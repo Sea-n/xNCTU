@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('utils.php');
 require('database.php');
 $db = new MyDB();
@@ -43,14 +44,31 @@ if (isset($_GET['uid'])) {
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<link href="https://www.sean.taipei/assets/css/tocas-ui/tocas.css" rel="stylesheet">
 		<link rel="stylesheet" href="/assets/css/style.css">
-		<script src="assets/js/review.js"></script>
+		<script src="/assets/js/common.js"></script>
+		<script src="/assets/js/review.js"></script>
 	</head>
 	<body>
-		<div>
-			<div class="row">
-				<div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
-					<h1>靠交 2.0</h1>
-					<p>給您一個沒有偷懶小編的靠北交大</p>
+		<nav class="ts basic fluid borderless menu horizontally scrollable">
+			<div class="ts container">
+				<a class="item" href=".">首頁</a>
+				<a class="item" href="submit">投稿</a>
+				<a class="active item" href="review">審核</a>
+				<div class="right fitted item">
+<?php if (isset($_SESSION['nctu_id'])) { ?>
+					<img class="ts mini circular image" src="https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg">&nbsp;<b><?= $_SESSION['name'] ?></b>
+<?php } else { ?>
+					<a class="item" href="/login-nctu">Login</a>
+<?php } ?>
+				</div>
+			</div>
+		</nav>
+		<header class="ts fluid vertically padded heading slate">
+			<div class="ts narrow container">
+				<h1 class="ts header">貼文審核</h1>
+				<div class="description">靠交 2.0</div>
+			</div>
+		</header>
+		<div class="ts container" name="main">
 <?php
 foreach ($posts as $post) {
 	$uid = $post['uid'];
@@ -59,35 +77,35 @@ foreach ($posts as $post) {
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
 ?>
-					<p><?= isset($_GET['uid']) ? '提醒您，為自己的貼文按「通過」會留下公開紀錄哦' : '' ?></p>
-					<div class="ts card" id="post-<?= $uid ?>">
+			<p><?= isset($_GET['uid']) ? '提醒您，為自己的貼文按「通過」會留下公開紀錄哦' : '' ?></p>
+			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">
 <?php if (!empty($post['img'])) { ?>
-						<div class="image">
-							<img src="<?= $img ?>" />
-						</div>
+				<div class="image">
+					<img src="<?= $img ?>" />
+				</div>
 <?php } ?>
-						<div class="content">
-							<div class="header">貼文編號 <?= $uid ?></div>
-							<p><?= $body ?></p>
-						</div>
-						<div class="extra content">
-							<div class="right floated author">
-								<img class="ts circular avatar image" src="https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg"> <?= $author ?></img>
-							</div>
-							<span>投稿時間：<?= $time ?></span>
-						</div>
-						<div class="ts fluid bottom attached large buttons">
-							<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approval"><?= $post['approval'] ?></span> 票)</button>
-							<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
-						</div>
+				<div class="content">
+					<div class="header">貼文編號 <?= $uid ?></div>
+					<p><?= $body ?></p>
+				</div>
+				<div class="extra content">
+					<div class="right floated author">
+						<img class="ts circular avatar image" src="https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg"> <?= $author ?></img>
 					</div>
-<?php } ?>
-					<p></p>
+					<span>投稿時間：<?= $time ?></span>
+				</div>
+				<div class="ts fluid bottom attached large buttons">
+					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approval"><?= $post['approval'] ?></span> 票)</button>
+					<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
 				</div>
 			</div>
+<?php } ?>
 		</div>
 		<footer class="panel-footer">
-			<center><p>&copy; 2020 <a target="_blank" href="https://www.sean.taipei/">Sean</a></p></center>
+			<center>
+				<p>由交大資工 112 級 <a target="_blank" href="https://www.sean.taipei/">Sean 韋詠祥</a> 開發設計
+				| 聯絡我們：<a href="mailto:x@nctu.app">x@nctu.app</a></p>
+			</center>
 		</footer>
 	</body>
 </html>

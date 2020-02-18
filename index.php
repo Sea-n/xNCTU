@@ -61,15 +61,13 @@ session_start();
 				<li><a target="_blank" href="https://www.facebook.com/xNCTU"><i class="fa fa-facebook-square"></i> Facebook</a></li>
 				<li><a target="_blank" href="https://www.plurk.com/xNCTU"><i class="fa fa-user-plus"></i> Plurk</a></li>
 			</ul>
+			<!-- Note: repeated in /submit -->
 			<h2 class="ts header">發文規則</h2>
 			<ol>
-				<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉，例如王 XX、王學長。
-					<ul>
-						<li>登入後具名投稿者，不受此條文之限制。</li>
-					</ul>
-				</li>
+				<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉。
+					<ul><li>登入後具名投稿者，不受此條文之限制。</li></ul></li>
 				<li>含有性別歧視、種族歧視、人身攻擊、色情內容、不實訊息等文章，將由審核團隊衡量發文尺度。</li>
-				<li>如果對文章感到不舒服、或是怕被發現是自己發的文想要刪文，請有禮貌的私訊審核團隊，並有合理的理由說服審核者，才會予以刪文。</li>
+				<li>如果對文章感到不舒服，請有禮貌的來信審核團隊，如有合理理由將協助刪文。</li>
 			</ol>
 			<h2 class="ts header">審文規則</h2>
 			<p>新版靠交 2.0 採全自動審文，人人皆可申請加入審核團隊，以下是系統判斷方式</p>
@@ -102,10 +100,11 @@ session_start();
 			<div class="ts fluid stackable buttons"><a class="ts massive positive button" href="/submit">我要發文</a><a class="ts massive info button" href="/review">我想審核</a></div>
 			<p></p>
 		</div>
+		<footer class="panel-footer">
+			<center>
+				<p>由交大資工 112 級 <a target="_blank" href="https://www.sean.taipei/">Sean 韋詠祥</a> 開發設計
+				| 聯絡我們：<a href="mailto:x@nctu.app">x@nctu.app</a></p>
+			</center>
+		</footer>
 	</body>
-	<footer class="panel-footer">
-		<center>
-			<p>由交大資工 112 級 <a target="_blank" href="https://www.sean.taipei/">Sean 韋詠祥</a> 開發設計</p>
-		</center>
-	</footer>
 </html>

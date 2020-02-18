@@ -118,12 +118,13 @@ if (isset($_POST['body'])) {
 			<p>文章臨時代碼：<code><?= $uid ?></code></p>
 			<p>您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
 <?php } else { ?>
+			<!-- Note: repeated in /index -->
 			<h2>發文規則</h2>
 			<ol>
-				<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉，例如王 XX、王學長。
+				<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉。
 					<ul><li>登入後具名投稿者，不受此條文之限制。</li></ul></li>
 				<li>含有性別歧視、種族歧視、人身攻擊、色情內容、不實訊息等文章，將由審核團隊衡量發文尺度。</li>
-				<li>如果對文章感到不舒服、或是怕被發現是自己發的文想要刪文，請有禮貌的私訊審核團隊，並有合理的理由說服審核者，才會予以刪文。</li>
+				<li>如果對文章感到不舒服，請有禮貌的來信審核團隊，如有合理理由將協助刪文。</li>
 			</ol>
 
 			<h2>立即投稿</h2>
@@ -150,7 +151,10 @@ if (isset($_POST['body'])) {
 			<p></p>
 		</div>
 		<footer class="panel-footer">
-			<center><p>&copy; 2020 <a target="_blank" href="https://www.sean.taipei/">Sean</a></p></center>
+			<center>
+				<p>由交大資工 112 級 <a target="_blank" href="https://www.sean.taipei/">Sean 韋詠祥</a> 開發設計
+				| 聯絡我們：<a href="mailto:x@nctu.app">x@nctu.app</a></p>
+			</center>
 		</footer>
 	</body>
 </html>
