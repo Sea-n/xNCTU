@@ -15,7 +15,7 @@ class MyDB {
 		if (mb_strlen($body) < 5)
 			return ['SEAN', 0, 'Body too short.'];
 
-		if (mb_strlen($body) > 1024)
+		if (mb_strlen($body) > 2000)
 			return ['SEAN', 0, 'Body too long.'];
 
 		if (!empty($img) && !preg_match('#^[0-9a-zA-Z]{3,5}\.[a-z]{3}$#', $img))
@@ -54,14 +54,27 @@ class MyDB {
 	}
 
 	public function voteSubmissions(string $uid, string $voter, int $vote, string $reason = '') {
-		if ($vote != 1 && $vote != -1)
-			return 'ERROR: Unknown vote.';
+		if ($vote == 1)
+			$type = 'approval';
+		else if ($vote == -1)
+			$type = 'rejects';
+		else
+			return ['ok' => false, 'msg' => 'Unknown vote.'];
 
-		$sql = "SELECT approval, rejects FROM submissions WHERE uid = :uid";
+		$sql = "SELECT uid FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 		if (!$stmt->fetch())
-			return 'ERROR: uid not found.';
+			return ['ok' => false, 'msg' => 'uid not found.'];
+
+		$sql = "SELECT created_at FROM votes WHERE uid = :uid AND voter = :voter";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':uid' => $uid,
+			':voter' => $voter
+		]);
+		if ($stmt->fetch())
+			return ['ok' => false, 'msg' => 'Already voted.'];
 
 		$sql = "INSERT INTO votes(uid, vote, reason, voter) VALUES (:uid, :vote, :reason, :voter)";
 		$stmt = $this->pdo->prepare($sql);
@@ -72,14 +85,16 @@ class MyDB {
 			':voter' => $voter
 		]);
 
-		$col = ($vote == 1 ? 'approval' : 'rejects');
-		$sql = "UPDATE submissions SET $col = $col + 1 WHERE uid = :uid";
+		$sql = "UPDATE submissions SET $type = $type + 1 WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 
 		$sql = "SELECT approval, rejects FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
-		return $stmt->fetch(PDO::FETCH_ASSOC);
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		$result['ok'] = true;
+		return $result;
 	}
 }

@@ -17,8 +17,8 @@ if (isset($_POST['body'])) {
 	$body = $_POST['body'];
 	if (mb_strlen($body) < 5)
 		exit('Body too short. 文章過短');
-	if (mb_strlen($body) > 1024)
-		exit('Body too long. 文章過長');
+	if (mb_strlen($body) > 2000)
+		exit('Body too long (' . mb_strlen($body) . ' chars). 文章過長');
 
 	if (isset($_FILES['img']) && $_FILES['img']['size']) {
 		$src = $_FILES['img']['tmp_name'];
@@ -115,8 +115,8 @@ if (isset($_POST['body'])) {
 		<div class="ts container" name="main">
 <?php if (isset($_POST['body'])) { ?>
 			<h2 class="ts header">投稿成功！</h2>
-			<p>文章臨時代碼：<code><?= $uid ?></code></p>
-			<p>您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
+			<p>文章臨時代碼：<code><?= $uid ?></code>，您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態</p>
+			<p>但提醒您，為自己的貼文按「通過」或「駁回」均會留下公開紀錄</p>
 <?php } else { ?>
 			<!-- Note: repeated in /index -->
 			<h2>發文規則</h2>
@@ -143,7 +143,7 @@ if (isset($_POST['body'])) {
 					<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" /></div>
 					<span>&nbsp; <?= $captcha ?></span>
 				</div>
-				<input id="submit" type="submit" class="ts button" value="提交貼文" />
+				<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
 				<p>請注意：您使用的網路服務商（<?= ip_from($ip) ?>）及部分 IP 位址 (<?= $ip_masked ?>) 將會永久保留於系統後台，所有已登入的審核者均可見。</p>
 				<input type="hidden" name="ip" value="<?= $ip_masked ?>">
 			</form>

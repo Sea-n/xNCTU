@@ -10,8 +10,8 @@ function reject(uid) {
 		return;
 
 	var reason = prompt('請輸入駁回理由');
-	if (reason.length < 10) {
-		alert('請輸入 10 個字以上');
+	if (reason.length < 5) {
+		alert('請輸入 5 個字以上');
 		return;
 	}
 
@@ -32,9 +32,12 @@ function vote(uid, type, reason) {
 		headers: {'content-type': 'application/json'}
 	}).then(resp => resp.json())
 	.then((resp) => {
-		var card = document.getElementById('post-' + uid);
-		card.querySelector('#approval').innerText = resp.approval;
-		card.querySelector('#rejects').innerText = resp.rejects;
 		console.log(resp);
+		var card = document.getElementById('post-' + uid);
+		if (resp.ok) {
+			card.querySelector('#approval').innerText = resp.approval;
+			card.querySelector('#rejects').innerText = resp.rejects;
+		} else
+			alert("Error: " + resp.msg);
 	});
 }

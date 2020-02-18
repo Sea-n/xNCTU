@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('utils.php');
 require('database.php');
 $db = new MyDB();
@@ -11,8 +12,7 @@ switch ($action) {
 	case 'vote':
 		$uid = $_POST['uid'] ?? '';
 
-		$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-		$voter = $ip;
+		$voter = $_SESSION['nctu_id'];
 		
 		$vote = $_POST['vote'] ?? 0;
 		if ($vote != 1 && $vote != -1)

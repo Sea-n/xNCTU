@@ -58,11 +58,25 @@ function ip_from(string $ip): string {
 }
 
 function ip_mask(string $ip): string {
-	$ip = explode('.', $ip);
-	$ip[2] = 'xxx';
-	$ip[3] = 'x' . ($ip[3]%100);
-	$ip = join('.', $ip);
-	return $ip;
+	if (strpos($ip, '.') !== false) { // IPv4
+		$ip4 = explode('.', $ip);
+		$ip4[2] = 'xxx';
+		$ip4[3] = 'x' . ($ip4[3]%100);
+		$ip4 = join('.', $ip4);
+		return $ip4;
+	}
+
+	$ip6 = $ip;
+	if (strpos($ip6, '::') !== false) {
+		$missing = 7 - substr_count($ip6, ':');
+		while ($missing--)
+			$ip6 = str_replace('::', ':0::', $ip6);
+		$ip6 = str_replace('::', ':0:', $ip6);
+	}
+	$ip6 = explode(':', $ip6);
+	$ip6[7] = substr('00'.$ip6[7], 0, 2);
+	$ip6 = "{$ip6[0]}:{$ip6[1]}:${ip6[2]}:___{$ip6[7]}";
+	return $ip6;
 }
 
 function rand58(int $len = 1): string {
