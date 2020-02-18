@@ -10,6 +10,12 @@ if ($_SERVER['HTTP_CONTENT_TYPE'] == 'application/json')
 $action = $_POST['action'] ?? 'x';
 switch ($action) {
 	case 'vote':
+		if (!isset($_SESSION['nctu_id']))
+			exit(json_encode([
+				'ok' => false,
+				'msg' => 'Please login.'
+			]));
+		
 		$uid = $_POST['uid'] ?? '';
 
 		$voter = $_SESSION['nctu_id'];

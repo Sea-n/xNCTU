@@ -19,6 +19,12 @@ function reject(uid) {
 }
 
 function vote(uid, type, reason) {
+	var login = document.querySelector('nav .right a');
+	if (login) {
+		alert('請先登入');
+		login.click();
+	}
+
 	data = {
 		action: 'vote',
 		uid: uid,

@@ -95,7 +95,7 @@ if (isset($_POST['body'])) {
 		<nav class="ts basic fluid borderless menu horizontally scrollable">
 			<div class="ts container">
 				<a class="item" href=".">首頁</a>
-				<a class="active item" href="submit">發文</a>
+				<a class="active item" href="submit">投稿</a>
 				<a class="item" href="review">審核</a>
 				<div class="right fitted item">
 <?php if (isset($_SESSION['nctu_id'])) { ?>
@@ -119,7 +119,7 @@ if (isset($_POST['body'])) {
 			<p>但提醒您，為自己的貼文按「通過」或「駁回」均會留下公開紀錄</p>
 <?php } else { ?>
 			<!-- Note: repeated in /index -->
-			<h2>發文規則</h2>
+			<h2>投稿規則</h2>
 			<ol>
 				<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉。
 					<ul><li>登入後具名投稿者，不受此條文之限制。</li></ul></li>
