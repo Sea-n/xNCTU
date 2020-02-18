@@ -1,14 +1,20 @@
 <?php
+require('database.php');
+
 if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
 	exit("Please don't hack me.");
 
-if ($_SERVER["HTTP_CF_IPCOUNTRY"] != 'TW')
-	exit("This service is limited to Taiwan's IP address. 此服務僅限台灣 IP 位址使用");
-
 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-if (isset($_POST['text'])) {
+if (isset($_POST['body'])) {
+	$body = $_POST['body'];
+	if (mb_strlen($body) < 5)
+		exit('Body too short. 文章過短');
 
+	if (mb_strlen($body) > 1024)
+		exit('Body too long. 文章過長');
 } else {
+	$captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
+
 	$ip = explode('.', $ip);
 	$ip[2] = 'xxx';
 	$ip[3] = 'x'.$ip[3]%100;
@@ -48,7 +54,8 @@ if (isset($_POST['text'])) {
 				<div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
 					<h1>靠交 2.0</h1>
 					<p>給您一個沒有偷懶小編的靠北交大</p>
-
+<?php if (isset($_POST['body'])) { ?>
+<?php } else { ?>
 					<h2>發文規則</h2>
 					<ol>
 						<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉，例如王 XX、王學長。
@@ -60,13 +67,14 @@ if (isset($_POST['text'])) {
 					<h2>貼文內容</h2>
 					<form action="/submit" method="POST">
 						<p>字數上限：<span id="wc">0</span> / 1,024</p>
-						<textarea id="text" name="text" rows="6" maxlength="1024" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
+						<textarea id="body" name="body" rows="6" maxlength="1024" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
 						<p>附加圖片：<input type="file" id="img" name="img" accept="image/*" style="display: inline-block;"></p>
+						<p>驗證問答：<?= $captcha ?><input id="captcha" name="captcha" size="8"></p>
 						<input type="submit" class="btn btn-info" value="提交貼文">
-						<p>請注意：您的 IP 位址 (<?= $ip ?>) 將會永久保留於系統後台，所有審核者均可見</p>
+						<p>請注意：您的 IP 位址 (<?= $ip ?>) 將會永久保留於系統後台，所有審核者均可見，請勿發佈違法內容</p>
 						<input type="hidden" name="ip" value="$ip">
 					</form>
-
+<?php } ?>
 					<p></p>
 				</div>
 			</div>
