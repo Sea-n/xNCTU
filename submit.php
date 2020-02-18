@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('utils.php');
 require('database.php');
 $db = new MyDB();
@@ -87,50 +88,66 @@ if (isset($_POST['body'])) {
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<link href="https://www.sean.taipei/assets/css/tocas-ui/tocas.css" rel="stylesheet">
 		<link rel="stylesheet" href="/assets/css/style.css">
+		<script src="/assets/js/common.js"></script>
+		<script src="/assets/js/submit.js"></script>
 	</head>
 	<body>
-		<div>
-			<div class="row">
-				<div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
-					<h1>靠交 2.0</h1>
-					<p>給您一個沒有偷懶小編的靠北交大</p>
-<?php if (isset($_POST['body'])) { ?>
-					<h2>投稿成功！</h2>
-					<p>文章臨時代碼：<code><?= $uid ?></code></p>
-					<p>您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
+		<nav class="ts basic fluid borderless menu horizontally scrollable">
+			<div class="ts container">
+				<a class="item" href=".">首頁</a>
+				<a class="active item" href="submit">發文</a>
+				<a class="item" href="review">審核</a>
+				<div class="right fitted item">
+<?php if (isset($_SESSION['nctu_id'])) { ?>
+					<img class="ts mini circular image" src="https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg">&nbsp;<b><?= $_SESSION['name'] ?></b>
 <?php } else { ?>
-					<h2>發文規則</h2>
-					<ol>
-						<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉，例如王 XX、王學長。
-							<ul><li>登入後具名投稿者，不受此條文之限制。</li></ul></li>
-						<li>含有性別歧視、種族歧視、人身攻擊、色情內容、不實訊息等文章，將由審核團隊衡量發文尺度。</li>
-						<li>如果對文章感到不舒服、或是怕被發現是自己發的文想要刪文，請有禮貌的私訊審核團隊，並有合理的理由說服審核者，才會予以刪文。</li>
-					</ol>
-
-					<h2>文章投稿</h2>
-					<form class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
-						<div class="required field">
-							<label>貼文內容</label>
-							<textarea id="body" name="body" rows="6" maxlength="1024" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
-							<span>字數上限：<span id="wc">0</span> / 1,024</span>
-						</div>
-						<div class="inline field">
-							<label>附加圖片</label>
-							<div class="four wide"><input type="file" name="img" accept="image/*" style="display: inline-block;" /></p></div>
-						</div>
-						<div class="required inline field">
-							<label>驗證問答</label>
-							<div class="two wide"><input id="captcha" name="captcha" /></div>
-							<span>&nbsp; <?= $captcha ?></span>
-						</div>
-						<input type="submit" class="ts button" value="提交貼文" />
-						<p>請注意：您使用的網路服務商（<?= ip_from($ip) ?>）及部分 IP 位址 (<?= $ip_masked ?>) 將會永久保留於系統後台，所有已登入的審核者均可見。</p>
-						<input type="hidden" name="ip" value="<?= $ip_masked ?>">
-					</form>
+					<a class="item" href="/login-nctu">Login</a>
 <?php } ?>
-					<p></p>
 				</div>
 			</div>
+		</nav>
+		<header class="ts fluid vertically padded heading slate">
+			<div class="ts narrow container">
+				<h1 class="ts header">文章投稿</h1>
+				<div class="description">靠交 2.0</div>
+			</div>
+		</header>
+		<div class="ts container" name="main">
+<?php if (isset($_POST['body'])) { ?>
+			<h2 class="ts header">投稿成功！</h2>
+			<p>文章臨時代碼：<code><?= $uid ?></code></p>
+			<p>您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
+<?php } else { ?>
+			<h2>發文規則</h2>
+			<ol>
+				<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉，例如王 XX、王學長。
+					<ul><li>登入後具名投稿者，不受此條文之限制。</li></ul></li>
+				<li>含有性別歧視、種族歧視、人身攻擊、色情內容、不實訊息等文章，將由審核團隊衡量發文尺度。</li>
+				<li>如果對文章感到不舒服、或是怕被發現是自己發的文想要刪文，請有禮貌的私訊審核團隊，並有合理的理由說服審核者，才會予以刪文。</li>
+			</ol>
+
+			<h2>立即投稿</h2>
+			<form class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
+				<div id="body-field" class="required field">
+					<label>貼文內容</label>
+					<textarea id="body-area" name="body" rows="6" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
+					<span>字數上限：<span id="body-wc">0</span> / 1,024</span>
+				</div>
+				<div class="inline field">
+					<label>附加圖片</label>
+					<div class="four wide"><input type="file" name="img" accept="image/*" style="display: inline-block;" /></p></div>
+				</div>
+				<div id="captcha-field" class="required inline field">
+					<label>驗證問答</label>
+					<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" /></div>
+					<span>&nbsp; <?= $captcha ?></span>
+				</div>
+				<input id="submit" type="submit" class="ts button" value="提交貼文" />
+				<p>請注意：您使用的網路服務商（<?= ip_from($ip) ?>）及部分 IP 位址 (<?= $ip_masked ?>) 將會永久保留於系統後台，所有已登入的審核者均可見。</p>
+				<input type="hidden" name="ip" value="<?= $ip_masked ?>">
+			</form>
+<?php } ?>
+			<p></p>
 		</div>
 		<footer class="panel-footer">
 			<center><p>&copy; 2020 <a target="_blank" href="https://www.sean.taipei/">Sean</a></p></center>

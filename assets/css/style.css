@@ -1,0 +1,30 @@
+html {
+	height: 100%;
+	min-height: 100%;
+}
+
+body {
+	min-height: 100%;
+}
+
+header.ts.fluid.vertically.padded.heading.slate {
+	font-size: 1.7em !important;
+	color: #646464 !important;
+	padding: 1.8em 2em 3em !important;
+}
+
+header.ts.fluid.vertically.padded.heading.slate+.ts.container {
+	margin-top: 2em !important;
+}
+
+nav.fixed {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 30 !important;
+}
+
+nav .item {
+	border-radius: 0 0 3px 3px !important;
+}
