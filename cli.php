@@ -17,7 +17,7 @@ case 'build':
 		'author TEXT NOT NULL, ' .
 		'approval INTEGER DEFAULT 0, ' .
 		'rejects INTEGER DEFAULT 0, ' .
-		'created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL)';
+		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
 
@@ -28,7 +28,7 @@ case 'build':
 		'img TEXT NOT NULL, ' .
 		'ip TEXT NOT NULL, ' .
 		'author TEXT NOT NULL, ' .
-		'created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL)';
+		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
 
@@ -37,7 +37,7 @@ case 'build':
 		'vote INTEGER NOT NULL, ' .
 		'reason TEXT NOT NULL, ' .
 		'voter TEXT NOT NULL, ' .
-		'created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL)';
+		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
 
@@ -48,7 +48,7 @@ case 'build':
 		'img TEXT NOT NULL, ' .
 		'ip TEXT NOT NULL, ' .
 		'author TEXT NOT NULL, ' .
-		'created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL)';
+		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
 	break;

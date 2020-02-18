@@ -60,7 +60,7 @@ function ip_from(string $ip): string {
 function ip_mask(string $ip): string {
 	$ip = explode('.', $ip);
 	$ip[2] = 'xxx';
-	$ip[3] = 'x'.$ip[3]%100;
+	$ip[3] = 'x' . ($ip[3]%100);
 	$ip = join('.', $ip);
 	return $ip;
 }
@@ -78,4 +78,32 @@ function rand58(int $len = 1): string {
 function toHTML(string $text): string {
 	$text = htmlentities($text);
 	return $text;
+}
+
+function humanTime(string $date): string {
+	$ts = strtotime($date);
+	$now = time();
+	$dt = $now - $ts;
+
+	$time = date("H:i", $ts);
+	if ($dt <= 120)
+		return "$time ($dt 秒前)";
+
+	$dt = floor($dt / 60);
+	if ($dt <= 90)
+		return "$time ($dt 分鐘前)";
+
+	$time = date("m 月 d 日 H:i", $ts);
+	$dt = floor($dt / 60);
+	if ($dt <= 48)
+		return "$time ($dt 小時前)";
+
+	$dt = floor($dt / 24);
+	if ($dt <= 45)
+		return "$time ($dt 天前)";
+
+	$time = date("Y 年 m 月 d 日 H:i", $ts);
+
+	$dt = floor($dt / 30);
+	return "$time ($dt 個月前)";
 }

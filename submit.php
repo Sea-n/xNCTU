@@ -19,7 +19,7 @@ if (isset($_POST['body'])) {
 	if (mb_strlen($body) > 1024)
 		exit('Body too long. 文章過長');
 
-	if (isset($_FILES['img'])) {
+	if (isset($_FILES['img']) && $_FILES['img']['size']) {
 		$src = $_FILES['img']['tmp_name'];
 		if (!file_exists($src) || !is_uploaded_file($src))
 			exit('Uploaded file not found. 上傳發生錯誤');
@@ -64,12 +64,12 @@ if (isset($_POST['body'])) {
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>文章投稿 - 靠交 2.0</title>
-		<link rel="icon" type="image/png" href="/logo-192.png" sizes="192x192">
-		<link rel="icon" type="image/png" href="/logo-128.png" sizes="128x128">
-		<link rel="icon" type="image/png" href="/logo-96.png" sizes="96x96">
-		<link rel="icon" type="image/png" href="/logo-64.png" sizes="64x64">
-		<link rel="icon" type="image/png" href="/logo-32.png" sizes="32x32">
-		<link rel="icon" type="image/png" href="/logo-16.png" sizes="16x16">
+		<link rel="icon" type="image/png" href="/assets/img/logo-192.png" sizes="192x192">
+		<link rel="icon" type="image/png" href="/assets/img/logo-128.png" sizes="128x128">
+		<link rel="icon" type="image/png" href="/assets/img/logo-96.png" sizes="96x96">
+		<link rel="icon" type="image/png" href="/assets/img/logo-64.png" sizes="64x64">
+		<link rel="icon" type="image/png" href="/assets/img/logo-32.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="/assets/img/logo-16.png" sizes="16x16">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 		<meta name="keywords" content="NCTU, 靠北交大, 靠交 2.0" />
 		<meta name="description" content="在這裡您可以匿名地發送貼文" />
@@ -85,8 +85,8 @@ if (isset($_POST['body'])) {
 		<meta property="og:site_name" content="靠交 2.0" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-		<link href="https://www.sean.taipei/assets/css/tocas-ui/tocas.css" rel="stylesheet"
-		<link rel="stylesheet" href="/style.css">
+		<link href="https://www.sean.taipei/assets/css/tocas-ui/tocas.css" rel="stylesheet">
+		<link rel="stylesheet" href="/assets/css/style.css">
 	</head>
 	<body>
 		<div>
@@ -97,7 +97,7 @@ if (isset($_POST['body'])) {
 <?php if (isset($_POST['body'])) { ?>
 					<h2>投稿成功！</h2>
 					<p>文章臨時代碼：<code><?= $uid ?></code></p>
-					<p>您可以於 <a href="/posts?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
+					<p>您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
 <?php } else { ?>
 					<h2>發文規則</h2>
 					<ol>
