@@ -7,16 +7,6 @@ class MyDB {
 		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
-	public function rand58(int $len = 1): string {
-		$base58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-
-		$rand = '';
-		for ($_=0; $_<$len; $_++)
-			$rand .= $base58[rand(0, 57)];
-
-		return $rand;
-	}
-
 	/* Return error info or ['00000', null, null] on success */
 	public function insertSubmission(string $uid, string $body, string $img, string $ip, string $author): array {
 		if (strlen($uid) < 3)
@@ -42,5 +32,12 @@ class MyDB {
 		]);
 
 		return $stmt->errorInfo();
+	}
+
+	public function getPostByUid(string $uid) {
+		$sql = "SELECT * FROM submissions WHERE uid = :uid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':uid' => $uid]);
+		return $stmt->fetch();
 	}
 }

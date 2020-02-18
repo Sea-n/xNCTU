@@ -1,0 +1,81 @@
+<?php
+function check_cf_ip(string $addr): bool {
+	$range = [
+		"173.245.48.0" => 20,
+		"103.21.244.0" => 22,
+		"103.22.200.0" => 22,
+		"103.31.4.0" => 22,
+		"141.101.64.0" => 18,
+		"108.162.192.0" => 18,
+		"190.93.240.0" => 20,
+		"188.114.96.0" => 20,
+		"197.234.240.0" => 22,
+		"198.41.128.0" => 17,
+		"162.158.0.0" => 15,
+		"104.16.0.0" => 12,
+		"172.64.0.0" => 13,
+		"131.0.72.0" => 22
+	];
+
+	foreach ($range as $base => $cidr)
+		if (ip2long($addr)>>(32-$cidr)
+		=== ip2long($base)>>(32-$cidr))
+			return true;
+
+	return false;
+}
+
+function ip_from(string $ip): string {
+	if ($_SERVER["HTTP_CF_IPCOUNTRY"] != 'TW')
+		return "境外, {$_SERVER["HTTP_CF_IPCOUNTRY"]}";
+
+	$tanet = [
+		'140.113.' => '交大',
+		'140.112.' => '台大',
+		'140.114.' => '清大',
+		'140.115.' => '中央',
+		'140.116.' => '成大',
+		'140.118.' => '台科',
+		'140.119.' => '政大',
+		'140.121.' => '海大',
+		'140.122.' => '師大',
+		'140.124.' => '北科',
+		'140.129.' => '陽明',
+	];
+
+	foreach ($tanet as $prefix => $name)
+		if (substr($ip, 0, 8) == $prefix)
+			return $name;
+
+	$curl = curl_init('https://rms.twnic.net.tw/query_whois1.php');
+	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip");
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	$resp = curl_exec($curl);
+	if (preg_match('#<tr><td>Chinese Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches))
+		return $matches[1];
+	else
+		return "台灣";
+}
+
+function ip_mask(string $ip): string {
+	$ip = explode('.', $ip);
+	$ip[2] = 'xxx';
+	$ip[3] = 'x'.$ip[3]%100;
+	$ip = join('.', $ip);
+	return $ip;
+}
+
+function rand58(int $len = 1): string {
+	$base58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+	$rand = '';
+	for ($_=0; $_<$len; $_++)
+		$rand .= $base58[rand(0, 57)];
+
+	return $rand;
+}
+
+function toHTML(string $text): string {
+	$text = htmlentities($text);
+	return $text;
+}

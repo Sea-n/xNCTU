@@ -1,4 +1,5 @@
 <?php
+require('utils.php');
 require('database.php');
 $db = new MyDB();
 
@@ -6,31 +7,7 @@ if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
 	exit("Please don't hack me.");
 
 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-if ($_SERVER["HTTP_CF_IPCOUNTRY"] != 'TW')
-	$ip_author = "境外, {$_SERVER["HTTP_CF_IPCOUNTRY"]}";
-else switch (substr($ip, 0, 8)) {
-	case '140.113.': $ip_author = "交大, 台灣"; break;
-	case '140.112.': $ip_author = "台大, 台灣"; break;
-	case '140.114.': $ip_author = "清大, 台灣"; break;
-	case '140.115.': $ip_author = "中央, 台灣"; break;
-	case '140.116.': $ip_author = "成大, 台灣"; break;
-	case '140.118.': $ip_author = "台科, 台灣"; break;
-	case '140.119.': $ip_author = "政大, 台灣"; break;
-	case '140.121.': $ip_author = "海大, 台灣"; break;
-	case '140.122.': $ip_author = "師大, 台灣"; break;
-	case '140.124.': $ip_author = "北科, 台灣"; break;
-	case '140.129.': $ip_author = "陽明, 台灣"; break;
 
-	default:
-	$curl = curl_init('https://rms.twnic.net.tw/query_whois1.php');
-	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip");
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	$resp = curl_exec($curl);
-	if (preg_match('#<tr><td>Chinese Name</td><td>([^<]+?)(股份|有限|公司)*</td></tr>#', $resp, $matches))
-		$ip_author = "{$matches[1]}, 台灣";
-	else
-		$ip_author = "台灣";
-}
 if (isset($_POST['body'])) {
 	$captcha = trim($_POST['captcha'] ?? 'X');
 	if ($captcha != '交大竹湖')
@@ -59,7 +36,7 @@ if (isset($_POST['body'])) {
 			exit('Extension not recognized. 圖片副檔名錯誤');
 
 		do {
-			$rand = $db->rand58(4);
+			$rand = rand58(4);
 			$img = "$rand.$ext";
 			$dst = __DIR__ . "/img/$img";
 		} while (file_exists($dst));
@@ -69,8 +46,9 @@ if (isset($_POST['body'])) {
 	} else
 		$img = '';
 
-	$uid = $db->rand58(4);
-	$author = "匿名, $ip_author";
+	$uid = rand58(4);
+	$ip_from = ip_from($ip);
+	$author = "匿名, $ip_from";
 
 	$error = $db->insertSubmission($uid, $body, $img, $ip, $author);
 	if ($error[0] != '00000')
@@ -78,17 +56,14 @@ if (isset($_POST['body'])) {
 } else {
 	$captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 
-	$ip_masked = explode('.', $ip);
-	$ip_masked[2] = 'xxx';
-	$ip_masked[3] = 'x'.$ip_masked[3]%100;
-	$ip_masked = join('.', $ip_masked);
+	$ip_masked = ip_mask($ip);
 }
 ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>發文申請 - 靠交 2.0</title>
+		<title>文章投稿 - 靠交 2.0</title>
 		<link rel="icon" type="image/png" href="/logo-192.png" sizes="192x192">
 		<link rel="icon" type="image/png" href="/logo-128.png" sizes="128x128">
 		<link rel="icon" type="image/png" href="/logo-96.png" sizes="96x96">
@@ -98,7 +73,7 @@ if (isset($_POST['body'])) {
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 		<meta name="keywords" content="NCTU, 靠北交大, 靠交 2.0" />
 		<meta name="description" content="在這裡您可以匿名地發送貼文" />
-		<meta property="og:title" content="發文申請" />
+		<meta property="og:title" content="文章投稿" />
 		<meta property="og:url" content="https://x.nctu.app/submit" />
 		<meta property="og:image" content="https://x.nctu.app/logo.png" />
 		<meta property="og:image:secure_url" content="https://x.nctu.app/logo.png" />
@@ -110,6 +85,7 @@ if (isset($_POST['body'])) {
 		<meta property="og:site_name" content="靠交 2.0" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<link href="https://www.sean.taipei/assets/css/tocas-ui/tocas.css" rel="stylesheet"
 		<link rel="stylesheet" href="/style.css">
 	</head>
 	<body>
@@ -121,7 +97,7 @@ if (isset($_POST['body'])) {
 <?php if (isset($_POST['body'])) { ?>
 					<h2>投稿成功！</h2>
 					<p>文章臨時代碼：<code><?= $uid ?></code></p>
-					<p>您可以於 <a href="/post?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
+					<p>您可以於 <a href="/posts?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
 <?php } else { ?>
 					<h2>發文規則</h2>
 					<ol>
@@ -131,14 +107,24 @@ if (isset($_POST['body'])) {
 						<li>如果對文章感到不舒服、或是怕被發現是自己發的文想要刪文，請有禮貌的私訊審核團隊，並有合理的理由說服審核者，才會予以刪文。</li>
 					</ol>
 
-					<h2>貼文內容</h2>
-					<form action="/submit" method="POST" enctype="multipart/form-data">
-						<p>字數上限：<span id="wc">0</span> / 1,024</p>
-						<textarea id="body" name="body" rows="6" maxlength="1024" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
-						<p>附加圖片：<input type="file" name="img" accept="image/*" style="display: inline-block;" /></p>
-						<p>驗證問答：<?= $captcha ?><input id="captcha" name="captcha" size="8" /></p>
-						<input type="submit" class="btn btn-info" value="提交貼文" />
-						<p>請注意：您使用的網路服務商（<?= $ip_author ?>）及部分 IP 位址 (<?= $ip_masked ?>) 將會永久保留於系統後台，所有已登入的審核者均可見。</p>
+					<h2>文章投稿</h2>
+					<form class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
+						<div class="required field">
+							<label>貼文內容</label>
+							<textarea id="body" name="body" rows="6" maxlength="1024" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
+							<span>字數上限：<span id="wc">0</span> / 1,024</span>
+						</div>
+						<div class="inline field">
+							<label>附加圖片</label>
+							<div class="four wide"><input type="file" name="img" accept="image/*" style="display: inline-block;" /></p></div>
+						</div>
+						<div class="required inline field">
+							<label>驗證問答</label>
+							<div class="two wide"><input id="captcha" name="captcha" /></div>
+							<span>&nbsp; <?= $captcha ?></span>
+						</div>
+						<input type="submit" class="ts button" value="提交貼文" />
+						<p>請注意：您使用的網路服務商（<?= ip_from($ip) ?>）及部分 IP 位址 (<?= $ip_masked ?>) 將會永久保留於系統後台，所有已登入的審核者均可見。</p>
 						<input type="hidden" name="ip" value="<?= $ip_masked ?>">
 					</form>
 <?php } ?>
@@ -151,30 +137,3 @@ if (isset($_POST['body'])) {
 		</footer>
 	</body>
 </html>
-
-<?php
-function check_cf_ip(string $addr) {
-	$range = [
-		"173.245.48.0" => 20,
-		"103.21.244.0" => 22,
-		"103.22.200.0" => 22,
-		"103.31.4.0" => 22,
-		"141.101.64.0" => 18,
-		"108.162.192.0" => 18,
-		"190.93.240.0" => 20,
-		"188.114.96.0" => 20,
-		"197.234.240.0" => 22,
-		"198.41.128.0" => 17,
-		"162.158.0.0" => 15,
-		"104.16.0.0" => 12,
-		"172.64.0.0" => 13,
-		"131.0.72.0" => 22
-	];
-
-	foreach ($range as $base => $cidr)
-		if (ip2long($addr)>>(32-$cidr)
-		=== ip2long($base)>>(32-$cidr))
-			return true;
-
-	return false;
-}
