@@ -1,24 +1,87 @@
 <?php
 require('database.php');
+$db = new MyDB();
 
 if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
 	exit("Please don't hack me.");
 
 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+if ($_SERVER["HTTP_CF_IPCOUNTRY"] != 'TW')
+	$ip_author = "境外, {$_SERVER["HTTP_CF_IPCOUNTRY"]}";
+else switch (substr($ip, 0, 8)) {
+	case '140.113.': $ip_author = "交大, 台灣"; break;
+	case '140.112.': $ip_author = "台大, 台灣"; break;
+	case '140.114.': $ip_author = "清大, 台灣"; break;
+	case '140.115.': $ip_author = "中央, 台灣"; break;
+	case '140.116.': $ip_author = "成大, 台灣"; break;
+	case '140.118.': $ip_author = "台科, 台灣"; break;
+	case '140.119.': $ip_author = "政大, 台灣"; break;
+	case '140.121.': $ip_author = "海大, 台灣"; break;
+	case '140.122.': $ip_author = "師大, 台灣"; break;
+	case '140.124.': $ip_author = "北科, 台灣"; break;
+	case '140.129.': $ip_author = "陽明, 台灣"; break;
+
+	default:
+	$curl = curl_init('https://rms.twnic.net.tw/query_whois1.php');
+	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip");
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	$resp = curl_exec($curl);
+	if (preg_match('#<tr><td>Chinese Name</td><td>([^<]+?)(股份|有限|公司)*</td></tr>#', $resp, $matches))
+		$ip_author = "{$matches[1]}, 台灣";
+	else
+		$ip_author = "台灣";
+}
 if (isset($_POST['body'])) {
+	$captcha = trim($_POST['captcha'] ?? 'X');
+	if ($captcha != '交大竹湖')
+		exit('Are you human? 驗證碼錯誤');
+
 	$body = $_POST['body'];
 	if (mb_strlen($body) < 5)
 		exit('Body too short. 文章過短');
-
 	if (mb_strlen($body) > 1024)
 		exit('Body too long. 文章過長');
+
+	if (isset($_FILES['img'])) {
+		$src = $_FILES['img']['tmp_name'];
+		if (!file_exists($src) || !is_uploaded_file($src))
+			exit('Uploaded file not found. 上傳發生錯誤');
+
+		if ($_FILES['img']['size'] > 5*1000*1000)
+			exit('Image too large. 圖片過大');
+
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		if (!($ext = array_search($finfo->file($src), [
+				'jpg' => 'image/jpeg',
+				'png' => 'image/png',
+				'gif' => 'image/gif',
+			], true)))
+			exit('Extension not recognized. 圖片副檔名錯誤');
+
+		do {
+			$rand = $db->rand58(4);
+			$img = "$rand.$ext";
+			$dst = __DIR__ . "/img/$img";
+		} while (file_exists($dst));
+
+		if (!move_uploaded_file($src, $dst))
+			exit('Failed to move uploaded file. 上傳發生錯誤');
+	} else
+		$img = '';
+
+	$uid = $db->rand58(4);
+	$author = "匿名, $ip_author";
+
+	$error = $db->insertSubmission($uid, $body, $img, $ip, $author);
+	if ($error[0] != '00000')
+		exit("Database error {$error[0]}, {$error[1]}, {$error[2]}. 資料庫發生錯誤");
 } else {
 	$captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 
-	$ip = explode('.', $ip);
-	$ip[2] = 'xxx';
-	$ip[3] = 'x'.$ip[3]%100;
-	$ip = join('.', $ip);
+	$ip_masked = explode('.', $ip);
+	$ip_masked[2] = 'xxx';
+	$ip_masked[3] = 'x'.$ip_masked[3]%100;
+	$ip_masked = join('.', $ip_masked);
 }
 ?>
 <!DOCTYPE html>
@@ -47,6 +110,7 @@ if (isset($_POST['body'])) {
 		<meta property="og:site_name" content="靠交 2.0" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="/style.css">
 	</head>
 	<body>
 		<div>
@@ -55,6 +119,9 @@ if (isset($_POST['body'])) {
 					<h1>靠交 2.0</h1>
 					<p>給您一個沒有偷懶小編的靠北交大</p>
 <?php if (isset($_POST['body'])) { ?>
+					<h2>投稿成功！</h2>
+					<p>文章臨時代碼：<code><?= $uid ?></code></p>
+					<p>您可以於 <a href="/post?uid=<?= $uid ?>">這裡</a> 查看審核動態，但提醒您為自己的貼文按「通過」會留下公開紀錄</p>
 <?php } else { ?>
 					<h2>發文規則</h2>
 					<ol>
@@ -65,14 +132,14 @@ if (isset($_POST['body'])) {
 					</ol>
 
 					<h2>貼文內容</h2>
-					<form action="/submit" method="POST">
+					<form action="/submit" method="POST" enctype="multipart/form-data">
 						<p>字數上限：<span id="wc">0</span> / 1,024</p>
 						<textarea id="body" name="body" rows="6" maxlength="1024" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
-						<p>附加圖片：<input type="file" id="img" name="img" accept="image/*" style="display: inline-block;"></p>
-						<p>驗證問答：<?= $captcha ?><input id="captcha" name="captcha" size="8"></p>
-						<input type="submit" class="btn btn-info" value="提交貼文">
-						<p>請注意：您的 IP 位址 (<?= $ip ?>) 將會永久保留於系統後台，所有審核者均可見，請勿發佈違法內容</p>
-						<input type="hidden" name="ip" value="$ip">
+						<p>附加圖片：<input type="file" name="img" accept="image/*" style="display: inline-block;" /></p>
+						<p>驗證問答：<?= $captcha ?><input id="captcha" name="captcha" size="8" /></p>
+						<input type="submit" class="btn btn-info" value="提交貼文" />
+						<p>請注意：您使用的網路服務商（<?= $ip_author ?>）及部分 IP 位址 (<?= $ip_masked ?>) 將會永久保留於系統後台，所有已登入的審核者均可見。</p>
+						<input type="hidden" name="ip" value="<?= $ip_masked ?>">
 					</form>
 <?php } ?>
 					<p></p>

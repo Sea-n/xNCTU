@@ -54,38 +54,13 @@ case 'build':
 	break;
 
 case 'dump':
-	$sql = "SELECT * FROM main";
+	$sql = "SELECT * FROM submissions";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
-	while ($data = $stmt->fetch())
-		printf("%-5s %-30s %10s  %s\n", $data['code'], $data['url'], $data['author'], $data['created_at']);
-	break;
-
-case 'export':
-	$sql = "SELECT * FROM main";
-	$stmt = $db->pdo->prepare($sql);
-	$stmt->execute();
-	$result = [];
-	while ($data = $stmt->fetch(PDO::FETCH_ASSOC))
-		$result[] = $data;
-	echo json_encode($result, JSON_PRETTY_PRINT);
-	break;
-
-case 'import':
-	$json = file_get_contents($argv[2]);
-	$json = json_decode($json, true);
-	foreach ($json as $data) {
-		$sql = 'INSERT INTO main(' .
-			join(', ', array_keys($data)) .
-			') VALUES (:' .
-			join(', :', array_keys($data)) .
-			')';
-
-		$stmt = $db->pdo->prepare($sql);
-		foreach ($data as $k => $v)
-			$stmt->bindValue(":$k", $v);
-		$stmt->execute();
-	}
+	$data = [];
+	while ($item = $stmt->fetch(PDO::FETCH_ASSOC))
+		$data[] = $item;
+	echo json_encode($data, JSON_PRETTY_PRINT);
 	break;
 
 default:
