@@ -28,3 +28,13 @@ nav.fixed {
 nav .item {
 	border-radius: 0 0 3px 3px !important;
 }
+
+div[name=main] {
+	padding-bottom: 60px;
+}
+
+footer {
+	position: absolute !important;
+	width: 100%;
+	bottom: 0;
+}

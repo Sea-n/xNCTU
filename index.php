@@ -5,48 +5,10 @@ session_start();
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>靠交 2.0</title>
-		<link rel="icon" type="image/png" href="/assets/img/logo-192.png" sizes="192x192">
-		<link rel="icon" type="image/png" href="/assets/img/logo-128.png" sizes="128x128">
-		<link rel="icon" type="image/png" href="/assets/img/logo-96.png" sizes="96x96">
-		<link rel="icon" type="image/png" href="/assets/img/logo-64.png" sizes="64x64">
-		<link rel="icon" type="image/png" href="/assets/img/logo-32.png" sizes="32x32">
-		<link rel="icon" type="image/png" href="/assets/img/logo-16.png" sizes="16x16">
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<meta name="keywords" content="NCTU, 靠北交大, 靠交 2.0">
-		<meta name="description" content="給您一個沒有偷懶小編的靠北交大">
-		<meta property="og:title" content="靠交 2.0">
-		<meta property="og:url" content="https://x.nctu.app/">
-		<meta property="og:image" content="https://x.nctu.app/logo.png">
-		<meta property="og:image:secure_url" content="https://x.nctu.app/logo.png">
-		<meta property="og:image:type" content="image/png">
-		<meta property="og:image:width" content="640">
-		<meta property="og:image:height" content="640">
-		<meta property="og:type" content="website">
-		<meta property="og:description" content="給您一個沒有偷懶小編的靠北交大">
-		<meta property="og:site_name" content="靠交 2.0">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-		<link href="https://www.sean.taipei/assets/css/tocas-ui/tocas.css" rel="stylesheet">
-		<link href="/assets/css/style.css" rel="stylesheet">
-		<script src="/assets/js/common.js"></script>
+<?php $TITLE = '首頁'; include('includes/head.php'); ?>
 	</head>
 	<body>
-		<nav class="ts basic fluid borderless menu horizontally scrollable">
-			<div class="ts container">
-				<a class="active item" href=".">首頁</a>
-				<a class="item" href="submit">投稿</a>
-				<a class="item" href="review">審核</a>
-				<div class="right fitted item">
-<?php if (isset($_SESSION['nctu_id'])) { ?>
-					<img class="ts mini circular image" src="https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg">&nbsp;<b><?= $_SESSION['name'] ?></b>
-<?php } else { ?>
-					<a class="item" href="/login-nctu">Login</a>
-<?php } ?>
-				</div>
-			</div>
-		</nav>
+<?php include('includes/nav.php'); ?>
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">靠交 2.0</h1>
@@ -98,13 +60,7 @@ session_start();
 			<p>通過審核之文章將會進入發文佇列，由系統每 5 分鐘 po 出一篇至各大社群平台，如欲搶先看也可申請加入審核團隊</p>
 			<h2 class="ts header">現在開始</h2>
 			<div class="ts fluid stackable buttons"><a class="ts massive positive button" href="/submit">我要投稿</a><a class="ts massive info button" href="/review">我想審核</a></div>
-			<p></p>
 		</div>
-		<footer class="panel-footer">
-			<center>
-				<p>由交大資工 112 級 <a target="_blank" href="https://www.sean.taipei/">Sean 韋詠祥</a> 開發設計
-				| 聯絡我們：<a href="mailto:x@nctu.app">x@nctu.app</a></p>
-			</center>
-		</footer>
+<?php include('includes/footer.php'); ?>
 	</body>
 </html>
