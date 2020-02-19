@@ -1,7 +1,4 @@
-<?php
-session_start();
-
-?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
@@ -12,7 +9,7 @@ session_start();
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">靠交 2.0</h1>
-				<div class="description">給您一個沒有偷懶小編的靠北交大</div>
+				<div class="description">別再說沒有人審文，先承認你就是沒有人。</div>
 			</div>
 		</header>
 		<div class="ts container" name="main">
@@ -40,7 +37,7 @@ session_start();
 			<ul>
 				<li>等待審核至少 10 分鐘</li>
 				<li>累積至少 2 個「通過」</li>
-				<li>「通過」多於「駁回」</li>
+				<li>「通過」不少於「駁回」</li>
 			</ul>
 			<h4>(C) 使用台灣 IP 位址</h4>
 			<ul>

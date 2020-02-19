@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('utils.php');
-require('database.php');
+require_once('utils.php');
+require_once('database.php');
 $db = new MyDB();
 
 if ($_SERVER['HTTP_CONTENT_TYPE'] == 'application/json')

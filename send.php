@@ -1,51 +1,111 @@
 <?php
+require_once('utils.php');
+require_once('database.php');
 require_once('config.php');
+require_once('/root/site/telegram/function.php');
+$db = new MyDB();
 
-function send_telegram() {
-	require('/root/site/telegram/function.php');
-	require('/root/site/telegram/config.php');
-	$msg = enHTML("$hn_title\n" .
-	"🕓 $hn_during\n");
-	if (!empty($hn_range))
-		$msg .= enHTML("🎯 $hn_range\n");
-	$msg .= enHTML("\n$hn_description\n") .
-	enHTML($link);
+if (!($post = $db->getPostReady()))
+	exit;
 
-	if ($debug)
-		echo "Telegram Message:\n$msg\n\n";
+$id = $post['id'];
+$body = $post['body'];
+$img = $post['img'];
 
-	$result = sendMsg([
-		'bot' => 'Sean',
-		'chat_id' => '@HiNetNotify',
-		'text' => $msg,
-		'parse_mode' => 'HTML',
-		'disable_web_page_preview' => true
-	]);
+$tg = send_telegram($id, $body, $img);
+$plurk = send_plurk($id, $body, $img);
+$twitter = send_twitter($id, $body, $img);
+$fb = send_facebook($id, $body, $img);
+
+$db->updatePostSns($id, $tg, $plurk, $twitter, $fb);
+
+
+function send_telegram(int $id, string $body, string $img = ''): int {
+	$link = "https://x.nctu.app/posts?id=$id";
+	$msg = "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
+
+	if (empty($img))
+		$result = sendMsg([
+			'bot' => 'xNCTU',
+			'chat_id' => '@xNCTU',
+			'text' => $msg,
+			'parse_mode' => 'HTML',
+			'disable_web_page_preview' => true
+		]);
+	else
+		$result = getTelegram('sendPhoto', [
+			'bot' => 'xNCTU',
+			'chat_id' => '@xNCTU',
+			'photo' => "https://x.nctu.app/img/{$img}",
+			'caption' => $msg,
+			'parse_mode' => 'HTML',
+		]);
 
 	return $result['result']['message_id'];
 }
 
+function send_twitter(int $id, string $body, string $img = ''): int {
+	$link = "https://x.nctu.app/posts?id=$id";
+	$msg = "#靠交$id\n\n$body";
+	if (strlen($msg) > 250)
+		$msg = substr($msg, 0, 250) . '...';
+	$msg .= "\n\n$link";
 
-function send_twitter() {
+	if (!empty($img)) {
+		$nonce     = md5(time());
+		$timestamp = time();
+
+		$URL = 'https://api.twitter.com/1.1/media/upload.json?media_category=tweet_image';
+
+		$oauth = new OAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
+		$oauth->enableDebug();
+		$oauth->setToken(TWITTER_TOKEN, TWITTER_TOKEN_SECRET);
+		$oauth->setNonce($nonce);
+		$oauth->setTimestamp($timestamp);
+		$signature = $oauth->generateSignature('POST', $URL);
+
+		$auth = [
+			'oauth_consumer_key' => TWITTER_CONSUMER_KEY,
+			'oauth_nonce' => $nonce,
+			'oauth_signature' => $signature,
+			'oauth_signature_method' => 'HMAC-SHA1',
+			'oauth_timestamp' => $timestamp,
+			'oauth_token' => TWITTER_TOKEN
+		];
+
+		$authStr = 'OAuth ';
+		foreach ($auth as $key => $val)
+			$authStr .= $key . '="' . urlencode($val) . '", ';
+		$authStr .= 'oauth_version="1.0"';
+
+		$file = ['media' => curl_file_create(__DIR__ . "/img/$img")];
+
+		$curl = curl_init();
+		curl_setopt_array($curl, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_URL => $URL,
+			CURLOPT_POST => true,
+			CURLOPT_POSTFIELDS => $file,
+			CURLOPT_HTTPHEADER => [
+				"Authorization: $authStr"
+			]
+		]);
+		$result = curl_exec($curl);
+		curl_close($curl);
+		$result = json_decode($result, true);
+		if (isset($result['media_id_string']))
+			$img_id = $result['media_id_string'];
+		else
+			echo "Twitter upload error: " . json_encode($result) . "\n";
+	}
+
 	$nonce     = md5(time());
 	$timestamp = time();
 
-	$msg = "$hn_title\n";
-	$msg .= "🕓 $hn_during\n";
-	if (!empty($hn_range))
-		$msg .= "🎯 $hn_range\n";
-	$msg .= "\n$hn_description";
-
-	$msgS = twitterSubstr($msg);
-	if (strlen($msg) != strlen($msgS))
-		$msg = "$msgS...";
-	$msg .= "\n$link";
-	if ($debug)
-		echo "Twitter Message:\n$msg\n\n";
-
-	$URL = 'https://api.twitter.com/1.1/statuses/update.json?' . http_build_query([
-		'status' => $msg
-	]);
+	$query = ['status' => $msg];
+	if (!empty($img_id))
+		$query['media_ids'] = $img_id;
+	$URL = 'https://api.twitter.com/1.1/statuses/update.json?' . http_build_query($query);
 
 	$oauth = new OAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
 	$oauth->enableDebug();
@@ -84,23 +144,28 @@ function send_twitter() {
 	return $result['id_str'];
 }
 
-function send_plurk() {
+function send_plurk(int $id, string $body, string $img = ''): int {
+	$link = "https://x.nctu.app/posts?id=$id";
+
+	$msg = empty($img) ? '' : "https://x.nctu.app/img/$img\n";
+	$msg .= "#靠交$id\n$body";
+
+	if (mb_strlen($msg) > 320)
+		$msg = mb_substr($msg, 0, 320) . '...';
+
+	$msg .= "\n$link";
+
 	$nonce     = md5(time());
 	$timestamp = time();
-
-	$msg = "$hn_title\n\n" .
-	"🕓 $hn_during\n\n";
-	if (!empty($hn_range))
-		$msg .= "🎯 $hn_range";
 
 	/* Add Plurk */
 	$URL = 'https://www.plurk.com/APP/Timeline/plurkAdd?' . http_build_query([
 		'content' => $msg,
-		'qualifier' => 'shares',
+		'qualifier' => 'says',
 		'lang' => 'tr_ch',
 	]);
 
-	echo "Plurk URL: $URL\n\n";
+	var_dump($URL);
 
 	$oauth = new OAuth(PLURK_CONSUMER_KEY, PLURK_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
 	$oauth->enableDebug();
@@ -109,148 +174,43 @@ function send_plurk() {
 	$oauth->setTimestamp($timestamp);
 	$signature = $oauth->generateSignature('POST', $URL);
 
-	echo "Plurk Signature: $signature\n\n";
-
-	$oauth->fetch($URL);
-	$result = $oauth->getLastResponse();
-
-	echo "Plurk Result: $result\n\n";
-
-	$result = json_decode($result, true);
-	$plurk_id = $result['plurk_id'];
-
-	echo "Plurk ID: $plurk_id\n";
-
-	/* Add Comment */
-	$nonce     = md5(time());
-	$timestamp = time();
-
-	$msg = "$hn_description\n\n" .
-	"$link (link)";
-
-	$URL = 'https://www.plurk.com/APP/Responses/responseAdd?' . http_build_query([
-		'plurk_id' => $plurk_id,
-		'content' => $msg,
-		'qualifier' => 'freestyle',
-	]);
-
-	$oauth = new OAuth(PLURK_CONSUMER_KEY, PLURK_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
-	$oauth->enableDebug();
-	$oauth->setToken(PLURK_TOKEN, PLURK_TOKEN_SECRET);
-	$oauth->setNonce($nonce);
-	$oauth->setTimestamp($timestamp);
-	$signature = $oauth->generateSignature('POST', $URL);
-
-	$oauth->fetch($URL);
-	$result = $oauth->getLastResponse();
-
-	return $plurk_id;
-}
-
-function send_facebook() {
-	$curl = curl_init();
-	curl_setopt_array($curl, [
-		CURLOPT_URL => 'https://graph.facebook.com/v2.6/' . FB_PAGES_ID . '/feed?access_token=' . FB_ACCESS_TOKEN,
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_POST => true
-	]);
-
-	if (preg_match('/(海纜|緊急|國際)/', $hn_title)) {
-		$msg = "$hn_title\n\n" .
-			"- - - - -\n\n" .
-			"✳️ 推薦使用 Telegram 及 Twitter 接收即時通知\n" .
-			"避免重要資訊漏接\n\n" .
-			"🔹 Telegram: https://t.me/HiNetNotify/{$tg_post_id}\n" .
-			"🔹 Twitter: https://twitter.com/HiNetNotify/status/{$twitter_post_id}\n";
-
-		curl_setopt($curl, CURLOPT_POSTFIELDS, [
-			'message' => $msg,
-			'link' => "https://t.me/HiNetNotify/{$tg_post_id}"
-		]);
-	} else if (preg_match('/(骨幹|DNS)/', $hn_title)) {
-		$msg = "$hn_title\n\n" .
-			"$hn_description\n\n" .
-			"= = =  你知道嗎?  = = =\n" .
-			"此服務亦支援 Twitter 及 Telegram 喔！\n" .
-			"Twitter: https://twitter.com/HiNetNotify/status/{$twitter_post_id}\n" .
-			"Telegram: https://t.me/HiNetNotify/{$tg_post_id}\n" .
-			"趕緊加入吧！ 訊息不再漏接！\n\n";
-
-		curl_setopt($curl, CURLOPT_POSTFIELDS, [
-			'message' => $msg,
-			'link' => "https://twitter.com/HiNetNotify/status/{$twitter_post_id}"
-		]);
-	} else {
-		$msg = "$hn_title\n\n" .
-			"$hn_description\n\n" .
-			"$link";
-
-		curl_setopt($curl, CURLOPT_POSTFIELDS, [
-			'message' => $msg,
-		]);
-	}
-	if ($debug)
-		echo "Facebook Message:\n$msg\n\n";
-
-	curl_exec($curl);
-	curl_close($curl);
-
-
-	if (preg_match('/(海纜|緊急|國際)/', $hn_title)) {
-		getTelegram('forwardMessage', [
-			'from_chat_id' => '@HiNetNotify',
-			'message_id' => $tg_post_id,
-			'chat_id' => -1001343575015   // 網通人
-		]);
+	try {
+		$oauth->fetch($URL);
+		$result = $oauth->getLastResponse();
+		$result = json_decode($result, true);
+		return $result['plurk_id'];
+	} catch (Exception $e) {
+		echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
+		echo $e->lastResponse . "\n";
+		return false;
 	}
 }
 
+function send_facebook(int $id, string $body, string $img = ''): int {
+	$link = "https://x.nctu.app/posts?id=$id";
+	$msg = "#靠交$id\n\n$body\n\n$link";
 
-/*
- * Functions
- */
+	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . (empty($img) ? '/feed' : '/photos');
+   
+	$data = ['access_token' => FB_ACCESS_TOKEN];
+	if (empty($img))
+		$data['message'] = $msg;
+	else {
+		$data['url'] = "https://x.nctu.app/img/$img";
+		$data['caption'] = $msg;
+	}
 
-
-/*
- * Shorten URL
- * @param string $longUrl
- * @return string $shortUrl Shortened URL
- */
-function shortenUrl(string $longUrl): string {
 	$curl = curl_init();
 	curl_setopt_array($curl, [
-		CURLOPT_URL => 'https://tg.pe/api',
+		CURLOPT_URL => $URL,
 		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_POST => true,
-		CURLOPT_POSTFIELDS => [
-			'token' => 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-			'url' => $longUrl,
-			'prefix' => 'hn',
-			'len' => 4
-		]
+		CURLOPT_POSTFIELDS => $data
 	]);
 
 	$result = curl_exec($curl);
 	curl_close($curl);
-	$json = json_decode($result, true);
-	return 'https://tg.pe/' . $json['shortLink'];
-}
+	$result = json_decode($result, true);
 
-/*
- * Substr to meet Twitter 280 chars limit
- * @param string $origin
- * @return string $str Length 256 (or less)
- */
-function twitterSubstr(string $ori): string {
-	$len = 253; // 280 - "..."(3) - newline(1) - link(23) = 253
-	$str = "";
-	do {
-		$chr = mb_substr($ori, 0, 1);
-		$ori = mb_substr($ori, 1);
-		$clen = (strlen($chr) > 1) ? 2 : 1;
-		$len -= $clen;
-		if ($len > 0)
-			$str .= $chr;
-	} while ($len > 0);
-	return $str;
+	$id = explode('_', $result['id'])[1];
+	return $id;
 }

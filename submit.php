@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('utils.php');
-require('database.php');
+require_once('utils.php');
+require_once('database.php');
 $db = new MyDB();
 
 if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
@@ -17,7 +17,7 @@ if (isset($_POST['body'])) {
 	$body = $_POST['body'];
 	if (mb_strlen($body) < 5)
 		exit('Body too short. 文章過短');
-	if (mb_strlen($body) > 2000)
+	if (mb_strlen($body) > 1000)
 		exit('Body too long (' . mb_strlen($body) . ' chars). 文章過長');
 
 	if (isset($_FILES['img']) && $_FILES['img']['size']) {
@@ -48,8 +48,13 @@ if (isset($_POST['body'])) {
 		$img = '';
 
 	$uid = rand58(4);
-	$ip_from = ip_from($ip);
-	$author = "匿名, $ip_from";
+
+	if (isset($_SESSION['name']))
+		$author = $_SESSION['name'];
+	else {
+		$ip_from = ip_from($ip);
+		$author = "匿名, $ip_from";
+	}
 
 	$error = $db->insertSubmission($uid, $body, $img, $ip, $author);
 	if ($error[0] != '00000')
@@ -90,11 +95,17 @@ if (isset($_POST['body'])) {
 			</ol>
 
 			<h2>立即投稿</h2>
+<?php if (isset($_SESSION['name'])) { ?>
+			<div class="ts warning message">
+				<div class="header">注意：您目前為登入狀態</div>
+				<p>所有人都能看到您（<?= $_SESSION['name'] ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
+			</div>
+<?php } ?>
 			<form class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
 				<div id="body-field" class="required field">
 					<label>貼文內容</label>
 					<textarea id="body-area" name="body" rows="6" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
-					<span>字數上限：<span id="body-wc">0</span> / 1,024</span>
+					<span>字數上限：<span id="body-wc">0</span> / 870</span>
 				</div>
 				<div class="inline field">
 					<label>附加圖片</label>

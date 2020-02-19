@@ -19,7 +19,7 @@ function reject(uid) {
 }
 
 function vote(uid, type, reason) {
-	var login = document.querySelector('nav .right a');
+	var login = document.querySelector('nav .right a[data-type="login"]');
 	if (login) {
 		alert('請先登入');
 		login.click();
@@ -41,7 +41,7 @@ function vote(uid, type, reason) {
 		console.log(resp);
 		var card = document.getElementById('post-' + uid);
 		if (resp.ok) {
-			card.querySelector('#approval').innerText = resp.approval;
+			card.querySelector('#approvals').innerText = resp.approvals;
 			card.querySelector('#rejects').innerText = resp.rejects;
 		} else
 			alert("Error: " + resp.msg);

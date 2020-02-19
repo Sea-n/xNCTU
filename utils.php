@@ -91,6 +91,7 @@ function rand58(int $len = 1): string {
 
 function toHTML(string $text): string {
 	$text = htmlentities($text);
+	$text = str_replace("\n", "\n<br>", $text);
 	return $text;
 }
 

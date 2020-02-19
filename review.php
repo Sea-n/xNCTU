@@ -1,7 +1,7 @@
 <?php
 session_start();
-require('utils.php');
-require('database.php');
+require_once('utils.php');
+require_once('database.php');
 $db = new MyDB();
 
 if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
@@ -13,7 +13,7 @@ if (isset($_GET['uid'])) {
 		exit('Post not found. 文章不存在');
 	$posts = [$post];
 } else
-	$posts = $db->getSubmissions();
+	$posts = $db->getSubmissions(10);
 
 ?>
 <!DOCTYPE html>
@@ -38,8 +38,20 @@ foreach ($posts as $post) {
 	$img = "/img/{$post['img']}";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
+
+	if (isset($_GET['uid'])) {
+		if (isset($post['id'])) {
 ?>
-			<p><?= isset($_GET['uid']) ? '提醒您，為自己的貼文按「通過」會留下公開紀錄哦' : '' ?></p>
+			<div class="ts positive message">
+				<div class="header">文章已發出</div>
+				<p>您可以在 <a href="/posts?id=<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
+			</div>
+<?php } else if (isset($_SESSION['name'])) { ?>
+			<div class="ts warning message">
+				<div class="header">注意：您目前為登入狀態</div>
+				<p>提醒您，為自己的貼文按「通過」會留下公開紀錄哦</p>
+			</div>
+<?php } } ?>
 			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">
 <?php if (!empty($post['img'])) { ?>
 				<div class="image">
@@ -47,7 +59,11 @@ foreach ($posts as $post) {
 				</div>
 <?php } ?>
 				<div class="content">
+<?php if (isset($_GET['uid'])) { ?>
 					<div class="header">貼文編號 <?= $uid ?></div>
+<?php } else { ?>
+					<a class="header" href="?uid=<?= $uid ?>">貼文編號 <?= $uid ?></a>
+<?php } ?>
 					<p><?= $body ?></p>
 				</div>
 				<div class="extra content">
@@ -56,10 +72,12 @@ foreach ($posts as $post) {
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>
+<?php if (!isset($post['id'])) { ?>
 				<div class="ts fluid bottom attached large buttons">
-					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approval"><?= $post['approval'] ?></span> 票)</button>
+					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approvals"><?= $post['approvals'] ?></span> 票)</button>
 					<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
 				</div>
+<?php } ?>
 			</div>
 <?php } ?>
 		</div>

@@ -19,10 +19,10 @@ function checkForm() {
 	var len = bodyArea.value.length;
 	bodyWc.innerText = len;
 
-	if (len > 1024) {
+	if (len > 870) {
 		bodyField.classList.add('error');
 		submit.classList.add('disabled');
-	} else if (len > 900)
+	} else if (len > 690)
 		bodyField.classList.add('warning');
 	else if (len < 10)
 		submit.classList.add('disabled');
