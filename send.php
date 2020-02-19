@@ -11,17 +11,34 @@ if (!($post = $db->getPostReady()))
 $id = $post['id'];
 $body = $post['body'];
 $img = $post['img'];
+$link = "https://x.nctu.app/posts?id=$id";
 
-$tg = send_telegram($id, $body, $img);
-$plurk = send_plurk($id, $body, $img);
-$twitter = send_twitter($id, $body, $img);
-$fb = send_facebook($id, $body, $img);
+$sns = [
+	'Telegram' => 'telegram',
+	'Plurk' => 'plurk',
+	'Twitter' => 'twitter',
+	'Facebook' => 'facebook',
+];
+foreach ($sns as $name => $key) {
+	try {
+		$func = "send_$key";
+		$pid = "{$key}_id";
+		if (isset($post["{$key}_id"]) && $post["{$key}_id"] > 0)
+			continue;
 
-$db->updatePostSns($id, $tg, $plurk, $twitter, $fb);
+		$pid = $func($id, $body, $img);
+
+		if ($pid > 0)
+			$db->updatePostSns($id, $key, $pid);
+	} catch (Exception $e) {
+		echo "Send $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
+		echo $e->lastResponse . "\n\n";
+	}
+}
 
 
 function send_telegram(int $id, string $body, string $img = ''): int {
-	$link = "https://x.nctu.app/posts?id=$id";
+	global $link;
 	$msg = "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
 
 	if (empty($img))
@@ -45,7 +62,7 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 }
 
 function send_twitter(int $id, string $body, string $img = ''): int {
-	$link = "https://x.nctu.app/posts?id=$id";
+	global $link;
 	$msg = "#靠交$id\n\n$body";
 	if (strlen($msg) > 250)
 		$msg = substr($msg, 0, 250) . '...';
@@ -55,7 +72,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 		$nonce     = md5(time());
 		$timestamp = time();
 
-		$URL = 'https://api.twitter.com/1.1/media/upload.json?media_category=tweet_image';
+		$URL = 'https://upload.twitter.com/1.1/media/upload.json?media_category=tweet_image';
 
 		$oauth = new OAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
 		$oauth->enableDebug();
@@ -145,7 +162,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 }
 
 function send_plurk(int $id, string $body, string $img = ''): int {
-	$link = "https://x.nctu.app/posts?id=$id";
+	global $link;
 
 	$msg = empty($img) ? '' : "https://x.nctu.app/img/$img\n";
 	$msg .= "#靠交$id\n$body";
@@ -164,8 +181,6 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 		'qualifier' => 'says',
 		'lang' => 'tr_ch',
 	]);
-
-	var_dump($URL);
 
 	$oauth = new OAuth(PLURK_CONSUMER_KEY, PLURK_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
 	$oauth->enableDebug();
@@ -187,7 +202,7 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 }
 
 function send_facebook(int $id, string $body, string $img = ''): int {
-	$link = "https://x.nctu.app/posts?id=$id";
+	global $link;
 	$msg = "#靠交$id\n\n$body\n\n$link";
 
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . (empty($img) ? '/feed' : '/photos');
@@ -211,6 +226,5 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	curl_close($curl);
 	$result = json_decode($result, true);
 
-	$id = explode('_', $result['id'])[1];
-	return $id;
+	return $result['id'];
 }

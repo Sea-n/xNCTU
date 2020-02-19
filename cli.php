@@ -40,10 +40,10 @@ case 'build':
 		'author TEXT NOT NULL, ' .
 		"approvers TEXT DEFAULT '', " .
 		"rejecters TEXT DEFAULT '', " .
-		'telegram_id INTEGER UNIQUE, ' .
-		'plurk_id INTEGER UNIQUE, ' .
-		'twitter_id INTEGER UNIQUE, ' .
-		'facebook_id INTEGER UNIQUE, ' .
+		'telegram_id INTEGER DEFAULT 0, ' .
+		'plurk_id INTEGER DEFAULT 0, ' .
+		'twitter_id INTEGER DEFAULT 0, ' .
+		'facebook_id INTEGER DEFAULT 0, ' .
 		"submitted_at DATETIME," .
 		"deleted_at DATETIME," .
 		"created_at DATETIME DEFAULT (datetime('now','localtime')))";

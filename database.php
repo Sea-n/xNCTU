@@ -49,9 +49,16 @@ class MyDB {
 		$stmt->execute();
 
 		$results = [];
-		while ($limit-- && $item = $stmt->fetch())
-			if (!isset($item['id']) && !isset($item['deleted_at']))
-				$results[] = $item;
+		while ($item = $stmt->fetch()) {
+			if (isset($item['id']))
+				continue;
+
+			if (isset($item['deleted_at']))
+				continue;
+
+			$results[] = $item;
+			$limit--;
+		}
 
 		return $results;
 	}
@@ -141,7 +148,7 @@ class MyDB {
 		return $results;
 	}
 
-	private function submissionEligibe(array $item) {
+	private function isSubmissionEligible(array $item) {
 		$dt = time() - strtotime($item['created_at']);
 
 		/* Rule for Logged-in users */
@@ -213,15 +220,27 @@ class MyDB {
 	}
 
 	public function getPostReady() {
+		/* Check undone post */
+		$posts = $this->getPosts(1);
+		if (isset($posts[0])
+		&& ($posts[0]['telegram_id'] <= 0
+		 || $posts[0]['plurk_id']    <= 0
+		 || $posts[0]['twitter_id']  <= 0
+		 || $posts[0]['facebook_id'] <= 0))
+		 return $posts[0];
+		unset($posts);
+
+		/* Get all pending submissions */
 		$submissions = $this->getSubmissions(0);
 
 		foreach ($submissions as $item) {
-			if ($this->submissionEligibe($item)) {
+			if ($this->isSubmissionEligible($item)) {
 				$post = $item;
 				break;
 			}
 		}
 
+		/* No eligible pending submission */
 		if (!isset($post))
 			return false;
 
@@ -256,15 +275,12 @@ class MyDB {
 		return $post;
 	}
 
-	public function updatePostSns(int $id, int $tg, int $plurk, int $twitter, int $fb) {
-		$sql = "UPDATE posts SET telegram_id = :tg, plurk_id = :plurk, twitter_id = :twitter, facebook_id = :fb WHERE id = :id";
+	public function updatePostSns(int $id, string $type, int $pid) {
+		$sql = "UPDATE posts SET {$type}_id = :pid WHERE id = :id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':id' => $id,
-			':tg' => $tg,
-			':plurk' => $plurk,
-			':twitter' => $twitter,
-			':fb' => $fb
+			':pid' => $pid,
 		]);
 	}
 }
