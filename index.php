@@ -16,46 +16,58 @@
 		<div class="ts container" name="main">
 			<h2 class="ts header">社群平台</h2>
 			<ul>
-				<li><a target="_blank" href="https://t.me/xNCTU"><i class="fa fa-paper-plane"></i> Telegram</a></li>
-				<li><a target="_blank" href="https://twitter.com/x_NCTU"><i class="fa fa-twitter"></i> Twitter</a></li>
-				<li><a target="_blank" href="https://www.facebook.com/xNCTU"><i class="fa fa-facebook-square"></i> Facebook</a></li>
-				<li><a target="_blank" href="https://www.plurk.com/xNCTU"><i class="fa fa-user-plus"></i> Plurk</a></li>
+				<li><a target="_blank" href="https://t.me/xNCTU"><i class="telegram icon"></i> Telegram</a></li>
+				<li><a target="_blank" href="https://twitter.com/x_NCTU"><i class="twitter icon"></i> Twitter</a></li>
+				<li><a target="_blank" href="https://www.facebook.com/xNCTU"><i class="facebook square icon"></i> Facebook</a></li>
+				<li><a target="_blank" href="https://www.plurk.com/xNCTU"><i class="talk icon"></i> Plurk</a></li>
 			</ul>
 
 			<h2 class="ts header">審文機制</h2>
 			<details class="ts accordion">
 				<summary>
 					<p><i class="dropdown icon"></i>
-					新版靠北交大 2.0 採全自動審文，人人皆可申請加入審核團隊，以下是系統判斷方式（點擊展開）</p>
+					新版靠北交大 2.0 採自助式審文，所有交大師生皆可加入審核者的行列，以下是系統判斷標準（點擊展開）</p>
 				</summary>
 				<div class="content">
-					<h4>(A) 登入具名投稿</h4>
-					<p>如在 5 分鐘內無「駁回」，免審核即自動發出</p>
-					<h4>(B) 交大 IP 位址</h4>
-					<p>使用 113 位址投稿者，達到以下三個條件即發出</p>
+					<h4>(A) 具名投稿</h4>
+					<p>如在 5 分鐘內無「駁回」，免審核即自動發出，詳細判斷條件如下：</p>
 					<ul>
-						<li>等待審核至少 10 分鐘</li>
-						<li>累積至少 2 個「通過」</li>
+						<li>等待審核至少 5 分鐘</li>
 						<li>「通過」不少於「駁回」</li>
 					</ul>
+					<h4>(B) 交大 IP 位址</h4>
+					<p>使用 113 位址投稿者，滿足以下三個條件即發出</p>
+					<ul>
+						<li>等待審核至少 10 分鐘</li>
+						<li>「通過」不少於「駁回」</li>
+						<li>拿到足夠的「通過」數<ul>
+							<li>10 分鐘至 2 小時：達到 2 個「通過」</li>
+							<li>2 至 6 小時：達到 1 個「通過」</li>
+						</ul></li>
+					</ul>
+					<p>經過 6 小時以後，只要「駁回」不多於「通過」即自動發出，意即無人審核也會發出，有效避免因為審核團隊偷懶而造成投稿卡住的情形</p>
 					<h4>(C) 使用台灣 IP 位址</h4>
+					<p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下三個條件即發出</p>
 					<ul>
 						<li>等待審核至少 30 分鐘</li>
 						<li>「通過」多於「駁回」</li>
-						<li>30 分鐘至 2 小時：達到 5 個「通過」</li>
-						<li>2 至 6 小時：達到 2 個「通過」</li>
-						<li>6 至 12 小時：達到 1 個「通過」</li>
-						<li>例外：經過 12 小時以後，只要「駁回」不多於「通過」即自動發出</li>
+						<li>拿到足夠的「通過」數<ul>
+							<li>30 分鐘至 2 小時：達到 5 個「通過」</li>
+							<li>2 至 6 小時：達到 3 個「通過」</li>
+							<li>6 至 24 小時：達到 1 個「通過」</li>
+						</ul></li>
 					</ul>
+					<p>經過 24 小時以後，只要「駁回」不多於「通過」即自動發出</p>
 					<h4>(D) 境外 IP 位址</h4>
+					<p>使用境外 IP 發文除了自動化的廣告機器人外，很可能是心虛怕用台灣 IP 位址做壞事會被抓到，因此除非通過群眾嚴厲的審核，否則一概不發出</p>
 					<ul>
 						<li>等待審核至少 60 分鐘</li>
-						<li>達到 10 個「通過」</li>
 						<li>「通過」比「駁回」多兩倍</li>
+						<li>達到 10 個「通過」</li>
 					</ul>
 
 					<h3>排程發文</h3>
-					<p>通過審核之文章將會進入發文佇列，由系統每 10 分鐘 po 出一篇至各大社群平台，如欲搶先看也可申請加入審核團隊</p>
+					<p>通過審核之文章將會進入發文佇列，在每天中午至晚上（09:00 - 24:00），由系統每 10 分鐘 po 出一篇至各大社群平台，如欲搶先看也可申請加入審核團隊</p>
 				</div>
 			</details>
 

@@ -166,15 +166,21 @@ class MyDB {
 		}
 
 		/* Rule for NCTU IP address */
-		if (substr($item['ip'], 0, 8) == '140.113.') {
+		if (substr($item['ip'], 0, 8) == '140.113.'
+		 || substr($item['ip'], 0, 9) == '2001:f18:') {
 			if ($dt < 10*60)
-				return false;
-
-			if ($item['approvals'] < 2)
 				return false;
 
 			if ($item['approvals'] < $item['rejects'])
 				return false;
+
+			if ($dt < 2*60*60) {
+				if ($item['approvals'] < 2)
+					return false;
+			} else if ($dt < 6*60*60) {
+				if ($item['approvals'] < 1)
+					return false;
+			}
 
 			return true;
 		}
@@ -184,7 +190,7 @@ class MyDB {
 			if ($dt < 30*60)  // 0 - 30min
 				return false;
 
-			if ($dt < 12*60*60) {  // 30min - 12hr
+			if ($dt < 24*60*60) {  // 30min - 24hr
 				if ($item['approvals'] <= $item['rejects'])
 					return false;
 
@@ -192,12 +198,11 @@ class MyDB {
 					if ($item['approvals'] < 5)
 						return false;
 				} else if ($dt < 6*60*60) {  // 2hr - 6hr
-					if ($item['approvals'] < 2)
+					if ($item['approvals'] < 3)
 						return false;
-				} else if ($dt < 12*60*60) {  // 6hr - 12hr
+				} else                    {  // 6hr - 24hr
 					if ($item['approvals'] < 1)
 						return false;
-
 				}
 			} else {
 				if ($item['approvals'] < $item['rejects'])

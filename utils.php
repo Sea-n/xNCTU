@@ -41,11 +41,21 @@ function ip_from(string $ip): string {
 		'140.122.' => '師大',
 		'140.124.' => '北科',
 		'140.129.' => '陽明',
+		'2001:f18:' => '交大',
+		'2001:288:e001:' => '清大',
+		'2001:288:1001:' => '台大',
 	];
 
 	foreach ($tanet as $prefix => $name)
-		if (substr($ip, 0, 8) == $prefix)
+		if (substr($ip, 0, strlen($prefix)) == $prefix)
 			return $name;
+
+
+	$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip");
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	$resp = curl_exec($curl);
+	if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立)*([^<]+?)(區網|中心)*</td></tr>#', $resp, $matches))
+		return $matches[2];
 
 	$curl = curl_init('https://rms.twnic.net.tw/query_whois1.php');
 	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip");
@@ -53,8 +63,10 @@ function ip_from(string $ip): string {
 	$resp = curl_exec($curl);
 	if (preg_match('#<tr><td>Chinese Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches))
 		return $matches[1];
-	else
-		return "台灣";
+	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches))
+		return $matches[1];
+
+	return "台灣";
 }
 
 function ip_mask(string $ip): string {

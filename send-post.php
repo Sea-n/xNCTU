@@ -42,8 +42,9 @@ foreach ($sns as $name => $key) {
 
 function send_telegram(int $id, string $body, string $img = ''): int {
 	global $link;
-	$msg = "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
 
+	/* Send to @xNCTU */
+	$msg = "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
 	if (empty($img))
 		$result = sendMsg([
 			'bot' => 'xNCTU',
@@ -61,7 +62,28 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 			'parse_mode' => 'HTML',
 		]);
 
-	return $result['result']['message_id'];
+	$tg_id = $result['result']['message_id'];
+
+	/* Send to @CowBeiNCTU */
+	$msg = "<a href='https://t.me/xNCTU/$tg_id'>#靠交$id</a>\n\n" . enHTML($body);
+	if (empty($img))
+		$result = sendMsg([
+			'bot' => 'xNCTU',
+			'chat_id' => '@CowBeiNCTU',
+			'text' => $msg,
+			'parse_mode' => 'HTML',
+			'disable_web_page_preview' => true
+		]);
+	else
+		$result = getTelegram('sendPhoto', [
+			'bot' => 'xNCTU',
+			'chat_id' => '@CowBeiNCTU',
+			'photo' => "https://x.nctu.app/img/{$img}",
+			'caption' => $msg,
+			'parse_mode' => 'HTML',
+		]);
+
+	return $tg_id;
 }
 
 function send_twitter(int $id, string $body, string $img = ''): int {

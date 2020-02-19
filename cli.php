@@ -56,12 +56,13 @@ case 'build':
 
 	$sql = 'CREATE TABLE users (' .
 		'name TEXT, ' .
-		'nctu_id TEXT, ' .
+		'nctu_id TEXT NOT NULL, ' .
 		'nctu_mail TEXT, ' .
 		'tg_id INTEGER, ' .
 		'tg_name TEXT, ' .
 		'tg_username TEXT, ' .
 		'tg_photo TEXT, ' .
+		"deleted_at DATETIME," .
 		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
