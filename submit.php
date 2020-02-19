@@ -49,14 +49,18 @@ if (isset($_POST['body'])) {
 
 	$uid = rand58(4);
 
-	if (isset($_SESSION['name']))
-		$author = $_SESSION['name'];
-	else {
+	if (isset($_SESSION['name'])) {
+		$author_name = $_SESSION['name'];
+		$author_id = $_SESSION['nctu_id'];
+		$author_photo = $_SESSION['photo'] ?? '';
+	} else {
 		$ip_from = ip_from($ip);
-		$author = "匿名, $ip_from";
+		$author_name = "匿名, $ip_from";
+		$author_id = '';
+		$author_photo = '';
 	}
 
-	$error = $db->insertSubmission($uid, $body, $img, $ip, $author);
+	$error = $db->insertSubmission($uid, $body, $img, $ip, $author_name, $author_id, $author_photo);
 	if ($error[0] != '00000')
 		exit("Database error {$error[0]}, {$error[1]}, {$error[2]}. 資料庫發生錯誤");
 } else {
@@ -76,7 +80,7 @@ if (isset($_POST['body'])) {
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">文章投稿</h1>
-				<div class="description">靠交 2.0</div>
+				<div class="description">靠北交大 2.0</div>
 			</div>
 		</header>
 		<div class="ts container" name="main">
@@ -85,7 +89,6 @@ if (isset($_POST['body'])) {
 			<p>文章臨時代碼：<code><?= $uid ?></code>，您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態</p>
 			<p>但提醒您，為自己的貼文按「通過」或「駁回」均會留下公開紀錄</p>
 <?php } else { ?>
-			<!-- Note: repeated in /index -->
 			<h2>投稿規則</h2>
 			<ol>
 				<li>攻擊性投稿內容不能含有姓名、暱稱等各種明顯洩漏對方身分的個人資料，請把關鍵字自行碼掉。
@@ -117,8 +120,7 @@ if (isset($_POST['body'])) {
 					<span>&nbsp; <?= $captcha ?></span>
 				</div>
 				<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
-				<p>請注意：您使用的網路服務商（<?= ip_from($ip) ?>）及部分 IP 位址 (<?= $ip_masked ?>) 將會永久保留於系統後台，所有已登入的審核者均可見。</p>
-				<input type="hidden" name="ip" value="<?= $ip_masked ?>">
+				<p><small>請注意：一但送出投稿後，所有已登入的交大人都能看見您使用的網路服務商（<?= ip_from($ip) ?>）及部分 IP 位址 (<?= $ip_masked ?>) 。詳請見 <a href="/policies">隱私權政策</a>。</small></p>
 			</form>
 <?php } ?>
 		</div>

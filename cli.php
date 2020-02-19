@@ -15,7 +15,9 @@ case 'build':
 		'body TEXT NOT NULL, ' .
 		"img TEXT DEFAULT '', " .
 		'ip TEXT NOT NULL, ' .
-		'author TEXT NOT NULL, ' .
+		'author_name TEXT NOT NULL, ' .
+		"author_id TEXT DEFAULT '', " .
+		"author_photo TEXT DEFAULT '', " .
 		'approvals INTEGER DEFAULT 0, ' .
 		'rejects INTEGER DEFAULT 0, ' .
 		"deleted_at DATETIME," .
@@ -37,7 +39,9 @@ case 'build':
 		'body TEXT NOT NULL, ' .
 		"img TEXT DEFAULT '', " .
 		'ip TEXT NOT NULL, ' .
-		'author TEXT NOT NULL, ' .
+		'author_name TEXT NOT NULL, ' .
+		"author_id TEXT DEFAULT '', " .
+		"author_photo TEXT DEFAULT '', " .
 		"approvers TEXT DEFAULT '', " .
 		"rejecters TEXT DEFAULT '', " .
 		'telegram_id INTEGER DEFAULT 0, ' .
@@ -49,12 +53,24 @@ case 'build':
 		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
+
+	$sql = 'CREATE TABLE users (' .
+		'name TEXT, ' .
+		'nctu_id TEXT, ' .
+		'nctu_mail TEXT, ' .
+		'tg_id INTEGER, ' .
+		'tg_name TEXT, ' .
+		'tg_username TEXT, ' .
+		'tg_photo TEXT, ' .
+		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
+	$stmt = $db->pdo->prepare($sql);
+	$stmt->execute();
 	break;
 
 case 'dump':
 	$data = [];
 
-	$tables = ['submissions', 'votes', 'posts'];
+	$tables = ['submissions', 'votes', 'posts', 'users'];
 	foreach ($tables as $table) {
 		$sql = "SELECT * FROM $table";
 		$stmt = $db->pdo->prepare($sql);

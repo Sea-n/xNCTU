@@ -19,7 +19,25 @@ if (isset($_GET['uid'])) {
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php $TITLE = '貼文審核'; include('includes/head.php'); ?>
+<?php
+$TITLE = '貼文審核';
+if (isset($post)) {
+	$hashtag = "待審貼文 {$post['uid']}";
+
+	$DESC = $post['body'];
+	$TITLE = "$hashtag $DESC";
+
+	if (mb_strlen($TITLE) > 40)
+		$TITLE = mb_substr($TITLE, 0, 40) . '...';
+
+	if (mb_strlen($DESC) > 150)
+		$DESC = mb_substr($DESC, 0, 150) . '...';
+
+	if ($post['img'])
+		$IMG = $post['img'];
+}
+include('includes/head.php');
+?>
 		<script src="/assets/js/review.js"></script>
 	</head>
 	<body>
@@ -27,14 +45,14 @@ if (isset($_GET['uid'])) {
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">貼文審核</h1>
-				<div class="description">靠交 2.0</div>
+				<div class="description">靠北交大 2.0</div>
 			</div>
 		</header>
 		<div class="ts container" name="main">
 <?php
 foreach ($posts as $post) {
 	$uid = $post['uid'];
-	$author = $post['author'];
+	$author_name = $post['author_name'];
 	$img = "/img/{$post['img']}";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
@@ -62,13 +80,20 @@ foreach ($posts as $post) {
 <?php if (isset($_GET['uid'])) { ?>
 					<div class="header">貼文編號 <?= $uid ?></div>
 <?php } else { ?>
-					<a class="header" href="?uid=<?= $uid ?>">貼文編號 <?= $uid ?></a>
+					<div class="header"> <a href="?uid=<?= $uid ?>">貼文編號 <?= $uid ?></a></div>
 <?php } ?>
 					<p><?= $body ?></p>
 				</div>
 				<div class="extra content">
+<?php if (isset($_SESSION['name'])) { ?>
+					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
+<?php }
+$photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
+if (!empty($post['author_photo']))
+	$photo = $post['author_photo'];
+?>
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg"> <?= $author ?></img>
+						<img class="ts circular avatar image" src="<?= $photo ?>"> <?= $author_name ?></img>
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>

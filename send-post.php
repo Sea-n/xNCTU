@@ -1,4 +1,7 @@
 <?php
+if (!isset($argv))
+	exit('Please run from command line.');
+
 require_once('utils.php');
 require_once('database.php');
 require_once('config.php');

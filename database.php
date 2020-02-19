@@ -1,4 +1,5 @@
 <?php
+require_once('utils.php');
 class MyDB {
 	public $pdo;
 
@@ -8,7 +9,7 @@ class MyDB {
 	}
 
 	/* Return error info or ['00000', null, null] on success */
-	public function insertSubmission(string $uid, string $body, string $img, string $ip, string $author): array {
+	public function insertSubmission(string $uid, string $body, string $img, string $ip, string $author_name, $author_id, $author_photo): array {
 		if (strlen($uid) < 3)
 			return ['SEAN', 0, 'UID too short.'];
 
@@ -21,14 +22,16 @@ class MyDB {
 		if (!empty($img) && !preg_match('#^[0-9a-zA-Z]{3,5}\.[a-z]{3}$#', $img))
 			return ['SEAN', 0, 'Image invaild.'];
 
-		$sql = "INSERT INTO submissions(uid, body, img, ip, author) VALUES (:uid, :body, :img, :ip, :author)";
+		$sql = "INSERT INTO submissions(uid, body, img, ip, author_name, author_id, author_photo) VALUES (:uid, :body, :img, :ip, :author_name, :author_id, :author_photo)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
 			':body' => $body,
 			':img' => $img,
 			':ip' => $ip,
-			':author' => $author,
+			':author_name' => $author_name,
+			':author_id' => $author_id,
+			':author_photo' => $author_photo,
 		]);
 
 		return $stmt->errorInfo();
@@ -152,7 +155,7 @@ class MyDB {
 		$dt = time() - strtotime($item['created_at']);
 
 		/* Rule for Logged-in users */
-		if (strpos($item['author'], '匿名') === false) {
+		if (!empty($item['author_id'])) {
 			if ($dt < 5*60)
 				return false;
 
@@ -177,7 +180,7 @@ class MyDB {
 		}
 
 		/* Rule for Taiwan IP address */
-		if (strpos($item['author'], '境外') === false) {
+		if (strpos($item['author_name'], '境外') === false) {
 			if ($dt < 30*60)  // 0 - 30min
 				return false;
 
@@ -250,13 +253,15 @@ class MyDB {
 		$rejecters = $this->getVotersBySubmissions($post['uid'], -1);
 		$rejecters = join(', ', $rejecters);
 
-		$sql = "INSERT INTO posts(body, img, ip, author, approvers, rejecters, submitted_at) VALUES (:body, :img, :ip, :author, :approvers, :rejecters, :submitted_at)";
+		$sql = "INSERT INTO posts(body, img, ip, author_name, author_id, author_photo, approvers, rejecters, submitted_at) VALUES (:body, :img, :ip, :author_name, :author_id, :author_photo, :approvers, :rejecters, :submitted_at)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':body' => $post['body'],
 			':img' => $post['img'],
 			':ip' => $post['ip'],
-			':author' => $post['author'],
+			':author_name' => $post['author_name'],
+			':author_id' => $post['author_id'],
+			':author_photo' => $post['author_photo'],
 			':approvers' => $approvers,
 			':rejecters' => $rejecters,
 			':submitted_at' => $post['created_at']
@@ -281,6 +286,48 @@ class MyDB {
 		$stmt->execute([
 			':id' => $id,
 			':pid' => $pid,
+		]);
+	}
+
+	public function insertUserNctu(string $nctu_id, string $mail) {
+		$sql = "SELECT nctu_id FROM users WHERE nctu_id = :nctu_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':nctu_id' => $nctu_id]);
+
+		if ($item = $stmt->fetch())
+			return;
+
+		$name = idToDep($nctu_id);
+
+		$sql = "INSERT INTO users(name, nctu_id, nctu_mail) VALUES (:name, :nctu_id, :mail)";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':name' => $name,
+			':nctu_id' => $nctu_id,
+			':mail' => $mail
+		]);
+	}
+
+	public function insertUserTg(string $nctu_id, array $tg) {
+		$sql = "SELECT nctu_id FROM users WHERE nctu_id = :nctu_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':nctu_id' => $nctu_id]);
+
+		if (!$stmt->fetch())
+			return;
+
+		$name = $tg['first_name'];
+		if (isset($tg['last_name']))
+			$name .= ' ' . $tg['last_name'];
+
+		$sql = "UPDATE users SET (tg_id, tg_name, tg_username, tg_photo) = (:tg_id, :name, :username, :photo) WHERE nctu_id = :nctu_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':nctu_id' => $nctu_id,
+			':tg_id' => $tg['id'],
+			':name' => $name,
+			':username' => $tg['username'] ?? '',
+			':photo' => $tg['photo_url'] ?? '',
 		]);
 	}
 }

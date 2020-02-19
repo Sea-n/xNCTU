@@ -22,8 +22,14 @@ foreach ($items as $href => $name) {
 }
 ?>
 		<div class="right fitted item">
-<?php if (isset($_SESSION['name'])) { ?>
-			<img class="ts mini circular image" src="https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg">&nbsp;<b><?= $_SESSION['name'] ?></b>
+<?php
+if (isset($_SESSION['name'])) {
+	$photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
+	if (isset($_SESSION['photo']) && !empty($_SESSION['photo']))
+		$photo = $_SESSION['photo'];
+?>
+			<img class="ts mini circular image" src="<?= $photo ?>">
+			&nbsp;<b><?= $_SESSION['name'] ?></b>
 			<a class="item" href="/logout" data-type="logout">Logout</a>
 <?php } else { ?>
 			<a class="item" href="/login-nctu" data-type="login">Login</a>

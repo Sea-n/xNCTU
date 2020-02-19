@@ -33,4 +33,4 @@ function checkForm() {
 		captchaField.classList.add('error');
 }
 
-window.onload = init;
+window.addEventListener("load", init);

@@ -10,3 +10,11 @@ window.addEventListener("scroll", function () {
 		body.style.top = "0px";
 	}
 });
+
+
+function init() {
+	var a = ts('.ts.dropdown:not(.basic)').dropdown();
+	console.log(a);
+}
+
+window.addEventListener("load", init);
