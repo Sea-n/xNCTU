@@ -128,6 +128,7 @@ if (!empty($post['author_photo']))
 <?php }
 if (isset($_GET['uid']) && isset($USER)) {
 	$votes = $db->getVotersBySubmissions($post['uid'], 0);
+	if (count($votes) > 0) {
 ?>
 			<table class="ts table">
 				<thead>
@@ -155,7 +156,7 @@ if (isset($_GET['uid']) && isset($USER)) {
 <?php } ?>
 				</tbody>
 			</table>
-<?php } ?>
+<?php } } ?>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>
