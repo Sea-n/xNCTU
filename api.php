@@ -18,7 +18,7 @@ switch ($action) {
 		
 		$uid = $_POST['uid'] ?? '';
 
-		$voter = idToDep($_SESSION['nctu_id']);
+		$voter = $_SESSION['nctu_id'];
 		
 		$vote = $_POST['vote'] ?? 0;
 		if ($vote != 1 && $vote != -1)

@@ -16,10 +16,15 @@ if (isset($_GET['uid'])) {
 		exit('Post not found. 文章不存在');
 	$posts = [$post];
 
-} else if (isset($USER) && !isset($_GET['all'])) {
-	$posts = $db->getSubmissionsUser($USER['nctu_id'], 10);
+} else if (isset($USER)) {
+	$posts = $db->getSubmissionsByVoter($USER['nctu_id'], 10);
 } else
 	$posts = $db->getSubmissions(10);
+
+if (!isset($_GET['all']))
+	$posts = array_filter($posts, function($item) {
+		return !isset($item['vote']);
+	});
 
 ?>
 <!DOCTYPE html>
@@ -113,13 +118,43 @@ if (!empty($post['author_photo']))
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>
-<?php if (!isset($post['id'])) { ?>
+<?php if (!isset($post['id']) && !isset($post['vote'])) { ?>
 				<div class="ts fluid bottom attached large buttons">
 					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approvals"><?= $post['approvals'] ?></span> 票)</button>
 					<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
 				</div>
 <?php } ?>
 			</div>
+<?php }
+if (isset($_GET['uid']) && isset($USER)) {
+	$votes = $db->getVotersBySubmissions($post['uid'], 0);
+?>
+			<table class="ts table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th></th>
+						<th>暱稱</th>
+						<th>理由</th>
+					</tr>
+				</thead>
+				<tbody>
+<?php
+	foreach ($votes as $i => $vote) {
+		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
+		$id = $vote['voter'];
+		$user = $db->getUserByNctu($id);
+		$name = $user['name'];
+?>
+					<tr>
+						<td><?= $i+1 ?></td>
+						<td><?= $type ?></td>
+						<td><?= $name ?></td>
+						<td><?= $vote['reason'] ?></td>
+					</tr>
+<?php } ?>
+				</tbody>
+			</table>
 <?php } ?>
 		</div>
 <?php include('includes/footer.php'); ?>

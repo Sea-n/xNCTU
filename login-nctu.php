@@ -46,7 +46,9 @@ if (!isset($data['username']))
 if (!isset($data['email']))
 	fail('No email from NCTU.', 5);
 
-$db->insertUserNctu($data['username'], $data['email']);
+$USER = $db->getUserByNctu($data['username']);
+if (!$USER)
+	$db->insertUserNctu($data['username'], $data['email']);
 
 $_SESSION['nctu_id'] = $data['username'];
 

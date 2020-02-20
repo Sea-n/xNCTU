@@ -42,9 +42,9 @@ if (isset($USER['name'])) {
 ?>
 			<img class="ts mini circular image" src="<?= $photo ?>">
 			&nbsp;<b><?= $USER['name'] ?></b>&nbsp;
-			<a class="item" href="/logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);" data-type="login" data-type="logout">Logout</a>
+			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Logout</a>
 <?php } else { ?>
-			<a class="item" href="/login-nctu" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);" data-type="login">Login</a>
+			<a class="item" href="/login-nctu" data-type="login" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Login</a>
 <?php } ?>
 		</div>
 	</div>

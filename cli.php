@@ -36,14 +36,13 @@ case 'build':
 
 	$sql = 'CREATE TABLE posts (' .
 		'id INTEGER PRIMARY KEY AUTOINCREMENT, ' .
+		'uid TEXT NOT NULL, ' .
 		'body TEXT NOT NULL, ' .
 		"img TEXT DEFAULT '', " .
 		'ip TEXT NOT NULL, ' .
 		'author_name TEXT NOT NULL, ' .
 		"author_id TEXT DEFAULT '', " .
 		"author_photo TEXT DEFAULT '', " .
-		"approvers TEXT DEFAULT '', " .
-		"rejecters TEXT DEFAULT '', " .
 		'telegram_id INTEGER DEFAULT 0, ' .
 		'plurk_id INTEGER DEFAULT 0, ' .
 		'twitter_id INTEGER DEFAULT 0, ' .

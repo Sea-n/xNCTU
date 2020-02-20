@@ -67,13 +67,13 @@ class MyDB {
 		return $results;
 	}
 
-	public function getSubmissionsUser(string $nctu_id, int $limit) {
+	public function getSubmissionsByVoter(string $nctu_id, int $limit) {
 		if ($limit == 0) $limit = 9487;
 
-		$votes = $this->getVotesByUser($nctu_id);
-		$voted = [];
-		foreach ($votes as $vote)
-			$voted[] = $vote['uid'];
+		$data = $this->getVotesByUser($nctu_id);
+		$votes = [];
+		foreach ($data as $item)
+			$votes[ $item['uid'] ] = $item['vote'];
 
 		$sql = "SELECT * FROM submissions";
 		$stmt = $this->pdo->prepare($sql);
@@ -87,8 +87,8 @@ class MyDB {
 			if (isset($item['deleted_at']))
 				continue;
 
-			if (in_array($item['uid'], $voted))
-				continue;
+			if (isset($votes[ $item['uid'] ]))
+				$item['vote'] = $votes[ $item['uid'] ];
 
 			$results[] = $item;
 			$limit--;
@@ -171,20 +171,14 @@ class MyDB {
 		return $result;
 	}
 
-	private function getVotersBySubmissions(string $uid, int $vote) {
-		if ($vote != 1 && $vote != -1)
-			return false;
-
-		$sql = "SELECT voter FROM votes WHERE uid = :uid AND vote = :vote";
+	public function getVotersBySubmissions(string $uid) {
+		$sql = "SELECT * FROM votes WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([
-			':uid' => $uid,
-			':vote' => $vote
-		]);
+		$stmt->execute([':uid' => $uid]);
 
 		$results = [];
 		while ($item = $stmt->fetch())
-			$results[] = $item['voter'];
+			$results[] = $item;
 
 		return $results;
 	}
@@ -302,23 +296,16 @@ class MyDB {
 		if (!isset($post))
 			return false;
 
-		$approvers = $this->getVotersBySubmissions($post['uid'], 1);
-		$approvers = join(', ', $approvers);
-
-		$rejecters = $this->getVotersBySubmissions($post['uid'], -1);
-		$rejecters = join(', ', $rejecters);
-
-		$sql = "INSERT INTO posts(body, img, ip, author_name, author_id, author_photo, approvers, rejecters, submitted_at) VALUES (:body, :img, :ip, :author_name, :author_id, :author_photo, :approvers, :rejecters, :submitted_at)";
+		$sql = "INSERT INTO posts(uid, body, img, ip, author_name, author_id, author_photo, submitted_at) VALUES (:uid, :body, :img, :ip, :author_name, :author_id, :author_photo, :submitted_at)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
+			':uid' => $post['uid'],
 			':body' => $post['body'],
 			':img' => $post['img'],
 			':ip' => $post['ip'],
 			':author_name' => $post['author_name'],
 			':author_id' => $post['author_id'],
 			':author_photo' => $post['author_photo'],
-			':approvers' => $approvers,
-			':rejecters' => $rejecters,
 			':submitted_at' => $post['created_at']
 		]);
 

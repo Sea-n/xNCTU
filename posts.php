@@ -83,12 +83,6 @@ $plurk = base_convert($post['plurk_id'], 10, 36);
 					<p>Plurk: <a target="_blank" href="https://www.plurk.com/p/<?= $plurk ?>">@xNCTU/<?= $plurk ?></a></p>
 					<p>Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/<?= $post['twitter_id'] ?>">@x_NCTU/<?= $post['twitter_id'] ?></a></p>
 <?php
-if (isset($USER)) {
-	if (!empty($post['approvers']))
-		echo "<p>表決通過：{$post['approvers']}</p>\n";
-	if (!empty($post['rejectors']))
-		echo "<p>表決駁回：{$post['rejectors']}</p>\n";
-}
 }
 
 $photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
@@ -101,6 +95,36 @@ if (!empty($author['tg_photo']))
 					<span>投稿時間：<?= $time ?></span>
 				</div>
 			</div>
+<?php }
+if (isset($_GET['id']) && isset($USER)) {
+	$votes = $db->getVotersBySubmissions($post['uid'], 0);
+?>
+			<table class="ts table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th></th>
+						<th>暱稱</th>
+						<th>理由</th>
+					</tr>
+				</thead>
+				<tbody>
+<?php
+	foreach ($votes as $i => $vote) {
+		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
+		$id = $vote['voter'];
+		$user = $db->getUserByNctu($id);
+		$name = $user['name'];
+?>
+					<tr>
+						<td><?= $i+1 ?></td>
+						<td><?= $type ?></td>
+						<td><?= $name ?></td>
+						<td><?= $vote['reason'] ?></td>
+					</tr>
+<?php } ?>
+				</tbody>
+			</table>
 <?php } ?>
 		</div>
 <?php include('includes/footer.php'); ?>
