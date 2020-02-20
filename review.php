@@ -14,14 +14,24 @@ if (isset($_GET['uid'])) {
 	$uid = $_GET['uid'];
 	if (!($post = $db->getSubmissionByUid($uid)))
 		exit('Post not found. 文章不存在');
+
+	if (isset($USER)) {
+		$votes = $db->getVotesByUser($USER['nctu_id']);
+		foreach ($votes as $vote)
+			if ($vote['uid'] == $uid)
+				$post['vote'] = $vote['vote'];
+	}
+
 	$posts = [$post];
 
-} else if (isset($USER)) {
-	$posts = $db->getSubmissionsByVoter($USER['nctu_id'], 10);
-} else
-	$posts = $db->getSubmissions(10);
+} else {
+	if (isset($USER))
+		$posts = $db->getSubmissionsByVoter($USER['nctu_id'], 10);
+	else
+		$posts = $db->getSubmissions(10);
+}
 
-if (!isset($_GET['all']))
+if (!isset($_GET['uid']) && !isset($_GET['all']))
 	$posts = array_filter($posts, function($item) {
 		return !isset($item['vote']);
 	});
@@ -85,7 +95,7 @@ foreach ($posts as $post) {
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/posts?id=<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
 			</div>
-<?php } else if (isset($USER)) { ?>
+<?php } else if (isset($USER) && !isset($post['vote'])) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
 				<p>提醒您，為自己的貼文按「通過」會留下公開紀錄哦</p>
