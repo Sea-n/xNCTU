@@ -14,18 +14,6 @@ try {
 	exit($e->getMessage());
 }
 
-
-$_SESSION['tg_data'] = $auth_data;
-$_SESSION['tg_id'] = $auth_data['id'];
-if (isset($auth_data['photo_url']))
-	$_SESSION['photo'] = $auth_data['photo_url'];
-
-$_SESSION['name'] = $auth_data['first_name'];
-if (isset($auth_data['last_name']))
-	$_SESSION['name'] .= ' ' . $auth_data['last_name'];
-if (strlen($_SESSION['name']) > 20)
-	$_SESSION['name'] = substr($_SESSION['name'], 0, 15) . '...';
-
 $db->insertUserTg($_SESSION['nctu_id'], $auth_data);
 
 $msg = "🎉 連結成功！\n\n將來有新投稿時，您將會收到推播，並可用 Telegram 內的按鈕審核貼文。";

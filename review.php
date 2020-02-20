@@ -34,7 +34,7 @@ if (isset($post)) {
 		$DESC = mb_substr($DESC, 0, 150) . '...';
 
 	if ($post['img'])
-		$IMG = $post['img'];
+		$IMG = "/img/{$post['img']}";
 }
 include('includes/head.php');
 ?>
@@ -64,7 +64,7 @@ foreach ($posts as $post) {
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/posts?id=<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
 			</div>
-<?php } else if (isset($_SESSION['name'])) { ?>
+<?php } else if (isset($USER['name'])) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
 				<p>提醒您，為自己的貼文按「通過」會留下公開紀錄哦</p>
@@ -85,7 +85,7 @@ foreach ($posts as $post) {
 					<p><?= $body ?></p>
 				</div>
 				<div class="extra content">
-<?php if (isset($_SESSION['name'])) { ?>
+<?php if (isset($USER)) { ?>
 					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
 <?php }
 $photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';

@@ -30,7 +30,7 @@ if (isset($post)) {
 		$DESC = mb_substr($DESC, 0, 150) . '...';
 
 	if ($post['img'])
-		$IMG = $post['img'];
+		$IMG = "/img/{$post['img']}";
 }
 include('includes/head.php');
 ?>
@@ -48,10 +48,16 @@ include('includes/head.php');
 <?php
 foreach ($posts as $post) {
 	$id = $post['id'];
-	$author_name = $post['author_name'];
 	$img = "/img/{$post['img']}";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['submitted_at']);
+
+	unset($author);
+	if (!empty($post['author_id'])) {
+		$author = $db->getUserByNctu($post['author_id']);
+		$author_name = $author['name'];
+	} else
+		$author_name = $post['author_name'];
 ?>
 			<div class="ts card" id="post-<?= $id ?>" style="margin-bottom: 42px;">
 <?php if (!empty($post['img'])) { ?>
@@ -77,7 +83,7 @@ $plurk = base_convert($post['plurk_id'], 10, 36);
 					<p>Plurk: <a target="_blank" href="https://www.plurk.com/p/<?= $plurk ?>">@xNCTU/<?= $plurk ?></a></p>
 					<p>Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/<?= $post['twitter_id'] ?>">@x_NCTU/<?= $post['twitter_id'] ?></a></p>
 <?php
-if (isset($_SESSION['name'])) {
+if (isset($USER)) {
 	if (!empty($post['approvers']))
 		echo "<p>表決通過：{$post['approvers']}</p>\n";
 	if (!empty($post['rejectors']))
@@ -86,8 +92,8 @@ if (isset($_SESSION['name'])) {
 }
 
 $photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
-if (!empty($post['author_photo']))
-	$photo = $post['author_photo'];
+if (!empty($author['tg_photo']))
+	$photo = $author['tg_photo'];
 ?>
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $photo ?>"> <?= $author_name ?></img>

@@ -9,6 +9,9 @@ if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
 
 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
 
+if (isset($_SESSION['nctu_id']))
+	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
+
 if (isset($_POST['body'])) {
 	$captcha = trim($_POST['captcha'] ?? 'X');
 	if ($captcha != '交大竹湖')
@@ -49,10 +52,10 @@ if (isset($_POST['body'])) {
 
 	$uid = rand58(4);
 
-	if (isset($_SESSION['name'])) {
-		$author_name = $_SESSION['name'];
-		$author_id = $_SESSION['nctu_id'];
-		$author_photo = $_SESSION['photo'] ?? '';
+	if (isset($USER)) {
+		$author_name = $USER['name'];
+		$author_id = $USER['nctu_id'];
+		$author_photo = $USER['tg_photo'] ?? '';
 	} else {
 		$ip_from = ip_from($ip);
 		$author_name = "匿名, $ip_from";
@@ -98,10 +101,10 @@ if (isset($_POST['body'])) {
 			</ol>
 
 			<h2>立即投稿</h2>
-<?php if (isset($_SESSION['name'])) { ?>
+<?php if (isset($USER['name'])) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
-				<p>所有人都能看到您（<?= $_SESSION['name'] ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
+				<p>所有人都能看到您（<?= $USER['name'] ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
 			</div>
 <?php } ?>
 			<form class="ts form" action="/submit" method="POST" enctype="multipart/form-data">

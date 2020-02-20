@@ -5,6 +5,7 @@ class MyDB {
 
 	public function __construct() {
 		$this->pdo = new PDO('sqlite:/usr/share/nginx/x.nctu.app/sqlite.db');
+		$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
@@ -96,6 +97,13 @@ class MyDB {
 		else
 			return ['ok' => false, 'msg' => 'Unknown vote.'];
 
+		if ($uid == 'TEST')
+			return [
+				'ok' => true,
+				'approvals' => 87,
+				'rejects' => 42
+			];
+
 		$sql = "SELECT uid FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
@@ -127,7 +135,7 @@ class MyDB {
 		$sql = "SELECT approvals, rejects FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		$result = $stmt->fetch();
 
 		$result['ok'] = true;
 		return $result;
@@ -299,7 +307,7 @@ class MyDB {
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':nctu_id' => $nctu_id]);
 
-		if ($item = $stmt->fetch())
+		if ($stmt->fetch())
 			return;
 
 		$name = idToDep($nctu_id);
@@ -334,5 +342,31 @@ class MyDB {
 			':username' => $tg['username'] ?? '',
 			':photo' => $tg['photo_url'] ?? '',
 		]);
+	}
+
+	public function getUserByNctu(string $id) {
+		$sql = "SELECT * FROM users WHERE nctu_id = :id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':id' => $id]);
+		return $stmt->fetch();
+	}
+
+	public function getUserByTg(int $id) {
+		$sql = "SELECT * FROM users WHERE tg_id = :id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':id' => $id]);
+		return $stmt->fetch();
+	}
+
+	public function getTgUsers() {
+		$sql = "SELECT * FROM users WHERE tg_id > 0";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([]);
+
+		$results = [];
+		while ($item = $stmt->fetch())
+			$results[] = $item;
+
+		return $results;
 	}
 }

@@ -2,6 +2,15 @@
 if (session_status() == PHP_SESSION_NONE) {
 	session_start();
 }
+
+if (!isset($db)) {
+	require_once('database.php');
+	$db = new MyDB();
+}
+
+if (isset($_SESSION['nctu_id']) && !isset($USER))
+	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
+
 ?>
 <nav class="ts basic fluid borderless menu horizontally scrollable">
 	<div class="ts container">
@@ -23,13 +32,13 @@ foreach ($items as $href => $name) {
 ?>
 		<div class="right fitted item">
 <?php
-if (isset($_SESSION['name'])) {
+if (isset($USER['name'])) {
 	$photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
-	if (isset($_SESSION['photo']) && !empty($_SESSION['photo']))
-		$photo = $_SESSION['photo'];
+	if (isset($USER['tg_photo']) && !empty($USER['tg_photo']))
+		$photo = $USER['tg_photo'];
 ?>
 			<img class="ts mini circular image" src="<?= $photo ?>">
-			&nbsp;<b><?= $_SESSION['name'] ?></b>
+			&nbsp;<b><?= $USER['name'] ?></b>
 			<a class="item" href="/logout" data-type="logout">Logout</a>
 <?php } else { ?>
 			<a class="item" href="/login-nctu" data-type="login">Login</a>

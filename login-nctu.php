@@ -21,10 +21,10 @@ $data = curl_exec($curl);
 curl_close($curl);
 $data = json_decode($data, true);
 if (isset($data['error']))
-	fail($data['error']);
+	fail($data['error'], 5);
 
 if (!isset($data['access_token']))
-	fail('No access token.');
+	fail('No access token.', 5);
 
 $token = $data['access_token'];
 $header = ["Authorization: Bearer $token"];
@@ -35,28 +35,30 @@ curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
 $data = curl_exec($curl);
 $data = json_decode($data, true);
 
-if (!isset($data['username']))
-	fail('No username from NCTU.');
-$_SESSION['nctu_id'] = $data['username'];
 
-$_SESSION['name'] = idToDep($data['username']);
+if (!isset($data['username']))
+	fail('No username from NCTU.', 5);
 
 if (!isset($data['email']))
-	fail('No email from NCTU.');
-$_SESSION['nctu_mail'] = $data['email'];
+	fail('No email from NCTU.', 5);
+
+$db->insertUserNctu($data['username'], $data['email']);
+
+$_SESSION['nctu_id'] = $data['username'];
 
 echo "Login success!";
 header('Location: /');
 
-$db->insertUserNctu($_SESSION['nctu_id'], $_SESSION['nctu_mail']);
 
-
-function fail(string $msg = '', int $time = 0) {
+function fail(string $msg = '', int $time) {
 	$url = 'https://id.nctu.edu.tw/o/authorize/?' . http_build_query([
 		'client_id' => NCTU_OAUTH_ID,
 		'response_type' => 'code',
 		'scope' => 'profile name'
 	]);
+
+	if ($time == 0)
+		header("Location: $url");
 
 	echo "<meta http-equiv='refresh' content='$time; url=$url' />";
 
