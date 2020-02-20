@@ -100,9 +100,21 @@ function rand58(int $len = 1): string {
 	return $rand;
 }
 
+/*
+ * Convert plain text to HTML
+ *
+ * Supported:
+ * 1. Newline to <br>
+ * 2. Signle line URL to <a>
+ */
 function toHTML(string $text): string {
 	$text = htmlentities($text);
-	$text = str_replace("\n", "\n<br>", $text);
+	$text = explode("\n", $text);
+	foreach ($text as $key => $val) {
+		if (filter_var($val, FILTER_VALIDATE_URL))
+			$text[$key] = "<a target='_blank' href='$val'>$val</a>";
+	}
+	$text = join("\n<br>", $text);
 	return $text;
 }
 
