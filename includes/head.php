@@ -20,7 +20,6 @@ if (!isset($DESC))
 <meta property="og:url" content="https://x.nctu.app/" />
 <meta property="og:image" content="<?= $IMG ?>" />
 <meta property="og:image:secure_url" content="<?= $IMG ?>" />
-<meta property="og:image:type" content="image/png" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="<?= $DESC ?>" />
 <meta property="og:site_name" content="靠北交大 2.0" />

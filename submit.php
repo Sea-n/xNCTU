@@ -124,7 +124,7 @@ if (isset($_POST['body'])) {
 					<span>&nbsp; <?= $captcha ?></span>
 				</div>
 				<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
-				<p><small>請注意：一但送出投稿後，所有已登入的交大人都能看見您使用的網路服務商（<?= ip_from($ip) ?>）及部分 IP 位址 (<?= $ip_masked ?>) 。詳請見 <a href="/policies">隱私權政策</a>。</small></p>
+				<p><small>請注意：一但送出投稿後，所有已登入的交大人都能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。詳請見 <a href="/policies">隱私權政策</a>。</small></p>
 			</form>
 <?php } ?>
 		</div>
