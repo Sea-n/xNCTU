@@ -127,7 +127,7 @@ if (!empty($post['author_photo']))
 			</div>
 <?php }
 if (isset($_GET['uid']) && isset($USER)) {
-	$votes = $db->getVotersBySubmissions($post['uid'], 0);
+	$votes = $db->getVotersBySubmission($post['uid'], 0);
 	if (count($votes) > 0) {
 ?>
 			<table class="ts table">

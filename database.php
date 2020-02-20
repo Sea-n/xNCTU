@@ -48,7 +48,7 @@ class MyDB {
 	public function getSubmissions(int $limit) {
 		if ($limit == 0) $limit = 9487;
 
-		$sql = "SELECT * FROM submissions";
+		$sql = "SELECT * FROM submissions ORDER BY created_at DESC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
@@ -75,7 +75,7 @@ class MyDB {
 		foreach ($data as $item)
 			$votes[ $item['uid'] ] = $item['vote'];
 
-		$sql = "SELECT * FROM submissions";
+		$sql = "SELECT * FROM submissions ORDER BY created_at DESC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
@@ -171,7 +171,7 @@ class MyDB {
 		return $result;
 	}
 
-	public function getVotersBySubmissions(string $uid) {
+	public function getVotersBySubmission(string $uid) {
 		$sql = "SELECT * FROM votes WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
@@ -184,7 +184,7 @@ class MyDB {
 	}
 
 	public function getVotesByUser(string $nctu_id) {
-		$sql = "SELECT * FROM votes WHERE voter = :nctu_id";
+		$sql = "SELECT * FROM votes WHERE voter = :nctu_id ORDER BY created_at DESC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':nctu_id' => $nctu_id]);
 
