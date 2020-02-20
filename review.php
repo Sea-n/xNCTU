@@ -104,7 +104,7 @@ foreach ($posts as $post) {
 			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">
 <?php if (!empty($post['img'])) { ?>
 				<div class="image">
-					<img src="<?= $img ?>" />
+					<img class="post-image" src="<?= $img ?>" />
 				</div>
 <?php } ?>
 				<div class="content">

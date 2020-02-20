@@ -41,3 +41,10 @@ footer {
 	width: 100%;
 	bottom: 0;
 }
+
+.post-image {
+	max-height: 150vh;
+	width: auto !important;
+	margin-left: auto;
+	margin-right: auto;
+}
