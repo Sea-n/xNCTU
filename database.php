@@ -344,6 +344,15 @@ class MyDB {
 		]);
 	}
 
+	public function updateUserNameTg(int $tg_id, string $name) {
+		$sql = "UPDATE users SET name = :name WHERE tg_id = :tg_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':tg_id' => $tg_id,
+			':name' => $name,
+		]);
+	}
+
 	public function getUserByNctu(string $id) {
 		$sql = "SELECT * FROM users WHERE nctu_id = :id";
 		$stmt = $this->pdo->prepare($sql);
