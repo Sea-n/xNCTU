@@ -70,6 +70,11 @@ class MyDB {
 	public function getSubmissionsUser(string $nctu_id, int $limit) {
 		if ($limit == 0) $limit = 9487;
 
+		$votes = $this->getVotesByUser($nctu_id);
+		$voted = [];
+		foreach ($votes as $vote)
+			$voted[] = $vote['uid'];
+
 		$sql = "SELECT * FROM submissions";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
@@ -82,7 +87,8 @@ class MyDB {
 			if (isset($item['deleted_at']))
 				continue;
 
-			# $this->getVotesByUser  // WIP
+			if (in_array($item['uid'], $voted))
+				continue;
 
 			$results[] = $item;
 			$limit--;
@@ -179,6 +185,18 @@ class MyDB {
 		$results = [];
 		while ($item = $stmt->fetch())
 			$results[] = $item['voter'];
+
+		return $results;
+	}
+
+	public function getVotesByUser(string $nctu_id) {
+		$sql = "SELECT * FROM votes WHERE voter = :nctu_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':nctu_id' => $nctu_id]);
+
+		$results = [];
+		while ($item = $stmt->fetch())
+			$results[] = $item;
 
 		return $results;
 	}

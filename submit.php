@@ -2,6 +2,7 @@
 session_start();
 require_once('utils.php');
 require_once('database.php');
+require_once('send-review.php');
 $db = new MyDB();
 
 if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
@@ -130,3 +131,7 @@ if (isset($_POST['body'])) {
 <?php include('includes/footer.php'); ?>
 	</body>
 </html>
+<?php
+if (isset($uid)) {
+	sendReview($uid, $body, $img);
+}

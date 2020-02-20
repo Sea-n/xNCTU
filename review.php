@@ -16,7 +16,7 @@ if (isset($_GET['uid'])) {
 		exit('Post not found. 文章不存在');
 	$posts = [$post];
 
-} else if (isset($USER)) {
+} else if (isset($USER) && !isset($_GET['all'])) {
 	$posts = $db->getSubmissionsUser($USER['nctu_id'], 10);
 } else
 	$posts = $db->getSubmissions(10);
@@ -55,10 +55,17 @@ include('includes/head.php');
 			</div>
 		</header>
 		<div class="ts container" name="main">
-<?php if (count($posts) == 0) { ?>
+<?php
+if (count($posts) == 0) {
+	if (isset($USER) && !isset($_GET['all'])) {
+?>
+			<h2 class="ts header">太棒了！您已審完所有貼文</h2>
+			<p>歡迎使用 Telegram Bot 接收投稿通知，並在程式內快速審查</p>
+			<p>目前僅顯示您未審核的文章，<a href="?all=1">點此查看所有貼文</a></p>
+<?php } else { ?>
 			<h2 class="ts header">太棒了！目前沒有待審貼文</h2>
 			<p>歡迎使用 Telegram Bot 接收投稿通知，並在程式內快速審查</p>
-<?php }
+<?php } }
 foreach ($posts as $post) {
 	$uid = $post['uid'];
 	$author_name = $post['author_name'];
@@ -73,7 +80,7 @@ foreach ($posts as $post) {
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/posts?id=<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
 			</div>
-<?php } else if (isset($USER['name'])) { ?>
+<?php } else if (isset($USER)) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
 				<p>提醒您，為自己的貼文按「通過」會留下公開紀錄哦</p>

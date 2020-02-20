@@ -11,18 +11,21 @@ if (!isset($db)) {
 if (isset($_SESSION['nctu_id']) && !isset($USER))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
 
-?>
-<nav class="ts basic fluid borderless menu horizontally scrollable">
-	<div class="ts container">
-<?php
 $items = [
 	'/' => '首頁',
 	'/submit' => '投稿',
 	'/review' => '審核',
 	'/posts' => '文章列表',
 ];
+
+?>
+<nav class="ts basic fluid borderless menu horizontally scrollable">
+	<div class="ts container">
+<?php
 foreach ($items as $href => $name) {
-	if ($_SERVER['REQUEST_URI'] == $href)
+	$uri = $_SERVER['REQUEST_URI'];
+	$uri = explode('?', $uri)[0];
+	if ($uri == $href)
 		$class = 'active item';
 	else
 		$class = 'item';
@@ -38,7 +41,7 @@ if (isset($USER['name'])) {
 		$photo = $USER['tg_photo'];
 ?>
 			<img class="ts mini circular image" src="<?= $photo ?>">
-			&nbsp;<b><?= $USER['name'] ?></b>
+			&nbsp;<b><?= $USER['name'] ?></b>&nbsp;
 			<a class="item" href="/logout" data-type="logout">Logout</a>
 <?php } else { ?>
 			<a class="item" href="/login-nctu" data-type="login">Login</a>
