@@ -56,99 +56,23 @@ switch ($args[0]) {
 		break;
 
 	case 'approve':
-		$TG->getTelegram('answerCallbackQuery', [
-			'callback_query_id' => $TG->data['callback_query']['id'],
-			'show_alert' => true,
-			'text' => "您確定要通過此投稿嗎？\n\n請點擊綠色按鈕確認"
-		]);
-
-		$uid = $args[1];
-		$keyboard = [[]];
-		for ($i=0; $i<5; $i++)
-			for ($j=0; $j<4; $j++)
-				if ($i == 3 && $j == 2)
-					$keyboard[$i][$j] = [
-						'text' => '✅ 通過',
-						'callback_data' => "vote_{$uid}_1"
-					];
-				else
-					$keyboard[$i][$j] = [
-						'text' => '✖️ 取消',
-						'callback_data' => "cancel_{$uid}_$i$j"
-					];
-		$TG->getTelegram('editMessageReplyMarkup', [
-			'chat_id' => $TG->ChatID,
-			'message_id' => $TG->MsgID,
-			'reply_markup' => [
-				'inline_keyboard' => $keyboard
-			]
-		]);
-		break;
-
 	case 'reject':
-		$TG->getTelegram('answerCallbackQuery', [
-			'callback_query_id' => $TG->data['callback_query']['id'],
-			'show_alert' => true,
-			'text' => "您確定要駁回此投稿嗎？\n\n請點擊紅色按鈕確認"
-		]);
-
+		$type = $args[0];
 		$uid = $args[1];
-		$keyboard = [[]];
-		for ($i=0; $i<5; $i++)
-			for ($j=0; $j<4; $j++)
-				if ($i == 3 && $j == 2)
-					$keyboard[$i][$j] = [
-						'text' => '❌ 駁回',
-						'callback_data' => "vote_{$uid}_-1"
-					];
-				else
-					$keyboard[$i][$j] = [
-						'text' => '✖️ 取消',
-						'callback_data' => "cancel_{$uid}_$i$j"
-					];
-		$TG->getTelegram('editMessageReplyMarkup', [
-			'chat_id' => $TG->ChatID,
-			'message_id' => $TG->MsgID,
+
+		$TG->sendMsg([
+			'reply_to_message_id' => $TG->MsgID,
+			'text' => "[$type/$uid] 請輸入理由\n\n" .
+				"不限字數，將會顯示於貼文頁面中",
 			'reply_markup' => [
-				'inline_keyboard' => $keyboard
+				'force_reply' => true,
 			]
 		]);
-		break;
-
-	case 'vote':
-		$uid = $args[1];
-		$vote = $args[2];
-		try {
-			$result = ['ok'=>0,'msg'=>json_encode($USER['nctu_id'])];
-			$result = $db->voteSubmissions($uid, $USER['nctu_id'], $vote, 'Vote via Telegram bot');
-			if (!$result['ok'])
-				$msg = $result['msg'];
-			else
-				$msg = "投票成功！\n\n目前通過 {$result['approvals']} 票、駁回 {$result['rejects']} 票";
-		} catch (Exception $e) {
-			$msg = 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
-		}
 
 		$TG->getTelegram('answerCallbackQuery', [
-			'callback_query_id' => $TG->data['callback_query']['id'],
-			'show_alert' => true,
-			'text' => $msg
+			'callback_query_id' => $TG->data['callback_query']['id']
 		]);
 
-		$TG->getTelegram('editMessageReplyMarkup', [
-			'chat_id' => $TG->ChatID,
-			'message_id' => $TG->MsgID,
-			'reply_markup' => [
-				'inline_keyboard' => [
-					[
-						[
-							'text' => '開啟審核頁面',
-							'url' => "https://x.nctu.app/review?uid=$uid"
-						]
-					]
-				]
-			]
-		]);
 		break;
 
 	case 'cancel':
