@@ -67,6 +67,30 @@ class MyDB {
 		return $results;
 	}
 
+	public function getSubmissionsUser(string $nctu_id, int $limit) {
+		if ($limit == 0) $limit = 9487;
+
+		$sql = "SELECT * FROM submissions";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute();
+
+		$results = [];
+		while ($item = $stmt->fetch()) {
+			if (isset($item['id']))
+				continue;
+
+			if (isset($item['deleted_at']))
+				continue;
+
+			# $this->getVotesByUser  // WIP
+
+			$results[] = $item;
+			$limit--;
+		}
+
+		return $results;
+	}
+
 	public function getPostById(string $id) {
 		$sql = "SELECT * FROM posts WHERE id = :id";
 		$stmt = $this->pdo->prepare($sql);

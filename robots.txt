@@ -1,0 +1,5 @@
+User-agent: *
+Allow: *
+Disallow: /login-nctu
+Disallow: /login-tg
+Disallow: /logout

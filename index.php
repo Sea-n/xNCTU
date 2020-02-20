@@ -10,7 +10,7 @@
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">靠北交大 2.0</h1>
-				<div class="description">別再說沒有人審文，先承認你就是沒有人。</div>
+				<div class="description">不要問為何沒有人審文，先承認你就是沒有人。</div>
 			</div>
 		</header>
 		<div class="ts container" name="main">

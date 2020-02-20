@@ -7,11 +7,17 @@ $db = new MyDB();
 if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
 	exit("Please don't hack me.");
 
+if (isset($_SESSION['nctu_id']) && !isset($USER))
+	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
+
 if (isset($_GET['uid'])) {
 	$uid = $_GET['uid'];
 	if (!($post = $db->getSubmissionByUid($uid)))
 		exit('Post not found. 文章不存在');
 	$posts = [$post];
+
+} else if (isset($USER)) {
+	$posts = $db->getSubmissionsUser($USER['nctu_id'], 10);
 } else
 	$posts = $db->getSubmissions(10);
 
@@ -49,7 +55,10 @@ include('includes/head.php');
 			</div>
 		</header>
 		<div class="ts container" name="main">
-<?php
+<?php if (count($posts) == 0) { ?>
+			<h2 class="ts header">太棒了！目前沒有待審貼文</h2>
+			<p>歡迎使用 Telegram Bot 接收投稿通知，並在程式內快速審查</p>
+<?php }
 foreach ($posts as $post) {
 	$uid = $post['uid'];
 	$author_name = $post['author_name'];

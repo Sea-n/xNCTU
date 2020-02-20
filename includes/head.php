@@ -3,7 +3,7 @@ if (!isset($IMG))
 	$IMG = 'https://x.nctu.app/logo.png';
 
 if (!isset($DESC))
-	$DESC = '別再說沒有人審文，先承認你就是沒有人。新版靠北交大讓全校師生都有了審核的權限，每天穩定發出投稿文章。';
+	$DESC = '不要問為何沒有人審文，先承認你就是沒有人。新版靠北交大讓全校師生都有了審核的權限，每天穩定發出投稿文章。';
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?= $TITLE ?> - 靠北交大 2.0</title>
