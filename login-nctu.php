@@ -5,8 +5,12 @@ require_once('config.php');
 require_once('database.php');
 $db = new MyDB();
 
-if (!isset($_GET['code']))
+if (!isset($_GET['code'])) {
+	if (preg_match('#^/[a-z]*(\?[a-z0-9=&]*)?$#i', $_GET['r'] ?? 'X'))
+		$_SESSION['redir'] = $_GET['r'];
+
 	fail('Redirecting...', 0);
+}
 
 $curl = curl_init('https://id.nctu.edu.tw/o/token/');
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -47,7 +51,12 @@ $db->insertUserNctu($data['username'], $data['email']);
 $_SESSION['nctu_id'] = $data['username'];
 
 echo "Login success!";
-header('Location: /');
+$uri = '/';
+if (isset($_SESSION['redir'])) {
+	$uri = $_SESSION['redir'];
+	unset($_SESSION['redir']);
+}
+header("Location: $uri");
 
 
 function fail(string $msg = '', int $time) {

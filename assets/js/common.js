@@ -13,8 +13,8 @@ window.addEventListener("scroll", function () {
 
 
 function init() {
-	var a = ts('.ts.dropdown:not(.basic)').dropdown();
-	console.log(a);
+	console.log("Hey there!");
+	console.log("Source code: https://git.io/xNCTU");
 }
 
 window.addEventListener("load", init);

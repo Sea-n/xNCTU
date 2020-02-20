@@ -13,6 +13,9 @@ if (ini_get("session.use_cookies")) {
 
 session_destroy();
 
-header('Location: /');
+$uri = $_GET['r'] ?? '/';
+if (!preg_match('#^/[a-z]*(\?[a-z0-9=&]*)?$#i', $uri))
+	$uri = '/';
+header("Location: $uri");
 ?>
 Logout success.

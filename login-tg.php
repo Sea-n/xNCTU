@@ -5,14 +5,38 @@ require('database.php');
 require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
 $db = new MyDB();
 
-if (!isset($_SESSION['nctu_id']))
-	exit('You must login NCTU first.');
-
 try {
 	$auth_data = checkTelegramAuthorization($_GET);
 } catch (Exception $e) {
 	exit($e->getMessage());
 }
+
+$USER = $db->getUserByTg($auth_data['id']);
+
+if ($USER) {
+	if (!isset($_SESSION['nctu_id'])) {
+		$_SESSION['nctu_id'] = $USER['nctu_id'];
+		redirect('Login via Telegram success.');
+	}
+
+	if ($_SESSION['nctu_id'] == $USER['nctu_id'])
+		redirect('Already login.');
+
+	$db->insertUserTg($_SESSION['nctu_id'], $auth_data);
+	sendMsg([
+		'bot' => 'xNCTU',
+		'chat_id' => $auth_data['id'],
+		'text' => "🎉 連結成功！\n\n" .
+		"您成功找出 bug 了，將不同的 NCTU OAuth 帳號連結至同一個 Telegram 帳號，目前還沒想到如何處理比較適當，歡迎提供建議\n\n" .
+		"NCTU ID from session: {$_SESSION['nctu_id']}\n" .
+		"NCTU ID from database: {$USER['nctu_id']}\n" .
+		"Telegram UID: {$auth_data['id']}"
+	]);
+	redirect('Account linked again.');
+}
+
+if (!isset($_SESSION['nctu_id']))
+	exit('You must login NCTU first.');
 
 $db->insertUserTg($_SESSION['nctu_id'], $auth_data);
 
@@ -23,9 +47,14 @@ sendMsg([
 	'text' => $msg
 ]);
 
-echo 'Login success.';
-header('Location: /');
+redirect('Login success.');
 
+
+function redirect(string $msg) {
+	echo $msg;
+	header('Location: /');
+	exit;
+}
 
 function checkTelegramAuthorization($auth_data) {
 	if (!isset($auth_data['id']))
