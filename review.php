@@ -31,7 +31,9 @@ if (isset($_GET['uid'])) {
 		$posts = $db->getSubmissions(10);
 }
 
-if (!isset($_GET['uid']) && !isset($_GET['all']))
+$showAll = isset($_GET['all']) && ($_GET['all'] == '1' || $_GET['all'] == 'true');
+
+if (!isset($_GET['uid']) && !$showAll)
 	$posts = array_filter($posts, function($item) {
 		return !isset($item['vote']);
 	});
@@ -72,13 +74,12 @@ include('includes/head.php');
 		<div class="ts container" name="main">
 <?php
 if (count($posts) == 0) {
-	if (isset($USER) && !isset($_GET['all'])) {
+	if (isset($USER)) {
 ?>
-			<h2 class="ts header">太棒了！您已審完所有貼文</h2>
+			<h2 class="ts header">太棒了！您已審完所有投稿</h2>
 			<p>歡迎使用 Telegram Bot 接收投稿通知，並在程式內快速審查</p>
-			<p>目前僅顯示您未審核的文章，<a href="?all=1">點此查看所有貼文</a></p>
 <?php } else { ?>
-			<h2 class="ts header">太棒了！目前沒有待審貼文</h2>
+			<h2 class="ts header">太棒了！目前沒有待審投稿</h2>
 			<p>歡迎使用 Telegram Bot 接收投稿通知，並在程式內快速審查</p>
 <?php } }
 foreach ($posts as $post) {
@@ -99,7 +100,7 @@ foreach ($posts as $post) {
 <?php } else if (isset($USER) && !isset($post['vote'])) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
-				<p>提醒您，為自己的貼文按「通過」會留下公開紀錄哦</p>
+				<p>提醒您，為自己的投稿按「通過」會留下公開紀錄哦</p>
 			</div>
 <?php } } ?>
 			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">
@@ -110,9 +111,9 @@ foreach ($posts as $post) {
 <?php } ?>
 				<div class="content">
 <?php if (isset($_GET['uid'])) { ?>
-					<div class="header">貼文編號 <?= $uid ?></div>
+					<div class="header">投稿編號 <?= $uid ?></div>
 <?php } else { ?>
-					<div class="header"> <a href="?uid=<?= $uid ?>">貼文編號 <?= $uid ?></a></div>
+					<div class="header"> <a href="?uid=<?= $uid ?>">投稿編號 <?= $uid ?></a></div>
 <?php } ?>
 					<p><?= $body ?></p>
 				</div>
@@ -165,7 +166,14 @@ if (isset($_GET['uid']) && isset($USER)) {
 <?php } ?>
 				</tbody>
 			</table>
-<?php } } ?>
+<?php } }
+if (isset($USER) && !isset($_GET['uid'])) {
+?>
+			<div class="ts toggle checkbox">
+				<input id="showAll" <?= $showAll ? 'checked' : '' ?> type="checkbox" onchange="location.href='?all='+this.checked;">
+				<label for="showAll">顯示所有投稿</label>
+			</div>
+<?php } ?>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>
