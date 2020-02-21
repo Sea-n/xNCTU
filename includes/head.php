@@ -1,6 +1,6 @@
 <?php
 if (!isset($IMG))
-	$IMG = 'https://x.nctu.app/logo.png';
+	$IMG = 'https://x.nctu.app/assets/img/logo.png';
 
 if (!isset($DESC))
 	$DESC = '不要問為何沒有人審文，先承認你就是沒有人。新版靠北交大 2.0 (xNCTU) 讓全校師生都有了審核的權限，每天穩定發出投稿文章。並支援 Telegram、Plurk、Twitter、Facebook 四大社群媒體平台。';

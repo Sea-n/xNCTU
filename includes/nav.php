@@ -14,7 +14,6 @@ if (isset($_SESSION['nctu_id']) && !isset($USER))
 $items = [
 	'/' => '首頁',
 	'/submit' => '投稿',
-	'/review' => '審核',
 	'/posts' => '文章列表',
 ];
 

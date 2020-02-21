@@ -15,7 +15,7 @@ if (isset($_SESSION['nctu_id']))
 
 if (isset($_POST['body'])) {
 	$captcha = trim($_POST['captcha'] ?? 'X');
-	if ($captcha != '交大竹湖')
+	if ($captcha != '交大竹湖' && $captcha != '交大竹狐')
 		exit('Are you human? 驗證碼錯誤');
 
 	$body = $_POST['body'];
