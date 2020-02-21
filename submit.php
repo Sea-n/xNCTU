@@ -15,8 +15,11 @@ if (isset($_SESSION['nctu_id']))
 
 if (isset($_POST['body'])) {
 	$captcha = trim($_POST['captcha'] ?? 'X');
-	if ($captcha != '交大竹湖' && $captcha != '交大竹狐')
+	if ($captcha != '交大竹湖' && $captcha != '交大竹狐') {
+		if (strlen($captcha) > 1 && strlen($captcha) < 20)
+			error_log("Captcha failed: $captcha.");
 		exit('Are you human? 驗證碼錯誤');
+	}
 
 	$body = $_POST['body'];
 	if (mb_strlen($body) < 5)
