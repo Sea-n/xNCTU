@@ -15,10 +15,11 @@ foreach (['id', 'uid'] as $i)
 		$query[$i] = $q[$i];
 if (count($query) > 0)
 	$URL .= '?' . http_build_query($query);
+$URL = "https://x.nctu.app$URL";
 
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?= $TITLE ?> - 靠北交大 2.0 (xNCTU)</title>
+<title><?= htmlentities($TITLE) ?> - 靠北交大 2.0 (xNCTU)</title>
 <link rel="icon" type="image/png" href="/assets/img/logo-192.png" sizes="192x192">
 <link rel="icon" type="image/png" href="/assets/img/logo-128.png" sizes="128x128">
 <link rel="icon" type="image/png" href="/assets/img/logo-96.png" sizes="96x96">
@@ -28,13 +29,17 @@ if (count($query) > 0)
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <meta name="keywords" content="xNCTU, 靠北交大 2.0" />
 <meta name="description" content="<?= htmlentities($DESC) ?>" />
+<link rel="canonical" href="<?= htmlentities($URL) ?>" />
 <meta property="og:title" content="<?= htmlentities($TITLE) ?>" />
-<meta property="og:url" content="https://x.nctu.app<?= htmlentities($URL) ?>" />
+<meta property="og:url" content="<?= htmlentities($URL) ?>" />
 <meta property="og:image" content="<?= htmlentities($IMG) ?>" />
 <meta property="og:image:secure_url" content="<?= htmlentities($IMG) ?>" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="<?= htmlentities($DESC) ?>" />
 <meta property="og:site_name" content="靠北交大 2.0" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@x_NCTU" />
+<meta property="fb:app_id" content="103461781248690" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.css">
 <link rel="stylesheet" href="/assets/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.js"></script>
