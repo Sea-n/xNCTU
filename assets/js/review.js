@@ -2,7 +2,13 @@ function approve(uid) {
 	if (!confirm('您確定要通過此貼文嗎？'))
 		return;
 
-	vote(uid, 1, '');
+	var reason = prompt('請輸入通過附註');
+	if (reason.length == 0) {
+		alert('請勿留空');
+		return;
+	}
+
+	vote(uid, 1, reason);
 }
 
 function reject(uid) {

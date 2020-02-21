@@ -4,7 +4,7 @@ require_once('utils.php');
 require_once('database.php');
 $db = new MyDB();
 
-if ($_SERVER['HTTP_CONTENT_TYPE'] == 'application/json')
+if (($_SERVER['HTTP_CONTENT_TYPE'] ?? '') == 'application/json')
 	$_POST = json_decode(file_get_contents('php://input'), true);
 
 $action = $_POST['action'] ?? 'x';
