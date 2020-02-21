@@ -30,7 +30,7 @@ if (isset($post)) {
 		$DESC = mb_substr($DESC, 0, 150) . '...';
 
 	if ($post['img'])
-		$IMG = "/img/{$post['img']}.jpg";
+		$IMG = "https://x.nctu.app/img/{$post['img']}.jpg";
 }
 include('includes/head.php');
 ?>
