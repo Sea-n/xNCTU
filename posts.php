@@ -55,9 +55,9 @@ foreach ($posts as $post) {
 	unset($author);
 	if (!empty($post['author_id'])) {
 		$author = $db->getUserByNctu($post['author_id']);
-		$author_name = $author['name'];
+		$author_name = toHTML($author['name']);
 	} else
-		$author_name = $post['author_name'];
+		$author_name = toHTML($post['author_name']);
 ?>
 			<div class="ts card" id="post-<?= $id ?>" style="margin-bottom: 42px;">
 <?php if (!empty($post['img'])) { ?>

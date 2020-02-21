@@ -84,7 +84,7 @@ if (count($posts) == 0) {
 <?php } }
 foreach ($posts as $post) {
 	$uid = $post['uid'];
-	$author_name = $post['author_name'];
+	$author_name = toHTML($post['author_name']);
 	$img = "/img/{$post['img']}.jpg";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
@@ -155,13 +155,13 @@ if (isset($_GET['uid']) && isset($USER)) {
 		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
 		$id = $vote['voter'];
 		$user = $db->getUserByNctu($id);
-		$name = $user['name'];
+		$name = toHTML($user['name']);
 ?>
 					<tr>
 						<td><?= $i+1 ?></td>
 						<td><?= $type ?></td>
 						<td><?= $name ?></td>
-						<td><?= $vote['reason'] ?></td>
+						<td><?= toHTML($vote['reason']) ?></td>
 					</tr>
 <?php } ?>
 				</tbody>
