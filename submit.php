@@ -48,6 +48,16 @@ if (isset($_POST['body'])) {
 
 		if (!move_uploaded_file($src, $dst))
 			exit('Failed to move uploaded file. 上傳發生錯誤');
+
+		$size = getimagesize($dst);
+		$width = $size[0];
+		$height = $size[1];
+		if ($width * $height < 320*320)
+			exit('Image must be at least 320x320.');
+		if ($width > $height*4)
+			exit('Image must be at least 1:4');
+		if ($width*2 < $height)
+			exit('Image must be at least 2:1');
 	} else
 		$img = '';
 
