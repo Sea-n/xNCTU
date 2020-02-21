@@ -282,8 +282,9 @@ class MyDB {
 		 return $posts[0];
 		unset($posts);
 
-		/* Get all pending submissions */
+		/* Get all pending submissions, oldest first */
 		$submissions = $this->getSubmissions(0);
+		array_reverse($submissions);
 
 		foreach ($submissions as $item) {
 			if ($this->isSubmissionEligible($item)) {
