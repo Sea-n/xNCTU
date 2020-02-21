@@ -97,7 +97,7 @@ foreach ($posts as $post) {
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/posts?id=<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
 			</div>
-<?php } else if (isset($USER) && !isset($post['vote'])) { ?>
+<?php } else if (isset($USER) && empty($post['author_id']) && !isset($post['vote'])) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
 				<p>提醒您，為自己的投稿按「通過」會留下公開紀錄哦</p>
