@@ -77,11 +77,17 @@ foreach ($posts as $post) {
 <?php
 if (isset($_GET['id'])) {
 $plurk = base_convert($post['plurk_id'], 10, 36);
+
+$data = $db->getVotersBySubmission($post['uid']);
+$votes = [1=>0, -1=>0];
+foreach ($data as $item)
+	++$votes[ $item['vote'] ];
 ?>
-					<p>Telegram: <a target="_blank" href="https://t.me/s/xNCTU/<?= $post['telegram_id'] ?>">@xNCTU/<?= $post['telegram_id'] ?></a></p>
-					<p>Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU/posts/<?= $post['facebook_id'] ?>">@xNCTU/<?= $post['facebook_id'] ?></a></p>
-					<p>Plurk: <a target="_blank" href="https://www.plurk.com/p/<?= $plurk ?>">@xNCTU/<?= $plurk ?></a></p>
-					<p>Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/<?= $post['twitter_id'] ?>">@x_NCTU/<?= $post['twitter_id'] ?></a></p>
+					<p><span>Telegram: <a target="_blank" href="https://t.me/s/xNCTU/<?= $post['telegram_id'] ?>">@xNCTU/<?= $post['telegram_id'] ?></a></span><br>
+					<span>Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU/posts/<?= $post['facebook_id'] ?>">@xNCTU/<?= $post['facebook_id'] ?></a></span><br>
+					<span>Plurk: <a target="_blank" href="https://www.plurk.com/p/<?= $plurk ?>">@xNCTU/<?= $plurk ?></a></span><br>
+					<span>Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/<?= $post['twitter_id'] ?>">@x_NCTU/<?= $post['twitter_id'] ?></a></span></p>
+					<p>審核結果：通過 <?= $votes[1] ?> 票、駁回 <?= $votes[-1] ?> 票</p>
 <?php
 }
 
@@ -97,7 +103,7 @@ if (!empty($author['tg_photo']))
 			</div>
 <?php }
 if (isset($_GET['id']) && isset($USER)) {
-	$votes = $db->getVotersBySubmission($post['uid'], 0);
+	$votes = $db->getVotersBySubmission($post['uid']);
 	if (count($votes) > 0) {
 ?>
 			<table class="ts table">
