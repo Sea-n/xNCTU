@@ -57,7 +57,7 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 		$result = getTelegram('sendPhoto', [
 			'bot' => 'xNCTU',
 			'chat_id' => '@xNCTU',
-			'photo' => "https://x.nctu.app/img/{$img}",
+			'photo' => "https://x.nctu.app/img/{$img}.jpg",
 			'caption' => $msg,
 			'parse_mode' => 'HTML',
 		]);
@@ -78,7 +78,7 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 		$result = getTelegram('sendPhoto', [
 			'bot' => 'xNCTU',
 			'chat_id' => '@CowBeiNCTU',
-			'photo' => "https://x.nctu.app/img/{$img}",
+			'photo' => "https://x.nctu.app/img/{$img}.jpg",
 			'caption' => $msg,
 			'parse_mode' => 'HTML',
 		]);
@@ -120,7 +120,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 			$authStr .= $key . '="' . urlencode($val) . '", ';
 		$authStr .= 'oauth_version="1.0"';
 
-		$file = ['media' => curl_file_create(__DIR__ . "/img/$img")];
+		$file = ['media' => curl_file_create(__DIR__ . "/img/$img.jpg")];
 
 		$curl = curl_init();
 		curl_setopt_array($curl, [
@@ -189,7 +189,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 function send_plurk(int $id, string $body, string $img = ''): int {
 	global $link;
 
-	$msg = empty($img) ? '' : "https://x.nctu.app/img/$img\n";
+	$msg = empty($img) ? '' : "https://x.nctu.app/img/$img.jpg\n";
 	$msg .= "#靠交$id\n$body";
 
 	if (mb_strlen($msg) > 320)
@@ -236,7 +236,7 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	if (empty($img))
 		$data['message'] = $msg;
 	else {
-		$data['url'] = "https://x.nctu.app/img/$img";
+		$data['url'] = "https://x.nctu.app/img/$img.jpg";
 		$data['caption'] = $msg;
 	}
 

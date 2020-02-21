@@ -20,7 +20,7 @@ class MyDB {
 		if (mb_strlen($body) > 1000)
 			return ['SEAN', 0, 'Body too long.'];
 
-		if (!empty($img) && !preg_match('#^[0-9a-zA-Z]{3,5}\.[a-z]{3}$#', $img))
+		if (!empty($img) && !preg_match('#^[0-9a-zA-Z]{4}$#', $img))
 			return ['SEAN', 0, 'Image invaild.'];
 
 		$sql = "INSERT INTO submissions(uid, body, img, ip, author_name, author_id, author_photo) VALUES (:uid, :body, :img, :ip, :author_name, :author_id, :author_photo)";

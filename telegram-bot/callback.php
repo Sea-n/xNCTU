@@ -28,7 +28,7 @@ switch ($args[0]) {
 
 			$TG->getTelegram('sendPhoto', [
 				'chat_id' => $TG->ChatID,
-				'photo' => "https://x.nctu.app/img/4ZSf.png",
+				'photo' => "https://x.nctu.app/img/TEST.jpg",
 				'caption' => $body,
 				'reply_markup' => [
 					'inline_keyboard' => [

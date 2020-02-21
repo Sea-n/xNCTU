@@ -30,7 +30,7 @@ if (isset($post)) {
 		$DESC = mb_substr($DESC, 0, 150) . '...';
 
 	if ($post['img'])
-		$IMG = "/img/{$post['img']}";
+		$IMG = "/img/{$post['img']}.jpg";
 }
 include('includes/head.php');
 ?>
@@ -48,7 +48,7 @@ include('includes/head.php');
 <?php
 foreach ($posts as $post) {
 	$id = $post['id'];
-	$img = "/img/{$post['img']}";
+	$img = "/img/{$post['img']}.jpg";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['submitted_at']);
 

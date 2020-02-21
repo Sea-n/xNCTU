@@ -46,8 +46,7 @@ if (isset($_POST['body'])) {
 			exit('Extension not recognized. 圖片副檔名錯誤');
 
 		do {
-			$rand = rand58(4);
-			$img = "$rand.$ext";
+			$img = rand58(4);
 			$dst = __DIR__ . "/img/$img";
 		} while (file_exists($dst));
 
@@ -63,6 +62,9 @@ if (isset($_POST['body'])) {
 			exit('Image must be at least 1:4');
 		if ($width*2 < $height)
 			exit('Image must be at least 2:1');
+
+		system("ffmpeg -i $dst $dst.jpg");
+		system("ffmpeg -i $dst $dst.png");
 	} else
 		$img = '';
 
@@ -131,7 +133,7 @@ if (isset($_POST['body'])) {
 				</div>
 				<div class="inline field">
 					<label>附加圖片</label>
-					<div class="four wide"><input type="file" name="img" accept="image/*" style="display: inline-block;" /></p></div>
+					<div class="four wide"><input type="file" name="img" accept="image/png, image/jpeg, image/gif" style="display: inline-block;" /></p></div>
 				</div>
 				<div id="captcha-field" class="required inline field">
 					<label>驗證問答</label>

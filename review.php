@@ -57,7 +57,7 @@ if (isset($post)) {
 		$DESC = mb_substr($DESC, 0, 150) . '...';
 
 	if ($post['img'])
-		$IMG = "/img/{$post['img']}";
+		$IMG = "/img/{$post['img']}.jpg";
 }
 include('includes/head.php');
 ?>
@@ -85,7 +85,7 @@ if (count($posts) == 0) {
 foreach ($posts as $post) {
 	$uid = $post['uid'];
 	$author_name = $post['author_name'];
-	$img = "/img/{$post['img']}";
+	$img = "/img/{$post['img']}.jpg";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
 	$canVote = (isset($post['id']) || isset($post['vote'])) ? 'disabled' : '';
