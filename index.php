@@ -76,7 +76,14 @@
 
 			<h2 class="ts header">使用 Telegram 快速審核</h2>
 			<p>您只要登入 NCTU 帳號，點擊下面按鈕即可綁定 Telegram 帳號，讓您收到最即時的投稿通知，並快速通過/駁回貼文。</p>
+<?php if (!isset($USER) || !isset($USER['tg_id'])) { ?>
 			<script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="xNCTUbot" data-size="large" data-auth-url="https://x.nctu.app/login-tg" data-request-access="write"></script>
+<?php } else { ?>
+<div class="ts positive message">
+	<div class="header">您已連結成功！</div>
+	<p>Tips: 使用 /name 指令即可修改您的暱稱</p>
+</div>
+<?php } ?>
 
 			<h2 class="ts header">服務聲明</h2>
 			<p>感謝您使用「靠北交大 2.0」（以下簡稱本網站），本網站之所有文章皆為不特定使用者自行投稿、不特定師生進行審核，並不代表本網站立場。</p>
