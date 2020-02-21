@@ -12,8 +12,10 @@ if (isset($_SESSION['nctu_id']) && !isset($USER))
 
 if (isset($_GET['uid'])) {
 	$uid = $_GET['uid'];
-	if (!($post = $db->getSubmissionByUid($uid)))
+	if (!($post = $db->getSubmissionByUid($uid))) {
+		http_response_code(404);
 		exit('Post not found. 文章不存在');
+	}
 
 	if (isset($USER)) {
 		$votes = $db->getVotesByUser($USER['nctu_id']);

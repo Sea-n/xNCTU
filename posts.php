@@ -5,8 +5,10 @@ require_once('database.php');
 $db = new MyDB();
 
 if (isset($_GET['id'])) {
-	if (!($post = $db->getPostById($_GET['id'])))
+	if (!($post = $db->getPostById($_GET['id']))) {
+		http_response_code(404);
 		exit('Post not found. 文章不存在');
+	}
 	$posts = [$post];
 } else
 	$posts = $db->getPosts(10);
