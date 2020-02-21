@@ -22,6 +22,8 @@ if (isset($_POST['body'])) {
 	}
 
 	$body = $_POST['body'];
+	$body = str_replace("\r", "", $body);
+
 	if (mb_strlen($body) < 5)
 		exit('Body too short. 文章過短');
 	if (mb_strlen($body) > 1000)
