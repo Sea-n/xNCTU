@@ -87,6 +87,7 @@ foreach ($posts as $post) {
 	$img = "/img/{$post['img']}";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
+	$canVote = (isset($post['id']) || isset($post['vote'])) ? 'disabled' : '';
 
 	if (isset($_GET['uid'])) {
 		if (isset($post['id'])) {
@@ -128,12 +129,10 @@ if (!empty($post['author_photo']))
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>
-<?php if (!isset($post['id']) && !isset($post['vote'])) { ?>
 				<div class="ts fluid bottom attached large buttons">
-					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approvals"><?= $post['approvals'] ?></span> 票)</button>
-					<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
+					<button class="ts positive <?= $canVote ?> button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approvals"><?= $post['approvals'] ?></span> 票)</button>
+					<button class="ts negative <?= $canVote ?> button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
 				</div>
-<?php } ?>
 			</div>
 <?php }
 if (isset($_GET['uid']) && isset($USER)) {
