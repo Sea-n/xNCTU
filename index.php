@@ -15,12 +15,12 @@
 		</header>
 		<div class="ts container" name="main">
 			<h2 class="ts header">社群平台</h2>
-			<ul>
-				<li><a target="_blank" href="https://t.me/xNCTU"><i class="telegram icon"></i> Telegram</a></li>
-				<li><a target="_blank" href="https://twitter.com/x_NCTU"><i class="twitter icon"></i> Twitter</a></li>
-				<li><a target="_blank" href="https://www.facebook.com/xNCTU"><i class="facebook square icon"></i> Facebook</a></li>
-				<li><a target="_blank" href="https://www.plurk.com/xNCTU"><i class="talk icon"></i> Plurk</a></li>
-			</ul>
+			<div>
+				<a class="ts link tiny circular image" target="_blank" href="https://t.me/xNCTU"            ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg" alt="Telegram"></a>
+				<a class="ts link tiny circular image" target="_blank" href="https://twitter.com/x_NCTU"    ><img src="https://image.flaticon.com/icons/svg/124/124021.svg"   alt="Twitter" ></a>
+				<a class="ts link tiny circular image" target="_blank" href="https://www.plurk.com/xNCTU"   ><img src="https://image.flaticon.com/icons/svg/124/124026.svg"   alt="Plurk"   ></a>
+				<a class="ts link tiny circular image" target="_blank" href="https://www.facebook.com/xNCTU"><img src="https://image.flaticon.com/icons/svg/220/220200.svg"   alt="Facebook"></a>
+			</div>
 
 			<h2 class="ts header">審文機制</h2>
 			<details class="ts accordion">
@@ -89,7 +89,6 @@
 			<p>感謝您使用「靠北交大 2.0」（以下簡稱本網站），本網站之所有文章皆為不特定使用者自行投稿、不特定師生進行審核，並不代表本網站立場。</p>
 			<p>如有侵害您權益之貼文，麻煩寄信至服務團隊，將在最短時間協助您撤下貼文或進行澄清。</p>
 			<p>投稿者如散播不實訊息而遭司法單位追究，在司法機關提供調取票等充分條件下，本網站將依法提供 IP 位址配合偵辦，切勿以身試法。</p>
-			<p>詳細內容請見 <a href="/policies">服務條款及隱私權政策</a> 頁面</p>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>

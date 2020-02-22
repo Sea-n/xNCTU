@@ -47,7 +47,7 @@ if (isset($USER['name'])) {
 	if (isset($USER['tg_photo']) && !empty($USER['tg_photo']))
 		$photo = $USER['tg_photo'];
 ?>
-			<img class="ts mini circular image" src="<?= $photo ?>">
+			<img class="ts circular avatar image" src="<?= $photo ?>">
 			&nbsp;<b><?= $USER['name'] ?></b>&nbsp;
 			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Logout</a>
 <?php } else { ?>
