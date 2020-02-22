@@ -3,3 +3,5 @@ Allow: *
 Disallow: /login-nctu
 Disallow: /login-tg
 Disallow: /logout
+Disallow: /review
+Sitemap: https://x.nctu.app/sitemap.xml
