@@ -123,13 +123,13 @@ if (isset($_GET['id']) && isset($USER)) {
 		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
 		$id = $vote['voter'];
 		$user = $db->getUserByNctu($id);
-		$name = $user['name'];
+		$name = toHTML($user['name']);
 ?>
 					<tr>
 						<td><?= $i+1 ?></td>
 						<td><?= $type ?></td>
 						<td><?= $name ?></td>
-						<td><?= $vote['reason'] ?></td>
+						<td><?= toHTML($vote['reason']) ?></td>
 					</tr>
 <?php } ?>
 				</tbody>
