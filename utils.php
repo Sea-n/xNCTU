@@ -142,5 +142,5 @@ function idToDep(string $id): string {
 
 	$deg = 4 + (int)(($id[0] > '3' ? '0' : '1') . $id[0] . $id[1]);
 
-	return "$dep $deg 級 $id";
+	return "$dep $deg 級";
 }

@@ -42,7 +42,7 @@ foreach ($items as $href => $name) {
 ?>
 		<div class="right fitted item">
 <?php
-if (isset($USER['name'])) {
+if (isset($USER)) {
 	$photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
 	if (isset($USER['tg_photo']) && !empty($USER['tg_photo']))
 		$photo = $USER['tg_photo'];

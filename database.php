@@ -358,12 +358,10 @@ class MyDB {
 		if ($stmt->fetch())
 			return;
 
-		$name = idToDep($nctu_id);
-
 		$sql = "INSERT INTO users(name, nctu_id, nctu_mail) VALUES (:name, :nctu_id, :mail)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
-			':name' => $name,
+			':name' => $nctu_id,
 			':nctu_id' => $nctu_id,
 			':mail' => $mail
 		]);
