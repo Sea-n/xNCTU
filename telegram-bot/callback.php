@@ -75,34 +75,6 @@ switch ($args[0]) {
 
 		break;
 
-	case 'cancel':
-		$uid = $args[1];
-		$TG->getTelegram('editMessageReplyMarkup', [
-			'chat_id' => $TG->ChatID,
-			'message_id' => $TG->MsgID,
-			'reply_markup' => [
-				'inline_keyboard' => [
-					[
-						[
-							'text' => '✅ 通過',
-							'callback_data' => "approve_$uid"
-						],
-						[
-							'text' => '❌ 駁回',
-							'callback_data' => "reject_$uid"
-						]
-					],
-					[
-						[
-							'text' => '開啟審核頁面',
-							'url' => "https://x.nctu.app/review?uid=$uid"
-						]
-					]
-				]
-			]
-		]);
-		break;
-
 	default:
 		$TG->sendMsg([
 			'text' => "Unknown callback data: {$arg}"
