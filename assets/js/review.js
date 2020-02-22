@@ -48,6 +48,9 @@ function vote(uid, type, reason_prompt) {
 		if (resp.ok) {
 			card.querySelector('#approvals').innerText = resp.approvals;
 			card.querySelector('#rejects').innerText = resp.rejects;
+
+			document.querySelectorAll(".attached button.positive").classList.add("disabled");
+			document.querySelectorAll(".attached button.negative").classList.add("disabled");
 		} else
 			alert("Error: " + resp.msg);
 	});
