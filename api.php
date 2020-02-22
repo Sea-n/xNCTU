@@ -65,7 +65,7 @@ switch ($action) {
 			]));
 
 		try {
-			$db->deleteSubmission($uid, $reason);
+			$db->deleteSubmission($uid, "自刪 $reason");
 			echo json_encode([
 				'ok' => true,
 				'msg' => '刪除成功！'

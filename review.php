@@ -87,11 +87,16 @@ foreach ($posts as $post) {
 	$img = "/img/{$post['img']}.jpg";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
-	$canVote = (isset($post['id']) || isset($post['vote'])) ? 'disabled' : '';
+	$canVote = (isset($post['id']) || isset($post['vote']) || isset($post['deleted_at'])) ? 'disabled' : '';
 
 	if (isset($_GET['uid'])) {
-		if (isset($post['id'])) {
+		if (isset($post['deleted_at'])) {
 ?>
+			<div class="ts error message">
+				<div class="header">此文已刪除</div>
+				<p>刪除原因：<?= $post['delete_note'] ?? '(無)' ?></p>
+			</div>
+<?php } else if (isset($post['id'])) { ?>
 			<div class="ts positive message">
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/posts?id=<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>

@@ -60,7 +60,14 @@ foreach ($posts as $post) {
 		$author_name = toHTML($author['name']);
 	} else
 		$author_name = toHTML($post['author_name']);
+
+if (isset($post['deleted_at'])) {
 ?>
+			<div class="ts error message">
+				<div class="header">此文已刪除</div>
+				<p>刪除原因：<?= $post['delete_note'] ?? '(無)' ?></p>
+			</div>
+<?php } ?>
 			<div class="ts card" id="post-<?= $id ?>" style="margin-bottom: 42px;">
 <?php if (!empty($post['img'])) { ?>
 				<div class="image">

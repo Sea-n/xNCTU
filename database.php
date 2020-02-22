@@ -143,11 +143,20 @@ class MyDB {
 				'rejects' => 42
 			];
 
-		$sql = "SELECT uid FROM submissions WHERE uid = :uid";
+		$sql = "SELECT id, delete_note FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
-		if (!$stmt->fetch())
+		if (!($item = $stmt->fetch()))
 			return ['ok' => false, 'msg' => 'uid not found.'];
+
+		if (!isset($item['id']))
+			return ['ok' => false, 'msg' => 'Already posted.'];
+
+		if (!empty($item['delete_note']))
+			return [
+				'ok' => false,
+				'msg' => 'Deleted: ' . $item['delete_note']
+			];
 
 		$sql = "SELECT created_at FROM votes WHERE uid = :uid AND voter = :voter";
 		$stmt = $this->pdo->prepare($sql);
