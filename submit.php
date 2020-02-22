@@ -108,7 +108,7 @@ if (isset($_POST['body'])) {
 <?php if (isset($_POST['body'])) { ?>
 			<h2 class="ts header">投稿成功！</h2>
 			<p>文章臨時代碼：<code><?= $uid ?></code>，您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態</p>
-			<p>但提醒您，為自己的貼文按「通過」或「駁回」均會留下公開紀錄</p>
+			<p>但提醒您，為自己的投稿按 <button class="ts vote positive button">通過</button> 或 <button class="ts vote negative button">駁回</button> 均會留下公開紀錄哦</p>
 <?php } else { ?>
 			<h2>投稿規則</h2>
 			<ol>
@@ -141,8 +141,8 @@ if (isset($_POST['body'])) {
 					<span>&nbsp; <?= $captcha ?></span>
 				</div>
 				<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
-				<p><small>請注意：一但送出投稿後，所有已登入的交大人都能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。詳請見 <a href="/policies">隱私權政策</a>。</small></p>
 			</form>
+			<p><small>請注意：一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</small></p>
 <?php } ?>
 		</div>
 <?php include('includes/footer.php'); ?>

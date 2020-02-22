@@ -102,7 +102,7 @@ foreach ($posts as $post) {
 <?php } else if (isset($USER) && empty($post['author_id']) && !isset($post['vote'])) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
-				<p>提醒您，為自己的投稿按「通過」會留下公開紀錄哦</p>
+				<p>提醒您，為自己的投稿按 <button class="ts vote positive button">通過</button> 或 <button class="ts vote negative button">駁回</button> 均會留下公開紀錄哦</p>
 			</div>
 <?php } } ?>
 			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">

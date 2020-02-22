@@ -44,3 +44,8 @@ footer {
 
 .post-image {
 }
+
+button.vote {
+	font-size: 0.9em !important;
+	padding: 0.05em 0.3em !important;
+}
