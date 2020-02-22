@@ -408,4 +408,19 @@ class MyDB {
 
 		return $results;
 	}
+
+	public function updateUserTgProfile(array $tg) {
+		$name = $tg['first_name'];
+		if (isset($tg['last_name']))
+			$name .= ' ' . $tg['last_name'];
+
+		$sql = "UPDATE users SET (tg_name, tg_username, tg_photo) = (:name, :username, :photo) WHERE tg_id = :tg_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':tg_id' => $tg['id'],
+			':name' => $name,
+			':username' => $tg['username'] ?? '',
+			':photo' => $tg['photo_url'] ?? '',
+		]);
+	}
 }

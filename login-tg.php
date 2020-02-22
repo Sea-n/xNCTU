@@ -14,6 +14,8 @@ try {
 $USER = $db->getUserByTg($auth_data['id']);
 
 if ($USER) {
+	$db->updateUserTgProfile($auth_data);
+
 	if (!isset($_SESSION['nctu_id'])) {
 		$_SESSION['nctu_id'] = $USER['nctu_id'];
 		redirect('Login via Telegram success.');
@@ -36,7 +38,7 @@ if ($USER) {
 }
 
 if (!isset($_SESSION['nctu_id']))
-	exit('You must login NCTU first.');
+	exit('You must login NCTU first. 請先於首頁右上角登入交大帳號');
 
 $db->insertUserTg($_SESSION['nctu_id'], $auth_data);
 
