@@ -102,10 +102,29 @@ if (isset($_POST['body'])) {
 			</div>
 		</header>
 		<div class="ts container" name="main">
-<?php if (isset($_POST['body'])) { ?>
+<?php if (isset($body)) { ?>
 			<h2 class="ts header">投稿成功！</h2>
-			<p>文章臨時代碼：<code><?= $uid ?></code>，您可以於 <a href="/review?uid=<?= $uid ?>">這裡</a> 查看審核動態</p>
-			<p>但提醒您，為自己的投稿按 <button class="ts vote positive button">通過</button> 或 <button class="ts vote negative button">駁回</button> 均會留下公開紀錄哦</p>
+			<p>您可以在 3 分鐘內反悔，逾時刪除請來信聯絡開發團隊。</p>
+			<div class="ts card" id="post-preview" style="margin-bottom: 42px;">
+<?php if (isset($img)) { ?>
+				<div class="image">
+					<img class="post-image" src="<?= $img ?>" />
+				</div>
+<?php } ?>
+				<div class="content">
+					<div class="header"> <a href="review?uid=<?= $uid ?>">投稿編號 <?= $uid ?></a></div>
+					<p><?= $body ?></p>
+				</div>
+				<div class="extra content">
+					<div class="right floated author">
+						<img class="ts circular avatar image" src="<?= $author_photo ?>"> <?= $author_name ?></img>
+					</div>
+					<p>發文者 IP 位址：<?= ip_mask($ip) ?></p>
+				</div>
+				<div class="ts fluid bottom attached large buttons">
+					<button id="delete-button" class="ts negative button" onclick="deleteSubmission('<?= $uid ?>');">刪除投稿 (<span id="countdown">3:00</span>)</button>
+				</div>
+			</div>
 <?php } else { ?>
 			<h2>投稿規則</h2>
 			<ol>
@@ -122,10 +141,10 @@ if (isset($_POST['body'])) {
 				<p>所有人都能看到您（<?= $USER['name'] ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
 			</div>
 <?php } ?>
-			<form class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
-				<div id="body-field" class="required field">
+			<form id ="submit-post" class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
+				<div id="body-field" class="required resizable field">
 					<label>貼文內容</label>
-					<textarea id="body-area" name="body" rows="6" placeholder="請在這輸入您的投稿內容。" style="width: 100%;"></textarea>
+					<textarea id="body-area" name="body" rows="6" placeholder="請在這輸入您的投稿內容。"></textarea>
 					<span>字數上限：<span id="body-wc">0</span> / 870</span>
 				</div>
 				<div class="inline field">
@@ -146,6 +165,8 @@ if (isset($_POST['body'])) {
 	</body>
 </html>
 <?php
+fastcgi_finish_request();
+
 if (isset($uid)) {
 	sendReview($uid, $body, $img);
 }

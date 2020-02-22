@@ -1,7 +1,28 @@
+var stopCountdown = 0;
+
 function init() {
-	document.getElementById('body-area').oninput = checkForm;
-	document.getElementById('captcha-input').oninput = checkForm;
-	checkForm();
+	if (document.getElementById('submit-post')) {
+		document.getElementById('body-area').oninput = checkForm;
+		document.getElementById('captcha-input').oninput = checkForm;
+		checkForm();
+	}
+
+	if (document.getElementById('post-preview')) {
+		var deadline = (new Date()).getTime() + 3*60*1000;
+		stopCountdown = setInterval(() => {
+			var dt = Math.floor((deadline - (new Date()).getTime()) / 1000);
+			if (dt == 0) {
+				document.getElementById('delete-button').classList.add('disabled');
+				clearInterval(stopCountdown);
+			}
+
+			var min = Math.floor(dt/60);
+			var sec = dt % 60;
+			if (sec < 10)
+				sec = '0' + sec;
+			document.getElementById('countdown').innerText = min + ':' + sec;
+		}, 100);
+	}
 }
 
 function checkForm() {
@@ -31,6 +52,37 @@ function checkForm() {
 		submit.classList.add('disabled');
 	else if (captchaInput.value.length != captchaInput.dataset.len)
 		captchaField.classList.add('error');
+}
+
+function deleteSubmission(uid) {
+	if (!confirm('您確定要刪除此投稿嗎？'))
+		return;
+
+	var reason = prompt('請輸入刪除附註');
+	if (reason.length < 5) {
+		alert('請輸入 5 個字以上');
+		return;
+	}
+
+	data = {
+		action: 'delete',
+		uid: uid,
+		reason: reason
+	};
+
+	fetch('/api', {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {'content-type': 'application/json'}
+	}).then(resp => resp.json())
+	.then((resp) => {
+		console.log(resp);
+		if (resp.ok) {
+			document.getElementById('delete-button').classList.add('disabled');
+			clearInterval(stopCountdown);
+		}
+		alert(resp.msg);
+	});
 }
 
 window.addEventListener("load", init);

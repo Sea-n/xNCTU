@@ -97,6 +97,15 @@ class MyDB {
 		return $results;
 	}
 
+	public function deleteSubmission(string $uid, string $reason) {
+		$sql = "UPDATE submissions SET (delete_note, deleted_at) = (:reason, datetime('now')) WHERE uid = :uid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':uid' => $uid,
+			':reason' => $reason
+		]);
+	}
+
 	public function getPostById(string $id) {
 		$sql = "SELECT * FROM posts WHERE id = :id";
 		$stmt = $this->pdo->prepare($sql);

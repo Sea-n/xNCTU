@@ -20,7 +20,8 @@ case 'build':
 		"author_photo TEXT DEFAULT '', " .
 		'approvals INTEGER DEFAULT 0, ' .
 		'rejects INTEGER DEFAULT 0, ' .
-		"deleted_at DATETIME," .
+		"deleted_at DATETIME, " .
+		"delete_note TEXT DEFAULT '', " .
 		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
@@ -47,8 +48,9 @@ case 'build':
 		'plurk_id INTEGER DEFAULT 0, ' .
 		'twitter_id INTEGER DEFAULT 0, ' .
 		'facebook_id INTEGER DEFAULT 0, ' .
-		"submitted_at DATETIME," .
-		"deleted_at DATETIME," .
+		"submitted_at DATETIME, " .
+		"deleted_at DATETIME, " .
+		"delete_note TEXT DEFAULT '', " .
 		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
@@ -61,7 +63,7 @@ case 'build':
 		'tg_name TEXT, ' .
 		'tg_username TEXT, ' .
 		'tg_photo TEXT, ' .
-		"deleted_at DATETIME," .
+		"deleted_at DATETIME, " .
 		"created_at DATETIME DEFAULT (datetime('now','localtime')))";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
