@@ -230,6 +230,53 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	global $link;
 	$msg = "#靠交$id\n\n$body\n\n$link";
 
+	$header = [
+		'Cookie: ' . FB_COOKIE,
+		'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:74.0) Gecko/20100101 Firefox/74.0'
+	];
+
+	$curl = curl_init('https://mbasic.facebook.com/xNCTU/');
+	curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+	curl_setopt($curl, CURLOPT_HEADER, true);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	$data = curl_exec($curl);
+	if (!preg_match('#<input type="hidden" name="fb_dtsg" value="([^"]+)"#', $data, $matches)) {
+		echo "No dstg tag:\n";
+		var_dump($data);
+		return 0;
+	}
+	$dtsg = $matches[1];
+
+	$data = [
+		'fb_dtsg' => $dtsg,
+		'xc_message' => $msg,
+		'jazoest' => rand(21000, 23000),
+		'r2a' => 1,
+		'target' => FB_PAGES_ID,
+		'c_src' => 'page_self',
+		'cwevent' => 'composer_entry',
+		'referrer' => 'pages_feed',
+		'ctype' => 'inline',
+		'cver' => 'amber',
+		'rst_icv' => '',
+		'view_post' => 'Post'
+	];
+
+	$curl = curl_init('https://mbasic.facebook.com/composer/mbasic/?av=' . FB_PAGES_ID);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+	curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($curl, CURLOPT_HEADER, true);
+	$data = curl_exec($curl);
+	if (strpos($data, 'Location: https://mbasic.facebook.com/xNCTU/?v=feed&_rdr') === false)
+		return 0;
+	return 1;
+}
+
+function send_facebook_api(int $id, string $body, string $img = ''): int {
+	global $link;
+	$msg = "#靠交$id\n\n$body\n\n$link";
+
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . (empty($img) ? '/feed' : '/photos');
    
 	$data = ['access_token' => FB_ACCESS_TOKEN];
