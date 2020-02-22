@@ -5,10 +5,7 @@ require_once('database.php');
 require_once('send-review.php');
 $db = new MyDB();
 
-if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
-	exit("Please don't hack me.");
-
-$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+$ip = $_SERVER['REMOTE_ADDR'];
 
 if (isset($_SESSION['nctu_id']))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);

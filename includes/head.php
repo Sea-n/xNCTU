@@ -42,5 +42,3 @@ $URL = "https://x.nctu.app$URL";
 <meta property="fb:app_id" content="103461781248690" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.css">
 <link rel="stylesheet" href="/assets/css/style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.js"></script>
-<script src="/assets/js/common.js"></script>

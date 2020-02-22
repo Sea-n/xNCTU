@@ -4,9 +4,6 @@ require_once('utils.php');
 require_once('database.php');
 $db = new MyDB();
 
-if (!check_cf_ip($_SERVER['REMOTE_ADDR'] ?? '1.1.1.1'))
-	exit("Please don't hack me.");
-
 if (isset($_SESSION['nctu_id']) && !isset($USER))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
 
