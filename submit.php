@@ -126,12 +126,12 @@ if (isset($_POST['body'])) {
 			<div class="ts card" id="post-preview" style="margin-bottom: 42px;">
 <?php if (isset($img)) { ?>
 				<div class="image">
-					<img class="post-image" src="<?= $img ?>" />
+					<img class="post-image" src="https://x.nctu.app/img/<?= $img ?>.png" />
 				</div>
 <?php } ?>
 				<div class="content">
 					<div class="header"> <a href="review?uid=<?= $uid ?>">投稿編號 <?= $uid ?></a></div>
-					<p><?= $body ?></p>
+					<p><?= toHTML($body) ?></p>
 				</div>
 				<div class="extra content">
 					<div class="right floated author">
@@ -174,7 +174,7 @@ if (isset($_POST['body'])) {
 					<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" /></div>
 					<span>&nbsp; <?= $captcha ?></span>
 				</div>
-				<input id="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
+				<input name="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
 				<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
 			</form>
 			<p><small>請注意：一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</small></p>

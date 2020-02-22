@@ -1,10 +1,25 @@
 var stopCountdown = 0;
+var submitted = false;
 
 function init() {
 	if (document.getElementById('submit-post')) {
 		document.getElementById('body-area').oninput = checkForm;
 		document.getElementById('captcha-input').oninput = checkForm;
 		checkForm();
+
+		document.getElementById('submit-post').onsubmit = () {
+			submitted = true;
+		}
+		window.addEventListener("beforeunload", function (e) {
+			var bodyArea = document.getElementById('body-area');
+			var len = bodyArea.value.length;
+			if (len == 0 || submitted)
+				return undefined;
+
+			var confirmationMessage = '您確定要離開嗎？';
+			(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+			return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+		});
 	}
 
 	if (document.getElementById('post-preview')) {
@@ -86,14 +101,3 @@ function deleteSubmission(uid) {
 }
 
 window.addEventListener("load", init);
-
-window.addEventListener("beforeunload", function (e) {
-	var bodyArea = document.getElementById('body-area');
-	var len = bodyArea.value.length;
-	if (len == 0)
-		return undefined;
-
-	var confirmationMessage = '您確定要離開嗎？';
-	(e || window.event).returnValue = confirmationMessage; //Gecko + IE
-	return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-});

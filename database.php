@@ -149,7 +149,7 @@ class MyDB {
 		if (!($item = $stmt->fetch()))
 			return ['ok' => false, 'msg' => 'uid not found.'];
 
-		if (!isset($item['id']))
+		if (isset($item['id']))
 			return ['ok' => false, 'msg' => 'Already posted.'];
 
 		if (!empty($item['delete_note']))
