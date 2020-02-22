@@ -11,6 +11,16 @@ if (isset($_SESSION['nctu_id']))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
 
 if (isset($_POST['body'])) {
+	/* Check CSRF Token */
+	if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']))
+		exit('No CSRF Token. 請重新操作');
+
+	if ($_SESSION['csrf_token'] !== $_POST['csrf_token'])
+		exit('Invalid CSRF Token. 請重新操作');
+
+	unset($_SESSION['csrf_token']);  // Prevent reuse
+
+	/* Check CAPTCHA */
 	$captcha = trim($_POST['captcha'] ?? 'X');
 	if ($captcha != '交大竹湖' && $captcha != '交大竹狐') {
 		if (strlen($captcha) > 1 && strlen($captcha) < 20)
@@ -18,6 +28,7 @@ if (isset($_POST['body'])) {
 		exit('Are you human? 驗證碼錯誤');
 	}
 
+	/* Check Body */
 	$body = $_POST['body'];
 	$body = str_replace("\r", "", $body);
 
@@ -26,6 +37,10 @@ if (isset($_POST['body'])) {
 	if (mb_strlen($body) > 1000)
 		exit('Body too long (' . mb_strlen($body) . ' chars). 文章過長');
 
+	/* Generate UID (Collision not handled) */
+	$uid = rand58(4);
+
+	/* Upload Image */
 	if (isset($_FILES['img']) && $_FILES['img']['size']) {
 		$src = $_FILES['img']['tmp_name'];
 		if (!file_exists($src) || !is_uploaded_file($src))
@@ -43,8 +58,8 @@ if (isset($_POST['body'])) {
 			exit('Extension not recognized. 圖片副檔名錯誤');
 
 		do {
-			$img = rand58(4);
-			$dst = __DIR__ . "/img/$img";
+			$img = $uid;
+			$dst = __DIR__ . "/img/$uid";
 		} while (file_exists($dst));
 
 		if (!move_uploaded_file($src, $dst))
@@ -65,8 +80,7 @@ if (isset($_POST['body'])) {
 	} else
 		$img = '';
 
-	$uid = rand58(4);
-
+	/* Get Author Name */
 	if (isset($USER)) {
 		$author_name = $USER['name'];
 		$author_id = $USER['nctu_id'];
@@ -78,10 +92,14 @@ if (isset($_POST['body'])) {
 		$author_photo = '';
 	}
 
+	/* Insert record */
 	$error = $db->insertSubmission($uid, $body, $img, $ip, $author_name, $author_id, $author_photo);
 	if ($error[0] != '00000')
 		exit("Database error {$error[0]}, {$error[1]}, {$error[2]}. 資料庫發生錯誤");
 } else {
+	if (!isset($_SESSION['csrf_token']))
+		$_SESSION['csrf_token'] = rand58(8);
+
 	$captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 
 	$ip_masked = ip_mask($ip);
@@ -156,6 +174,7 @@ if (isset($_POST['body'])) {
 					<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" /></div>
 					<span>&nbsp; <?= $captcha ?></span>
 				</div>
+				<input id="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
 				<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
 			</form>
 			<p><small>請注意：一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</small></p>
