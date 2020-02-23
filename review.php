@@ -30,12 +30,18 @@ if (isset($_GET['uid'])) {
 		$posts = $db->getSubmissions(10);
 }
 
-$showAll = isset($_GET['all']) && ($_GET['all'] == '1' || $_GET['all'] == 'true');
+$postsCanVote = array_filter($posts, function($item) {
+	return !isset($item['vote']);
+});
 
-if (!isset($_GET['uid']) && !$showAll)
-	$posts = array_filter($posts, function($item) {
-		return !isset($item['vote']);
-	});
+if (isset($_GET['all'])) {
+	$showAll = ($_GET['all'] == 'true');
+} else {
+	$showAll = (count($postsCanVote) == 0);
+}
+
+if (!$showAll)
+	$posts = $postsCanVote;
 
 ?>
 <!DOCTYPE html>
