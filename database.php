@@ -439,4 +439,10 @@ class MyDB {
 			':photo' => $tg['photo_url'] ?? '',
 		]);
 	}
+
+	public function removeUserTg(int $tg_id) {
+		$sql = "UPDATE users SET tg_name = NULL WHERE tg_id = :tg_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':tg_id' => $tg['id']]);
+	}
 }
