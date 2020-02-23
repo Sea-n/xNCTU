@@ -62,6 +62,34 @@ switch ($args[0]) {
 		$type = $args[0];
 		$uid = $args[1];
 
+		$check = $db->canVote($uid, $USER['nctu_id']);
+		if (!$check['ok']) {
+			$TG->getTelegram('answerCallbackQuery', [
+				'callback_query_id' => $TG->data['callback_query']['id'],
+				'text' => $check['msg'],
+				'show_alert' => true
+			]);
+
+			$TG->getTelegram('editMessageReplyMarkup', [
+				'chat_id' => $TG->data['callback_query']['message']['chat']['id'],
+				'message_id' => $TG->data['callback_query']['message']['message_id'],
+				'reply_markup' => [
+					'inline_keyboard' => [
+						[
+							[
+								'text' => '開啟審核頁面',
+								'login_url' => [
+									'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+								]
+							]
+						]
+					]
+				]
+			]);
+
+			break;
+		}
+
 		$TG->sendMsg([
 			'reply_to_message_id' => $TG->MsgID,
 			'text' => "[$type/$uid] 請輸入理由\n\n" .

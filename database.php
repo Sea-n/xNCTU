@@ -128,34 +128,23 @@ class MyDB {
 		return $results;
 	}
 
-	public function voteSubmissions(string $uid, string $voter, int $vote, string $reason = '') {
-		if ($vote == 1)
-			$type = 'approvals';
-		else if ($vote == -1)
-			$type = 'rejects';
-		else
-			return ['ok' => false, 'msg' => 'Unknown vote.'];
-
+	public function canVote(string $uid, string $voter) {
 		if ($uid == 'TEST')
-			return [
-				'ok' => true,
-				'approvals' => 87,
-				'rejects' => 42
-			];
+			return ['ok' => true];
 
 		$sql = "SELECT id, delete_note FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 		if (!($item = $stmt->fetch()))
-			return ['ok' => false, 'msg' => 'uid not found.'];
+			return ['ok' => false, 'msg' => 'uid not found. 找不到該投稿'];
 
 		if (isset($item['id']))
-			return ['ok' => false, 'msg' => 'Already posted.'];
+			return ['ok' => false, 'msg' => 'Already posted. 太晚囉，貼文已發出'];
 
 		if (!empty($item['delete_note']))
 			return [
 				'ok' => false,
-				'msg' => 'Deleted: ' . $item['delete_note']
+				'msg' => '投稿已刪除，理由：' . $item['delete_note']
 			];
 
 		$sql = "SELECT created_at FROM votes WHERE uid = :uid AND voter = :voter";
@@ -165,7 +154,22 @@ class MyDB {
 			':voter' => $voter
 		]);
 		if ($stmt->fetch())
-			return ['ok' => false, 'msg' => 'Already voted.'];
+			return ['ok' => false, 'msg' => 'Already voted. 您已投過票'];
+
+		return ['ok' => true];
+	}
+
+	public function voteSubmissions(string $uid, string $voter, int $vote, string $reason = '') {
+		if ($vote == 1)
+			$type = 'approvals';
+		else if ($vote == -1)
+			$type = 'rejects';
+		else
+			return ['ok' => false, 'msg' => 'Unknown vote. 未知的投票類型'];
+
+		$check = $this->canVote($uid, $voter);
+		if (!$check['ok'])
+			return $check;
 
 		$sql = "INSERT INTO votes(uid, vote, reason, voter) VALUES (:uid, :vote, :reason, :voter)";
 		$stmt = $this->pdo->prepare($sql);
