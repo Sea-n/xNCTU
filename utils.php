@@ -43,8 +43,10 @@ function ip_from(string $ip): string {
 
 	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches)) {
 		$name = $matches[1];
-		$name = str_replace("Far EasTone Telecommunication Co., Ltd.", "遠傳電信");
-		$name = str_replace("Chunghwa Telecom Co.,Ltd.", "中華電信");
+		$name = str_replace("Far EasTone Telecommunication Co., Ltd.", "遠傳電信", $name);
+		$name = str_replace("Chunghwa Telecom Co.,Ltd.", "中華電信", $name);
+		$name = str_replace("ASIA PACIFIC TELECOM CO.,Ltd.", "亞太電信", $name);
+		$name = str_replace("Taiwan Mobile Co., Ltd.", "台灣大哥大", $name);
 		return $name;
 	}
 
