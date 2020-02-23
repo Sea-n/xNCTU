@@ -7,7 +7,7 @@ function init() {
 		document.getElementById('captcha-input').oninput = checkForm;
 		checkForm();
 
-		document.getElementById('submit-post').onsubmit = () {
+		document.getElementById('submit-post').onsubmit = () => {
 			submitted = true;
 		}
 		window.addEventListener("beforeunload", function (e) {
