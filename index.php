@@ -2,7 +2,11 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php $TITLE = '首頁'; include('includes/head.php'); ?>
+<?php
+$TITLE = '首頁';
+$IMG = 'https://x.nctu.app/assets/img/logo.png';
+include('includes/head.php');
+?>
 		<script src="/assets/js/index.js"></script>
 	</head>
 	<body>

@@ -42,7 +42,6 @@ if (!isset($_GET['uid']) && !$showAll)
 <html lang="zh-TW">
 	<head>
 <?php
-$TITLE = '貼文審核';
 if (isset($post)) {
 	$hashtag = "待審貼文 {$post['uid']}";
 
@@ -57,6 +56,9 @@ if (isset($post)) {
 
 	if ($post['img'])
 		$IMG = "https://x.nctu.app/img/{$post['img']}.jpg";
+} else {
+	$TITLE = '貼文審核';
+	$IMG = 'https://x.nctu.app/assets/img/logo.png';
 }
 include('includes/head.php');
 ?>

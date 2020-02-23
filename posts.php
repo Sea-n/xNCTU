@@ -18,7 +18,6 @@ if (isset($_GET['id'])) {
 <html lang="zh-TW">
 	<head>
 <?php
-$TITLE = '文章列表';
 if (isset($post)) {
 	$hashtag = "#靠交{$post['id']}";
 
@@ -33,6 +32,9 @@ if (isset($post)) {
 
 	if ($post['img'])
 		$IMG = "https://x.nctu.app/img/{$post['img']}.jpg";
+} else {
+	$TITLE = '文章列表';
+	$IMG = 'https://x.nctu.app/assets/img/logo.png';
 }
 include('includes/head.php');
 ?>

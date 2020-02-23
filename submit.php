@@ -108,7 +108,11 @@ if (isset($_POST['body'])) {
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php $TITLE = '文章投稿'; include('includes/head.php'); ?>
+<?php
+$TITLE = '文章投稿';
+$IMG = 'https://x.nctu.app/assets/img/logo.png';
+include('includes/head.php');
+?>
 		<script src="/assets/js/submit.js"></script>
 	</head>
 	<body>

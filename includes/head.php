@@ -1,8 +1,4 @@
 <?php
-if (!isset($IMG))
-	$IMG = 'https://x.nctu.app/assets/img/logo.png';
-$IMG = htmlentities($IMG);
-
 $TITLE = htmlentities($TITLE);
 $TITLE = str_replace("\n", "  ", $TITLE);
 
@@ -10,6 +6,9 @@ if (!isset($DESC))
 	$DESC = '不要問為何沒有人審文，先承認你就是沒有人。新版靠北交大 2.0 (xNCTU) 讓全校師生都有了審核的權限，每天穩定發出投稿文章。並支援 Telegram、Plurk、Twitter、Facebook 四大社群媒體平台。';
 $DESC = htmlentities($DESC);
 $DESC = str_replace("\n", "  ", $DESC);
+
+if (isset($IMG))
+	$IMG = htmlentities($IMG);
 
 $URL = $_SERVER['REQUEST_URI'];
 $URL = explode('?', $URL, 2);
@@ -39,8 +38,10 @@ $URL = htmlentities($URL);
 <link rel="canonical" href="<?= $URL ?>" />
 <meta property="og:title" content="<?= $TITLE ?>" />
 <meta property="og:url" content="<?= $URL ?>" />
+<?php if (isset($IMG)) { ?>
 <meta property="og:image" content="<?= $IMG ?>" />
 <meta property="og:image:secure_url" content="<?= $IMG ?>" />
+<?php } ?>
 <meta property="og:type" content="website" />
 <meta property="og:description" content="<?= $DESC ?>" />
 <meta property="og:site_name" content="靠北交大 2.0" />

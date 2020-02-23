@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php $TITLE = '常見問答'; include('includes/head.php'); ?>
+<?php
+$TITLE = '常見問答';
+$IMG = 'https://x.nctu.app/assets/img/logo.png';
+include('includes/head.php');
+?>
 	</head>
 	<body>
 <?php include('includes/nav.php'); ?>
