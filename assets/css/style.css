@@ -17,6 +17,15 @@ header.ts.fluid.vertically.padded.heading.slate+.ts.container {
 	margin-top: 2em !important;
 }
 
+header .description {
+	line-height: 1.2em;
+}
+
+nav > div {
+	display: flex;
+	flex-wrap: wrap;
+}
+
 nav.fixed {
 	position: fixed;
 	top: 0;
