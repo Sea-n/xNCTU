@@ -94,7 +94,7 @@ foreach ($posts as $post) {
 ?>
 			<div class="ts error message">
 				<div class="header">此文已刪除</div>
-				<p>刪除原因：<?= $post['delete_note'] ?? '(無)' ?></p>
+				<p>刪除原因：<?= toHTML($post['delete_note']) ?? '(無)' ?></p>
 			</div>
 <?php } else if (isset($post['id'])) { ?>
 			<div class="ts positive message">
