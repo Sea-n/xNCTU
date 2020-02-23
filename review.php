@@ -92,7 +92,7 @@ foreach ($posts as $post) {
 	if (isset($_GET['uid'])) {
 		if (isset($post['deleted_at'])) {
 ?>
-			<div class="ts error message">
+			<div class="ts negative message">
 				<div class="header">此文已刪除</div>
 				<p>刪除原因：<?= toHTML($post['delete_note']) ?? '(無)' ?></p>
 			</div>
