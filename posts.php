@@ -11,7 +11,7 @@ if (isset($_GET['id'])) {
 	}
 	$posts = [$post];
 } else
-	$posts = $db->getPosts(10);
+	$posts = $db->getPosts(50);
 
 ?>
 <!DOCTYPE html>
@@ -85,7 +85,9 @@ if (isset($post['deleted_at'])) {
 					<p><?= $body ?></p>
 				</div>
 				<div class="extra content">
-<?php
+<?php if (isset($USER) && empty($post['author_id'])) { ?>
+					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
+<?php }
 if (isset($_GET['id'])) {
 $plurk = base_convert($post['plurk_id'], 10, 36);
 

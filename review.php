@@ -25,9 +25,9 @@ if (isset($_GET['uid'])) {
 
 } else {
 	if (isset($USER))
-		$posts = $db->getSubmissionsByVoter($USER['nctu_id'], 10);
+		$posts = $db->getSubmissionsByVoter($USER['nctu_id'], 50);
 	else
-		$posts = $db->getSubmissions(10);
+		$posts = $db->getSubmissions(50);
 }
 
 $postsCanVote = array_filter($posts, function($item) {
@@ -130,7 +130,7 @@ foreach ($posts as $post) {
 					<p><?= $body ?></p>
 				</div>
 				<div class="extra content">
-<?php if (isset($USER)) { ?>
+<?php if (isset($USER) && empty($post['author_id'])) { ?>
 					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
 <?php }
 $photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
