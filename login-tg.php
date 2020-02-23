@@ -5,7 +5,13 @@ require('database.php');
 require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
 $db = new MyDB();
 
+$redir = '/';  # Default value
+
 try {
+	if (isset($_GET['r'])) {
+		$redir = $_GET['r'];
+		unset($_GET['r']);
+	}
 	$auth_data = checkTelegramAuthorization($_GET);
 } catch (Exception $e) {
 	exit($e->getMessage());
@@ -53,8 +59,9 @@ redirect('Login success.');
 
 
 function redirect(string $msg) {
+	global $redir;
 	echo $msg;
-	header('Location: /');
+	header("Location: $redir");
 	exit;
 }
 

@@ -97,7 +97,9 @@ if (substr($text, 0, 1) == '/') {
 						[
 							[
 								'text' => '開啟網站',
-								'url' => 'https://x.nctu.app/'
+								'login_url' => [
+									'url' => "https://x.nctu.app/login-tg"
+								]
 							]
 						]
 					]
@@ -143,7 +145,9 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 				[
 					[
 						'text' => '開啟審核頁面',
-						'url' => "https://x.nctu.app/review?uid=$uid"
+						'login_url' => [
+							'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+						]
 					]
 				]
 			]

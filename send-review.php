@@ -27,7 +27,9 @@ function sendPost(string $uid, string $body, string $img, int $id) {
 			[
 				[
 					'text' => '開啟審核頁面',
-					'url' => "https://x.nctu.app/review?uid=$uid"
+					'login_url' => [
+						'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+					]
 				]
 			]
 		]
