@@ -80,6 +80,15 @@ include('includes/head.php');
 		</header>
 		<div class="ts container" name="main">
 <?php
+/* Time period 00:00 - 09:59 */
+if (substr(date('H'), 0, 1) == '0') {
+?>
+		<div class="ts info message">
+			<div class="header">現在時間 <?= date('H:i') ?></div>
+			<p>系統已進入休眠模式，將於 10:00 起發送通過審核的貼文。這段時間內仍然可以正常投稿、審核。</p>
+		</div>
+<?php
+}
 if (count($posts) == 0) {
 	if (isset($USER)) {
 ?>

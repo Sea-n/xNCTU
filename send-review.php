@@ -43,12 +43,16 @@ function sendPost(string $uid, string $body, string $img, int $id) {
 		]
 	];
 
+	/* Time period 00:00 - 09:59 */
+	$dnd = (substr(date('H'), 0, 1) != '0');
+
 	if (empty($img))
 		return sendMsg([
 			'bot' => 'xNCTU',
 			'chat_id' => $id,
 			'text' => $body,
-			'reply_markup' => $keyboard
+			'reply_markup' => $keyboard,
+			'disable_notification' => $dnd
 		]);
 	else
 		return getTelegram('sendPhoto', [
@@ -56,6 +60,7 @@ function sendPost(string $uid, string $body, string $img, int $id) {
 			'chat_id' => $id,
 			'photo' => "https://x.nctu.app/img/$img.jpg",
 			'caption' => $body,
-			'reply_markup' => $keyboard
+			'reply_markup' => $keyboard,
+			'disable_notification' => $dnd
 		]);
 }
