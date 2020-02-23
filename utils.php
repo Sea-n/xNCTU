@@ -1,8 +1,10 @@
 <?php
 function ip_from(string $ip): string {
+	/* Only convert Taiwan IP addresses */
 	if (($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx') != 'TW')
-		return '境外, ' . ccToZh($_SERVER["HTTP_CF_IPCOUNTRY"]);
+		return '境外, ' . ccToZh($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx');
 
+	/* Known IP address prefix for TANet */
 	$tanet = [
 		'140.113.' => '交大',
 		'140.112.' => '台大',
@@ -15,6 +17,7 @@ function ip_from(string $ip): string {
 		'140.122.' => '師大',
 		'140.124.' => '北科',
 		'140.129.' => '陽明',
+		'163.13.' => '淡江',
 		'2001:f18:' => '交大',
 		'2001:288:e001:' => '清大',
 		'2001:288:1001:' => '台大',
@@ -25,24 +28,31 @@ function ip_from(string $ip): string {
 			return $name;
 
 
-	$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip");
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	$resp = curl_exec($curl);
-	if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立)*([^<]+?)(區網|中心)*</td></tr>#', $resp, $matches))
-		return $matches[2];
-
+	/* Query TWNIC whois */
 	$curl = curl_init('https://rms.twnic.net.tw/query_whois1.php');
 	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip");
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	$resp = curl_exec($curl);
+
 	if (preg_match('#<tr><td>Chinese Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches)) {
 		$name = $matches[1];
 		$name = str_replace("台灣之星電信", "台灣之星", $name);
 		return $name;
 	}
 
+	/* IPv6 address only have English org name for unknown reason */
 	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches)) {
 		$name = $matches[1];
+		if ($name == '教育部') {
+			$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip");
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$resp = curl_exec($curl);
+			if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立|私立)*([^<]+?)(大學|區網|中心)*</td></tr>#', $resp, $matches)) {
+				$name = $matches[2];
+				return $name;
+			}
+		}
+
 		$name = str_replace("Far EasTone Telecommunication Co., Ltd.", "遠傳電信", $name);
 		$name = str_replace("Chunghwa Telecom Co.,Ltd.", "中華電信", $name);
 		$name = str_replace("ASIA PACIFIC TELECOM CO.,Ltd.", "亞太電信", $name);
@@ -50,6 +60,17 @@ function ip_from(string $ip): string {
 		return $name;
 	}
 
+	/* Use PTR record then mapping by human */
+	$ptr = gethostbyaddr($ip);
+	if ($ptr != $ip) {
+		$ptr = explode('.', $ptr);
+		$ptr = array_slice($ptr, -3, 3);
+		$ptr = join('.', $ptr);
+		$ptr = str_replace("dynamic.kbtelecom.net", "中嘉和網", $ptr);
+		return $ptr;
+	}
+
+	/* Unknown ISP */
 	return "台灣";
 }
 
