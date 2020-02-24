@@ -64,25 +64,6 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 
 	$tg_id = $result['result']['message_id'];
 
-	/* Send to @CowBeiNCTU */
-	$msg = "<a href='https://t.me/xNCTU/$tg_id'>#靠交$id</a>\n\n" . enHTML($body);
-	if (empty($img))
-		$result = sendMsg([
-			'bot' => 'xNCTU',
-			'chat_id' => '@CowBeiNCTU',
-			'text' => $msg,
-			'parse_mode' => 'HTML',
-			'disable_web_page_preview' => true
-		]);
-	else
-		$result = getTelegram('sendPhoto', [
-			'bot' => 'xNCTU',
-			'chat_id' => '@CowBeiNCTU',
-			'photo' => "https://x.nctu.app/img/{$img}.jpg",
-			'caption' => $msg,
-			'parse_mode' => 'HTML',
-		]);
-
 	return $tg_id;
 }
 
