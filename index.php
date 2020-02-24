@@ -19,7 +19,7 @@ include('includes/head.php');
 		</header>
 		<div class="ts container" name="main">
 			<h2 class="ts header">社群平台</h2>
-			<div>
+			<div class="icon-row">
 				<a class="ts link tiny circular image" target="_blank" href="https://t.me/xNCTU"            ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg" alt="Telegram"></a>
 				<a class="ts link tiny circular image" target="_blank" href="https://twitter.com/x_NCTU"    ><img src="https://image.flaticon.com/icons/svg/124/124021.svg"   alt="Twitter" ></a>
 				<a class="ts link tiny circular image" target="_blank" href="https://www.plurk.com/xNCTU"   ><img src="https://image.flaticon.com/icons/svg/124/124026.svg"   alt="Plurk"   ></a>
