@@ -45,10 +45,13 @@ class MyDB {
 		return $stmt->fetch();
 	}
 
-	public function getSubmissions(int $limit) {
+	public function getSubmissions(int $limit, bool $desc = true) {
 		if ($limit == 0) $limit = 9487;
 
-		$sql = "SELECT * FROM submissions ORDER BY created_at DESC";
+		if ($desc)
+			$sql = "SELECT * FROM submissions ORDER BY created_at DESC";
+		else
+			$sql = "SELECT * FROM submissions ORDER BY created_at ASC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
@@ -306,7 +309,7 @@ class MyDB {
 		unset($posts);
 
 		/* Get all pending submissions, oldest first */
-		$submissions = $this->getSubmissions(0);
+		$submissions = $this->getSubmissions(0, false);
 		array_reverse($submissions);
 
 		foreach ($submissions as $item) {
