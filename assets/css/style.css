@@ -49,3 +49,10 @@ button.vote {
 	font-size: 0.9em !important;
 	padding: 0.05em 0.3em !important;
 }
+
+/* Vote Table */
+table.votes thead tr th:nth-child(1) { width: 32px;   }
+table.votes thead tr th:nth-child(2) { width: 72px;   }
+table.votes thead tr th:nth-child(3) { width: 140px;  }
+table.votes thead tr th:nth-child(4) { width: 160px;  }
+table.votes thead tr th:nth-child(5) { width: 320px; }

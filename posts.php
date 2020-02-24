@@ -119,7 +119,7 @@ if (isset($_GET['id']) && isset($USER)) {
 	$votes = $db->getVotersBySubmission($post['uid']);
 	if (count($votes) > 0) {
 ?>
-			<table class="ts table">
+			<table class="ts votes table">
 				<thead>
 					<tr>
 						<th>#</th>
