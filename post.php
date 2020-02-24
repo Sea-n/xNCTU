@@ -91,14 +91,15 @@ if (isset($post['deleted_at'])) {
 					<span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/<?= $plurk ?>">@xNCTU/<?= $plurk ?></a></span><br>
 <?php } ?>
 					<span><i class="twitter icon"></i> Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/<?= $post['twitter_id'] ?>">@x_NCTU/<?= $post['twitter_id'] ?></a></span></p>
-					<p>審核結果：通過 <?= $vote_count[1] ?> 票、駁回 <?= $vote_count[-1] ?> 票</p>
-<?php if (isset($USER) && empty($post['author_id'])) { ?>
-					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
-<?php } ?>
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
+<?php if (isset($USER) && empty($post['author_id'])) { ?>
+						<br>
+						<span class="right floated">(<?= ip_mask($post['ip']) ?>)</span>
+<?php } ?>
 					</div>
-					<span>投稿時間：<?= $time ?></span>
+					<p><span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $vote_count[1] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $vote_count[-1] ?>&nbsp;票</span><br>
+					<span>投稿時間：<?= $time ?></span></p>
 				</div>
 			</div>
 <?php
