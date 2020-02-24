@@ -27,7 +27,6 @@ $sns = [
 foreach ($sns as $name => $key) {
 	try {
 		$func = "send_$key";
-		$pid = "{$key}_id";
 		if (isset($post["{$key}_id"]) && $post["{$key}_id"] > 0)
 			continue;
 
@@ -35,8 +34,25 @@ foreach ($sns as $name => $key) {
 
 		if ($pid > 0)
 			$db->updatePostSns($id, $key, $pid);
+		$post["{$key}_id"] = $pid;
 	} catch (Exception $e) {
 		echo "Send $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
+		echo $e->lastResponse . "\n\n";
+	}
+}
+
+$sns = [
+	'Telegram' => 'telegram',
+];
+foreach ($sns as $name => $key) {
+	try {
+		$func = "update_$key";
+		if (!isset($post["{$key}_id"]) || $post["{$key}_id"] < 0)
+			continue;  // not posted, could be be edit
+
+		$func($post);
+	} catch (Exception $e) {
+		echo "Edit $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
 		echo $e->lastResponse . "\n\n";
 	}
 }
@@ -297,5 +313,31 @@ function send_facebook_api(int $id, string $body, string $img = ''): int {
 	curl_close($curl);
 	$result = json_decode($result, true);
 
-	return $result['id'];
+	$fb_id = (int) $result['id'];
+	return $fb_id;
+}
+
+function update_telegram(array $post) {
+	getTelegram('editMessageReplyMarkup', [
+		'chat_id' => '@xNCTU',
+		'message_id' => $post['telegram_id'],
+		'reply_markup' => [
+			'inline_keyboard' => [
+				[
+					[
+						'text' => 'Facebook',
+						'url' => "https://www.facebook.com/xNCTU/posts/{$post['facebook_id']}"
+					],
+					[
+						'text' => 'Website',
+						'url' => "https://x.nctu.app/posts?id={$post['id']}"
+					],
+					[
+						'text' => 'Twitter',
+						'url' => "https://twitter.com/x_NCTU/status/{$post['twitter_id']}"
+					],
+				]
+			]
+		]
+	]);
 }
