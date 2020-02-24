@@ -40,14 +40,17 @@ foreach ($items as $href => $name) {
 	echo "<a class='$class' href='$href'>$name</a>\n";
 }
 ?>
-		<div class="right fitted item">
+		<div class="right fitted item" style="overflow: hidden;">
 <?php
 if (isset($USER)) {
 	$photo = $USER['tg_photo'] ?? '';
 ?>
 			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
 			&nbsp;<b style="overflow: hidden;"><?= $USER['name'] ?></b>&nbsp;
-			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Logout</a>
+			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);" style="overflow: hidden; min-width: 50px;">
+				<i class="log out icon"></i>
+				<span style="overflow: hidden;">Logout</span>
+			</a>
 <?php } else { ?>
 			<a class="item" href="/login-nctu" data-type="login" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Login</a>
 <?php } ?>
