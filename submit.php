@@ -128,7 +128,7 @@ include('includes/head.php');
 			<h2 class="ts header">投稿成功！</h2>
 			<p>您可以在 3 分鐘內反悔，逾時刪除請來信聯絡開發團隊。</p>
 			<div class="ts card" id="post-preview" style="margin-bottom: 42px;">
-<?php if (isset($img)) { ?>
+<?php if (!empty($img)) { ?>
 				<div class="image">
 					<img class="post-image" src="https://x.nctu.app/img/<?= $img ?>.png" />
 				</div>
