@@ -209,7 +209,9 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 
 function send_facebook(int $id, string $body, string $img = ''): int {
 	global $link;
-	$msg = "#靠交$id\n\n$body\n\n$link";
+	$msg = "#靠交$id\n\n$body";
+	if (!empty($img))
+		$img .= "\n\n$link";
 
 	$header = [
 		'Cookie: ' . FB_COOKIE,
