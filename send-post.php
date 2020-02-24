@@ -14,6 +14,7 @@ if (!($post = $db->getPostReady()))
 $id = $post['id'];
 $body = $post['body'];
 $img = $post['img'];
+$time = date("Y 年 m 月 d 日 H:i", $post['submitted_at']);
 $link = "https://x.nctu.app/posts?id=$id";
 
 $sns = [
@@ -208,10 +209,12 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 }
 
 function send_facebook(int $id, string $body, string $img = ''): int {
-	global $link;
-	$msg = "#靠交$id\n\n$body";
+	global $link, $time;
+	$msg = "#靠交$id\n\n";
+	$msg .= "$body\n\n";
+	$msg .= "投稿時間：$time\n\n";
 	if (!empty($img))
-		$img .= "\n\n$link";
+		$img .= "$link";
 
 	$header = [
 		'Cookie: ' . FB_COOKIE,
@@ -266,8 +269,11 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 }
 
 function send_facebook_api(int $id, string $body, string $img = ''): int {
-	global $link;
-	$msg = "#靠交$id\n\n$body\n\n$link";
+	global $link, $time;
+	$msg = "#靠交$id\n\n";
+	$msg .= "$body\n\n";
+	$msg .= "投稿時間：$time\n\n";
+	$msg .= $link;
 
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . (empty($img) ? '/feed' : '/photos');
    
