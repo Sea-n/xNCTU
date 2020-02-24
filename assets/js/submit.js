@@ -73,40 +73,32 @@ function checkForm() {
 }
 
 function checkFormSubmit(e) {
-	e.preventDefault();
 	var bodyArea = document.getElementById('body-area');
 	var bodyField = document.getElementById('body-field');
 	var img = document.getElementById('img');
 	var captchaInput = document.getElementById('captcha-input');
 	var captchaField = document.getElementById('captcha-field');
-	var result = true;
+	submitted = true;
 
 	checkForm();  // For clean & update warnings
 
 	var len = bodyArea.value.length;
 	if (len < 10) {
-		result = false;
 		bodyField.classList.add('error');
+		e.preventDefault();
+		submitted = false;
 	}
 
-	if (img.files.length) {
-		if (len > 870)
-			result = false;
-	} else {
-		if (len > 3600)
-			result = false;
+	if ((img.files.length && len > 870) || len > 3600) {
+		e.preventDefault();
+		submitted = false;
 	}
 
 	if (captchaInput.value.length != captchaInput.dataset.len) {
-		result = false;
-		bodyField.classList.add('error');
 		captchaField.classList.add('error');
+		e.preventDefault();
+		submitted = false;
 	}
-
-	if (result)
-		submitted = true;
-
-	return result;
 }
 
 function deleteSubmission(uid) {
