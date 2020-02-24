@@ -341,6 +341,7 @@ class MyDB {
 
 		$id = $this->pdo->lastInsertId();
 		$post['id'] = $id;
+		$post['submitted_at'] = $post['created_at'];
 
 		$sql = "UPDATE submissions SET id = :id WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);

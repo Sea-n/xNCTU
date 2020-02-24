@@ -14,7 +14,8 @@ if (!($post = $db->getPostReady()))
 $id = $post['id'];
 $body = $post['body'];
 $img = $post['img'];
-$time = date("Y 年 m 月 d 日 H:i", $post['submitted_at']);
+$time = strtotime($post['submitted_at']);
+$time = date("Y 年 m 月 d 日 H:i", $time);
 $link = "https://x.nctu.app/posts?id=$id";
 
 $sns = [
