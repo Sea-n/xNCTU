@@ -222,13 +222,14 @@ class MyDB {
 
 	private function isSubmissionEligible(array $item) {
 		$dt = time() - strtotime($item['created_at']);
+		$vote = $item['approvals'] - $item['rejects'];
 
 		/* Rule for Logged-in users */
 		if (!empty($item['author_id'])) {
 			if ($dt < 10*60)
 				return false;
 
-			if ($item['approvals'] < $item['rejects'])
+			if ($vote < 0)
 				return false;
 
 			return true;
@@ -240,14 +241,14 @@ class MyDB {
 			if ($dt < 10*60)
 				return false;
 
-			if ($item['approvals'] < $item['rejects'])
+			if ($vote < 0)
 				return false;
 
 			if ($dt < 2*60*60) {
-				if ($item['approvals'] < 2)
+				if ($vote < 2)
 					return false;
 			} else if ($dt < 6*60*60) {
-				if ($item['approvals'] < 1)
+				if ($vote < 1)
 					return false;
 			}
 
@@ -260,21 +261,21 @@ class MyDB {
 				return false;
 
 			if ($dt < 24*60*60) {  // 10min - 24hr
-				if ($item['approvals'] <= $item['rejects'])
+				if ($vote <= 0)
 					return false;
 
 				if ($dt < 1*60*60) {  // 30min - 1hr
-					if ($item['approvals'] < 5)
+					if ($vote < 5)
 						return false;
 				} else if ($dt < 6*60*60) {  // 1hr - 6hr
-					if ($item['approvals'] < 3)
+					if ($vote < 3)
 						return false;
 				} else                    {  // 6hr - 24hr
-					if ($item['approvals'] < 1)
+					if ($vote < 1)
 						return false;
 				}
 			} else {
-				if ($item['approvals'] < $item['rejects'])
+				if ($vote < 0)
 					return false;
 			}
 
@@ -286,10 +287,7 @@ class MyDB {
 			if ($dt < 60*60)
 				return false;
 
-			if ($item['approvals'] < 10)
-				return false;
-
-			if ($item['approvals'] < 2*$item['rejects'])
+			if ($vote < 10)
 				return false;
 
 			return true;
