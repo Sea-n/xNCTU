@@ -16,7 +16,7 @@ $body = $post['body'];
 $img = $post['img'];
 $time = strtotime($post['submitted_at']);
 $time = date("Y 年 m 月 d 日 H:i", $time);
-$link = "https://x.nctu.app/posts?id=$id";
+$link = "https://x.nctu.app/post/$id";
 
 $sns = [
 	'Telegram' => 'telegram',
@@ -221,7 +221,7 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 	} catch (Exception $e) {
 		echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
 		echo $e->lastResponse . "\n";
-		return false;
+		return 1;  # ignore error
 	}
 }
 
@@ -330,7 +330,7 @@ function update_telegram(array $post) {
 					],
 					[
 						'text' => 'Website',
-						'url' => "https://x.nctu.app/posts?id={$post['id']}"
+						'url' => "https://x.nctu.app/post/{$post['id']}"
 					],
 					[
 						'text' => 'Twitter',

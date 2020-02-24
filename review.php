@@ -116,7 +116,7 @@ foreach ($posts as $post) {
 <?php } else if (isset($post['id'])) { ?>
 			<div class="ts positive message">
 				<div class="header">文章已發出</div>
-				<p>您可以在 <a href="/posts?id=<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
+				<p>您可以在 <a href="/post/<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
 			</div>
 <?php } else if (isset($USER) && empty($post['author_id']) && !isset($post['vote'])) { ?>
 			<div class="ts warning message">

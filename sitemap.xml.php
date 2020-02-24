@@ -22,7 +22,7 @@ $posts = $db->getPosts(50);
 </url>
 <?php foreach ($posts as $post) { ?>
 <url>
-  <loc>https://x.nctu.app/posts?id=<?= $post['id'] ?></loc>
+  <loc>https://x.nctu.app/post/<?= $post['id'] ?></loc>
   <priority>0.87</priority>
 </url>
 <?php } ?>

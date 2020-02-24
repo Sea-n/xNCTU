@@ -15,7 +15,7 @@ $URL = explode('?', $URL, 2);
 parse_str($URL[1] ?? '', $q);
 $URL = $URL[0];
 $query = [];
-foreach (['id', 'uid'] as $i)
+foreach (['uid'] as $i)
 	if (isset($q[$i]))
 		$query[$i] = $q[$i];
 if (count($query) > 0)
