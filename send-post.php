@@ -176,7 +176,7 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 	if (mb_strlen($msg) > 320)
 		$msg = mb_substr($msg, 0, 320) . '...';
 
-	$msg .= "\n$link";
+	$msg .= "\n\n$link (全平台連結)";
 
 	$nonce     = md5(time());
 	$timestamp = time();
