@@ -253,7 +253,16 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	$data = curl_exec($curl);
 	if (strpos($data, 'Location: https://mbasic.facebook.com/xNCTU/?v=feed&_rdr') === false)
 		return 0;
-	return 1;
+
+	$curl = curl_init('https://mbasic.facebook.com/xNCTU/');
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+	$data = curl_exec($curl);
+	if (preg_match("!#靠交$id.*? id=\"like_(\d+)\"!", $data, $matches)) {
+		$pid = (int) $matches[1];
+		return $pid;
+	} else
+		return 1;
 }
 
 function send_facebook_api(int $id, string $body, string $img = ''): int {
