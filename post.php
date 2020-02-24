@@ -4,12 +4,14 @@ require_once('utils.php');
 require_once('database.php');
 $db = new MyDB();
 
+/* NginX rewrite rule:  /post/87 -> /post?id=87 */
 if (!isset($_GET['id'])) {
 	header('Location: /posts');
 	exit('ID not found. 請輸入文章編號');
 }
 
-if (!($post = $db->getPostById($_GET['id']))) {
+$post = $db->getPostById($_GET['id']);
+if (!$post) {
 	http_response_code(404);
 	exit('Post not found. 文章不存在');
 }
@@ -56,6 +58,7 @@ if (!empty($post['author_id'])) {
 	$author = $db->getUserByNctu($post['author_id']);
 	$author_name = toHTML($author['name']);
 }
+$author_photo = $author['tg_photo'] ?? '';
 
 $plurk = base_convert($post['plurk_id'], 10, 36);
 
@@ -91,12 +94,9 @@ if (isset($post['deleted_at'])) {
 					<p>審核結果：通過 <?= $vote_count[1] ?> 票、駁回 <?= $vote_count[-1] ?> 票</p>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
 					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
-<?php }
-
-$photo = $author['tg_photo'] ?? '';
-?>
+<?php } ?>
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
+						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>

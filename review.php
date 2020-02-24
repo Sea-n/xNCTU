@@ -101,6 +101,7 @@ if (count($posts) == 0) {
 foreach ($posts as $post) {
 	$uid = $post['uid'];
 	$author_name = toHTML($post['author_name']);
+	$author_photo = $post['author_photo'] ?? '';
 	$img = "/img/{$post['img']}.jpg";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
@@ -141,11 +142,9 @@ foreach ($posts as $post) {
 				<div class="extra content">
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
 					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
-<?php }
-$photo = $post['author_photo'] ?? '';
-?>
+<?php } ?>
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?></img>
+						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?></img>
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>
@@ -155,47 +154,17 @@ $photo = $post['author_photo'] ?? '';
 				</div>
 			</div>
 <?php }
-if (isset($_GET['uid']) && isset($USER)) {
-	$votes = $db->getVotersBySubmission($post['uid']);
-	if (count($votes) > 0) {
-?>
-			<table class="ts votes table">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th></th>
-						<th>系級</th>
-						<th>暱稱</th>
-						<th>理由</th>
-					</tr>
-				</thead>
-				<tbody>
-<?php
-	foreach ($votes as $i => $vote) {
-		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
-		$id = $vote['voter'];
-		$user = $db->getUserByNctu($id);
-		$dep = idToDep($id);
-		$name = toHTML($user['name']);
-?>
-					<tr>
-						<td><?= $i+1 ?></td>
-						<td><?= $type ?></td>
-						<td><?= $dep ?></td>
-						<td><?= $name ?></td>
-						<td><?= toHTML($vote['reason']) ?></td>
-					</tr>
-<?php } ?>
-				</tbody>
-			</table>
-<?php } }
-if (isset($USER) && !isset($_GET['uid'])) {
+if (isset($USER)) {
+	if (isset($_GET['uid'])) {
+		$VOTES = $db->getVotersBySubmission($post['uid']);
+		include('includes/table-vote.php');
+	} else {
 ?>
 			<div class="ts toggle checkbox">
 				<input id="showAll" <?= $showAll ? 'checked' : '' ?> type="checkbox" onchange="location.href='?all='+this.checked;">
 				<label for="showAll">顯示所有投稿</label>
 			</div>
-<?php } ?>
+<?php } } ?>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>

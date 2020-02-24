@@ -46,6 +46,8 @@ foreach ($posts as $post) {
 		$author_name = toHTML($author['name']);
 	} else
 		$author_name = toHTML($post['author_name']);
+
+	$author_photo = $author['tg_photo'] ?? '';
 ?>
 			<div class="ts card" id="post-<?= $id ?>" style="margin-bottom: 42px;">
 <?php if (!empty($post['img'])) { ?>
@@ -60,11 +62,9 @@ foreach ($posts as $post) {
 				<div class="extra content">
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
 					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
-<?php }
-$photo = $author['tg_photo'] ?? '';
-?>
+<?php } ?>
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?></img>
+						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?></img>
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>
