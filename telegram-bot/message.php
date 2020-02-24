@@ -80,7 +80,7 @@ if (substr($text, 0, 1) == '/') {
 
 		case 'name':
 			$arg = $TG->enHTML(trim($arg));
-			if (empty($arg) || strlen($arg) > 32) {
+			if (empty($arg) || strlen($arg) > 10) {
 				$TG->sendMsg([
 					'text' => "使用方式：`/name [新暱稱]`",
 					'parse_mode' => 'Markdown'
@@ -128,8 +128,16 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 	$vote = $matches[1] == 'approve' ? 1 : -1;
 	$uid = $matches[2];
 
+	if (empty($text) || mb_strlen($text) > 100) {
+		$TG->sendMsg([
+			'text' => '請輸入 1 - 100 字投票附註'
+		]);
+
+		exit;
+	}
+
 	try {
-		$result = $db->voteSubmissions($uid, $USER['nctu_id'], $vote, $text ?? 'Vote via Telegram bot');
+		$result = $db->voteSubmissions($uid, $USER['nctu_id'], $vote, $text);
 		if (!$result['ok'])
 			$msg = $result['msg'];
 		else

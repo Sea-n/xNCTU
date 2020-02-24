@@ -2,14 +2,14 @@ function approve(uid) {
 	if (!confirm('您確定要通過此貼文嗎？'))
 		return;
 
-	vote(uid, 1, '請輸入通過附註');
+	vote(uid, 1, '通過附註');
 }
 
 function reject(uid) {
 	if (!confirm('您確定要駁回此貼文嗎？'))
 		return;
 
-	vote(uid, -1, '請輸入駁回理由');
+	vote(uid, -1, '駁回理由');
 }
 
 function vote(uid, type, reason_prompt) {
@@ -20,12 +20,17 @@ function vote(uid, type, reason_prompt) {
 		return;
 	}
 
-	var reason = prompt(reason_prompt);
+	var reason = prompt('請輸入' + reason_prompt + ' (5 - 100 字)');
 	if (reason === null)
 		return;
 
 	if (reason.length < 5) {
 		alert('請輸入 5 個字以上');
+		return;
+	}
+
+	if (reason.length > 100) {
+		alert('請輸入 100 個字以內');
 		return;
 	}
 

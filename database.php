@@ -167,6 +167,9 @@ class MyDB {
 		else
 			return ['ok' => false, 'msg' => 'Unknown vote. 未知的投票類型'];
 
+		if (mb_strlen($reason) > 100)
+			return ['ok' => false, 'msg' => 'Reason too long. 附註文字過長'];
+
 		$check = $this->canVote($uid, $voter);
 		if (!$check['ok'])
 			return $check;

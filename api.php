@@ -24,10 +24,20 @@ switch ($action) {
 		if ($vote != 1 && $vote != -1)
 			exit(json_encode([
 				'ok' => false,
-				'msg' => 'vote invalid.'
+				'msg' => 'vote invalid. 投票類型無效'
 			]));
 
 		$reason = $_POST['reason'] ?? '';
+		if (mb_strlen($reason) < 5)
+			exit(json_encode([
+				'ok' => false,
+				'msg' => '附註請輸入 5 個字以上'
+			]));
+		if (mb_strlen($reason) > 100)
+			exit(json_encode([
+				'ok' => false,
+				'msg' => '附註請輸入 100 個字以內'
+			]));
 
 		$result = $db->voteSubmissions($uid, $voter, $vote, $reason);
 		echo json_encode($result);
@@ -57,11 +67,16 @@ switch ($action) {
 				'msg' => '無法驗證身份：IP 位址不相符'
 			]));
 
-		$reason = $_POST['reason'];
-		if (strlen($reason) < 5)
+		$reason = $_POST['reason'] ?? '';
+		if (mb_strlen($reason) < 5)
 			exit(json_encode([
 				'ok' => false,
 				'msg' => '附註請輸入 5 個字以上'
+			]));
+		if (mb_strlen($reason) > 100)
+			exit(json_encode([
+				'ok' => false,
+				'msg' => '附註請輸入 100 個字以內'
 			]));
 
 		try {

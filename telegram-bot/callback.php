@@ -92,8 +92,8 @@ switch ($args[0]) {
 
 		$TG->sendMsg([
 			'reply_to_message_id' => $TG->MsgID,
-			'text' => "[$type/$uid] 請輸入理由\n\n" .
-				"不限字數，將會顯示於貼文頁面中",
+			'text' => "[$type/$uid] 請輸入 1 - 100 字理由\n\n" .
+				"將會顯示於貼文頁面中，所有已登入的交大人都能看到您的具名投票",
 			'reply_markup' => [
 				'force_reply' => true,
 			]
