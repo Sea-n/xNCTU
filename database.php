@@ -12,16 +12,19 @@ class MyDB {
 	/* Return error info or ['00000', null, null] on success */
 	public function insertSubmission(string $uid, string $body, string $img, string $ip, string $author_name, $author_id, $author_photo): array {
 		if (strlen($uid) < 3)
-			return ['SEAN', 0, 'UID too short.'];
+			return ['SEAN', 0, 'UID too short. (at least 3 chars)'];
 
 		if (mb_strlen($body) < 5)
-			return ['SEAN', 0, 'Body too short.'];
+			return ['SEAN', 0, 'Body too short. (at least 5 chars)'];
 
-		if (mb_strlen($body) > 1000)
-			return ['SEAN', 0, 'Body too long.'];
+		if (!empty($img) && mb_strlen($body) > 1000)
+			return ['SEAN', 0, 'Body too long. (max 1000 chars with image)'];
+
+		if (mb_strlen($body) > 4000)
+			return ['SEAN', 0, 'Body too long. (max 4000 chars)'];
 
 		if (!empty($img) && !preg_match('#^[0-9a-zA-Z]{4}$#', $img))
-			return ['SEAN', 0, 'Image invaild.'];
+			return ['SEAN', 0, 'Image invaild. (should be 4 chars)'];
 
 		$sql = "INSERT INTO submissions(uid, body, img, ip, author_name, author_id, author_photo) VALUES (:uid, :body, :img, :ip, :author_name, :author_id, :author_photo)";
 		$stmt = $this->pdo->prepare($sql);

@@ -3,13 +3,12 @@ var submitted = false;
 
 function init() {
 	if (document.getElementById('submit-post')) {
+		document.getElementById('submit-post').onsubmit = checkFormSubmit;
 		document.getElementById('body-area').oninput = checkForm;
+		document.getElementById('img').oninput = checkForm;
 		document.getElementById('captcha-input').oninput = checkForm;
 		checkForm();
 
-		document.getElementById('submit-post').onsubmit = () => {
-			submitted = true;
-		}
 		window.addEventListener("beforeunload", function (e) {
 			var bodyArea = document.getElementById('body-area');
 			var len = bodyArea.value.length;
@@ -44,6 +43,7 @@ function checkForm() {
 	var bodyArea = document.getElementById('body-area');
 	var bodyField = document.getElementById('body-field');
 	var bodyWc = document.getElementById('body-wc');
+	var img = document.getElementById('img');
 	var captchaInput = document.getElementById('captcha-input');
 	var captchaField = document.getElementById('captcha-field');
 	var submit = document.getElementById('submit');
@@ -55,18 +55,58 @@ function checkForm() {
 	var len = bodyArea.value.length;
 	bodyWc.innerText = len;
 
-	if (len > 870) {
-		bodyField.classList.add('error');
-		submit.classList.add('disabled');
-	} else if (len > 690)
-		bodyField.classList.add('warning');
-	else if (len < 10)
-		submit.classList.add('disabled');
+	if (img.files.length) {
+		if (len > 870) {
+			bodyField.classList.add('error');
+		} else if (len > 690)
+			bodyField.classList.add('warning');
+	} else {
+		if (len > 3600) {
+			bodyField.classList.add('error');
+		} else if (len > 3200)
+			bodyField.classList.add('warning');
+	}
 
-	if (captchaInput.value.length == 0)
-		submit.classList.add('disabled');
-	else if (captchaInput.value.length != captchaInput.dataset.len)
+	if (captchaInput.value.length > 0 &&
+		captchaInput.value.length != captchaInput.dataset.len)
 		captchaField.classList.add('error');
+}
+
+function checkFormSubmit(e) {
+	e.preventDefault();
+	var bodyArea = document.getElementById('body-area');
+	var bodyField = document.getElementById('body-field');
+	var img = document.getElementById('img');
+	var captchaInput = document.getElementById('captcha-input');
+	var captchaField = document.getElementById('captcha-field');
+	var result = true;
+
+	checkForm();  // For clean & update warnings
+
+	var len = bodyArea.value.length;
+	if (len < 10) {
+		result = false;
+		bodyField.classList.add('error');
+	}
+
+	if (img.files.length) {
+		if (len > 870)
+			result = false;
+	} else {
+		if (len > 3600)
+			result = false;
+	}
+
+	if (captchaInput.value.length != captchaInput.dataset.len) {
+		result = false;
+		bodyField.classList.add('error');
+		captchaField.classList.add('error');
+	}
+
+	if (result)
+		submitted = true;
+
+	return result;
 }
 
 function deleteSubmission(uid) {

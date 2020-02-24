@@ -34,6 +34,8 @@ if (isset($_POST['body'])) {
 
 	if (mb_strlen($body) < 5)
 		exit('Body too short. 文章過短');
+	if (isset($_FILES['img']) && $_FILES['img']['size'] && mb_strlen($body) > 4000)
+		exit('Body too long (' . mb_strlen($body) . ' chars). 文章過長');
 	if (mb_strlen($body) > 1000)
 		exit('Body too long (' . mb_strlen($body) . ' chars). 文章過長');
 
@@ -167,11 +169,11 @@ include('includes/head.php');
 				<div id="body-field" class="required resizable field">
 					<label>貼文內容</label>
 					<textarea id="body-area" name="body" rows="6" placeholder="請在這輸入您的投稿內容。"></textarea>
-					<span>字數上限：<span id="body-wc">0</span> / 870</span>
+					<span>目前字數：<span id="body-wc">0</span></span>
 				</div>
 				<div class="inline field">
 					<label>附加圖片</label>
-					<div class="four wide"><input type="file" name="img" accept="image/png, image/jpeg, image/gif" style="display: inline-block;" /></p></div>
+					<div class="four wide"><input type="file" id="img" name="img" accept="image/png, image/jpeg, image/gif" style="display: inline-block;" /></p></div>
 				</div>
 				<div id="captcha-field" class="required inline field">
 					<label>驗證問答</label>
