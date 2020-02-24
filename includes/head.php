@@ -50,3 +50,11 @@ $URL = htmlentities($URL);
 <meta property="fb:app_id" content="103461781248690" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.css">
 <link rel="stylesheet" href="/assets/css/style.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-158901570-1"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-158901570-1');
+</script>
