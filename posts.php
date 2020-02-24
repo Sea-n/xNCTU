@@ -104,12 +104,10 @@ foreach ($data as $item)
 <?php
 }
 
-$photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
-if (!empty($author['tg_photo']))
-	$photo = $author['tg_photo'];
+$photo = $author['tg_photo'] ?? '';
 ?>
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $photo ?>"> <?= $author_name ?></img>
+						<img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?></img>
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>

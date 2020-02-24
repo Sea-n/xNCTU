@@ -142,12 +142,10 @@ foreach ($posts as $post) {
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
 					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
 <?php }
-$photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
-if (!empty($post['author_photo']))
-	$photo = $post['author_photo'];
+$photo = $post['author_photo'] ?? '';
 ?>
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $photo ?>"> <?= $author_name ?></img>
+						<img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?></img>
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>

@@ -43,11 +43,9 @@ foreach ($items as $href => $name) {
 		<div class="right fitted item">
 <?php
 if (isset($USER)) {
-	$photo = 'https://c.disquscdn.com/uploads/users/20967/622/avatar128.jpg';
-	if (isset($USER['tg_photo']) && !empty($USER['tg_photo']))
-		$photo = $USER['tg_photo'];
+	$photo = $USER['tg_photo'] ?? '';
 ?>
-			<img class="ts circular related avatar image" src="<?= $photo ?>">
+			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
 			&nbsp;<b style="overflow: hidden;"><?= $USER['name'] ?></b>&nbsp;
 			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Logout</a>
 <?php } else { ?>
