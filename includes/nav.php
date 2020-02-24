@@ -47,8 +47,8 @@ if (isset($USER)) {
 	if (isset($USER['tg_photo']) && !empty($USER['tg_photo']))
 		$photo = $USER['tg_photo'];
 ?>
-			<img class="ts circular avatar image" src="<?= $photo ?>">
-			&nbsp;<b><?= $USER['name'] ?></b>&nbsp;
+			<img class="ts circular related avatar image" src="<?= $photo ?>">
+			&nbsp;<b style="overflow: hidden;"><?= $USER['name'] ?></b>&nbsp;
 			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Logout</a>
 <?php } else { ?>
 			<a class="item" href="/login-nctu" data-type="login" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Login</a>
