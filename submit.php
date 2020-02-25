@@ -36,9 +36,9 @@ if (isset($_POST['body'])) {
 
 	if (mb_strlen($body) < 5)
 		exit('Body too short. 文章過短');
-	if (isset($_FILES['img']) && $_FILES['img']['size'] && mb_strlen($body) > 4000)
+	if (isset($_FILES['img']) && $_FILES['img']['size'] && mb_strlen($body) > 1000)
 		exit('Body too long (' . mb_strlen($body) . ' chars). 文章過長');
-	if (mb_strlen($body) > 1000)
+	if (mb_strlen($body) > 4000)
 		exit('Body too long (' . mb_strlen($body) . ' chars). 文章過長');
 
 	/* Generate UID (Collision not handled) */
