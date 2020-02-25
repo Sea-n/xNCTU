@@ -141,7 +141,7 @@ include('includes/head.php');
 				</div>
 				<div class="extra content">
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $author_photo ?>"> <?= $author_name ?></img>
+						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
 					</div>
 					<p>發文者 IP 位址：<?= ip_mask($ip) ?></p>
 				</div>

@@ -144,7 +144,7 @@ foreach ($posts as $post) {
 					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
 <?php } ?>
 					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?></img>
+						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
 					</div>
 					<span>投稿時間：<?= $time ?></span>
 				</div>
