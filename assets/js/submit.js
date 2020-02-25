@@ -3,11 +3,10 @@ var submitted = false;
 
 function init() {
 	if (document.getElementById('submit-post')) {
-		document.getElementById('submit-post').onsubmit = checkFormSubmit;
-		document.getElementById('body-area').oninput = checkForm;
-		document.getElementById('img').oninput = checkForm;
-		document.getElementById('captcha-input').oninput = checkForm;
-		checkForm();
+		document.getElementById('submit-post').onsubmit = checkForm;
+		document.getElementById('body-area').oninput = formUpdate;
+		document.getElementById('img').oninput = formUpdate;
+		document.getElementById('captcha-input').oninput = formUpdate;
 
 		window.addEventListener("beforeunload", function (e) {
 			var bodyArea = document.getElementById('body-area');
@@ -19,6 +18,8 @@ function init() {
 			(e || window.event).returnValue = confirmationMessage; //Gecko + IE
 			return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
 		});
+
+		restoreForm();
 	}
 
 	if (document.getElementById('post-preview')) {
@@ -39,7 +40,20 @@ function init() {
 	}
 }
 
-function checkForm() {
+function restoreForm() {
+	var bodyArea = document.getElementById('body-area');
+	var captchaInput = document.getElementById('captcha-input');
+
+	if (localStorage.getItem('draft'))
+		bodyArea.value = localStorage.getItem('draft');
+
+	if (localStorage.getItem('captcha'))
+		captchaInput.value = localStorage.getItem('captcha');
+
+	formUpdate();
+}
+
+function formUpdate() {
 	var bodyArea = document.getElementById('body-area');
 	var bodyField = document.getElementById('body-field');
 	var bodyWc = document.getElementById('body-wc');
@@ -52,7 +66,8 @@ function checkForm() {
 	captchaField.classList.remove('error');
 	submit.classList.remove('disabled');
 
-	var len = bodyArea.value.length;
+	var body = bodyArea.value;
+	var len = body.length;
 	bodyWc.innerText = len;
 
 	if (img.files.length) {
@@ -67,12 +82,16 @@ function checkForm() {
 			bodyField.classList.add('warning');
 	}
 
-	if (captchaInput.value.length > 0 &&
-		captchaInput.value.length != captchaInput.dataset.len)
+	var captcha = captchaInput.value;
+	if (captcha.length > 0 &&
+		captcha.length != captchaInput.dataset.len)
 		captchaField.classList.add('error');
+
+	localStorage.setItem('draft', body);
+	localStorage.setItem('captcha', captcha);
 }
 
-function checkFormSubmit(e) {
+function checkForm(e) {
 	var bodyArea = document.getElementById('body-area');
 	var bodyField = document.getElementById('body-field');
 	var img = document.getElementById('img');
@@ -80,7 +99,7 @@ function checkFormSubmit(e) {
 	var captchaField = document.getElementById('captcha-field');
 	submitted = true;
 
-	checkForm();  // For clean & update warnings
+	formUpdate();  // For clean & update warnings
 
 	var len = bodyArea.value.length;
 	if (len < 10) {
@@ -98,6 +117,10 @@ function checkFormSubmit(e) {
 		captchaField.classList.add('error');
 		e.preventDefault();
 		submitted = false;
+	}
+
+	if (submitted) {
+		localStorage.setItem('draft', '');
 	}
 }
 
