@@ -226,6 +226,27 @@ class MyDB {
 		return $results;
 	}
 
+	public function getVotesByTime(int $after, int $before = NULL) {
+		if ($before == NULL)
+			$before == time();
+
+		$after  = date("Y-m-d H:i:s", $after);
+		$before = date("Y-m-d H:i:s", $before);
+
+		$sql = "SELECT * FROM votes WHERE created_at BETWEEN :after AND :before";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':after' => $after,
+			':before' => $before,
+		]);
+
+		$results = [];
+		while ($item = $stmt->fetch())
+			$results[] = $item;
+
+		return $results;
+	}
+
 	private function isSubmissionEligible(array $item) {
 		$dt = time() - strtotime($item['created_at']);
 		$vote = $item['approvals'] - $item['rejects'];
