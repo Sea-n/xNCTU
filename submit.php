@@ -31,6 +31,8 @@ if (isset($_POST['body'])) {
 	/* Check Body */
 	$body = $_POST['body'];
 	$body = str_replace("\r", "", $body);
+	$body = preg_replace("#\n\s+\n#", "\n\n", $body);
+	$body = trim($body);
 
 	if (mb_strlen($body) < 5)
 		exit('Body too short. 文章過短');
