@@ -51,7 +51,8 @@ include('includes/head.php');
 <?php
 $id = $post['id'];
 $body = toHTML($post['body']);
-$time = humanTime($post['submitted_at']);
+$timeS = humanTime($post['submitted_at']);
+$timeC = humanTime($post['created_at']);
 
 $author_name = toHTML($post['author_name']);
 if (!empty($post['author_id'])) {
@@ -74,15 +75,17 @@ if (isset($post['deleted_at'])) {
 				<p>刪除原因：<?= $post['delete_note'] ?? '(無)' ?></p>
 			</div>
 <?php } ?>
-			<div class="ts card" style="margin-bottom: 42px;">
+			<article itemscope itemtype="http://schema.org/Article" class="ts card" style="margin-bottom: 42px;">
 <?php if (isset($IMG)) { ?>
 				<div class="image">
-					<img class="post-image" src="<?= $IMG ?>" />
+					<img itemprop="image" class="post-image" src="<?= $IMG ?>" />
 				</div>
+<?php } else { ?>
+<meta itemprop="image" content="/assets/img/logo.png">
 <?php } ?>
 				<div class="content">
-					<div class="header">#靠交<?= $id ?></div>
-					<p><?= $body ?></p>
+					<div itemprop="headline" class="header">#靠交<?= $id ?></div>
+					<p itemprop="articleBody"><?= $body ?></p>
 				</div>
 				<div class="extra content">
 					<p><span><i class="telegram icon"></i> Telegram: <a target="_blank" href="https://t.me/s/xNCTU/<?= $post['telegram_id'] ?>">@xNCTU/<?= $post['telegram_id'] ?></a></span><br>
@@ -91,17 +94,28 @@ if (isset($post['deleted_at'])) {
 					<span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/<?= $plurk ?>">@xNCTU/<?= $plurk ?></a></span><br>
 <?php } ?>
 					<span><i class="twitter icon"></i> Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/<?= $post['twitter_id'] ?>">@x_NCTU/<?= $post['twitter_id'] ?></a></span></p>
-					<div class="right floated author">
-						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
+					<div itemprop="author" itemscope itemtype="http://schema.org/Person" class="right floated author">
+						<img itemprop="image" class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <span itemprop="name"><?= $author_name ?></span>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
 						<br>
 						<span class="right floated">(<?= ip_mask($post['ip']) ?>)</span>
 <?php } ?>
 					</div>
-					<p><span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $vote_count[1] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $vote_count[-1] ?>&nbsp;票</span><br>
-					<span>投稿時間：<?= $time ?></span></p>
+					<p>
+						<span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $vote_count[1] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $vote_count[-1] ?>&nbsp;票</span><br>
+						<span>投稿時間：<time itemprop="dateCreated" datetime="<?= $post['submitted_at'] ?>"><?= $timeS ?></time></span><br>
+						<span style="display: none;">發出時間：<time itemprop="datePublished" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time></span><br>
+						<span style="display: none;">更新時間：<time itemprop="dateModified" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time></span><br>
+					</p>
+					<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display: none;">
+						<div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+							<meta itemprop="url" content="/assets/img/logo.png">
+						</div>
+						<span itemprop="name">靠北交大 2.0</span>
+					</div>
+					<link itemprop="mainEntityOfPage" href="<?= $URL ?>" />
 				</div>
-			</div>
+			</article>
 <?php
 if (isset($USER)) {
 	include('includes/table-vote.php');
