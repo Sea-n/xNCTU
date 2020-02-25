@@ -231,7 +231,7 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	$msg .= "$body\n\n";
 	$msg .= "投稿時間：$time\n\n";
 	if (!empty($img))
-		$img .= "$link";
+		$msg .= "$link";
 
 	$header = [
 		'Cookie: ' . FB_COOKIE,
