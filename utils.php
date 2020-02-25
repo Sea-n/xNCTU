@@ -130,9 +130,15 @@ function rand58(int $len = 1): string {
 function toHTML(string $text): string {
 	$text = htmlentities($text);
 	$text = explode("\n", $text);
-	foreach ($text as $key => $val) {
-		if (filter_var($val, FILTER_VALIDATE_URL))
-			$text[$key] = "<a target='_blank' href='$val'>$val</a>";
+	foreach ($text as $k1 => $v1) {
+		$text[$k1] = explode(' ', $v1);
+		foreach ($text[$k1] as $k2 => $v2) {
+			if (filter_var($v2, FILTER_VALIDATE_URL))
+				$text[$k1][$k2] = "<a target='_blank' href='$v2'>$v2</a>";
+			else
+				$text[$k1][$k2] = str_replace(' ', '&nbsp;', $v2);
+		}
+		$text[$k1] = join("&nbsp;", $text[$k1]);
 	}
 	$text = join("\n<br>", $text);
 	return $text;
