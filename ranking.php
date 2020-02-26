@@ -95,7 +95,7 @@ foreach ($user_count as $i => $item) {
 						<td>*</td>
 						<td>ALL</td>
 						<td><img class="ts circular avatar image" src="/assets/img/logo.png"></td>
-						<td><a onclick="changeChart('ALL')">所有人</a></td>
+						<td><a onclick="changeChart('ALL')">沒有人</a></td>
 						<td><?= $vote_sum[1] ?></td>
 						<td><?= $vote_sum[-1] ?></td>
 					</tr>

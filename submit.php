@@ -80,7 +80,6 @@ if (isset($_POST['body'])) {
 			exit('Image must be at least 2:1');
 
 		system("ffmpeg -i $dst $dst.jpg");
-		system("ffmpeg -i $dst $dst.png");
 	} else
 		$img = '';
 
@@ -134,7 +133,7 @@ include('includes/head.php');
 			<div class="ts card" id="post-preview" style="margin-bottom: 42px;">
 <?php if (!empty($img)) { ?>
 				<div class="image">
-					<img class="post-image" src="https://x.nctu.app/img/<?= $img ?>.png" />
+					<img class="post-image" src="https://x.nctu.app/img/<?= $img ?>.jpg" />
 				</div>
 <?php } ?>
 				<div class="content">
