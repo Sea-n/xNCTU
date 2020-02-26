@@ -4421,6 +4421,7 @@ window.Graph = {
         opts.$parent.appendChild(this.$tip);
 
         this.$tipDt = document.createElement('h6');
+        this.$tipDt.classList.add('unstyled');  // Sean: conflict with tocas
         this.$tip.appendChild(this.$tipDt);
 
         this.$tipDtText = document.createTextNode("");
