@@ -318,6 +318,7 @@ function send_facebook_api(int $id, string $body, string $img = ''): int {
 }
 
 function update_telegram(array $post) {
+	$plurk = base_convert($post['plurk_id'], 10, 36);
 	getTelegram('editMessageReplyMarkup', [
 		'chat_id' => '@xNCTU',
 		'message_id' => $post['telegram_id'],
@@ -329,8 +330,8 @@ function update_telegram(array $post) {
 						'url' => "https://www.facebook.com/xNCTU/posts/{$post['facebook_id']}"
 					],
 					[
-						'text' => 'Website',
-						'url' => "https://x.nctu.app/post/{$post['id']}"
+						'text' => 'Plurk',
+						'url' => "https://www.plurk.com/p/$plurk"
 					],
 					[
 						'text' => 'Twitter',

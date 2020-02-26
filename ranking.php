@@ -128,11 +128,14 @@ foreach ($user_count as $i => $item) {
 					renderGraph('chart_wrap', d, true);
 
 					ts('.snackbar').snackbar({
-						content: '已讀取 ' + d['title'] + ' 的統計資料',
+						content: '已載入 ' + d['title'] + ' 的統計資料',
 						action: '點我查看',
 						actionEmphasis: 'info',
 						onAction: () => {
 							location.href = '#chart_wrap';
+							setTimeout(() => {
+								history.pushState(null, null, location.pathname);
+							}, 1000);
 						}
 					});
 				}
