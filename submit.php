@@ -23,7 +23,7 @@ if (isset($_POST['body'])) {
 	/* Check CAPTCHA */
 	$captcha = trim($_POST['captcha'] ?? 'X');
 	if ($captcha != '交大竹湖' && $captcha != '交大竹狐') {
-		if (strlen($captcha) > 1 && strlen($captcha) < 20)
+		if (mb_strlen($captcha) > 1 && mb_strlen($captcha) < 20)
 			error_log("Captcha failed: $captcha.");
 		exit('Are you human? 驗證碼錯誤');
 	}

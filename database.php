@@ -226,19 +226,10 @@ class MyDB {
 		return $results;
 	}
 
-	public function getVotesByTime(int $after, int $before = NULL) {
-		if ($before == NULL)
-			$before == time();
-
-		$after  = date("Y-m-d H:i:s", $after);
-		$before = date("Y-m-d H:i:s", $before);
-
-		$sql = "SELECT * FROM votes WHERE created_at BETWEEN :after AND :before";
+	public function getVotes() {
+		$sql = "SELECT * FROM votes";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([
-			':after' => $after,
-			':before' => $before,
-		]);
+		$stmt->execute();
 
 		$results = [];
 		while ($item = $stmt->fetch())

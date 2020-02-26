@@ -80,7 +80,7 @@ if (substr($text, 0, 1) == '/') {
 
 		case 'name':
 			$arg = $TG->enHTML(trim($arg));
-			if (empty($arg) || strlen($arg) > 10) {
+			if (empty($arg) || mb_strlen($arg) > 10) {
 				$TG->sendMsg([
 					'text' => "使用方式：`/name 新暱稱`\n\n字數上限：10 個字",
 					'parse_mode' => 'Markdown'
