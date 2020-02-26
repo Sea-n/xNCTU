@@ -28,6 +28,7 @@ switch ($action) {
 			]));
 
 		$reason = $_POST['reason'] ?? '';
+		$reason = trim($reason);
 		if (mb_strlen($reason) < 5)
 			exit(json_encode([
 				'ok' => false,
@@ -68,6 +69,7 @@ switch ($action) {
 			]));
 
 		$reason = $_POST['reason'] ?? '';
+		$reason = trim($reason);
 		if (mb_strlen($reason) < 5)
 			exit(json_encode([
 				'ok' => false,
