@@ -195,5 +195,8 @@ function idToDep(string $id): string {
 
 	$deg = 4 + (int)(($id[0] > '3' ? '0' : '1') . $id[0] . $id[1]);
 
+	/* Exception for changed department */
+	if ($id == '0711239') $dep = '資工系';
+
 	return "$dep $deg 級";
 }

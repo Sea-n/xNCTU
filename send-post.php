@@ -219,6 +219,7 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 		$result = json_decode($result, true);
 		return $result['plurk_id'];
 	} catch (Exception $e) {
+		echo "Plurk Message: $msg\n\n";
 		echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
 		echo $e->lastResponse . "\n";
 		return 1;  # ignore error

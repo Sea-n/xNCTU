@@ -104,8 +104,8 @@ if (isset($post['deleted_at'])) {
 					<p>
 						<span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $vote_count[1] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $vote_count[-1] ?>&nbsp;票</span><br>
 						<span>投稿時間：<time itemprop="dateCreated" datetime="<?= $post['submitted_at'] ?>"><?= $timeS ?></time></span><br>
-						<span style="display: none;">發出時間：<time itemprop="datePublished" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time></span><br>
-						<span style="display: none;">更新時間：<time itemprop="dateModified" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time></span><br>
+						<span style="display: none;">發出時間：<time itemprop="datePublished" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time><br></span>
+						<span style="display: none;">更新時間：<time itemprop="dateModified" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time><br></span>
 					</p>
 					<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display: none;">
 						<div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
