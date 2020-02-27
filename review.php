@@ -89,8 +89,8 @@ include('includes/head.php');
 		</header>
 		<div class="ts container" name="main">
 <?php
-/* Time period 00:00 - 09:59 */
-if (substr(date('H'), 0, 1) == '0') {
+/* Time period 02:00 - 09:59 */
+if (2 <= idate('H') && idate('H') <= 9) {
 ?>
 		<div class="ts info message">
 			<div class="header">現在時間 <?= date('H:i') ?></div>
