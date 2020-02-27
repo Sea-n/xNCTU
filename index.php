@@ -90,7 +90,7 @@ include('includes/head.php');
 
 			<h2 class="ts header">排行榜</h2>
 			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名計算公式為：總投票數 + min(少數票, 多數票/2) * 3<br>
-			意即「通過 20 票」與「通過 8 票 + 駁回 3 票」的排名相同</p>
+			意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;8 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;3 票」的排名相同</p>
 			<p>您可以在 <a href="/ranking">這個頁面</a> 查看前十名</p>
 
 			<h2 class="ts header">服務聲明</h2>

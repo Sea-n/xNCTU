@@ -66,8 +66,31 @@ class MyDB {
 			if (isset($item['deleted_at']))
 				continue;
 
+			if (!$limit--)
+				break;
+
 			$results[] = $item;
-			$limit--;
+		}
+
+		return $results;
+	}
+
+	public function getDeletedSubmissions(int $limit, bool $desc = true) {
+		if ($limit == 0) $limit = 9487;
+
+		if ($desc)
+			$sql = "SELECT * FROM submissions WHERE deleted_at ORDER BY created_at DESC";
+		else
+			$sql = "SELECT * FROM submissions WHERE deleted_at ORDER BY created_at ASC";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute();
+
+		$results = [];
+		while ($item = $stmt->fetch()) {
+			if (!$limit--)
+				break;
+
+			$results[] = $item;
 		}
 
 		return $results;
@@ -96,8 +119,10 @@ class MyDB {
 			if (isset($votes[ $item['uid'] ]))
 				$item['vote'] = $votes[ $item['uid'] ];
 
+			if (!$limit--)
+				break;
+
 			$results[] = $item;
-			$limit--;
 		}
 
 		return $results;
@@ -127,9 +152,15 @@ class MyDB {
 		$stmt->execute();
 
 		$results = [];
-		while ($limit-- && $item = $stmt->fetch())
-			if (!isset($item['deleted_at']))
-				$results[] = $item;
+		while ($item = $stmt->fetch()) {
+			if (isset($item['deleted_at']))
+				continue;
+
+			if (!$limit--)
+				break;
+
+			$results[] = $item;
+		}
 
 		return $results;
 	}

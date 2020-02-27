@@ -24,7 +24,13 @@ if (isset($_GET['uid'])) {
 	$posts = [$post];
 
 } else {
-	if (isset($USER))
+	if (isset($_GET['deleted'])) {
+		if (!isset($USER)) {
+			header('Location: /login-nctu?r=%2Fdeleted');
+			exit('Please login first. 請先登入');
+		}
+		$posts = $db->getDeletedSubmissions(50);
+	} else if (isset($USER))
 		$posts = $db->getSubmissionsByVoter($USER['nctu_id'], 50);
 	else
 		$posts = $db->getSubmissions(50);
@@ -62,6 +68,9 @@ if (isset($post)) {
 
 	if ($post['img'])
 		$IMG = "https://x.nctu.app/img/{$post['img']}.jpg";
+} else if (isset($_GET['deleted'])) {
+	$TITLE = '已刪投稿';
+	$IMG = 'https://x.nctu.app/assets/img/logo.png';
 } else {
 	$TITLE = '貼文審核';
 	$IMG = 'https://x.nctu.app/assets/img/logo.png';
@@ -74,7 +83,7 @@ include('includes/head.php');
 <?php include('includes/nav.php'); ?>
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
-				<h1 class="ts header">貼文審核</h1>
+				<h1 class="ts header"><?= isset($_GET['deleted']) ? '已刪投稿' : '貼文審核' ?></h1>
 				<div class="description">靠北交大 2.0</div>
 			</div>
 		</header>
@@ -107,19 +116,22 @@ foreach ($posts as $post) {
 	$time = humanTime($post['created_at']);
 	$canVote = (isset($post['id']) || isset($post['vote']) || isset($post['deleted_at'])) ? 'disabled' : '';
 
-	if (isset($_GET['uid'])) {
-		if (isset($post['deleted_at'])) {
+	if (isset($post['deleted_at'])) {
 ?>
 			<div class="ts negative message">
 				<div class="header">此文已刪除</div>
 				<p>刪除原因：<?= toHTML($post['delete_note']) ?? '(無)' ?></p>
 			</div>
-<?php } else if (isset($post['id'])) { ?>
+<?php
+	}
+	if (isset($_GET['uid'])) {
+		if (isset($post['id'])) {
+?>
 			<div class="ts positive message">
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/post/<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
 			</div>
-<?php } else if (isset($USER) && empty($post['author_id']) && !isset($post['vote'])) { ?>
+<?php } else if (isset($USER) && empty($post['author_id']) && !isset($post['vote']) && !isset($post['deleted_at'])) { ?>
 			<div class="ts warning message">
 				<div class="header">注意：您目前為登入狀態</div>
 				<p>提醒您，為自己的投稿按 <button class="ts vote positive button">通過</button> 或 <button class="ts vote negative button">駁回</button> 均會留下公開紀錄哦</p>

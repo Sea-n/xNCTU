@@ -27,6 +27,9 @@ include('includes/head.php');
 
 			<h2 class="ts header" id="length-limit">Q：字數上限是多少</h2>
 			<p>純文字投稿的字數上限為 3,600 字、附圖投稿為 870 字。遊走字數上限發文時請注意，最好在發出前自行備份，避免因伺服器判斷誤差造成投稿失敗。</p>
+
+			<h2 class="ts header" id="deleted-submissions">Q：可以去哪找到被黑箱的投稿</h2>
+			<p>如果管理團隊覺得投稿不適合發出，或是放置過久、累積足夠的駁回，就會放到 <a href="/deleted">已刪投稿</a> 頁面。</p>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>
