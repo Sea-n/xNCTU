@@ -26,7 +26,7 @@ foreach($user_count as $k => $v) {
 	$min = min($v[1], $v[-1]);
 	$max = max($v[1], $v[-1]);
 
-	$point = $total + min($min, $max/2)*3;
+	$point = $total + min($min, $max/2)*3.001;
 	$user_count[$k]['pt'] = $point;
 }
 
@@ -34,7 +34,7 @@ usort($user_count, function($A, $B) {
 	return $A['pt'] < $B['pt'];
 });
 
-$user_count = array_slice($user_count, 0, 10);
+$user_count = array_slice($user_count, 0, 15);
 
 foreach($user_count as $k => $v) {
 	$user = $db->getUserByNctu($v['id']);
