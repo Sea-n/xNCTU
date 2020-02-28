@@ -1,7 +1,7 @@
 <?php
 require_once('utils.php');
 ?>
-<table class="ts votes table">
+<table class="ts votes table" id="votes">
 	<thead>
 		<tr>
 			<th>#</th>
