@@ -63,38 +63,36 @@ function vote(uid, type, reason_prompt) {
 }
 
 function updateVotes(uid) {
-	var table = document.getElementById('votes');
-	var tbody = table.tBodies[0];
+	var button = document.getElementById('refresh');
+	button.classList.add('disabled');
 
 	fetch('/api/votes?uid=' + uid)
 	.then(resp => resp.json())
 	.then((resp) => {
 		console.log(resp);
 		if (resp.ok) {
-			card.querySelector('#approvals').innerText = resp.approvals;
-			card.querySelector('#rejects').innerText = resp.rejects;
-
-			tbody.innerHTML = '';
-			var votes = resp.votes;
-			for (var i=0; i<votes.length; i++) {
-				var vote = votes[i];
-				appendRow(vote.vote, vote.dep, vote.name, vote.reason);
-			}
+			updateVotesTable(resp.votes);
+			button.classList.remove('disabled');
 		} else
 			alert(resp.msg);
 	});
 }
 
-function appendRow(vote, dep, name, reason) {
+function updateVotesTable(votes) {
 	var table = document.getElementById('votes');
 	var tbody = table.tBodies[0];
 
-	var lastNum = 0;
-	var lastRow = tbody.lastElementChild;
-	if (lastRow)
-		lastNum = lastRow.firstElementChild.innerText;
-	var no = parseInt(lastNum) + 1;
+	var newBody = document.createElement('tbody');
+	for (var i=0; i<votes.length; i++) {
+		var vote = votes[i];
+		var tr = voteRow(i+1, vote.vote, vote.dep, vote.name, vote.reason);
+		newBody.appendChild(tr);
+	}
 
+	tbody.innerHTML = newBody.innerHTML;
+}
+
+function voteRow(no, vote, dep, name, reason) {
 	var type = '❓ 未知';
 	if (vote == 1)
 		type = '✅ 通過';
@@ -111,5 +109,5 @@ function appendRow(vote, dep, name, reason) {
 	tr.cells[3].appendChild(document.createTextNode(name));
 	tr.cells[4].appendChild(document.createTextNode(reason));
 
-	tbody.appendChild(tr);
+	return tr;
 }

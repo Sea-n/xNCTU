@@ -175,8 +175,9 @@ if (isset($USER)) {
 	if (isset($_GET['uid'])) {
 		$VOTES = $db->getVotesByUid($post['uid']);
 		include('includes/table-vote.php');
-	} else {
 ?>
+			<button id="refresh" class="ts primary button" onclick="updateVotes('<?= $uid ?>');">重新整理</button>
+<?php } else { ?>
 			<div class="ts toggle checkbox">
 				<input id="showAll" <?= $showAll ? 'checked' : '' ?> type="checkbox" onchange="location.href='?all='+this.checked;">
 				<label for="showAll">顯示所有投稿</label>
