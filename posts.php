@@ -65,8 +65,10 @@ foreach ($posts as $post) {
 						<br><span class="right floated">(<?= ip_mask($post['ip_addr']) ?>)</span>
 <?php } ?>
 					</div>
-					<p><span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $post['approvals'] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $post['rejects'] ?>&nbsp;票</span><br>
-					<span>投稿時間：<?= $time ?></span></p>
+					<p style="margin-top: 0; line-height: 1.7em">
+						<span>審核狀況：<button class="ts vote positive button">通過</button>&nbsp;<?= $post['approvals'] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $post['rejects'] ?>&nbsp;票</span><br>
+						<span>投稿時間：<?= $time ?></span>
+					</p>
 				</div>
 			</div>
 <?php } ?>

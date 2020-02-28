@@ -112,7 +112,7 @@ foreach ($posts as $post) {
 	$author_photo = $post['author_photo'] ?? '';
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
-	$canVote = (isset($post['id']) || isset($post['vote']) || isset($post['deleted_at'])) ? 'disabled' : '';
+	$canVote = !(isset($post['id']) || isset($post['vote']) || isset($post['deleted_at']));
 
 	if (isset($post['deleted_at'])) {
 ?>
@@ -150,18 +150,25 @@ foreach ($posts as $post) {
 					<p><?= $body ?></p>
 				</div>
 				<div class="extra content">
-<?php if (isset($USER) && empty($post['author_id'])) { ?>
-					<p>發文者 IP 位址：<?= ip_mask($post['ip_addr']) ?></p>
-<?php } ?>
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
+<?php if (isset($USER) && empty($post['author_id'])) { ?>
+						<br><span class="right floated">(<?= ip_mask($post['ip_addr']) ?>)</span>
+<?php } ?>
 					</div>
-					<span>投稿時間：<?= $time ?></span>
+					<p style="margin-top: 0; line-height: 1.7em">
+<?php if (!$canVote) { ?>
+						<span>審核狀況：<button class="ts vote positive button">通過</button>&nbsp;<?= $post['approvals'] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $post['rejects'] ?>&nbsp;票</span>
+<?php } ?>
+						<br><span>投稿時間：<?= $time ?></span>
+					</p>
 				</div>
+<?php if ($canVote) { ?>
 				<div class="ts fluid bottom attached large buttons">
-					<button class="ts positive <?= $canVote ?> button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approvals"><?= $post['approvals'] ?></span> 票)</button>
-					<button class="ts negative <?= $canVote ?> button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
+					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approvals"><?= $post['approvals'] ?></span> 票)</button>
+					<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
 				</div>
+<?php } ?>
 			</div>
 <?php }
 if (isset($USER)) {
