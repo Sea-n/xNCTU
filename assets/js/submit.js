@@ -26,7 +26,7 @@ function init() {
 		var deadline = (new Date()).getTime() + 3*60*1000;
 		stopCountdown = setInterval(() => {
 			var dt = Math.floor((deadline - (new Date()).getTime()) / 1000);
-			if (dt == 0) {
+			if (dt <= 0) {
 				document.getElementById('delete-button').classList.add('disabled');
 				clearInterval(stopCountdown);
 			}

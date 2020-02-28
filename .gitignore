@@ -1,4 +1,3 @@
-*.db
 /img/
 config.php
 /backup/
