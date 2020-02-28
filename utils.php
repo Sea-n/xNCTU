@@ -19,6 +19,7 @@ function ip_from(string $ip_addr): string {
 		'140.129.' => '陽明',
 		'163.13.' => '淡江',
 		'2001:f18:' => '交大',
+		'2001:288:4001:' => '交大',
 		'2001:288:e001:' => '清大',
 		'2001:288:1001:' => '台大',
 	];
@@ -36,13 +37,7 @@ function ip_from(string $ip_addr): string {
 
 	if (preg_match('#<tr><td>Chinese Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches)) {
 		$name = $matches[1];
-		$name = str_replace("台灣之星電信", "台灣之星", $name);
-		return $name;
-	}
-
-	/* IPv6 address only have English org name for unknown reason */
-	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches)) {
-		$name = $matches[1];
+		/* Check TANet Whois */
 		if ($name == '教育部') {
 			$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip_addr");
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -53,10 +48,28 @@ function ip_from(string $ip_addr): string {
 			}
 		}
 
-		$name = str_replace("Far EasTone Telecommunication Co., Ltd.", "遠傳電信", $name);
-		$name = str_replace("Chunghwa Telecom Co.,Ltd.", "中華電信", $name);
-		$name = str_replace("ASIA PACIFIC TELECOM CO.,Ltd.", "亞太電信", $name);
-		$name = str_replace("Taiwan Mobile Co., Ltd.", "台灣大哥大", $name);
+		$name = str_replace("台灣之星電信", "台灣之星", $name);
+		return $name;
+	}
+
+	/* IPv6 address only have English org name for unknown reason */
+	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)( Co., Ltd.)*</td></tr>#', $resp, $matches)) {
+		$name = $matches[1];
+		/* Check TANet Whois */
+		if ($name == 'Ministry of Education Computer Center') {
+			$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip_addr");
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			$resp = curl_exec($curl);
+			if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立|私立)*([^<]+?)(大學|區網|中心)*</td></tr>#', $resp, $matches)) {
+				$name = $matches[2];
+				return $name;
+			}
+		}
+
+		$name = str_replace("Far EasTone Telecommunication", "遠傳電信", $name);
+		$name = str_replace("Chunghwa Telecom", "中華電信", $name);
+		$name = str_replace("ASIA PACIFIC TELECOM", "亞太電信", $name);
+		$name = str_replace("Taiwan Mobile", "台灣大哥大", $name);
 		return $name;
 	}
 
