@@ -135,6 +135,8 @@ function toHTML(string $text): string {
 		foreach ($text[$k1] as $k2 => $v2) {
 			if (filter_var($v2, FILTER_VALIDATE_URL))
 				$text[$k1][$k2] = "<a target='_blank' href='$v2'>$v2</a>";
+			else if (preg_match('/^#靠交(\d+)$/', $v2, $matches))
+				$text[$k1][$k2] = "<a target='_blank' href='/post/{$matches[1]}'>$v2</a>";
 			else
 				$text[$k1][$k2] = str_replace(' ', '&nbsp;', $v2);
 		}
