@@ -2,7 +2,7 @@
 cd "`dirname $0`"
 
 # Several times a day
-cp sqlite.db backup/sqlite-`date +%Y%m%d-%H%M`.db
+mysqldump xnctu |gzip > backup/database-`date +%Y%m%d-%H%M`.sql.gz
 
 # Daily
 tar czf backup/img-`date +%Y%m%d`.tgz img
