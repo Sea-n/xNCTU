@@ -15,10 +15,9 @@ if (isset($_GET['uid'])) {
 	}
 
 	if (isset($USER)) {
-		$votes = $db->getVotesByUser($USER['nctu_id']);
-		foreach ($votes as $vote)
-			if ($vote['uid'] == $uid)
-				$post['vote'] = $vote['vote'];
+		$canVote = $db->canVote($uid, $USER['nctu_id']);
+		if (!$canVote['ok'])
+			$post['vote'] = 87;
 	}
 
 	$posts = [$post];
