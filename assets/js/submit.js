@@ -135,12 +135,11 @@ function deleteSubmission(uid) {
 	}
 
 	data = {
-		action: 'delete',
 		uid: uid,
 		reason: reason
 	};
 
-	fetch('/api', {
+	fetch('/api/delete', {
 		method: 'POST',
 		body: JSON.stringify(data),
 		headers: {'content-type': 'application/json'}

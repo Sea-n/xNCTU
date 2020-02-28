@@ -36,13 +36,12 @@ function vote(uid, type, reason_prompt) {
 
 
 	data = {
-		action: 'vote',
 		uid: uid,
 		vote: type,
 		reason: reason
 	};
 
-	fetch('/api', {
+	fetch('/api/vote', {
 		method: 'POST',
 		body: JSON.stringify(data),
 		headers: {'content-type': 'application/json'}
