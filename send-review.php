@@ -2,7 +2,7 @@
 require_once('database.php');
 require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
 
-function sendReview(string $uid, string $body, string $img) {
+function sendReview(string $uid, string $body, bool $has_img) {
 	$db = new MyDB();
 	$USERS = $db->getTgUsers();
 
@@ -10,7 +10,7 @@ function sendReview(string $uid, string $body, string $img) {
 		if (!isset($user['tg_name']))
 			continue;
 
-		$result = sendPost($uid, $body, $img, $user['tg_id']);
+		$result = sendPost($uid, $body, $has_img, $user['tg_id']);
 
 		if (!$result['ok']) {
 			if ($result['description'] == 'Bad Request: chat not found')
@@ -19,7 +19,7 @@ function sendReview(string $uid, string $body, string $img) {
 	}
 }
 
-function sendPost(string $uid, string $body, string $img, int $id) {
+function sendPost(string $uid, string $body, bool $has_img, int $id) {
 	$keyboard = [
 		'inline_keyboard' => [
 			[
@@ -46,7 +46,7 @@ function sendPost(string $uid, string $body, string $img, int $id) {
 	/* Time period 00:00 - 09:59 */
 	$dnd = (substr(date('H'), 0, 1) != '0');
 
-	if (empty($img))
+	if (!$has_img)
 		return sendMsg([
 			'bot' => 'xNCTU',
 			'chat_id' => $id,
@@ -58,7 +58,7 @@ function sendPost(string $uid, string $body, string $img, int $id) {
 		return getTelegram('sendPhoto', [
 			'bot' => 'xNCTU',
 			'chat_id' => $id,
-			'photo' => "https://x.nctu.app/img/$img.jpg",
+			'photo' => "https://x.nctu.app/img/$uid.jpg",
 			'caption' => $body,
 			'reply_markup' => $keyboard,
 			'disable_notification' => $dnd

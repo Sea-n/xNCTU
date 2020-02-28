@@ -36,7 +36,6 @@ include('includes/head.php');
 <?php
 foreach ($posts as $post) {
 	$id = $post['id'];
-	$img = "/img/{$post['img']}.jpg";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['submitted_at']);
 
@@ -48,16 +47,11 @@ foreach ($posts as $post) {
 		$author_name = toHTML($post['author_name']);
 
 	$author_photo = $author['tg_photo'] ?? '';
-
-	$VOTES = $db->getVotersBySubmission($post['uid']);
-	$vote_count = [1=>0, -1=>0];
-	foreach ($VOTES as $item)
-		++$vote_count[ $item['vote'] ];
 ?>
 			<div class="ts card" id="post-<?= $id ?>" style="margin-bottom: 42px;">
-<?php if (!empty($post['img'])) { ?>
+<?php if ($post['has_img']) { ?>
 				<div class="image">
-					<img class="post-image" src="<?= $img ?>" />
+					<img class="post-image" src="/img/<?= $post['uid'] ?>.jpg" />
 				</div>
 <?php } ?>
 				<div class="content">
@@ -68,10 +62,10 @@ foreach ($posts as $post) {
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
-						<br><span class="right floated">(<?= ip_mask($post['ip']) ?>)</span>
+						<br><span class="right floated">(<?= ip_mask($post['ip_addr']) ?>)</span>
 <?php } ?>
 					</div>
-					<p><span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $vote_count[1] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $vote_count[-1] ?>&nbsp;票</span><br>
+					<p><span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $post['approvals'] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $post['rejects'] ?>&nbsp;票</span><br>
 					<span>投稿時間：<?= $time ?></span></p>
 				</div>
 			</div>

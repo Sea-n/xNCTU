@@ -30,7 +30,7 @@ if (isset($_GET['uid'])) {
 		}
 		$posts = $db->getDeletedSubmissions(50);
 	} else if (isset($USER))
-		$posts = $db->getSubmissionsByVoter($USER['nctu_id'], 50);
+		$posts = $db->getSubmissionsForVoter($USER['nctu_id'], 50);
 	else
 		$posts = $db->getSubmissions(50);
 }
@@ -65,8 +65,8 @@ if (isset($post)) {
 	if (mb_strlen($DESC) > 150)
 		$DESC = mb_substr($DESC, 0, 150) . '...';
 
-	if ($post['img'])
-		$IMG = "https://x.nctu.app/img/{$post['img']}.jpg";
+	if ($post['has_img'])
+		$IMG = "https://x.nctu.app/img/{$post['uid']}.jpg";
 } else if (isset($_GET['deleted'])) {
 	$TITLE = '已刪投稿';
 	$IMG = 'https://x.nctu.app/assets/img/logo.png';
@@ -110,7 +110,6 @@ foreach ($posts as $post) {
 	$uid = $post['uid'];
 	$author_name = toHTML($post['author_name']);
 	$author_photo = $post['author_photo'] ?? '';
-	$img = "/img/{$post['img']}.jpg";
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
 	$canVote = (isset($post['id']) || isset($post['vote']) || isset($post['deleted_at'])) ? 'disabled' : '';
@@ -137,9 +136,9 @@ foreach ($posts as $post) {
 			</div>
 <?php } } ?>
 			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">
-<?php if (!empty($post['img'])) { ?>
+<?php if ($post['has_img']) { ?>
 				<div class="image">
-					<img class="post-image" src="<?= $img ?>" />
+					<img class="post-image" src="/img/<?= $uid ?>.jpg" />
 				</div>
 <?php } ?>
 				<div class="content">
@@ -152,7 +151,7 @@ foreach ($posts as $post) {
 				</div>
 				<div class="extra content">
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
-					<p>發文者 IP 位址：<?= ip_mask($post['ip']) ?></p>
+					<p>發文者 IP 位址：<?= ip_mask($post['ip_addr']) ?></p>
 <?php } ?>
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
@@ -167,7 +166,7 @@ foreach ($posts as $post) {
 <?php }
 if (isset($USER)) {
 	if (isset($_GET['uid'])) {
-		$VOTES = $db->getVotersBySubmission($post['uid']);
+		$VOTES = $db->getVotesByUid($post['uid']);
 		include('includes/table-vote.php');
 	} else {
 ?>

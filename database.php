@@ -1,40 +1,38 @@
 <?php
 require_once('utils.php');
+require_once('config.php');
 class MyDB {
 	public $pdo;
 
 	public function __construct() {
-		$this->pdo = new PDO('sqlite:/usr/share/nginx/x.nctu.app/sqlite.db');
+		$this->pdo = new PDO('mysql:host=localhost;dbname=xnctu', 'xnctu', MYSQL_PASSWORD);
 		$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 
 	/* Return error info or ['00000', null, null] on success */
-	public function insertSubmission(string $uid, string $body, string $img, string $ip, string $author_name, $author_id, $author_photo): array {
-		if (strlen($uid) < 3)
-			return ['SEAN', 0, 'UID too short. (at least 3 chars)'];
+	public function insertSubmission(string $uid, string $body, bool $has_img, string $ip_addr, string $author_id, string $author_name, string $author_photo): array {
+		if (strlen($uid) != 4)
+			return ['SEAN', 0, 'UID invalid. (should be 4 chars)'];
 
 		if (mb_strlen($body) < 5)
 			return ['SEAN', 0, 'Body too short. (at least 5 chars)'];
 
-		if (!empty($img) && mb_strlen($body) > 1000)
-			return ['SEAN', 0, 'Body too long. (max 1000 chars with image)'];
-
 		if (mb_strlen($body) > 4000)
 			return ['SEAN', 0, 'Body too long. (max 4000 chars)'];
 
-		if (!empty($img) && !preg_match('#^[0-9a-zA-Z]{4}$#', $img))
-			return ['SEAN', 0, 'Image invaild. (should be 4 chars)'];
+		if ($has_img && mb_strlen($body) > 1000)
+			return ['SEAN', 0, 'Body too long. (max 1000 chars with image)'];
 
-		$sql = "INSERT INTO submissions(uid, body, img, ip, author_name, author_id, author_photo) VALUES (:uid, :body, :img, :ip, :author_name, :author_id, :author_photo)";
+		$sql = "INSERT INTO submissions(uid, body, has_img, ip_addr, author_id, author_name, author_photo) VALUES (:uid, :body, :has_img, :ip_addr, :author_id, :author_name, :author_photo)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
 			':body' => $body,
-			':img' => $img,
-			':ip' => $ip,
-			':author_name' => $author_name,
+			':has_img' => $has_img,
+			':ip_addr' => $ip_addr,
 			':author_id' => $author_id,
+			':author_name' => $author_name,
 			':author_photo' => $author_photo,
 		]);
 
@@ -96,7 +94,8 @@ class MyDB {
 		return $results;
 	}
 
-	public function getSubmissionsByVoter(string $nctu_id, int $limit) {
+	/* Return submissions with previous vote */
+	public function getSubmissionsForVoter(string $nctu_id, int $limit) {
 		if ($limit == 0) $limit = 9487;
 
 		$data = $this->getVotesByUser($nctu_id);
@@ -116,6 +115,7 @@ class MyDB {
 			if (isset($item['deleted_at']))
 				continue;
 
+			/* Should be 1 or -1 or NULL, not 0 */
 			if (isset($votes[ $item['uid'] ]))
 				$item['vote'] = $votes[ $item['uid'] ];
 
@@ -129,7 +129,7 @@ class MyDB {
 	}
 
 	public function deleteSubmission(string $uid, string $reason) {
-		$sql = "UPDATE submissions SET (delete_note, deleted_at) = (:reason, datetime('now')) WHERE uid = :uid";
+		$sql = "UPDATE submissions SET delete_note = :reason, deleted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
@@ -144,6 +144,7 @@ class MyDB {
 		return $stmt->fetch();
 	}
 
+	/* Get posts newest first */
 	public function getPosts(int $limit) {
 		if ($limit == 0) $limit = 9487;
 
@@ -165,11 +166,12 @@ class MyDB {
 		return $results;
 	}
 
-	public function canVote(string $uid, string $voter) {
+	/* Check can user vote for certain submission or not */
+	public function canVote(string $uid, string $voter): array {
 		if ($uid == 'TEST')
 			return ['ok' => true];
 
-		$sql = "SELECT id, delete_note FROM submissions WHERE uid = :uid";
+		$sql = "SELECT * FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 		if (!($item = $stmt->fetch()))
@@ -178,7 +180,7 @@ class MyDB {
 		if (isset($item['id']))
 			return ['ok' => false, 'msg' => 'Already posted. 太晚囉，貼文已發出'];
 
-		if (!empty($item['delete_note']))
+		if (isset($item['deleted_at']))
 			return [
 				'ok' => false,
 				'msg' => '投稿已刪除，理由：' . $item['delete_note']
@@ -220,6 +222,7 @@ class MyDB {
 			':voter' => $voter
 		]);
 
+		/* Caution: use string combine in SQL query */
 		$sql = "UPDATE submissions SET $type = $type + 1 WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
@@ -233,7 +236,19 @@ class MyDB {
 		return $result;
 	}
 
-	public function getVotersBySubmission(string $uid) {
+	public function getVotes() {
+		$sql = "SELECT * FROM votes";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute();
+
+		$results = [];
+		while ($item = $stmt->fetch())
+			$results[] = $item;
+
+		return $results;
+	}
+
+	public function getVotesByUid(string $uid) {
 		$sql = "SELECT * FROM votes WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
@@ -245,22 +260,10 @@ class MyDB {
 		return $results;
 	}
 
-	public function getVotesByUser(string $nctu_id) {
+	private function getVotesByUser(string $nctu_id) {
 		$sql = "SELECT * FROM votes WHERE voter = :nctu_id ORDER BY created_at DESC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':nctu_id' => $nctu_id]);
-
-		$results = [];
-		while ($item = $stmt->fetch())
-			$results[] = $item;
-
-		return $results;
-	}
-
-	public function getVotes() {
-		$sql = "SELECT * FROM votes";
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute();
 
 		$results = [];
 		while ($item = $stmt->fetch())
@@ -285,8 +288,8 @@ class MyDB {
 		}
 
 		/* Rule for NCTU IP address */
-		if (substr($item['ip'], 0, 8) == '140.113.'
-		 || substr($item['ip'], 0, 9) == '2001:f18:') {
+		if (substr($item['ip_addr'], 0, 8) == '140.113.'
+		 || substr($item['ip_addr'], 0, 9) == '2001:f18:') {
 			if ($dt < 10*60)
 				return false;
 
@@ -351,12 +354,10 @@ class MyDB {
 		 || $posts[0]['plurk_id']    <= 0
 		 || $posts[0]['twitter_id']  <= 0
 		 || $posts[0]['facebook_id'] <= 0))
-		 return $posts[0];
-		unset($posts);
+			return $posts[0];
 
 		/* Get all pending submissions, oldest first */
 		$submissions = $this->getSubmissions(0, false);
-		array_reverse($submissions);
 
 		foreach ($submissions as $item) {
 			if ($this->isSubmissionEligible($item)) {
@@ -369,16 +370,18 @@ class MyDB {
 		if (!isset($post))
 			return false;
 
-		$sql = "INSERT INTO posts(uid, body, img, ip, author_name, author_id, author_photo, submitted_at) VALUES (:uid, :body, :img, :ip, :author_name, :author_id, :author_photo, :submitted_at)";
+		$sql = "INSERT INTO posts(uid, body, has_img, ip_addr, author_id, author_name, author_photo, approvals, rejects, submitted_at) VALUES (:uid, :body, :has_img, :ip_addr, :author_id, :author_name, :author_photo, :approvals, :rejects, :submitted_at)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $post['uid'],
 			':body' => $post['body'],
-			':img' => $post['img'],
-			':ip' => $post['ip'],
-			':author_name' => $post['author_name'],
+			':has_img' => $post['has_img'],
+			':ip_addr' => $post['ip_addr'],
 			':author_id' => $post['author_id'],
+			':author_name' => $post['author_name'],
 			':author_photo' => $post['author_photo'],
+			':approvals' => $post['approvals'],
+			':rejects' => $post['rejects'],
 			':submitted_at' => $post['created_at']
 		]);
 
@@ -396,7 +399,12 @@ class MyDB {
 		return $post;
 	}
 
+	/* Update SNS post ID */
 	public function updatePostSns(int $id, string $type, int $pid) {
+		if (!in_array($type, ['telegram', 'plurk', 'twitter', 'facebook']))
+			return false;
+
+		/* Caution: use string combine in SQL query */
 		$sql = "UPDATE posts SET {$type}_id = :pid WHERE id = :id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
@@ -411,7 +419,7 @@ class MyDB {
 		$stmt->execute([':nctu_id' => $nctu_id]);
 
 		if ($stmt->fetch())
-			return;
+			return false;
 
 		$sql = "INSERT INTO users(name, nctu_id, nctu_mail) VALUES (:name, :nctu_id, :mail)";
 		$stmt = $this->pdo->prepare($sql);
@@ -428,16 +436,31 @@ class MyDB {
 		$stmt->execute([':nctu_id' => $nctu_id]);
 
 		if (!$stmt->fetch())
-			return;
+			return false;
 
 		$name = $tg['first_name'];
 		if (isset($tg['last_name']))
 			$name .= ' ' . $tg['last_name'];
 
-		$sql = "UPDATE users SET (tg_id, tg_name, tg_username, tg_photo) = (:tg_id, :name, :username, :photo) WHERE nctu_id = :nctu_id";
+		$sql = "UPDATE users SET tg_id = :tg_id, tg_name = :name, tg_username = :username, tg_photo = :photo WHERE nctu_id = :nctu_id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':nctu_id' => $nctu_id,
+			':tg_id' => $tg['id'],
+			':name' => $name,
+			':username' => $tg['username'] ?? '',
+			':photo' => $tg['photo_url'] ?? '',
+		]);
+	}
+
+	public function updateUserTgProfile(array $tg) {
+		$name = $tg['first_name'];
+		if (isset($tg['last_name']))
+			$name .= ' ' . $tg['last_name'];
+
+		$sql = "UPDATE users SET tg_name = :name, tg_username = :username, tg_photo = :photo WHERE tg_id = :tg_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
 			':tg_id' => $tg['id'],
 			':name' => $name,
 			':username' => $tg['username'] ?? '',
@@ -478,21 +501,6 @@ class MyDB {
 			$results[] = $item;
 
 		return $results;
-	}
-
-	public function updateUserTgProfile(array $tg) {
-		$name = $tg['first_name'];
-		if (isset($tg['last_name']))
-			$name .= ' ' . $tg['last_name'];
-
-		$sql = "UPDATE users SET (tg_name, tg_username, tg_photo) = (:name, :username, :photo) WHERE tg_id = :tg_id";
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([
-			':tg_id' => $tg['id'],
-			':name' => $name,
-			':username' => $tg['username'] ?? '',
-			':photo' => $tg['photo_url'] ?? '',
-		]);
 	}
 
 	public function removeUserTg(int $tg_id) {

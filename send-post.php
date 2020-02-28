@@ -13,7 +13,7 @@ if (!($post = $db->getPostReady()))
 
 $id = $post['id'];
 $body = $post['body'];
-$img = $post['img'];
+$img = $post['has_img'] ? $post['uid'] : '';
 $time = strtotime($post['submitted_at']);
 $time = date("Y 年 m 月 d 日 H:i", $time);
 $link = "https://x.nctu.app/post/$id";

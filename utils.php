@@ -1,5 +1,5 @@
 <?php
-function ip_from(string $ip): string {
+function ip_from(string $ip_addr): string {
 	/* Only convert Taiwan IP addresses */
 	if (($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx') != 'TW')
 		return '境外, ' . ccToZh($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx');
@@ -24,13 +24,13 @@ function ip_from(string $ip): string {
 	];
 
 	foreach ($tanet as $prefix => $name)
-		if (substr($ip, 0, strlen($prefix)) == $prefix)
+		if (substr($ip_addr, 0, strlen($prefix)) == $prefix)
 			return $name;
 
 
 	/* Query TWNIC whois */
 	$curl = curl_init('https://rms.twnic.net.tw/query_whois1.php');
-	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip");
+	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip_addr");
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	$resp = curl_exec($curl);
 
@@ -44,7 +44,7 @@ function ip_from(string $ip): string {
 	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(股份|有限|公司|台灣|分公司)*</td></tr>#', $resp, $matches)) {
 		$name = $matches[1];
 		if ($name == '教育部') {
-			$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip");
+			$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip_addr");
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			$resp = curl_exec($curl);
 			if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立|私立)*([^<]+?)(大學|區網|中心)*</td></tr>#', $resp, $matches)) {
@@ -61,8 +61,8 @@ function ip_from(string $ip): string {
 	}
 
 	/* Use PTR record then mapping by human */
-	$ptr = gethostbyaddr($ip);
-	if ($ptr != $ip) {
+	$ptr = gethostbyaddr($ip_addr);
+	if ($ptr != $ip_addr) {
 		$ptr = explode('.', $ptr);
 		$ptr = array_slice($ptr, -3, 3);
 		$ptr = join('.', $ptr);
@@ -89,16 +89,16 @@ function ccToZh(string $cc) {
 	return $TABLE[$cc] ?? "{$cc} (未知)";
 }
 
-function ip_mask(string $ip): string {
-	if (strpos($ip, '.') !== false) { // IPv4
-		$ip4 = explode('.', $ip);
+function ip_mask(string $ip_addr): string {
+	if (strpos($ip_addr, '.') !== false) { // IPv4
+		$ip4 = explode('.', $ip_addr);
 		$ip4[2] = '***';
 		$ip4[3] = '*' . ($ip4[3]%100);
 		$ip4 = join('.', $ip4);
 		return $ip4;
 	}
 
-	$ip6 = $ip;
+	$ip6 = $ip_addr;
 	if (strpos($ip6, '::') !== false) {
 		$missing = 7 - substr_count($ip6, ':');
 		while ($missing--)

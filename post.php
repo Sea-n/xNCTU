@@ -32,8 +32,8 @@ if (mb_strlen($TITLE) > 40)
 if (mb_strlen($DESC) > 150)
 	$DESC = mb_substr($DESC, 0, 150) . '...';
 
-if ($post['img'])
-	$IMG = "https://x.nctu.app/img/{$post['img']}.jpg";
+if ($post['has_img'])
+	$IMG = "https://x.nctu.app/img/{$post['uid']}.jpg";
 
 include('includes/head.php');
 ?>
@@ -63,10 +63,7 @@ $author_photo = $author['tg_photo'] ?? '';
 
 $plurk = base_convert($post['plurk_id'], 10, 36);
 
-$VOTES = $db->getVotersBySubmission($post['uid']);
-$vote_count = [1=>0, -1=>0];
-foreach ($VOTES as $item)
-	++$vote_count[ $item['vote'] ];
+$VOTES = $db->getVotesByUid($post['uid']);
 
 if (isset($post['deleted_at'])) {
 ?>
@@ -98,11 +95,11 @@ if (isset($post['deleted_at'])) {
 						<img itemprop="image" class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <span itemprop="name"><?= $author_name ?></span>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
 						<br>
-						<span class="right floated">(<?= ip_mask($post['ip']) ?>)</span>
+						<span class="right floated">(<?= ip_mask($post['ip_addr']) ?>)</span>
 <?php } ?>
 					</div>
 					<p>
-						<span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $vote_count[1] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $vote_count[-1] ?>&nbsp;票</span><br>
+						<span>審核結果：<button class="ts vote positive button">通過</button>&nbsp;<?= $post['approvals'] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $post['rejects'] ?>&nbsp;票</span><br>
 						<span>投稿時間：<time itemprop="dateCreated" datetime="<?= $post['submitted_at'] ?>"><?= $timeS ?></time></span><br>
 						<span style="display: none;">發出時間：<time itemprop="datePublished" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time><br></span>
 						<span style="display: none;">更新時間：<time itemprop="dateModified" datetime="<?= $post['created_at'] ?>"><?= $timeC ?></time><br></span>

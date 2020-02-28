@@ -62,7 +62,7 @@ switch ($action) {
 				'msg' => '已超出刪除期限，請來信聯絡開發團隊'
 			]));
 
-		if ($_SERVER['REMOTE_ADDR'] !== $post['ip'])
+		if ($_SERVER['REMOTE_ADDR'] !== $post['ip_addr'])
 			exit(json_encode([
 				'ok' => false,
 				'msg' => '無法驗證身份：IP 位址不相符'
@@ -90,7 +90,7 @@ switch ($action) {
 		} catch (Exception $e) {
 			echo json_encode([
 				'ok' => 'false',
-				'msg' => ' Database Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n" . $e->lastResponse
+				'msg' => ' Database Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n" . $e->lastResponse
 			]);
 		}
 

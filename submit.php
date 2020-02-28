@@ -5,7 +5,7 @@ require_once('database.php');
 require_once('send-review.php');
 $db = new MyDB();
 
-$ip = $_SERVER['REMOTE_ADDR'];
+$ip_addr = $_SERVER['REMOTE_ADDR'];
 
 if (isset($_SESSION['nctu_id']))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
@@ -61,11 +61,7 @@ if (isset($_POST['body'])) {
 			], true)))
 			exit('Extension not recognized. 圖片副檔名錯誤');
 
-		do {
-			$img = $uid;
-			$dst = __DIR__ . "/img/$uid";
-		} while (file_exists($dst));
-
+		$dst = __DIR__ . "/img/$uid";
 		if (!move_uploaded_file($src, $dst))
 			exit('Failed to move uploaded file. 上傳發生錯誤');
 
@@ -80,8 +76,10 @@ if (isset($_POST['body'])) {
 			exit('Image must be at least 2:1');
 
 		system("ffmpeg -i $dst $dst.jpg");
+
+		$has_img = true;
 	} else
-		$img = '';
+		$has_img = false;
 
 	/* Get Author Name */
 	if (isset($USER)) {
@@ -89,14 +87,14 @@ if (isset($_POST['body'])) {
 		$author_id = $USER['nctu_id'];
 		$author_photo = $USER['tg_photo'] ?? '';
 	} else {
-		$ip_from = ip_from($ip);
+		$ip_from = ip_from($ip_addr);
 		$author_name = "匿名, $ip_from";
 		$author_id = '';
 		$author_photo = '';
 	}
 
 	/* Insert record */
-	$error = $db->insertSubmission($uid, $body, $img, $ip, $author_name, $author_id, $author_photo);
+	$error = $db->insertSubmission($uid, $body, $has_img, $ip_addr, $author_name, $author_id, $author_photo);
 	if ($error[0] != '00000')
 		exit("Database error {$error[0]}, {$error[1]}, {$error[2]}. 資料庫發生錯誤");
 } else {
@@ -105,7 +103,7 @@ if (isset($_POST['body'])) {
 
 	$captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 
-	$ip_masked = ip_mask($ip);
+	$ip_masked = ip_mask($ip_addr);
 }
 ?>
 <!DOCTYPE html>
@@ -131,9 +129,9 @@ include('includes/head.php');
 			<h2 class="ts header">投稿成功！</h2>
 			<p>您可以在 3 分鐘內反悔，逾時刪除請來信聯絡開發團隊。</p>
 			<div class="ts card" id="post-preview" style="margin-bottom: 42px;">
-<?php if (!empty($img)) { ?>
+<?php if ($has_img) { ?>
 				<div class="image">
-					<img class="post-image" src="https://x.nctu.app/img/<?= $img ?>.jpg" />
+					<img class="post-image" src="https://x.nctu.app/img/<?= $uid ?>.jpg" />
 				</div>
 <?php } ?>
 				<div class="content">
@@ -144,7 +142,7 @@ include('includes/head.php');
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
 					</div>
-					<p>發文者 IP 位址：<?= ip_mask($ip) ?></p>
+					<p>發文者 IP 位址：<?= ip_mask($ip_addr) ?></p>
 				</div>
 				<div class="ts fluid bottom attached large buttons">
 					<button id="delete-button" class="ts negative button" onclick="deleteSubmission('<?= $uid ?>');">刪除投稿 (<span id="countdown">3:00</span>)</button>
@@ -184,7 +182,7 @@ include('includes/head.php');
 				<input name="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
 				<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
 			</form>
-			<p><small>請注意：一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</small></p>
+			<p><small>請注意：一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip_addr) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</small></p>
 <?php } ?>
 		</div>
 <?php include('includes/footer.php'); ?>
@@ -194,5 +192,5 @@ include('includes/head.php');
 fastcgi_finish_request();
 
 if (isset($uid)) {
-	sendReview($uid, $body, $img);
+	sendReview($uid, $body, $has_img);
 }
