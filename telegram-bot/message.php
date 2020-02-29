@@ -162,5 +162,15 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 		]
 	]);
 
+	$msg_id = $db->getTgMsg($uid, $TG->ChatID);
+	if ($msg_id)
+		$TG->getTelegram('editMessageReplyMarkup', [
+			'chat_id' => $TG->ChatID,
+			'message_id' => $msg_id,
+			'reply_markup' => [
+				'inline_keyboard' => []
+			]
+		]);
+
 	exit;
 }

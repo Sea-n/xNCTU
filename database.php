@@ -1,6 +1,6 @@
 <?php
-require_once('utils.php');
-require_once('config.php');
+require_once(__DIR__ . '/utils.php');
+require_once(__DIR__ . '/config.php');
 class MyDB {
 	public $pdo;
 
@@ -199,6 +199,13 @@ class MyDB {
 	}
 
 	public function voteSubmissions(string $uid, string $voter, int $vote, string $reason = '') {
+		if ($uid == 'TEST')
+			return [
+				'ok' => true,
+				'approvals' => 87,
+				'rejects' => 42,
+			];
+
 		if ($vote == 1)
 			$type = 'approvals';
 		else if ($vote == -1)
@@ -507,5 +514,46 @@ class MyDB {
 		$sql = "UPDATE users SET tg_name = NULL WHERE tg_id = :tg_id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':tg_id' => $tg['id']]);
+	}
+
+	public function setTgMsg(string $uid, int $chat, int $msg) {
+		if ($this->getTgMsg($uid, $chat))
+			$this->updateTgMsg($uid, $chat, $msg);
+		else
+			$this->insertTgMsg($uid, $chat, $msg);
+	}
+
+
+	public function insertTgMsg(string $uid, int $chat, int $msg) {
+		$sql = "INSERT INTO tg_msg(uid, chat_id, msg_id) VALUES (:uid, :chat, :msg)";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':uid' => $uid,
+			':chat' => $chat,
+			':msg' => $msg,
+		]);
+	}
+
+	public function updateTgMsg(string $uid, int $chat, int $msg) {
+		$sql = "UPDATE tg_msg SET msg_id = :msg WHERE uid = :uid AND chat_id = :chat";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':uid' => $uid,
+			':chat' => $chat,
+			':msg' => $msg,
+		]);
+	}
+
+	public function getTgMsg(string $uid, int $chat): int {
+		$sql = "SELECT msg_id FROM tg_msg WHERE uid = :uid AND chat_id = :chat";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':uid' => $uid,
+			':chat' => $chat,
+		]);
+
+		$item = $stmt->fetch();
+
+		return $item['msg_id'] ?? 0;
 	}
 }

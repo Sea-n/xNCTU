@@ -12,7 +12,7 @@ switch ($argv[1]) {
 case 'dump':
 	$data = [];
 
-	$tables = ['submissions', 'votes', 'posts', 'users'];
+	$tables = ['submissions', 'votes', 'posts', 'users', 'tg_msg'];
 	foreach ($tables as $table) {
 		$sql = "SELECT * FROM $table ORDER BY created_at DESC";
 		$stmt = $db->pdo->prepare($sql);

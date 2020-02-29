@@ -15,7 +15,10 @@ function sendReview(string $uid, string $body, bool $has_img) {
 		if (!$result['ok']) {
 			if ($result['description'] == 'Bad Request: chat not found')
 				$db->removeUserTg($user['tg_id']);
+			continue;
 		}
+
+		$db->setTgMsg($uid, $user['tg_id'], $result['result']['message_id']);
 	}
 }
 
