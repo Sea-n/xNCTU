@@ -94,7 +94,7 @@ if (isset($_POST['body'])) {
 	}
 
 	/* Insert record */
-	$error = $db->insertSubmission($uid, $body, $has_img, $ip_addr, $author_name, $author_id, $author_photo);
+	$error = $db->insertSubmission($uid, $body, $has_img, $ip_addr, $author_id, $author_name, $author_photo);
 	if ($error[0] != '00000')
 		exit("Database error {$error[0]}, {$error[1]}, {$error[2]}. 資料庫發生錯誤");
 } else {

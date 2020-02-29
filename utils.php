@@ -140,7 +140,7 @@ function rand58(int $len = 1): string {
  * 1. Newline to <br>
  * 2. Signle line URL to <a>
  */
-function toHTML(string $text): string {
+function toHTML(string $text = ''): string {
 	$text = htmlentities($text);
 	$text = explode("\n", $text);
 	foreach ($text as $k1 => $v1) {
