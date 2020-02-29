@@ -11,8 +11,11 @@ START TRANSACTION;
  * 3 sent all review
  * 4 selected to post
  * 5 posted to all SNS
- * -1 deleted
+ * -1 deleted for unknown reason
  * -2 rejected
+ * -3 deleted by author
+ * -4 deleted by admin
+ * -5 deleted and hidden by admin
  */
 
 DROP TABLE IF EXISTS submissions;

@@ -155,8 +155,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 
 		if ($_POST['status'] == 'confirmed') {
 			$post = $db->getSubmissionByUid($uid);
+			if (!$post)
+				err('找不到該篇投稿');
+
 			if ($post['status'] != 0)
 				err("Submission $uid status {$post['status']} is not eligible to be confirmed. 此投稿狀態不允許確認");
+
+			if ($_SERVER['REMOTE_ADDR'] !== $post['ip_addr'])
+				err('無法驗證身份：IP 位址不相符');
 
 			$db->updateSubmissionStatus($uid, 1);
 			echo json_encode([
@@ -186,6 +192,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 		if (!$post)
 			err('找不到該篇投稿');
 
+		if ($post['status'] != 0)
+			err("目前狀態 {$post['status']} 無法刪除");
+
 		$ts = strtotime($post['created_at']);
 		$dt = time() - $ts;
 		if ($dt > 5*60)
@@ -203,6 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 		try {
 			$db->deleteSubmission($uid, "自刪 $reason");
+			$db->updateSubmissionStatus($uid, -3);
 			echo json_encode([
 				'ok' => true,
 				'msg' => '刪除成功！'
