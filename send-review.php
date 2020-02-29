@@ -9,7 +9,12 @@ function sendReview(string $uid) {
 	$body = $post['body'];
 	$has_img = $post['has_img'];
 
+	$status = $post['status'];
+	assert($status == 1);
+
 	$USERS = $db->getTgUsers();
+
+	$db->updateSubmissionStatus($uid, 2);
 
 	foreach ($USERS as $user) {
 		if (!isset($user['tg_name']))
@@ -25,6 +30,8 @@ function sendReview(string $uid) {
 
 		$db->setTgMsg($uid, $user['tg_id'], $result['result']['message_id']);
 	}
+
+	$db->updateSubmissionStatus($uid, 3);
 }
 
 function sendPost(string $uid, string $body, bool $has_img, int $id) {

@@ -73,6 +73,12 @@ class MyDB {
 			if (isset($item['deleted_at']))
 				continue;
 
+			if ($item['status'] < 1)
+				continue;
+
+			if ($item['status'] > 5)
+				continue;
+
 			if (!$limit--)
 				break;
 
@@ -122,6 +128,12 @@ class MyDB {
 				continue;
 
 			if (isset($item['deleted_at']))
+				continue;
+
+			if ($item['status'] < 1)
+				continue;
+
+			if ($item['status'] > 5)
 				continue;
 
 			/* Should be 1 or -1 or NULL, not 0 */
@@ -386,6 +398,8 @@ class MyDB {
 		if (!isset($post))
 			return false;
 
+		$this->updateSubmissionStatus($post['uid'], 4);
+
 		$sql = "INSERT INTO posts(uid, body, has_img, ip_addr, author_id, author_name, author_photo, approvals, rejects, submitted_at) VALUES (:uid, :body, :has_img, :ip_addr, :author_id, :author_name, :author_photo, :approvals, :rejects, :submitted_at)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
@@ -427,6 +441,13 @@ class MyDB {
 			':id' => $id,
 			':pid' => $pid,
 		]);
+
+		$post = $this->getPostById($id);
+		if ($post['telegram_id'] > 0
+		 && $post['plurk_id']    > 0
+		 && $post['twitter_id']  > 0
+		 && $post['facebook_id'] > 0)
+			$this->updateSubmissionStatus($post['uid'], 5);
 	}
 
 	public function insertUserNctu(string $nctu_id, string $mail) {
