@@ -46,7 +46,11 @@ foreach ($posts as $post) {
 	} else
 		$author_name = toHTML($post['author_name']);
 
+	$ip_masked = ip_mask($post['ip_addr']);
+
 	$author_photo = $author['tg_photo'] ?? '';
+	if (empty($author_photo))
+		$author_photo = genPic($ip_masked);
 ?>
 			<div class="ts card" id="post-<?= $id ?>" style="margin-bottom: 42px;">
 <?php if ($post['has_img']) { ?>
@@ -62,7 +66,7 @@ foreach ($posts as $post) {
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
-						<br><span class="right floated">(<?= ip_mask($post['ip_addr']) ?>)</span>
+						<br><span class="right floated">(<?= $ip_masked ?>)</span>
 <?php } ?>
 					</div>
 					<p style="margin-top: 0; line-height: 1.7em">

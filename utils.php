@@ -218,3 +218,9 @@ function idToDep(string $id): string {
 
 	return "$dep $deg 級";
 }
+
+function genPic(string $str) {
+	$sha1 = sha1($str);
+	$url = "https://www.gravatar.com/avatar/$sha1?s=160&d=monsterid";
+	return $url;
+}

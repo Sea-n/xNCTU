@@ -44,6 +44,8 @@ foreach ($items as $href => $name) {
 <?php
 if (isset($USER)) {
 	$photo = $USER['tg_photo'] ?? '';
+	if (empty($photo))
+		$photo = genPic($USER['nctu_id']);
 ?>
 			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
 			&nbsp;<b style="x-overflow: hidden;"><?= $USER['name'] ?></b>&nbsp;

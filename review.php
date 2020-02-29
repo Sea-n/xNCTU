@@ -108,8 +108,13 @@ if (count($posts) == 0) {
 <?php } }
 foreach ($posts as $post) {
 	$uid = $post['uid'];
+	$ip_masked = ip_mask($post['ip_addr']);
 	$author_name = toHTML($post['author_name']);
+
 	$author_photo = $post['author_photo'] ?? '';
+	if (empty($author_photo))
+		$author_photo = genPic($ip_masked);
+
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
 	$canVote = !(isset($post['id']) || isset($post['vote']) || isset($post['deleted_at']));
@@ -153,7 +158,7 @@ foreach ($posts as $post) {
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
-						<br><span class="right floated">(<?= ip_mask($post['ip_addr']) ?>)</span>
+						<br><span class="right floated">(<?= $ip_masked ?>)</span>
 <?php } ?>
 					</div>
 					<p style="margin-top: 0; line-height: 1.7em">

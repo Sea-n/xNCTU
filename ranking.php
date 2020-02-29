@@ -81,11 +81,14 @@ foreach ($user_count as $i => $item) {
 	$id = $item['id'];
 	$dep = idToDep($id);
 	$name = toHTML($item['user']['name']);
+	$photo = $item['user']['tg_photo'] ?? '';
+	if (empty($photo))
+		$photo = genPic($id);
 ?>
 					<tr>
 						<td><?= $no ?></td>
 						<td><?= $dep ?></td>
-						<td><img class="ts circular avatar image" src="<?= $item['user']['tg_photo'] ?? '' ?>" onerror="this.src='/assets/img/avatar.jpg';"></td>
+						<td><img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"></td>
 						<td><a onclick="changeChart('<?= $id ?>')"><?= $name ?></a></td>
 						<td><?= $item[1] ?></td>
 						<td><?= $item[-1] ?></td>

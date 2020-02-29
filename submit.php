@@ -6,6 +6,7 @@ require_once('send-review.php');
 $db = new MyDB();
 
 $ip_addr = $_SERVER['REMOTE_ADDR'];
+$ip_masked = ip_mask($ip_addr);
 
 if (isset($_SESSION['nctu_id']))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
@@ -97,13 +98,15 @@ if (isset($_POST['body'])) {
 	$error = $db->insertSubmission($uid, $body, $has_img, $ip_addr, $author_id, $author_name, $author_photo);
 	if ($error[0] != '00000')
 		exit("Database error {$error[0]}, {$error[1]}, {$error[2]}. 資料庫發生錯誤");
+
+	/* For preview only, don't save to database. */
+	if (empty($author_photo))
+		$author_photo = genPic($ip_masked);
 } else {
 	if (!isset($_SESSION['csrf_token']))
 		$_SESSION['csrf_token'] = rand58(8);
 
 	$captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
-
-	$ip_masked = ip_mask($ip_addr);
 }
 ?>
 <!DOCTYPE html>

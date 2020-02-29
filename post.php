@@ -54,12 +54,17 @@ $body = toHTML($post['body']);
 $timeS = humanTime($post['submitted_at']);
 $timeC = humanTime($post['created_at']);
 
+$ip_masked = ip_mask($post['ip_addr']);
+
 $author_name = toHTML($post['author_name']);
 if (!empty($post['author_id'])) {
 	$author = $db->getUserByNctu($post['author_id']);
 	$author_name = toHTML($author['name']);
 }
+
 $author_photo = $author['tg_photo'] ?? '';
+if (empty($author_photo))
+	$author_photo = genPic($ip_masked);
 
 $plurk = base_convert($post['plurk_id'], 10, 36);
 
@@ -95,7 +100,7 @@ if (isset($post['deleted_at'])) {
 						<img itemprop="image" class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <span itemprop="name"><?= $author_name ?></span>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
 						<br>
-						<span class="right floated">(<?= ip_mask($post['ip_addr']) ?>)</span>
+						<span class="right floated">(<?= $ip_masked ?>)</span>
 <?php } ?>
 					</div>
 					<p>
