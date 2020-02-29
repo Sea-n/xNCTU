@@ -29,7 +29,7 @@ class MyDB {
 		$stmt->execute([
 			':uid' => $uid,
 			':body' => $body,
-			':has_img' => $has_img,
+			':has_img' => $has_img ? 1 : 0,
 			':ip_addr' => $ip_addr,
 			':author_id' => $author_id,
 			':author_name' => $author_name,
