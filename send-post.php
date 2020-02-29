@@ -13,8 +13,12 @@ if (!($post = $db->getPostReady()))
 
 /* Prepare post content */
 $id = $post['id'];
+$uid = $post['uid'];
 $body = $post['body'];
-$img = $post['has_img'] ? $post['uid'] : '';
+
+/* img cannot be URL, Twitter required local file upload */
+$img = $post['has_img'] ? $uid : '';
+
 $time = strtotime($post['submitted_at']);
 $time = date("Y 年 m 月 d 日 H:i", $time);
 $link = "https://x.nctu.app/post/$id";
