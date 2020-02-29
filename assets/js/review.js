@@ -1,3 +1,5 @@
+setInterval(updateVotes, 30*1000);
+
 function approve(uid) {
 	if (!confirm('您確定要通過此貼文嗎？'))
 		return;
@@ -58,21 +60,31 @@ function vote(uid, type, reason_prompt) {
 		} else
 			alert("Error: " + resp.msg);
 
-		updateVotes(uid);
+			updateVotes();
 	});
 }
 
-function updateVotes(uid) {
+function updateVotes() {
 	var button = document.getElementById('refresh');
 	button.classList.add('disabled');
+
+	var uid = document.body.dataset.uid;
+	if (!uid)
+		return;
 
 	fetch('/api/votes?uid=' + uid)
 	.then(resp => resp.json())
 	.then((resp) => {
 		console.log(resp);
 		if (resp.ok) {
+			var card = document.getElementById('post-' + uid);
+			card.querySelector('#approvals').innerText = resp.approvals;
+			card.querySelector('#rejects').innerText = resp.rejects;
+
 			updateVotesTable(resp.votes);
-			button.classList.remove('disabled');
+			setTimeout(() => {
+				button.classList.remove('disabled');
+			}, 800);
 		} else
 			alert(resp.msg);
 	});

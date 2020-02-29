@@ -78,8 +78,13 @@ include('includes/head.php');
 ?>
 		<script src="/assets/js/review.js"></script>
 	</head>
+<?php if (isset($uid)) { ?>
+	<body data-uid="<?= $uid ?>">
+<?php } else { ?>
 	<body>
-<?php include('includes/nav.php'); ?>
+<?php }
+include('includes/nav.php');
+?>
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header"><?= isset($_GET['deleted']) ? '已刪投稿' : '貼文審核' ?></h1>
@@ -163,7 +168,7 @@ foreach ($posts as $post) {
 					</div>
 					<p style="margin-top: 0; line-height: 1.7em">
 <?php if (!$canVote) { ?>
-						<span>審核狀況：<button class="ts vote positive button">通過</button>&nbsp;<?= $post['approvals'] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $post['rejects'] ?>&nbsp;票</span>
+						<span>審核狀況：<button class="ts vote positive button">通過</button>&nbsp;<span id="approvals"><?= $post['approvals'] ?></span>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<span id="rejects"><?= $post['rejects'] ?></span>&nbsp;票</span>
 <?php } ?>
 						<br><span>投稿時間：<?= $time ?></span>
 					</p>
