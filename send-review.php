@@ -2,8 +2,13 @@
 require_once('database.php');
 require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
 
-function sendReview(string $uid, string $body, bool $has_img) {
+function sendReview(string $uid) {
 	$db = new MyDB();
+
+	$post = $db->getSubmissionByUid($uid);
+	$body = $post['body'];
+	$has_img = $post['has_img'];
+
 	$USERS = $db->getTgUsers();
 
 	foreach ($USERS as $user) {

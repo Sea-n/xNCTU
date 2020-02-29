@@ -39,6 +39,15 @@ class MyDB {
 		return $stmt->errorInfo();
 	}
 
+	public function updateSubmissionStatus(string $uid, int $status) {
+		$sql = "UPDATE submissions SET status = :status WHERE uid = :uid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':uid' => $uid,
+			':status' => $status,
+		]);
+	}
+
 	public function getSubmissionByUid(string $uid) {
 		$sql = "SELECT * FROM submissions WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
@@ -129,7 +138,7 @@ class MyDB {
 	}
 
 	public function deleteSubmission(string $uid, string $reason) {
-		$sql = "UPDATE submissions SET delete_note = :reason, deleted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
+		$sql = "UPDATE submissions SET status = -1, delete_note = :reason, deleted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
@@ -396,7 +405,7 @@ class MyDB {
 		$post['id'] = $id;
 		$post['submitted_at'] = $post['created_at'];
 
-		$sql = "UPDATE submissions SET id = :id WHERE uid = :uid";
+		$sql = "UPDATE submissions SET status = 4, id = :id WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $post['uid'],

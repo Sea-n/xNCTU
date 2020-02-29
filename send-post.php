@@ -67,7 +67,8 @@ foreach ($sns as $name => $key) {
 /* Remove vote keyboard in Telegram */
 $msgs = $db->getTgMsgsByUid($uid);
 foreach ($msgs as $item) {
-	$TG->getTelegram('editMessageReplyMarkup', [
+	getTelegram('editMessageReplyMarkup', [
+		'bot' => 'xNCTU',
 		'chat_id' => $item['chat_id'],
 		'message_id' => $item['msg_id'],
 		'reply_markup' => [

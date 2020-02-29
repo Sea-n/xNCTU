@@ -3,7 +3,7 @@ var submitted = false;
 
 function init() {
 	if (document.getElementById('submit-post')) {
-		document.getElementById('submit-post').onsubmit = checkForm;
+		document.getElementById('submit-post').onsubmit = submitForm;
 		document.getElementById('body-area').oninput = formUpdate;
 		document.getElementById('img').oninput = formUpdate;
 		document.getElementById('captcha-input').oninput = formUpdate;
@@ -20,23 +20,6 @@ function init() {
 		});
 
 		restoreForm();
-	}
-
-	if (document.getElementById('post-preview')) {
-		var deadline = (new Date()).getTime() + 3*60*1000;
-		stopCountdown = setInterval(() => {
-			var dt = Math.floor((deadline - (new Date()).getTime()) / 1000);
-			if (dt <= 0) {
-				document.getElementById('delete-button').classList.add('disabled');
-				clearInterval(stopCountdown);
-			}
-
-			var min = Math.floor(dt/60);
-			var sec = dt % 60;
-			if (sec < 10)
-				sec = '0' + sec;
-			document.getElementById('countdown').innerText = min + ':' + sec;
-		}, 100);
 	}
 }
 
@@ -91,40 +74,135 @@ function formUpdate() {
 	localStorage.setItem('captcha', captcha);
 }
 
-function checkForm(e) {
+function submitForm(e) {
+	e.preventDefault();
+	var body = document.getElementById('body-area');
+	var img = document.getElementById('img');
+	var captcha = document.getElementById('captcha-input');
+	var csrf = document.getElementById('csrf_token');
+	submitted = true;
+
+	if (!checkForm()) {
+		e.preventDefault();
+		submitted = false;
+
+		return;
+	}
+
+	const formData  = new FormData();
+	formData.append('body', body.value);
+	if (img.files.length)
+		formData.append('img', img.files[0]);
+	formData.append('captcha', captcha.value);
+	formData.append('csrf_token', csrf.value);
+
+	fetch('/api/submission', {
+		method: 'POST',
+		body: formData,
+	}).then(resp => resp.json())
+	.then((resp) => {
+		console.log(resp);
+		if (!resp.ok) {
+			alert(resp.msg);
+			return;
+		}
+
+		showPreview(resp);
+
+		var deadline = (new Date()).getTime() + 10*1000;
+		stopCountdown = setInterval(() => {
+			var dt = Math.floor((deadline - (new Date()).getTime()) / 1000);
+			if (dt <= 0) {
+				document.getElementById('confirm-button').classList.remove('disabled');
+				clearInterval(stopCountdown);
+			}
+
+			var min = Math.floor(dt/60);
+			var sec = dt % 60;
+			if (sec < 10)
+				sec = '0' + sec;
+			document.getElementById('countdown').innerText = min + ':' + sec;
+		}, 100);
+	});
+}
+
+function checkForm() {
 	var bodyArea = document.getElementById('body-area');
 	var bodyField = document.getElementById('body-field');
 	var img = document.getElementById('img');
 	var captchaInput = document.getElementById('captcha-input');
 	var captchaField = document.getElementById('captcha-field');
-	submitted = true;
+	var isValid = true;
 
 	formUpdate();  // For clean & update warnings
 
 	var len = bodyArea.value.length;
 	if (len < 10) {
 		bodyField.classList.add('error');
-		e.preventDefault();
-		submitted = false;
+		isValid = false;
 	}
 
 	if ((img.files.length && len > 870) || len > 3600) {
-		e.preventDefault();
-		submitted = false;
+		isValid = false;
 	}
 
 	if (captchaInput.value.length != captchaInput.dataset.len) {
 		captchaField.classList.add('error');
-		e.preventDefault();
-		submitted = false;
+		isValid = false;
 	}
 
-	if (submitted) {
-		localStorage.setItem('draft', '');
-	}
+	return isValid;
 }
 
-function deleteSubmission(uid) {
+function showPreview(data) {
+	document.body.dataset.uid = data.uid;
+	document.getElementById('preview-body').innerText = data.body;
+
+	var img = document.getElementById('preview-img');
+	if (data.has_img)
+		img.src = '/img/' + data.uid + '.jpg';
+	else
+		img.src = '';
+
+	document.getElementById('author-photo').src = data.author_photo;
+	document.getElementById('author-name').innerText = data.author_name;
+	document.getElementById('author-ip').innerText = data.ip_masked;
+
+	document.getElementById('preview-section').style.display = '';
+	document.getElementById('submit-section').style.display = 'none';
+}
+
+function confirmSubmission() {
+	if (!confirm('確定要送出此投稿嗎？\n\n這是你反悔的最後機會'))
+		return;
+
+	document.getElementById('confirm-button').classList.add('disabled');
+	document.getElementById('delete-button').classList.add('disabled');
+
+	var uid = document.body.dataset.uid;
+
+	data = {
+		uid: uid,
+		status: 'confirmed',
+	};
+
+	fetch('/api/submission', {
+		method: 'PATCH',
+		body: JSON.stringify(data),
+		headers: {'content-type': 'application/json'}
+	}).then(resp => resp.json())
+	.then((resp) => {
+		console.log(resp);
+		if (!resp.ok) {
+			alert(resp.msg);
+			return;
+		}
+		localStorage.setItem('draft', '');
+		location.href = '/review?uid=' + uid;
+	});
+}
+
+function deleteSubmission() {
 	if (!confirm('您確定要刪除此投稿嗎？'))
 		return;
 
@@ -134,8 +212,13 @@ function deleteSubmission(uid) {
 		return;
 	}
 
+	document.getElementById('confirm-button').classList.add('disabled');
+	document.getElementById('delete-button').classList.add('disabled');
+
+	clearInterval(stopCountdown);
+
 	data = {
-		uid: uid,
+		uid: document.body.dataset.uid,
 		reason: reason
 	};
 
@@ -146,10 +229,6 @@ function deleteSubmission(uid) {
 	}).then(resp => resp.json())
 	.then((resp) => {
 		console.log(resp);
-		if (resp.ok) {
-			document.getElementById('delete-button').classList.add('disabled');
-			clearInterval(stopCountdown);
-		}
 		alert(resp.msg);
 	});
 }

@@ -53,7 +53,7 @@ function ip_from(string $ip_addr): string {
 	}
 
 	/* IPv6 address only have English org name for unknown reason */
-	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)( Co., Ltd.)*</td></tr>#', $resp, $matches)) {
+	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(\s*Co.,\s*Ltd.)*</td></tr>#', $resp, $matches)) {
 		$name = $matches[1];
 		/* Check TANet Whois */
 		if ($name == 'Ministry of Education Computer Center') {

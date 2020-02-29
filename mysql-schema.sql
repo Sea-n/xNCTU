@@ -2,6 +2,19 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 START TRANSACTION;
 
+/*
+ * submission status codes:
+ *
+ * 0 pending submit
+ * 1 confirmed submit
+ * 2 sening review message
+ * 3 sent all review
+ * 4 selected to post
+ * 5 posted to all SNS
+ * -1 deleted
+ * -2 rejected
+ */
+
 DROP TABLE IF EXISTS submissions;
 CREATE TABLE submissions (
 	uid CHAR(4) PRIMARY KEY UNIQUE,
@@ -14,6 +27,7 @@ CREATE TABLE submissions (
 	author_photo VARCHAR(2048) DEFAULT '' NOT NULL,
 	approvals INTEGER DEFAULT 0 NOT NULL,
 	rejects INTEGER DEFAULT 0 NOT NULL,
+	status INTEGER DEFAULT 0 NOT NULL;
 	deleted_at TIMESTAMP NULL,
 	delete_note VARCHAR(870) DEFAULT '' NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL

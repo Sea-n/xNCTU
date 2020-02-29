@@ -2,6 +2,7 @@
 session_start();
 require_once('utils.php');
 require_once('database.php');
+require_once('send-review.php');
 $db = new MyDB();
 
 if (($_SERVER['HTTP_CONTENT_TYPE'] ?? '') == 'application/json')
@@ -143,6 +144,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 }
 
+/* HTTP Method: PATCH */
+if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+	$ACTION = $_GET['action'] ?? 'x';
+
+	if ($ACTION == 'submission') {
+		$uid = $_POST['uid'] ?? 'x';
+		if (strlen($uid) != 4)
+			err("uid ($uid) invalid. 投稿編號無效");
+
+		if ($_POST['status'] == 'confirmed') {
+			$post = $db->getSubmissionByUid($uid);
+			if ($post['status'] != 0)
+				err("Submission $uid status {$post['status']} is not eligible to be confirmed. 此投稿狀態不允許確認");
+
+			$db->updateSubmissionStatus($uid, 1);
+			echo json_encode([
+				'ok' => true,
+				'msg' => '投稿已送出'
+			], JSON_PRETTY_PRINT);
+
+			fastcgi_finish_request();
+
+			sendReview($uid);
+		}
+	} else {
+		err('Unknown PATCH action. 未知的操作');
+	}
+}
+
 /* HTTP Method: DELETE */
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 	$ACTION = $_GET['action'] ?? 'x';
@@ -202,8 +232,6 @@ function checkSubmitData(string $body, bool $has_img): string {
 
 	if ($_SESSION['csrf_token'] !== $_POST['csrf_token'])
 		return 'Invalid CSRF Token. 請重新操作';
-
-	unset($_SESSION['csrf_token']);  // Prevent reuse (e.g., refresh the submit page)
 
 	/* Check CAPTCHA */
 	$captcha = trim($_POST['captcha'] ?? 'X');
