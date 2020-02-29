@@ -557,14 +557,12 @@ class MyDB {
 		return $item['msg_id'] ?? 0;
 	}
 
-	public function deleteTgMsg(string $uid, int $chat): int {
+	public function deleteTgMsg(string $uid, int $chat) {
 		$sql = "DELETE FROM tg_msg WHERE uid = :uid AND chat_id = :chat";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
 			':chat' => $chat,
 		]);
-
-		$item = $stmt->fetch();
 	}
 }

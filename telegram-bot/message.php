@@ -63,19 +63,37 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'send':
-			$TG->sendMsg([
-				'text' => '點擊下方按鈕以發送測試貼文',
+			$body = "學生計算機年會（Students’ Information Technology Conference）自 2013 年發起，以學生為本、由學生自發舉辦，長期投身學生資訊教育與推廣開源精神，希望引領更多學子踏入資訊的殿堂，更冀望所有對資訊有興趣的學生，能夠在年會裏齊聚一堂，彼此激盪、傳承、啟發，達到「學以致用、教學相長」的實際展現。";
+
+			$result = $TG->getTelegram('sendPhoto', [
+				'chat_id' => $TG->ChatID,
+				'photo' => "https://x.nctu.app/img/TEST.jpg",
+				'caption' => $body,
 				'reply_markup' => [
 					'inline_keyboard' => [
 						[
 							[
-								'text' => '發送測試貼文',
-								'callback_data' => 'test_send'
+								'text' => '✅ 通過',
+								'callback_data' => "approve_TEST"
+							],
+							[
+								'text' => '❌ 駁回',
+								'callback_data' => "reject_TEST"
+							]
+						],
+						[
+							[
+								'text' => '開啟審核頁面',
+								'login_url' => [
+									'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3DTEST"
+								]
 							]
 						]
 					]
 				]
 			]);
+
+			$db->setTgMsg('TEST', $TG->ChatID, $result['result']['message_id']);
 			break;
 
 		case 'name':
@@ -150,11 +168,6 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 		$msg = 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
 	}
 
-	$TG->getTelegram('deleteMessage', [
-		'chat_id' => $TG->ChatID,
-		'message_id' => $TG->data['message']['reply_to_message']['message_id'],
-	]);
-
 	$TG->sendMsg([
 		'text' => $msg,
 	]);
@@ -179,6 +192,11 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 		]);
 		$db->deleteTgMsg($uid, $TG->ChatID);
 	}
+
+	$TG->getTelegram('deleteMessage', [
+		'chat_id' => $TG->ChatID,
+		'message_id' => $TG->data['message']['reply_to_message']['message_id'],
+	]);
 
 	exit;
 }
