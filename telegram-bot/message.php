@@ -128,6 +128,8 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 	$vote = $matches[1] == 'approve' ? 1 : -1;
 	$uid = $matches[2];
 
+	$type = $vote == 1 ? '✅ 通過' : '❌ 駁回';
+
 	if (empty($text) || mb_strlen($text) > 100) {
 		$TG->sendMsg([
 			'text' => '請輸入 1 - 100 字投票附註'
@@ -140,37 +142,43 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 		$result = $db->voteSubmissions($uid, $USER['nctu_id'], $vote, $text);
 		if (!$result['ok'])
 			$msg = $result['msg'];
-		else
-			$msg = "投票成功！\n\n目前通過 {$result['approvals']} 票、駁回 {$result['rejects']} 票";
+		else {
+			$msg = "您成功為 $uid 投下了 $type\n\n";
+			$msg .= "目前通過 {$result['approvals']} 票、駁回 {$result['rejects']} 票";
+		}
 	} catch (Exception $e) {
 		$msg = 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
 	}
 
+	$TG->getTelegram('deleteMessage', [
+		'chat_id' => $TG->ChatID,
+		'message_id' => $TG->data['message']['reply_to_message']['message_id'],
+	]);
+
 	$TG->sendMsg([
 		'text' => $msg,
-		'reply_markup' => [
-			'inline_keyboard' => [
-				[
-					[
-						'text' => '開啟審核頁面',
-						'login_url' => [
-							'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
-						]
-					]
-				]
-			]
-		]
 	]);
 
 	$msg_id = $db->getTgMsg($uid, $TG->ChatID);
-	if ($msg_id)
+	if ($msg_id) {
 		$TG->getTelegram('editMessageReplyMarkup', [
 			'chat_id' => $TG->ChatID,
 			'message_id' => $msg_id,
 			'reply_markup' => [
-				'inline_keyboard' => []
+				'inline_keyboard' => [
+					[
+						[
+							'text' => '開啟審核頁面',
+							'login_url' => [
+								'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+							]
+						]
+					]
+				]
 			]
 		]);
+		$db->deleteTgMsg($uid, $TG->ChatID);
+	}
 
 	exit;
 }
