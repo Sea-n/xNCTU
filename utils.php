@@ -106,7 +106,7 @@ function ip_mask(string $ip_addr): string {
 	if (strpos($ip_addr, '.') !== false) { // IPv4
 		$ip4 = explode('.', $ip_addr);
 		$ip4[2] = '***';
-		$ip4[3] = '*' . ($ip4[3]%100);
+		$ip4[3] = '*' . substr('0'.($ip4[3]%100), -2);
 		$ip4 = join('.', $ip4);
 		return $ip4;
 	}
