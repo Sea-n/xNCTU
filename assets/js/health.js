@@ -120,7 +120,7 @@ function statsFormatMin(time) {  // Sean: 5min -> min
 
 function statsFormatHour(time) {
   var date = new Date(time);
-  return statShortMonths[date.getMonth()] + ', ' + date.getDate() + ' ' + date.toString().match(/(\d+:\d+):/)[1];  // Sean: Use local time instead of UTC
+  return statShortWeekDays[date.getDay()] + ' ' + date.getDate() + ' ' + statShortMonths[date.getMonth()] + ' ' + date.toString().match(/(\d+:\d+):/)[1];  // Sean: Use local time instead of UTC
 }
 
 function statsFormatTooltipValue(val) {
