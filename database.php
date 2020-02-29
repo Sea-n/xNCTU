@@ -557,6 +557,18 @@ class MyDB {
 		return $item['msg_id'] ?? 0;
 	}
 
+	public function getTgMsgsByUid(string $uid): array {
+		$sql = "SELECT chat_id, msg_id FROM tg_msg WHERE uid = :uid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':uid' => $uid]);
+
+		$result = [];
+		while ($item = $stmt->fetch())
+			$result[] = $item;
+
+		return $result;
+	}
+
 	public function deleteTgMsg(string $uid, int $chat) {
 		$sql = "DELETE FROM tg_msg WHERE uid = :uid AND chat_id = :chat";
 		$stmt = $this->pdo->prepare($sql);

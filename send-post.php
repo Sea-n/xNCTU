@@ -11,6 +11,7 @@ $db = new MyDB();
 if (!($post = $db->getPostReady()))
 	exit;
 
+/* Prepare post content */
 $id = $post['id'];
 $body = $post['body'];
 $img = $post['has_img'] ? $post['uid'] : '';
@@ -18,6 +19,7 @@ $time = strtotime($post['submitted_at']);
 $time = date("Y 年 m 月 d 日 H:i", $time);
 $link = "https://x.nctu.app/post/$id";
 
+/* Send post to every SNS */
 $sns = [
 	'Telegram' => 'telegram',
 	'Plurk' => 'plurk',
@@ -41,6 +43,7 @@ foreach ($sns as $name => $key) {
 	}
 }
 
+/* Update with link to other SNS */
 $sns = [
 	'Telegram' => 'telegram',
 ];
@@ -55,6 +58,28 @@ foreach ($sns as $name => $key) {
 		echo "Edit $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
 		echo $e->lastResponse . "\n\n";
 	}
+}
+
+/* Remove vote keyboard in Telegram */
+$msgs = $db->getTgMsgsByUid($uid);
+foreach ($msgs as $item) {
+	$TG->getTelegram('editMessageReplyMarkup', [
+		'chat_id' => $item['chat_id'],
+		'message_id' => $item['msg_id'],
+		'reply_markup' => [
+			'inline_keyboard' => [
+				[
+					[
+						'text' => '開啟審核頁面',
+						'login_url' => [
+							'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+						]
+					]
+				]
+			]
+		]
+	]);
+	$db->deleteTgMsg($uid, $item['chat_id']);
 }
 
 
