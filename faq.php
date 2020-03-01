@@ -26,9 +26,19 @@ include('includes/head.php');
 			<p>純文字投稿的字數上限為 3,600 字、附圖投稿為 870 字。</p>
 			<p>遊走字數上限發文時請注意，最好在發出前自行備份，避免因伺服器判斷誤差造成投稿失敗。</p>
 
+			<h2 class="ts header" id="deleted-submissions">Q：被駁回的機制是什麼</h2>
+			<p>當投稿被多數人 <button class="ts vote negative button">駁回</button> 或是放了很久卻達不到通過標準，就會被系統自動清理。</p>
+			<p>詳細判斷標準如下：</p>
+			<ul>
+				<li>24 小時以內：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 20 個</li>
+				<li>24 小時至 48 小時：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 10 個</li>
+				<li>48 小時至 72 小時：<button class="ts vote negative button">駁回</button>&nbsp;不少於&nbsp;<button class="ts vote positive button">通過</button></li>
+				<li>72 小時以後：不論條件，全數回收</li>
+			</ul>
+
 			<h2 class="ts header" id="deleted-submissions">Q：可以去哪找到被黑箱的投稿</h2>
-			<p>如果管理團隊覺得投稿不適合發出，或是放置過久、累積足夠的駁回，就會放到 <a href="/deleted">已刪投稿</a> 頁面。</p>
-			<p>不過有些投稿包含個人資訊，所以需要登入才能檢閱。</p>
+			<p>如果達到上述駁回條件，或是管理團隊覺得投稿不適合發出，就會放到 <a href="/deleted">已刪投稿</a> 頁面。</p>
+			<p>不過有些投稿包含個人資訊，所以限制僅供已登入交大帳號的使用者才能檢閱。</p>
 
 			<h2 class="ts header" id="apply-account">Q：怎麼註冊帳號</h2>
 			<p>如果您是交大的學生、老師、校友，請直接點擊右上角 Login 使用 NCTU OAuth 登入，不需另外註冊即可使用。</p>
