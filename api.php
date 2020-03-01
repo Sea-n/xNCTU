@@ -195,11 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 		if ($post['status'] != 0)
 			err("目前狀態 {$post['status']} 無法刪除");
 
-		$ts = strtotime($post['created_at']);
-		$dt = time() - $ts;
-		if ($dt > 5*60)
-			err('已超出刪除期限，請來信聯絡開發團隊');
-
 		if ($_SERVER['REMOTE_ADDR'] !== $post['ip_addr'])
 			err('無法驗證身份：IP 位址不相符');
 
