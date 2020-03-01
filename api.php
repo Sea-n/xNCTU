@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 		$result = ['ok' => true];
 
-		$post = $db->getSubmissionByUid($uid);
+		$post = $db->getPostByUid($uid);
 		$result['approvals'] = (int) $post['approvals'];
 		$result['rejects'] = (int) $post['rejects'];
 
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 			err("uid ($uid) invalid. 投稿編號無效");
 
 		if ($_POST['status'] == 'confirmed') {
-			$post = $db->getSubmissionByUid($uid);
+			$post = $db->getPostByUid($uid);
 			if (!$post)
 				err('找不到該篇投稿');
 
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 		if (strlen($uid) != 4)
 			err("uid ($uid) invalid. 投稿編號無效");
 
-		$post = $db->getSubmissionByUid($uid);
+		$post = $db->getPostByUid($uid);
 		if (!$post)
 			err('找不到該篇投稿');
 
@@ -211,8 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 			err('附註請輸入 100 個字以內');
 
 		try {
-			$db->deleteSubmission($uid, "自刪 $reason");
-			$db->updateSubmissionStatus($uid, -3);
+			$db->deleteSubmission($uid, -3, "自刪 $reason");
 			echo json_encode([
 				'ok' => true,
 				'msg' => '刪除成功！'

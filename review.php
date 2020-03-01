@@ -9,7 +9,7 @@ if (isset($_SESSION['nctu_id']) && !isset($USER))
 
 if (isset($_GET['uid'])) {
 	$uid = $_GET['uid'];
-	if (!($post = $db->getSubmissionByUid($uid))) {
+	if (!($post = $db->getPostByUid($uid))) {
 		http_response_code(404);
 		exit('Post not found. 文章不存在');
 	}
@@ -30,7 +30,7 @@ if (isset($_GET['uid'])) {
 		}
 		$posts = $db->getDeletedSubmissions(50);
 	} else if (isset($USER))
-		$posts = $db->getSubmissionsForVoter($USER['nctu_id'], 50);
+		$posts = $db->getSubmissionsForVoter(50, true, $USER['nctu_id']);
 	else
 		$posts = $db->getSubmissions(50);
 }

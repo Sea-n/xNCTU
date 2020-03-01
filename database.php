@@ -24,7 +24,7 @@ class MyDB {
 		if ($has_img && mb_strlen($body) > 1000)
 			return ['SEAN', 0, 'Body too long. (max 1000 chars with image)'];
 
-		$sql = "INSERT INTO submissions(uid, body, has_img, ip_addr, author_id, author_name, author_photo) VALUES (:uid, :body, :has_img, :ip_addr, :author_id, :author_name, :author_photo)";
+		$sql = "INSERT INTO posts(uid, body, has_img, ip_addr, author_id, author_name, author_photo) VALUES (:uid, :body, :has_img, :ip_addr, :author_id, :author_name, :author_photo)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
@@ -40,7 +40,7 @@ class MyDB {
 	}
 
 	public function updateSubmissionStatus(string $uid, int $status) {
-		$sql = "UPDATE submissions SET status = :status WHERE uid = :uid";
+		$sql = "UPDATE posts SET status = :status WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
@@ -48,8 +48,8 @@ class MyDB {
 		]);
 	}
 
-	public function getSubmissionByUid(string $uid) {
-		$sql = "SELECT * FROM submissions WHERE uid = :uid";
+	public function getPostByUid(string $uid) {
+		$sql = "SELECT * FROM posts WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 		return $stmt->fetch();
@@ -58,27 +58,13 @@ class MyDB {
 	public function getSubmissions(int $limit, bool $desc = true) {
 		if ($limit == 0) $limit = 9487;
 
-		if ($desc)
-			$sql = "SELECT * FROM submissions ORDER BY created_at DESC";
-		else
-			$sql = "SELECT * FROM submissions ORDER BY created_at ASC";
+		$ORDER = $desc ? 'DESC' : 'ASC';
+		$sql = "SELECT * FROM posts WHERE status BETWEEN 1 AND 3 ORDER BY created_at $ORDER";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
 		$results = [];
 		while ($item = $stmt->fetch()) {
-			if (isset($item['id']))
-				continue;
-
-			if (isset($item['deleted_at']))
-				continue;
-
-			if ($item['status'] < 1)
-				continue;
-
-			if ($item['status'] > 5)
-				continue;
-
 			if (!$limit--)
 				break;
 
@@ -91,10 +77,8 @@ class MyDB {
 	public function getDeletedSubmissions(int $limit, bool $desc = true) {
 		if ($limit == 0) $limit = 9487;
 
-		if ($desc)
-			$sql = "SELECT * FROM submissions WHERE deleted_at ORDER BY created_at DESC";
-		else
-			$sql = "SELECT * FROM submissions WHERE deleted_at ORDER BY created_at ASC";
+		$ORDER = $desc ? 'DESC' : 'ASC';
+		$sql = "SELECT * FROM posts WHERE status < 0 ORDER BY created_at $ORDER";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
@@ -110,7 +94,7 @@ class MyDB {
 	}
 
 	/* Return submissions with previous vote */
-	public function getSubmissionsForVoter(string $nctu_id, int $limit) {
+	public function getSubmissionsForVoter(int $limit, bool $desc = true, string $nctu_id) {
 		if ($limit == 0) $limit = 9487;
 
 		$data = $this->getVotesByUser($nctu_id);
@@ -118,24 +102,10 @@ class MyDB {
 		foreach ($data as $item)
 			$votes[ $item['uid'] ] = $item['vote'];
 
-		$sql = "SELECT * FROM submissions ORDER BY created_at DESC";
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute();
+		$posts = $this->getSubmissions(0, $desc);
 
 		$results = [];
-		while ($item = $stmt->fetch()) {
-			if (isset($item['id']))
-				continue;
-
-			if (isset($item['deleted_at']))
-				continue;
-
-			if ($item['status'] < 1)
-				continue;
-
-			if ($item['status'] > 5)
-				continue;
-
+		foreach ($posts as $item) {
 			/* Should be 1 or -1 or NULL, not 0 */
 			if (isset($votes[ $item['uid'] ]))
 				$item['vote'] = $votes[ $item['uid'] ];
@@ -149,12 +119,13 @@ class MyDB {
 		return $results;
 	}
 
-	public function deleteSubmission(string $uid, string $reason) {
-		$sql = "UPDATE submissions SET status = -1, delete_note = :reason, deleted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
+	public function deleteSubmission(string $uid, int $status = -1, string $reason) {
+		$sql = "UPDATE posts SET status = :status, delete_note = :reason, deleted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
-			':reason' => $reason
+			':status' => $status,
+			':reason' => $reason,
 		]);
 	}
 
@@ -169,15 +140,12 @@ class MyDB {
 	public function getPosts(int $limit) {
 		if ($limit == 0) $limit = 9487;
 
-		$sql = "SELECT * FROM posts ORDER BY created_at DESC";
+		$sql = "SELECT * FROM posts WHERE status BETWEEN 4 AND 5 ORDER BY posted_at DESC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
 		$results = [];
 		while ($item = $stmt->fetch()) {
-			if (isset($item['deleted_at']))
-				continue;
-
 			if (!$limit--)
 				break;
 
@@ -192,19 +160,17 @@ class MyDB {
 		if ($uid == 'TEST')
 			return ['ok' => true];
 
-		$sql = "SELECT * FROM submissions WHERE uid = :uid";
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':uid' => $uid]);
-		if (!($item = $stmt->fetch()))
+		$post = $this->getPostByUid($uid);
+		if (!$post)
 			return ['ok' => false, 'msg' => 'uid not found. 找不到該投稿'];
 
-		if (isset($item['id']))
+		if ($post['status'] > 3)
 			return ['ok' => false, 'msg' => 'Already posted. 太晚囉，貼文已發出'];
 
-		if (isset($item['deleted_at']))
+		if ($post['status'] < 0)
 			return [
 				'ok' => false,
-				'msg' => '投稿已刪除，理由：' . $item['delete_note']
+				'msg' => '投稿已刪除，理由：' . $post['delete_note']
 			];
 
 		$sql = "SELECT created_at FROM votes WHERE uid = :uid AND voter = :voter";
@@ -251,11 +217,11 @@ class MyDB {
 		]);
 
 		/* Caution: use string combine in SQL query */
-		$sql = "UPDATE submissions SET $type = $type + 1 WHERE uid = :uid";
+		$sql = "UPDATE posts SET $type = $type + 1 WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 
-		$sql = "SELECT approvals, rejects FROM submissions WHERE uid = :uid";
+		$sql = "SELECT approvals, rejects FROM posts WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 		$result = $stmt->fetch();
@@ -378,10 +344,7 @@ class MyDB {
 		/* Check undone post */
 		$posts = $this->getPosts(1);
 		if (isset($posts[0])
-		&& ($posts[0]['telegram_id'] <= 0
-		 || $posts[0]['plurk_id']    <= 0
-		 || $posts[0]['twitter_id']  <= 0
-		 || $posts[0]['facebook_id'] <= 0))
+		&& $posts[0]['status'] == 4)
 			return $posts[0];
 
 		/* Get all pending submissions, oldest first */
@@ -398,35 +361,23 @@ class MyDB {
 		if (!isset($post))
 			return false;
 
-		$this->updateSubmissionStatus($post['uid'], 4);
-
-		$sql = "INSERT INTO posts(uid, body, has_img, ip_addr, author_id, author_name, author_photo, approvals, rejects, submitted_at) VALUES (:uid, :body, :has_img, :ip_addr, :author_id, :author_name, :author_photo, :approvals, :rejects, :submitted_at)";
+		$post['id'] = $this->getLastPostId() + 1;
+		$sql = "UPDATE posts SET id = :id, status = 4, posted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $post['uid'],
-			':body' => $post['body'],
-			':has_img' => $post['has_img'],
-			':ip_addr' => $post['ip_addr'],
-			':author_id' => $post['author_id'],
-			':author_name' => $post['author_name'],
-			':author_photo' => $post['author_photo'],
-			':approvals' => $post['approvals'],
-			':rejects' => $post['rejects'],
-			':submitted_at' => $post['created_at']
-		]);
-
-		$id = $this->pdo->lastInsertId();
-		$post['id'] = $id;
-		$post['submitted_at'] = $post['created_at'];
-
-		$sql = "UPDATE submissions SET status = 4, id = :id WHERE uid = :uid";
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([
-			':uid' => $post['uid'],
-			':id' => $id
+			':id' => $post['id'],
 		]);
 
 		return $post;
+	}
+
+	public function getLastPostId(): int {
+		$sql = "SELECT id FROM posts ORDER BY id DESC LIMIT 1";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute();
+		$item = $stmt->fetch();
+		return $item['id'] ?? 0;
 	}
 
 	/* Update SNS post ID */

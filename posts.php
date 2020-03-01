@@ -37,7 +37,7 @@ include('includes/head.php');
 foreach ($posts as $post) {
 	$id = $post['id'];
 	$body = toHTML($post['body']);
-	$time = humanTime($post['submitted_at']);
+	$time = humanTime($post['created_at']);
 
 	unset($author);
 	if (!empty($post['author_id'])) {

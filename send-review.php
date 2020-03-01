@@ -5,7 +5,7 @@ require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
 function sendReview(string $uid) {
 	$db = new MyDB();
 
-	$post = $db->getSubmissionByUid($uid);
+	$post = $db->getPostByUid($uid);
 	$body = $post['body'];
 	$has_img = $post['has_img'];
 
