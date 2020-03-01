@@ -47,10 +47,15 @@ include('includes/head.php');
 
 			<div id="submit-section">
 				<h2>立即投稿</h2>
-<?php if (isset($USER['name'])) { ?>
+<?php if (isset($USER)) { ?>
 				<div class="ts warning message">
 					<div class="header">注意：您目前為登入狀態</div>
 					<p>所有人都能看到您（<?= $USER['name'] ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
+				</div>
+<?php } else { ?>
+				<div class="ts info message">
+					<div class="header">請注意</div>
+					<p>一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip_addr) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</p>
 				</div>
 <?php } ?>
 				<form id ="submit-post" class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
@@ -71,7 +76,6 @@ include('includes/head.php');
 					<input name="csrf_token" id="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
 					<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
 				</form>
-				<p><small>請注意：一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip_addr) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</small></p>
 			</div>
 
 			<div class="ts card" id="preview-section" style="margin-bottom: 42px; display: none;">

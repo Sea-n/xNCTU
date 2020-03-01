@@ -1,4 +1,4 @@
-setInterval(updateVotes, 30*1000);
+setInterval(updateVotes, 10*1000);
 
 function approve(uid) {
 	if (!confirm('您確定要通過此貼文嗎？'))
@@ -77,6 +77,9 @@ function updateVotes() {
 	.then((resp) => {
 		console.log(resp);
 		if (resp.ok) {
+			if (resp.id)
+				location.href = '/post/' + resp.id;
+
 			var card = document.getElementById('post-' + uid);
 			card.querySelector('#approvals').innerText = resp.approvals;
 			card.querySelector('#rejects').innerText = resp.rejects;
@@ -97,7 +100,7 @@ function updateVotesTable(votes) {
 	var newBody = document.createElement('tbody');
 	for (var i=0; i<votes.length; i++) {
 		var vote = votes[i];
-		var tr = voteRow(i+1, vote.vote, vote.dep, vote.name, vote.reason);
+		var tr = voteRow(i+1, vote.vote, vote.dep, vote.name, vote.reason_html);
 		newBody.appendChild(tr);
 	}
 
@@ -119,7 +122,7 @@ function voteRow(no, vote, dep, name, reason) {
 	tr.cells[1].appendChild(document.createTextNode(type));
 	tr.cells[2].appendChild(document.createTextNode(dep));
 	tr.cells[3].appendChild(document.createTextNode(name));
-	tr.cells[4].appendChild(document.createTextNode(reason));
+	tr.cells[4].innerHTML = reason;
 
 	return tr;
 }
