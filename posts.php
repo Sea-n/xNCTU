@@ -22,7 +22,6 @@ $TITLE = '文章列表';
 $IMG = 'https://x.nctu.app/assets/img/logo.png';
 include('includes/head.php');
 ?>
-		<script src="/assets/js/review.js"></script>
 	</head>
 	<body>
 <?php include('includes/nav.php'); ?>
@@ -38,6 +37,7 @@ foreach ($posts as $post) {
 	$id = $post['id'];
 	$body = toHTML($post['body']);
 	$time = humanTime($post['created_at']);
+	$ts = strtotime($post['created_at']);
 
 	unset($author);
 	if (!empty($post['author_id'])) {
@@ -71,7 +71,7 @@ foreach ($posts as $post) {
 					</div>
 					<p style="margin-top: 0; line-height: 1.7em">
 						<span>審核狀況：<button class="ts vote positive button">通過</button>&nbsp;<?= $post['approvals'] ?>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<?= $post['rejects'] ?>&nbsp;票</span><br>
-						<span>投稿時間：<?= $time ?></span>
+						<span>投稿時間：<time data-ts="<?= $ts ?>"><?= $time ?></time></span>
 					</p>
 				</div>
 			</div>

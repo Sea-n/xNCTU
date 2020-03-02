@@ -121,6 +121,7 @@ foreach ($posts as $post) {
 		$author_photo = genPic($ip_masked);
 
 	$body = toHTML($post['body']);
+	$ts = strtotime($post['created_at']);
 	$time = humanTime($post['created_at']);
 	$canVote = !(isset($post['id']) || isset($post['vote']) || isset($post['deleted_at']));
 
@@ -170,7 +171,7 @@ foreach ($posts as $post) {
 <?php if (!$canVote) { ?>
 						<span>審核狀況：<button class="ts vote positive button">通過</button>&nbsp;<span id="approvals"><?= $post['approvals'] ?></span>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<span id="rejects"><?= $post['rejects'] ?></span>&nbsp;票</span>
 <?php } ?>
-						<br><span>投稿時間：<?= $time ?></span>
+						<br><span>投稿時間：<time data-ts="<?= $ts ?>"><?= $time ?></time></span>
 					</p>
 				</div>
 <?php if ($canVote) { ?>
