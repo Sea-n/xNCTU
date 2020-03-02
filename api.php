@@ -14,7 +14,47 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	$ACTION = $_GET['action'] ?? 'x';
 
-	if ($ACTION == 'votes') {
+	if ($ACTION == 'posts') {
+		$offset = $_GET['offset'] ?? 0;
+		$limit = $_GET['limit'] ?? 20;
+		if ($limit > 100)
+			$limit = 100;
+
+		$posts = $db->getPosts($limit, $offset);
+		$result = [];
+		foreach ($posts as $post) {
+			if (!empty($post['author_id'])) {
+				$author = $db->getUserByNctu($post['author_id']);
+				$author_name = $author['name'];
+
+			} else
+				$author_name = $post['author_name'];
+
+			$ip_masked = ip_mask($post['ip_addr']);
+			if (!isset($_SESSION['nctu_id']) || !empty($post['author_id']))
+				$ip_masked = false;
+
+			$author_photo = $author['tg_photo'] ?? '';
+			if (empty($author_photo))
+				$author_photo = genPic($ip_masked);
+
+			$result[] = [
+				'id' => $post['id'],
+				'uid' => $post['uid'],
+				'body' => $post['body'],
+				'body_html' => toHTML($post['body']),
+				'has_img' => $post['has_img'],
+				'ip_masked' => $ip_masked,
+				'author_name' => $author_name,
+				'author_photo' => $author_photo,
+				'approvals' => $post['approvals'],
+				'rejects' => $post['rejects'],
+				'time' => strtotime($post['created_at']),
+			];
+		}
+
+		echo json_encode($result, JSON_PRETTY_PRINT);
+	} else if ($ACTION == 'votes') {
 		$uid = $_GET['uid'] ?? '';
 		if (strlen($uid) != 4)
 			err('uid invalid. 投稿編號無效');

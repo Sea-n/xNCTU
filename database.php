@@ -137,20 +137,18 @@ class MyDB {
 	}
 
 	/* Get posts newest first */
-	public function getPosts(int $limit) {
+	public function getPosts(int $limit, int $offset = 0) {
 		if ($limit == 0) $limit = 9487;
 
-		$sql = "SELECT * FROM posts WHERE status BETWEEN 4 AND 5 ORDER BY posted_at DESC";
+		$sql = "SELECT * FROM posts WHERE status BETWEEN 4 AND 5 ORDER BY posted_at DESC LIMIT :limit OFFSET :offset";
 		$stmt = $this->pdo->prepare($sql);
+		$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+		$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 		$stmt->execute();
 
 		$results = [];
-		while ($item = $stmt->fetch()) {
-			if (!$limit--)
-				break;
-
+		while ($item = $stmt->fetch())
 			$results[] = $item;
-		}
 
 		return $results;
 	}
