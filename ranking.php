@@ -34,7 +34,7 @@ usort($user_count, function($A, $B) {
 	return $A['pt'] < $B['pt'];
 });
 
-$user_count = array_slice($user_count, 0, 15);
+$user_count = array_slice($user_count, 0, 20);
 
 foreach($user_count as $k => $v) {
 	$user = $db->getUserByNctu($v['id']);
@@ -162,7 +162,7 @@ function genData(string $id) {
 		'subchart' => [
 			'show' => true,
 			'defaultZoom' => [
-				strtotime("2020-02-23 12:00") * 1000,
+				strtotime("7 days ago") * 1000,
 				strtotime("now") * 1000
 			]
 		],
