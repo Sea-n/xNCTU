@@ -198,7 +198,7 @@ function confirmSubmission() {
 			return;
 		}
 		localStorage.setItem('draft', '');
-		location.href = '/review?uid=' + uid;
+		location.href = '/review/' + uid;
 	});
 }
 

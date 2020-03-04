@@ -156,7 +156,7 @@ foreach ($posts as $post) {
 <?php if (isset($_GET['uid'])) { ?>
 					<div class="header">投稿編號 <?= $uid ?></div>
 <?php } else { ?>
-					<div class="header"> <a href="?uid=<?= $uid ?>">投稿編號 <?= $uid ?></a></div>
+					<div class="header"> <a href="/review/<?= $uid ?>">投稿編號 <?= $uid ?></a></div>
 <?php } ?>
 					<p><?= $body ?></p>
 				</div>
