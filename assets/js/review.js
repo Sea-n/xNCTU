@@ -1,4 +1,11 @@
-setInterval(updateVotes, 10*1000);
+window.addEventListener("load", init);
+
+
+function init() {
+	var button = document.getElementById('refresh');
+	if (button)
+		setInterval(updateVotes, 10*1000);
+}
 
 function approve(uid) {
 	if (!confirm('您確定要通過此貼文嗎？'))
