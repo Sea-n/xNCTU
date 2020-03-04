@@ -89,7 +89,7 @@ foreach ($user_count as $i => $item) {
 						<td><?= $no ?></td>
 						<td><?= $dep ?></td>
 						<td><img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"></td>
-						<td><a onclick="changeChart('<?= $id ?>')"><?= $name ?></a></td>
+						<td title="<?= (int) $item['pt'] ?> pt"><a onclick="changeChart('<?= $id ?>')"><?= $name ?></a></td>
 						<td><?= $item[1] ?></td>
 						<td><?= $item[-1] ?></td>
 					</tr>
