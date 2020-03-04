@@ -345,7 +345,7 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	$result = json_decode($result, true);
 
 	$fb_id = $result['post_id'] ?? $result['id'] ?? '0_0';
-	$post_id = (int) explode('_', $result['id'])[0];
+	$post_id = (int) explode('_', $fb_id)[1];
 
 	if ($post_id == 0) {
 		echo "Facebook result error:";
