@@ -280,8 +280,7 @@ class MyDB {
 		}
 
 		/* Rule for NCTU IP address */
-		if (substr($item['ip_addr'], 0, 8) == '140.113.'
-		 || substr($item['ip_addr'], 0, 9) == '2001:f18:') {
+		if ($item['author_name'] == '匿名, 交大') {
 			if ($dt < 10*60)
 				return false;
 
