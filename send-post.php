@@ -256,7 +256,7 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 	}
 }
 
-function send_facebook(int $id, string $body, string $img = ''): int {
+function send_facebook_mbasic(int $id, string $body, string $img = ''): int {
 	global $link, $time;
 	$msg = "#靠交$id\n\n";
 	$msg .= "$body\n\n";
@@ -316,12 +316,12 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 		return 1;
 }
 
-function send_facebook_api(int $id, string $body, string $img = ''): int {
+function send_facebook(int $id, string $body, string $img = ''): int {
 	global $link, $time;
 	$msg = "#靠交$id\n\n";
 	$msg .= "$body\n\n";
-	$msg .= "投稿時間：$time\n\n";
-	$msg .= $link;
+	$msg .= "投稿時間：$time\n";
+	$msg .= "✅ $link";
 
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . (empty($img) ? '/feed' : '/photos');
    
@@ -344,8 +344,15 @@ function send_facebook_api(int $id, string $body, string $img = ''): int {
 	curl_close($curl);
 	$result = json_decode($result, true);
 
-	$fb_id = (int) $result['id'];
-	return $fb_id;
+	$fb_id = $result['post_id'] ?? $result['id'] ?? '0_0';
+	$post_id = (int) explode('_', $result['id'])[0];
+
+	if ($post_id == 0) {
+		echo "Facebook result error:";
+		var_dump($result);
+	}
+
+	return $post_id;
 }
 
 function update_telegram(array $post) {
