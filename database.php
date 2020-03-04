@@ -270,7 +270,7 @@ class MyDB {
 
 		/* Rule for Logged-in users */
 		if (!empty($item['author_id'])) {
-			if ($dt < 10*60)
+			if ($dt < 5*60)
 				return false;
 
 			if ($vote < 0)

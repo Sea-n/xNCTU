@@ -34,9 +34,9 @@ include('includes/head.php');
 				</summary>
 				<div class="content">
 					<h4>(A) 具名投稿</h4>
-					<p>如在 10 分鐘內無 <button class="ts vote negative button">駁回</button>，免審核即自動發出，詳細判斷條件如下：</p>
+					<p>如在 5 分鐘內無 <button class="ts vote negative button">駁回</button>，免審核即自動發出，詳細判斷條件如下：</p>
 					<ul>
-						<li>等待審核至少 10 分鐘</li>
+						<li>等待審核至少 5 分鐘</li>
 						<li><button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></li>
 					</ul>
 					<h4>(B) 交大 IP 位址</h4>
