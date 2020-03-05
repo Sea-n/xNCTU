@@ -8,6 +8,18 @@ require_once('config.php');
 require_once('/root/site/telegram/function.php');
 $db = new MyDB();
 
+$cmd = $argv[1] ?? '';
+if ($cmd == 'update') {
+	if (!isset($argv[2]))
+		exit('No ID.');
+
+	$id = $argv[2];
+	$post = $db->getPostById($id);
+
+	update_telegram($post);
+	exit;
+}
+
 if (!($post = $db->getPostReady()))
 	exit;
 
