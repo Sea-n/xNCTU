@@ -113,6 +113,7 @@ function submitForm(e) {
 		stopCountdown = setInterval(() => {
 			var dt = Math.floor((deadline - (new Date()).getTime()) / 1000);
 			if (dt <= 0) {
+				document.getElementById('countdown').innerText = '00:00';
 				document.getElementById('confirm-button').classList.remove('disabled');
 				clearInterval(stopCountdown);
 			}
