@@ -22,6 +22,9 @@ include('includes/head.php');
 			<p>目前此功能僅實作於 Telegram bot 中，請點擊首頁下方按鈕連結 Telegram 帳號。</p>
 			<p>於 Telegram 使用 /name 指令即可更改您的暱稱，所有過往的投稿、投票也會一起修正。</p>
 
+			<h2 class="ts header" id="modify-dep">Q：如何更改科系</h2>
+			<p>目前系級判斷是從學號來的，如果您曾經轉系、希望顯示新的科系，麻煩透過 mail 與開發團隊聯絡。</p>
+
 			<h2 class="ts header" id="length-limit">Q：字數上限是多少</h2>
 			<p>純文字投稿的字數上限為 3,600 字、附圖投稿為 870 字。</p>
 			<p>遊走字數上限發文時請注意，最好在發出前自行備份，避免因伺服器判斷誤差造成投稿失敗。</p>
