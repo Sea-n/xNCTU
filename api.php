@@ -182,6 +182,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		$result = $db->voteSubmissions($uid, $voter, $vote, $reason);
 		echo json_encode($result, JSON_PRETTY_PRINT);
+		fastcgi_finish_request();
+
+		/* Remove vote keyboard in Telegram */
+		$USER = $db->getUserByNctu($voter);
+		$chat_id = $USER['tg_id'] ?? 0;
+		$msg_id = $db->getTgMsg($uid, $chat_id);
+
+		if ($msg_id) {
+			getTelegram('editMessageReplyMarkup', [
+				'bot' => 'xNCTU',
+				'chat_id' => $chat_id,
+				'message_id' => $msg_id,
+				'reply_markup' => [
+					'inline_keyboard' => [
+						[
+							[
+								'text' => '開啟審核頁面',
+								'login_url' => [
+									'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+								]
+							]
+						]
+					]
+				]
+			]);
+			$db->deleteTgMsg($uid, $tg_id);
+		}
 	} else {
 		err('Unknown POST action. 未知的操作');
 	}
