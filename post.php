@@ -90,12 +90,19 @@ if (isset($post['deleted_at'])) {
 					<p itemprop="articleBody"><?= $body ?></p>
 				</div>
 				<div class="extra content">
+<?php if ($post['telegram_id']) { ?>
 					<p><span><i class="telegram icon"></i> Telegram: <a target="_blank" href="https://t.me/s/xNCTU/<?= $post['telegram_id'] ?>">@xNCTU/<?= $post['telegram_id'] ?></a></span><br>
+<?php }
+if ($post['facebook_id']) { ?>
 					<span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU/posts/<?= $post['facebook_id'] ?>">@xNCTU/<?= $post['facebook_id'] ?></a></span><br>
-<?php if (strlen($plurk) > 1) { ?>
+<?php }
+if (strlen($plurk) > 1) { ?>
 					<span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/<?= $plurk ?>">@xNCTU/<?= $plurk ?></a></span><br>
-<?php } ?>
+<?php }
+if ($post['twitter_id']) { ?>
 					<span><i class="twitter icon"></i> Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/<?= $post['twitter_id'] ?>">@x_NCTU/<?= $post['twitter_id'] ?></a></span></p>
+<?php } ?>
+
 					<div itemprop="author" itemscope itemtype="http://schema.org/Person" class="right floated author">
 						<img itemprop="image" class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <span itemprop="name"><?= $author_name ?></span>
 <?php if (isset($USER) && empty($post['author_id'])) { ?>
