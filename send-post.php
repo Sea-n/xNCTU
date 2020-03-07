@@ -268,66 +268,6 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 	}
 }
 
-function send_facebook_mbasic(int $id, string $body, string $img = ''): int {
-	global $link, $time;
-	$msg = "#靠交$id\n\n";
-	$msg .= "$body\n\n";
-	$msg .= "投稿時間：$time\n\n";
-	if (!empty($img))
-		$msg .= "$link";
-
-	$header = [
-		'Cookie: ' . FB_COOKIE,
-		'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:74.0) Gecko/20100101 Firefox/74.0'
-	];
-
-	$curl = curl_init('https://mbasic.facebook.com/xNCTU/');
-	curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-	curl_setopt($curl, CURLOPT_HEADER, true);
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	$data = curl_exec($curl);
-	if (!preg_match('#<input type="hidden" name="fb_dtsg" value="([^"]+)"#', $data, $matches)) {
-		echo "No dstg tag:\n";
-		var_dump($data);
-		return 0;
-	}
-	$dtsg = $matches[1];
-
-	$data = [
-		'fb_dtsg' => $dtsg,
-		'xc_message' => $msg,
-		'jazoest' => rand(21000, 23000),
-		'r2a' => 1,
-		'target' => FB_PAGES_ID,
-		'c_src' => 'page_self',
-		'cwevent' => 'composer_entry',
-		'referrer' => 'pages_feed',
-		'ctype' => 'inline',
-		'cver' => 'amber',
-		'rst_icv' => '',
-		'view_post' => 'Post'
-	];
-
-	$curl = curl_init('https://mbasic.facebook.com/composer/mbasic/?av=' . FB_PAGES_ID);
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-	curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($curl, CURLOPT_HEADER, true);
-	$data = curl_exec($curl);
-	if (strpos($data, 'Location: https://mbasic.facebook.com/xNCTU/?v=feed&_rdr') === false)
-		return 0;
-
-	$curl = curl_init('https://mbasic.facebook.com/xNCTU/');
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-	$data = curl_exec($curl);
-	if (preg_match("!#靠交$id.*? id=\"like_(\d+)\"!", $data, $matches)) {
-		$pid = (int) $matches[1];
-		return $pid;
-	} else
-		return 1;
-}
-
 function send_facebook(int $id, string $body, string $img = ''): int {
 	global $link, $time;
 	$msg = "#靠交$id\n\n";
