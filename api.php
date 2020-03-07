@@ -183,6 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$result = $db->voteSubmissions($uid, $voter, $vote, $reason);
 		echo json_encode($result, JSON_PRETTY_PRINT);
 		fastcgi_finish_request();
+		session_write_close();
 
 		/* Remove vote keyboard in Telegram */
 		$USER = $db->getUserByNctu($voter);
@@ -241,6 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 			], JSON_PRETTY_PRINT);
 
 			fastcgi_finish_request();
+			session_write_close();
 
 			sendReview($uid);
 		}

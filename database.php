@@ -495,6 +495,11 @@ class MyDB {
 	}
 
 	public function setTgMsg(string $uid, int $chat, int $msg) {
+		if ($msg <= 0) {
+			$this->deleteTgMsg($uid, $chat);
+			return;
+		}
+
 		if ($this->getTgMsg($uid, $chat))
 			$this->updateTgMsg($uid, $chat, $msg);
 		else
