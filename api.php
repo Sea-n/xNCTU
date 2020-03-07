@@ -64,7 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		$post = $db->getPostByUid($uid);
 		$result['approvals'] = (int) $post['approvals'];
 		$result['rejects'] = (int) $post['rejects'];
-		if (isset($post['id']))
+
+		/* Redirect if posted to all platforms */
+		if ($post['status'] == 5)
 			$result['id'] = $post['id'];
 
 		$result['votes'] = [];
