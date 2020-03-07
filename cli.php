@@ -5,6 +5,7 @@ if (!isset($argv[1]))
 
 require('utils.php');
 require('database.php');
+require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
 $db = new MyDB();
 
 
@@ -35,6 +36,7 @@ case 'dump':
 case 'reject':
 	$posts = $db->getSubmissions(0);
 	foreach ($posts as $post) {
+		$uid = $post['uid'];
 		$dt = time() - strtotime($post['created_at']);
 		$vote = $post['approvals'] - $post['rejects'];
 
@@ -53,7 +55,30 @@ case 'reject':
 			if ($vote > 0)
 				continue;
 
-		$db->deleteSubmission($post['uid'], -2, '已駁回');
+		$db->deleteSubmission($uid, -2, '已駁回');
+
+		/* Remove vote keyboard in Telegram */
+		$msgs = $db->getTgMsgsByUid($uid);
+		foreach ($msgs as $item) {
+			getTelegram('editMessageReplyMarkup', [
+				'bot' => 'xNCTU',
+				'chat_id' => $item['chat_id'],
+				'message_id' => $item['msg_id'],
+				'reply_markup' => [
+					'inline_keyboard' => [
+						[
+							[
+								'text' => '開啟審核頁面',
+								'login_url' => [
+									'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+								]
+							]
+						]
+					]
+				]
+			]);
+			$db->deleteTgMsg($uid, $item['chat_id']);
+		}
 	}
 	break;
 
