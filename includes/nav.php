@@ -1,6 +1,6 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-	session_start();
+if (!isset($_SESSION)) {
+	session_start(['read_and_close' => true]);
 }
 
 if (!isset($db)) {

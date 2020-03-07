@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php session_start(['read_and_close' => true]); ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
