@@ -11,11 +11,22 @@ function sendReview(string $uid) {
 	$status = $post['status'];
 	assert($status == 1);
 
+	$hashtag = "#投稿$uid";
+
+	$author_name = $post['author_name'];
+	$hashtag_author = '#' . preg_replace('/[\s!-/:-@\[-`{-~]+/', '_', $author_name);
+
+	$ip_masked = ip_mask($post['ip_addr']);
+	if (strpos($ip_masked, ':') !== false)
+		$hashtag_ip = '#IPv6_' . preg_replace('/[:*]+/', '_', $ip_masked);
+	else
+		$hashtag_ip = '#IPv4_' . preg_replace('/[.*]+/', '_', $ip_masked);
+
 	$msg = $post['body'];
-	$msg .= "\n\n投稿人：{$post['author_name']}";
 	if (empty($post['author_id'])) {
-		$ip_masked = ip_mask($post['ip_addr']);
-		$msg .= " ($ip_masked)";
+		$msg .= "\n\n$hashtag | $hashtag_author | $hashtag_ip";
+	} else {
+		$msg .= "\n\n$hashtag | $hashtag_author";
 	}
 
 	$has_img = $post['has_img'];
