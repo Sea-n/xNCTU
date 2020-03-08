@@ -11,10 +11,15 @@ window.addEventListener("scroll", function () {
 	}
 });
 
+window.addEventListener("load", init);
+window.addEventListener("resize", resizeNav);
+
 
 function init() {
 	console.log("Hey there!");
 	console.log("Source code: https://git.io/xNCTU");
+
+	resizeNav();
 
 	setInterval(() => {
 		document.querySelectorAll('time[data-ts]')
@@ -26,7 +31,18 @@ function init() {
 	}, 500);
 }
 
-window.addEventListener("load", init);
+function resizeNav() {
+	var right = document.getElementById('nav-right');
+	var navName = document.getElementById('nav-name');
+	var prev = right.previousElementSibling;
+	var rect = prev.getBoundingClientRect();
+
+	var width = window.innerWidth - rect.right - 94;
+	if (width < 0)
+		width = 0;
+
+	navName.style.maxWidth = width + 'px';
+}
 
 function timeFormat(ts = 0) {
 	if (ts < 1e10)

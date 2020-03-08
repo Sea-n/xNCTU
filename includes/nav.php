@@ -40,7 +40,7 @@ foreach ($items as $href => $name) {
 	echo "<a class='$class' href='$href'>$name</a>\n";
 }
 ?>
-		<div class="right fitted item" style="x-overflow: hidden;">
+		<div class="right fitted item" id="nav-right">
 <?php
 if (isset($USER)) {
 	$photo = $USER['tg_photo'] ?? '';
@@ -48,10 +48,10 @@ if (isset($USER)) {
 		$photo = genPic($USER['nctu_id']);
 ?>
 			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
-			&nbsp;<b style="x-overflow: hidden;"><?= $USER['name'] ?></b>&nbsp;
-			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);" style="x-overflow: hidden; min-width: 50px;">
+			&nbsp;<b id="nav-name" style="overflow-x: hidden;"><?= $USER['name'] ?></b>&nbsp;
+			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
 				<i class="log out icon"></i>
-				<span style="x-overflow: hidden;">Logout</span>
+				<span class="tablet or large device only">Logout</span>
 			</a>
 <?php } else { ?>
 			<a class="item" href="/login-nctu" data-type="login" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Login</a>
