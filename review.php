@@ -132,21 +132,14 @@ foreach ($posts as $post) {
 				<div class="header">此文已刪除</div>
 				<p>刪除原因：<?= toHTML($post['delete_note']) ?? '(無)' ?></p>
 			</div>
-<?php
-	}
-	if (isset($_GET['uid'])) {
-		if (isset($post['id'])) {
+<?php }
+if (isset($post['id'])) {
 ?>
 			<div class="ts positive message">
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/post/<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
 			</div>
-<?php } else if (isset($USER) && empty($post['author_id']) && !isset($post['vote']) && !isset($post['deleted_at'])) { ?>
-			<div class="ts warning message">
-				<div class="header">注意：您目前為登入狀態</div>
-				<p>提醒您，為自己的投稿按 <button class="ts vote positive button">通過</button> 或 <button class="ts vote negative button">駁回</button> 均會留下公開紀錄哦</p>
-			</div>
-<?php } } ?>
+<?php } ?>
 			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">
 <?php if ($post['has_img']) { ?>
 				<div class="image">
