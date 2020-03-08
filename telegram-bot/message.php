@@ -24,7 +24,7 @@ if (!$USER) {
 	$msg = "您尚未綁定 NCTU 帳號，請至靠北交大 2.0 網站登入\n\n";
 	$msg .= "操作步驟：\n";
 	$msg .= "1. 登入 NCTU OAuth 帳號\n";
-	$msg .= "2. 於靠交 2.0 首頁登入 Telegram 帳號\n";
+	$msg .= "2. 點擊下方按鈕連結 Telegram 帳號\n";
 	$msg .= "3. 系統綁定成功後，將會發送 Telegram 訊息通知您";
 	$TG->sendMsg([
 		'text' => $msg,
@@ -32,8 +32,10 @@ if (!$USER) {
 			'inline_keyboard' => [
 				[
 					[
-						'text' => '登入靠交 2.0 網站',
-						'url' => 'https://x.nctu.app/login-nctu'
+						'text' => '綁定靠交 2.0 網站',
+						'login_url' => [
+							'url' => "https://x.nctu.app/login-tg?r=/"
+						]
 					]
 				]
 			]
