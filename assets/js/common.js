@@ -106,6 +106,11 @@ function toHTML(str) {
 					a.appendChild(document.createTextNode(word));
 					a.href = '/post/' + word.substr(3);
 					word = a.outerHTML;
+				} else if (/^#投稿\w+$/.test(word)) {
+					var a = document.createElement('a');
+					a.appendChild(document.createTextNode(word));
+					a.href = '/review/' + word.substr(3);
+					word = a.outerHTML;
 				} else if (/^#[^\s]+$/.test(word)) {
 					var a = document.createElement('a');
 					a.appendChild(document.createTextNode(word));
