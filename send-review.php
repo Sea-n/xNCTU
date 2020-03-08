@@ -1,4 +1,5 @@
 <?php
+require_once('utils.php');
 require_once('database.php');
 require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
 
@@ -12,6 +13,10 @@ function sendReview(string $uid) {
 
 	$msg = $post['body'];
 	$msg .= "\n\n投稿人：{$post['author_name']}";
+	if (empty($post['author_id'])) {
+		$ip_masked = ip_mask($post['ip_addr']);
+		$msg .= " ($ip_masked)";
+	}
 
 	$has_img = $post['has_img'];
 
