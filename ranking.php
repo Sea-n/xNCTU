@@ -26,7 +26,7 @@ foreach($user_count as $k => $v) {
 	$min = min($v[1], $v[-1]);
 	$max = max($v[1], $v[-1]);
 
-	$point = $total + min($min, $max/2)*3.001;
+	$point = $total + min($min, $max/4)*3.001;
 	$user_count[$k]['pt'] = $point;
 }
 
@@ -59,7 +59,7 @@ include('includes/head.php');
 			</div>
 		</header>
 		<div class="ts container" name="main">
-			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名計算公式為： 總投票數 + min(少數票, 多數票/2) * 3</p>
+			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名計算公式為： 總投票數 + min(少數票, 多數票/4) * 3</p>
 			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;8 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;3 票」的排名相同</p>
 
 			<table class="ts table">
