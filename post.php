@@ -126,9 +126,7 @@ if ($post['twitter_id']) { ?>
 				</div>
 			</article>
 <?php
-if (isset($USER)) {
-	include('includes/table-vote.php');
-}
+include('includes/table-vote.php');
 ?>
 		</div>
 <?php include('includes/footer.php'); ?>

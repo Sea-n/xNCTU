@@ -13,12 +13,13 @@ require_once('utils.php');
 	</thead>
 	<tbody>
 <?php
-foreach ($VOTES as $i => $vote) {
-	$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
-	$id = $vote['voter'];
-	$user = $db->getUserByNctu($id);
-	$dep = idToDep($id);
-	$name = toHTML($user['name']);
+if (isset($USER)) {
+	foreach ($VOTES as $i => $vote) {
+		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
+		$id = $vote['voter'];
+		$user = $db->getUserByNctu($id);
+		$dep = idToDep($id);
+		$name = toHTML($user['name']);
 ?>
 		<tr>
 			<td><?= $i+1 ?></td>
@@ -26,6 +27,10 @@ foreach ($VOTES as $i => $vote) {
 			<td><?= $dep ?></td>
 			<td><?= $name ?></td>
 			<td><?= toHTML($vote['reason']) ?></td>
+		</tr>
+<?php } } else { ?>
+		<tr>
+			<td colspan="5"><h2 class="ts info message">此區域僅限交大使用者查看</h2></td>
 		</tr>
 <?php } ?>
 	</tbody>

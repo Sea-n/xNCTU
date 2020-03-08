@@ -182,11 +182,10 @@ foreach ($posts as $post) {
 <?php } ?>
 			</div>
 <?php }
-if (isset($USER)) {
-	if (isset($_GET['uid'])) {
-		$VOTES = $db->getVotesByUid($post['uid']);
-		include('includes/table-vote.php');
-		if (1 <= $post['status'] && $post['status'] <= 3) {
+if (isset($_GET['uid'])) {
+	$VOTES = $db->getVotesByUid($post['uid']);
+	include('includes/table-vote.php');
+	if (isset($USER) && 1 <= $post['status'] && $post['status'] <= 3) {
 ?>
 			<button id="refresh" class="ts primary button" onclick="updateVotes('<?= $uid ?>');">重新整理</button>
 <?php } } else { ?>
@@ -194,7 +193,7 @@ if (isset($USER)) {
 				<input id="showAll" <?= $showAll ? 'checked' : '' ?> type="checkbox" onchange="location.href='?all='+this.checked;">
 				<label for="showAll">顯示所有投稿</label>
 			</div>
-<?php } } ?>
+<?php } ?>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>
