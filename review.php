@@ -93,12 +93,13 @@ include('includes/nav.php');
 		</header>
 		<div class="ts container" name="main">
 <?php
-/* Time period 02:00 - 09:59 */
-if (2 <= idate('H') && idate('H') <= 9) {
+/* Time period 01:00 - 07:59 */
+if (1 <= idate('H') && idate('H') <= 7) {
 ?>
 		<div class="ts info message">
 			<div class="header">現在時間 <?= date('H:i') ?></div>
-			<p>系統已進入休眠模式，將於 10:00 起發送通過審核的貼文。這段時間內仍然可以正常投稿、審核。</p>
+			<p>系統已進入休眠模式，將於 08:00 起發送通過審核的貼文。這段時間內仍然可以正常投稿、審核。</p>
+			<p>您可以在 <a href="/faq#post-schedule">常見問答</a> 找到確切發文間隔。</p>
 		</div>
 <?php
 }
