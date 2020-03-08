@@ -6,11 +6,14 @@ function sendReview(string $uid) {
 	$db = new MyDB();
 
 	$post = $db->getPostByUid($uid);
-	$body = $post['body'];
-	$has_img = $post['has_img'];
 
 	$status = $post['status'];
 	assert($status == 1);
+
+	$msg = $post['body'];
+	$msg .= "\n\n投稿人：{$post['author_name']}";
+
+	$has_img = $post['has_img'];
 
 	$USERS = $db->getTgUsers();
 
@@ -20,7 +23,7 @@ function sendReview(string $uid) {
 		if (!isset($user['tg_name']))
 			continue;
 
-		$result = sendPost($uid, $body, $has_img, $user['tg_id']);
+		$result = sendPost($uid, $msg, $has_img, $user['tg_id']);
 
 		if (!$result['ok']) {
 			if ($result['description'] == 'Bad Request: chat not found')
@@ -34,7 +37,7 @@ function sendReview(string $uid) {
 	$db->updateSubmissionStatus($uid, 3);
 }
 
-function sendPost(string $uid, string $body, bool $has_img, int $id) {
+function sendPost(string $uid, string $msg, bool $has_img, int $id) {
 	$keyboard = [
 		'inline_keyboard' => [
 			[
@@ -65,7 +68,7 @@ function sendPost(string $uid, string $body, bool $has_img, int $id) {
 		return sendMsg([
 			'bot' => 'xNCTU',
 			'chat_id' => $id,
-			'text' => $body,
+			'text' => $msg,
 			'reply_markup' => $keyboard,
 			'disable_notification' => $dnd
 		]);
@@ -74,7 +77,7 @@ function sendPost(string $uid, string $body, bool $has_img, int $id) {
 			'bot' => 'xNCTU',
 			'chat_id' => $id,
 			'photo' => "https://x.nctu.app/img/$uid.jpg",
-			'caption' => $body,
+			'caption' => $msg,
 			'reply_markup' => $keyboard,
 			'disable_notification' => $dnd
 		]);
