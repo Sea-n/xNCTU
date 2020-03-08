@@ -107,7 +107,7 @@ function updateVotesTable(votes) {
 	var newBody = document.createElement('tbody');
 	for (var i=0; i<votes.length; i++) {
 		var vote = votes[i];
-		var tr = voteRow(i+1, vote.vote, vote.dep, vote.name, vote.reason_html);
+		var tr = voteRow(i+1, vote.vote, vote.dep, vote.name, vote.reason);
 		newBody.appendChild(tr);
 	}
 
@@ -129,7 +129,7 @@ function voteRow(no, vote, dep, name, reason) {
 	tr.cells[1].appendChild(document.createTextNode(type));
 	tr.cells[2].appendChild(document.createTextNode(dep));
 	tr.cells[3].appendChild(document.createTextNode(name));
-	tr.cells[4].innerHTML = reason;
+	tr.cells[4].innerHTML = toHTML(reason);
 
 	return tr;
 }

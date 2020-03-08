@@ -25,19 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		foreach ($posts as $post) {
 
 			if (!empty($post['author_id'])) {
-				$ip_masked = ip_mask($post['ip_addr']);
-
+				$ip_masked = false;
 				$author = $db->getUserByNctu($post['author_id']);
 				$author_name = $author['name'];
 				$author_photo = $author['tg_photo'] ?? genPic($post['author_id']);
-
-				if (!isset($_SESSION['nctu_id']))
-					$ip_masked = false;
 			} else {
-				$ip_masked = false;
+				$ip_masked = ip_mask($post['ip_addr']);
 
 				$author_name = $post['author_name'];
 				$author_photo = genPic($ip_masked);
+
+				if (!isset($_SESSION['nctu_id']))
+					$ip_masked = false;
 			}
 
 			$result[] = [
@@ -71,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 			$result['id'] = $post['id'];
 
 		$result['votes'] = [];
-		if (true || isset($_SESSION['nctu_id'])) {
+		if (isset($_SESSION['nctu_id'])) {
 			$votes = $db->getVotesByUid($uid);
 
 			foreach ($votes as $item) {

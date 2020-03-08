@@ -46,7 +46,7 @@ include('includes/head.php');
 						<img id="img-container-inner" style="width: 100%;">
 					</div>
 					<div class="actions">
-						<button class="ts inverted basic deny button">關閉</button>
+						<button class="ts inverted basic button">關閉</button>
 					</div>
 				</dialog>
 			</div>
