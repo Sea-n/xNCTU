@@ -60,7 +60,7 @@ include('includes/head.php');
 		</header>
 		<div class="ts container" name="main">
 			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名計算公式為： 總投票數 + min(少數票, 多數票/4) * 3</p>
-			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;8 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;3 票」的排名相同</p>
+			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;40 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;5 票」的排名相同</p>
 
 			<table class="ts table">
 				<thead>
