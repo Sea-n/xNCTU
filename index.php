@@ -68,15 +68,6 @@ include('includes/head.php');
 						<li>等待審核至少 60 分鐘</li>
 						<li><button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個</li>
 					</ul>
-
-					<h3>排程發文</h3>
-					<p>通過審核之文章將會進入發文佇列，由系統每 5 - 10 分鐘 po 出一篇至各大社群平台，如欲搶先看也可申請加入審核團隊。</p>
-					<p>發文時段會依照投稿數量不定時調整，以下為目前設定：</p>
-					<ul>
-						<li>每天早上 08:00 - 12:00 每 10 分鐘發出一篇</li>
-						<li>12:00 - 23:00 每 5 分鐘發出一篇</li>
-						<li>半夜 23:00 - 01:00 每 10 分鐘發出一篇</li>
-					</ul>
 				</div>
 			</details>
 
