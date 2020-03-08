@@ -109,7 +109,7 @@ function submitForm(e) {
 
 		showPreview(resp);
 
-		var deadline = (new Date()).getTime() + 10*1000;
+		var deadline = (new Date()).getTime() + 3*1000;
 		stopCountdown = setInterval(() => {
 			var dt = Math.floor((deadline - (new Date()).getTime()) / 1000);
 			if (dt <= 0) {

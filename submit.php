@@ -93,7 +93,7 @@ include('includes/head.php');
 					<p>發文者 IP 位址：<span id="author-ip">140.113.***.*87</span></p>
 				</div>
 				<div class="ts fluid bottom attached large buttons">
-					<button id="confirm-button" class="ts positive disabled button" onclick="confirmSubmission();">確認投稿 (<span id="countdown">10</span>)</button>
+					<button id="confirm-button" class="ts positive disabled button" onclick="confirmSubmission();">確認投稿 (<span id="countdown">03</span>)</button>
 					<button id="delete-button" class="ts negative button" onclick="deleteSubmission();">刪除投稿</button>
 				</div>
 			</div>
