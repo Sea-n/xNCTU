@@ -45,11 +45,11 @@ include('includes/head.php');
 						<li>等待審核至少 10 分鐘</li>
 						<li><button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></li>
 						<li>拿到足夠的&nbsp;<button class="ts vote positive button">通過</button>&nbsp;數 (扣除&nbsp;<button class="ts vote negative button">駁回</button>)<ul>
-							<li>10 分鐘至 2 小時：達到 2 個&nbsp;<button class="ts vote positive button">通過</button></li>
-							<li>2 至 6 小時：達到 1 個&nbsp;<button class="ts vote positive button">通過</button></li>
+							<li>10 分鐘至 1 小時：達到 2 個&nbsp;<button class="ts vote positive button">通過</button></li>
+							<li>1 至 2 小時：達到 1 個&nbsp;<button class="ts vote positive button">通過</button></li>
 						</ul></li>
 					</ul>
-					<p>經過 6 小時以後，只要 <button class="ts vote negative button">駁回</button> 不多於 <button class="ts vote positive button">通過</button> 即自動發出，意即無人審核也會發出，有效避免因為審核團隊偷懶而造成投稿卡住的情形</p>
+					<p>經過 2 小時以後，只要 <button class="ts vote negative button">駁回</button> 不多於 <button class="ts vote positive button">通過</button> 即自動發出，意即無人審核也會發出，有效避免因為審核團隊偷懶而造成投稿卡住的情形</p>
 					<h4>(C) 使用台灣 IP 位址</h4>
 					<p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下三個條件即發出</p>
 					<ul>
@@ -57,11 +57,11 @@ include('includes/head.php');
 						<li><button class="ts vote positive button">通過</button>&nbsp;多於&nbsp;<button class="ts vote negative button">駁回</button></li>
 						<li>拿到足夠的&nbsp;<button class="ts vote positive button">通過</button>&nbsp;數 (扣除&nbsp;<button class="ts vote negative button">駁回</button>)<ul>
 							<li>10 分鐘至 1 小時：達到 5 個&nbsp;<button class="ts vote positive button">通過</button></li>
-							<li>1 至 6 小時：達到 3 個&nbsp;<button class="ts vote positive button">通過</button></li>
-							<li>6 至 24 小時：達到 1 個&nbsp;<button class="ts vote positive button">通過</button></li>
+							<li>1 至 2 小時：達到 3 個&nbsp;<button class="ts vote positive button">通過</button></li>
+							<li>2 至 6 小時：達到 1 個&nbsp;<button class="ts vote positive button">通過</button></li>
 						</ul></li>
 					</ul>
-					<p>經過 24 小時以後，只要 <button class="ts vote negative button">駁回</button> 不多於 <button class="ts vote positive button">通過</button> 即自動發出</p>
+					<p>經過 6 小時以後，只要 <button class="ts vote negative button">駁回</button> 不多於 <button class="ts vote positive button">通過</button> 即自動發出</p>
 					<h4>(D) 境外 IP 位址</h4>
 					<p>使用境外 IP 發文除了自動化的廣告機器人外，很可能是心虛怕用台灣 IP 位址做壞事會被抓到，因此除非通過群眾嚴厲的審核，否則一概不發出</p>
 					<ul>

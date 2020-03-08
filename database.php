@@ -281,46 +281,46 @@ class MyDB {
 
 		/* Rule for NCTU IP address */
 		if ($item['author_name'] == '匿名, 交大') {
+			/* Less than 10 min */
 			if ($dt < 10*60)
 				return false;
 
-			if ($vote < 0)
+			/* 10min - 1hour */
+			if ($dt < 1*60*60 && $vote < 2)
 				return false;
 
-			if ($dt < 2*60*60) {
-				if ($vote < 2)
-					return false;
-			} else if ($dt < 6*60*60) {
-				if ($vote < 1)
-					return false;
-			}
+			/* 1hour - 2hour */
+			if ($dt < 2*60*60 && $vote < 1)
+				return false;
+
+			/* More than 2 hour */
+			if ($vote < 0)
+				return false;
 
 			return true;
 		}
 
 		/* Rule for Taiwan IP address */
 		if (strpos($item['author_name'], '境外') === false) {
-			if ($dt < 10*60)  // 0 - 30min
+			/* Less than 10 min */
+			if ($dt < 10*60)
 				return false;
 
-			if ($dt < 24*60*60) {  // 10min - 24hr
-				if ($vote <= 0)
+			/* 10min - 1hour */
+			if ($dt < 1*60*60 && $vote < 5)
 					return false;
 
-				if ($dt < 1*60*60) {  // 30min - 1hr
-					if ($vote < 5)
-						return false;
-				} else if ($dt < 6*60*60) {  // 1hr - 6hr
-					if ($vote < 3)
-						return false;
-				} else                    {  // 6hr - 24hr
-					if ($vote < 1)
-						return false;
-				}
-			} else {
-				if ($vote < 0)
-					return false;
-			}
+			/* 1hour - 2hour */
+			if ($dt < 2*60*60 && $vote < 3)
+				return false;
+
+			/* 2hour - 6hour */
+			if ($dt < 6*60*60 && $vote < 1)
+				return false;
+
+			/* More than 6 hour */
+			if ($vote < 0)
+				return false;
 
 			return true;
 		}
