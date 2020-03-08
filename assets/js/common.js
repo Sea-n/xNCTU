@@ -69,3 +69,45 @@ function timeFormat(ts = 0) {
 	dt = Math.floor(dt / 30);
 	return time + ' (' + dt + ' 個月前)';
 }
+
+function toHTML(str) {
+	var paras = str.split('\n\n');
+	for (var i=0; i<paras.length; i++) {
+		var lines = paras[i].split('\n');
+		for (var j=0; j<lines.length; j++) {
+			var words = lines[j].split(' ');
+			for (var k=0; k<words.length; k++) {
+				var word = words[k];
+
+				if (/^https?:\/\/.+\..+/.test(word)) {
+					var a = document.createElement('a');
+					var linkText = document.createTextNode(word);
+					a.appendChild(linkText);
+					a.href = word;
+					word = a.outerHTML;
+				} else if (/^#靠交\d+$/.test(word)) {
+					var a = document.createElement('a');
+					a.appendChild(document.createTextNode(word));
+					a.href = '/post/' + word.substr(3);
+					word = a.outerHTML;
+				} else if (/^#[^\s]+$/.test(word)) {
+					var a = document.createElement('a');
+					a.appendChild(document.createTextNode(word));
+					a.href = 'javascript:;';
+					word = a.outerHTML;
+				} else {
+					var div = document.createElement('div');
+					div.appendChild(document.createTextNode(word));
+					word = div.innerHTML;
+				}
+
+				words[k] = word;
+			}
+			lines[j] = words.join('&nbsp;');
+		}
+		paras[i] = lines.join('<br>\n');
+	}
+	str = '<p>' + paras.join('</p>\n\n<p>') + '</p>';
+
+	return str;
+}

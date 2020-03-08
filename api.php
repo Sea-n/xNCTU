@@ -26,15 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 			if (!empty($post['author_id'])) {
 				$author = $db->getUserByNctu($post['author_id']);
 				$author_name = $author['name'];
-
-			} else
+				$author_photo = $author['tg_photo'] ?? '';
+			} else {
+				$author_photo = '';
 				$author_name = $post['author_name'];
+			}
 
 			$ip_masked = ip_mask($post['ip_addr']);
 			if (!isset($_SESSION['nctu_id']) || !empty($post['author_id']))
 				$ip_masked = false;
 
-			$author_photo = $author['tg_photo'] ?? '';
 			if (empty($author_photo))
 				$author_photo = genPic($ip_masked);
 
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 				'uid' => $post['uid'],
 				'body' => $post['body'],
 				'body_html' => toHTML($post['body']),
-				'has_img' => $post['has_img'],
+				'has_img' => $post['has_img'] ? true : false,
 				'ip_masked' => $ip_masked,
 				'author_name' => $author_name,
 				'author_photo' => $author_photo,
