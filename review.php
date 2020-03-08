@@ -188,7 +188,7 @@ if (isset($_GET['uid'])) {
 	if (isset($USER) && 1 <= $post['status'] && $post['status'] <= 3) {
 ?>
 			<button id="refresh" class="ts primary button" onclick="updateVotes('<?= $uid ?>');">重新整理</button>
-<?php } } else { ?>
+<?php } } else if (!isset($_GET['deleted'])) { ?>
 			<div class="ts toggle checkbox">
 				<input id="showAll" <?= $showAll ? 'checked' : '' ?> type="checkbox" onchange="location.href='?all='+this.checked;">
 				<label for="showAll">顯示所有投稿</label>

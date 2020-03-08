@@ -14,13 +14,18 @@ function sendReview(string $uid) {
 	$hashtag = "#投稿$uid";
 
 	$author_name = $post['author_name'];
-	$hashtag_author = '#' . preg_replace('/[\s!-/:-@\[-`{-~]+/', '_', $author_name);
+	$hashtag_author = '#' . preg_replace('/[ ,]+/u', '_', $author_name);
 
-	$ip_masked = ip_mask($post['ip_addr']);
-	if (strpos($ip_masked, ':') !== false)
-		$hashtag_ip = '#IPv6_' . preg_replace('/[:*]+/', '_', $ip_masked);
+	$ip_addr = $post['ip_addr'];
+
+	$ip_masked = ip_mask($ip_addr);
+	$ip_masked = preg_replace('/[.:*]/u', '_', $ip_masked);
+	$ip_masked = preg_replace('/___+/', '___', $ip_masked);
+
+	if (strpos($ip_addr, ':') !== false)
+		$hashtag_ip = "#IPv6_$ip_masked";
 	else
-		$hashtag_ip = '#IPv4_' . preg_replace('/[.*]+/', '_', $ip_masked);
+		$hashtag_ip = "#IPv4_$ip_masked";
 
 	$msg = $post['body'];
 	if (empty($post['author_id'])) {
