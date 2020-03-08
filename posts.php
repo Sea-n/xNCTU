@@ -38,10 +38,23 @@ include('includes/head.php');
 
 			<button id="more" class="ts primary button" onclick="more();" data-offset="0">顯示更多文章</button>
 
+			<div class="ts modals dimmer" id="img-container-wrapper" style="margin-top: 40px;">
+				<dialog id="modal" class="ts basic fullscreen closable modal" open>
+					<i class="close icon"></i>
+					<div class="ts icon header"></div>
+					<div class="content">
+						<img id="img-container-inner" style="width: 100%;">
+					</div>
+					<div class="actions">
+						<button class="ts inverted basic deny button">關閉</button>
+					</div>
+				</dialog>
+			</div>
+
 			<template id="post-template">
 				<div class="ts card" id="post-XXXX" style="margin-bottom: 42px;">
 					<div class="image">
-						<img id="img" class="post-image" />
+						<img id="img" class="post-image" style="max-height: 40vh; width: auto;" />
 					</div>
 					<div class="content">
 						<div class="header"><a id="hashtag">#靠交000</a></div>

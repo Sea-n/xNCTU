@@ -56,8 +56,10 @@ function appendPost(item) {
 	post.querySelector('#hashtag').innerText = '#靠交' + item.id;
 	post.querySelector('#hashtag').href = '/post/' + item.id;
 
-	if (item.has_img)
+	if (item.has_img) {
+		post.querySelector('#img').onclick = showImg;
 		post.querySelector('#img').src = '/img/' + item.uid + '.jpg';
+	}
 
 	post.querySelector('#body').innerHTML = toHTML(item.body);
 
@@ -74,4 +76,11 @@ function appendPost(item) {
 	post.querySelector('#time').dataset.ts = item.time;
 
 	posts.appendChild(post);
+}
+
+function showImg(e) {
+	console.log(e);
+	var src = e.target.src;
+	document.getElementById('img-container-inner').src = src;
+	ts('#modal').modal('show');
 }
