@@ -143,7 +143,11 @@ if (isset($post['id'])) {
 			<div class="ts card" id="post-<?= $uid ?>" style="margin-bottom: 42px;">
 <?php if ($post['has_img']) { ?>
 				<div class="image">
+<?php if (isset($_GET['uid'])) { ?>
 					<img class="post-image" src="/img/<?= $uid ?>.jpg" />
+<?php } else { ?>
+					<img class="post-image" src="/img/<?= $uid ?>.jpg" onclick="showImg(this);" style="max-height: 40vh; width: auto; cursor: zoom-in;" />
+<?php } ?>
 				</div>
 <?php } ?>
 				<div class="content">
@@ -188,6 +192,19 @@ if (isset($_GET['uid'])) {
 				<label for="showAll">顯示所有投稿</label>
 			</div>
 <?php } ?>
+
+			<div class="ts modals dimmer" id="img-container-wrapper" style="margin-top: 40px;">
+				<dialog id="modal" class="ts basic fullscreen closable modal" open>
+					<i class="close icon"></i>
+					<div class="ts icon header"></div>
+					<div class="content">
+						<img id="img-container-inner" style="width: 100%;">
+					</div>
+					<div class="actions">
+						<button class="ts inverted basic cancel button">關閉</button>
+					</div>
+				</dialog>
+			</div>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>

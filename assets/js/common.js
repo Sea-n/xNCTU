@@ -137,3 +137,10 @@ function toHTML(str) {
 
 	return str;
 }
+
+function showImg(e) {
+	console.log(e);
+	var src = e.src || e.target.src;
+	document.getElementById('img-container-inner').src = src;
+	ts('#modal').modal('show');
+}

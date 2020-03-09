@@ -83,9 +83,3 @@ function appendPost(item) {
 
 	posts.appendChild(post);
 }
-
-function showImg(e) {
-	var src = e.target.src;
-	document.getElementById('img-container-inner').src = src;
-	ts('#modal').modal('show');
-}
