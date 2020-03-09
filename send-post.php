@@ -39,8 +39,8 @@ $link = "https://x.nctu.app/post/$id";
 $sns = [
 	'Telegram' => 'telegram',
 	'Plurk' => 'plurk',
-	'Twitter' => 'twitter',
 	'Facebook' => 'facebook',
+	'Twitter' => 'twitter',
 ];
 foreach ($sns as $name => $key) {
 	try {
@@ -224,6 +224,12 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 	curl_close($curl);
 
 	$result = json_decode($result, true);
+	if (!isset($result['id_str'])) {
+		echo "Twitter error: ";
+		var_dump($result);
+		return 0;
+	}
+
 	return $result['id_str'];
 }
 
