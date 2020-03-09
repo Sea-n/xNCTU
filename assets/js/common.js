@@ -1,4 +1,26 @@
-window.addEventListener("scroll", function () {
+window.addEventListener("load", init);
+window.addEventListener("scroll", adjustNav);
+window.addEventListener("resize", resizeNav);
+
+
+function init() {
+	console.log("Hey there!");
+	console.log("Source code: https://git.io/xNCTU");
+
+	resizeNav();
+	adjustNav();
+
+	setInterval(() => {
+		document.querySelectorAll('time[data-ts]')
+		.forEach((elem) => {
+			var ts = parseInt(elem.dataset.ts);
+			var time = timeFormat(ts);
+			elem.innerText = time;
+		});
+	}, 500);
+}
+
+function adjustNav() {
 	var nav = document.getElementsByTagName("nav")[0];
 	var body = document.getElementsByTagName("body")[0];
 	if (window.scrollY > 200) {
@@ -9,26 +31,6 @@ window.addEventListener("scroll", function () {
 		nav.classList.remove("fixed");
 		body.style.top = "0px";
 	}
-});
-
-window.addEventListener("load", init);
-window.addEventListener("resize", resizeNav);
-
-
-function init() {
-	console.log("Hey there!");
-	console.log("Source code: https://git.io/xNCTU");
-
-	resizeNav();
-
-	setInterval(() => {
-		document.querySelectorAll('time[data-ts]')
-		.forEach((elem) => {
-			var ts = parseInt(elem.dataset.ts);
-			var time = timeFormat(ts);
-			elem.innerText = time;
-		});
-	}, 500);
 }
 
 function resizeNav() {
