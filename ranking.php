@@ -162,7 +162,7 @@ function genData(string $id) {
 		'subchart' => [
 			'show' => true,
 			'defaultZoom' => [
-				strtotime("7 days ago") * 1000,
+				strtotime("14 days ago") * 1000,
 				strtotime("now") * 1000
 			]
 		],
@@ -187,7 +187,8 @@ function genData(string $id) {
 		$step = 6*60*60;
 	} else {
 		$name = '所有人';
-		$step = 2*60*60;
+		$step = 60*60;
+		$data['subchart']['defaultZoom'][0] = strtotime("3 days ago") * 1000;
 	}
 
 	$data['title'] = $name;
