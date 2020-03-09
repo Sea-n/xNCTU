@@ -41,18 +41,18 @@ case 'reject':
 		$dt = time() - strtotime($post['created_at']);
 		$vote = $post['approvals'] - $post['rejects'];
 
-		/* Before 24 hour */
-		if ($dt < 1*24*60*60)
+		/* Before 12 hour */
+		if ($dt < 12*60*60)
 			if ($vote > -20)
 				continue;
 
-		/* 1day - 2day */
-		if ($dt < 2*24*60*60)
+		/* 12 hour - 24 hour*/
+		if ($dt < 24*60*60)
 			if ($vote > -10)
 				continue;
 
-		/* 2day - 3day */
-		if ($dt < 3*24*60*60)
+		/* 24 hour - 48 hour */
+		if ($dt < 48*60*60)
 			if ($vote > 0)
 				continue;
 

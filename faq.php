@@ -42,10 +42,10 @@ include('includes/head.php');
 			<p>當投稿被多數人 <button class="ts vote negative button">駁回</button> 或是放了很久卻達不到通過標準，就會被系統自動清理。</p>
 			<p>詳細判斷標準如下：</p>
 			<ul>
-				<li>24 小時以內：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 20 個</li>
-				<li>24 小時至 48 小時：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 10 個</li>
-				<li>48 小時至 72 小時：<button class="ts vote negative button">駁回</button>&nbsp;不少於&nbsp;<button class="ts vote positive button">通過</button></li>
-				<li>72 小時以後：不論條件，全數回收</li>
+				<li>12 小時以內：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 20 個</li>
+				<li>12 小時至 24 小時：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 10 個</li>
+				<li>24 小時至 48 小時：<button class="ts vote negative button">駁回</button>&nbsp;不少於&nbsp;<button class="ts vote positive button">通過</button></li>
+				<li>48 小時以後：不論條件，全數回收</li>
 			</ul>
 
 			<h2 class="ts header" id="deleted-submissions">Q：可以去哪找到被黑箱的投稿</h2>
