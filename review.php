@@ -170,18 +170,14 @@ if (isset($post['id'])) {
 <?php } ?>
 					</div>
 					<p style="margin-top: 0; line-height: 1.7em">
-<?php if (!$canVote) { ?>
 						<span>審核狀況：<button class="ts vote positive button">通過</button>&nbsp;<span id="approvals"><?= $post['approvals'] ?></span>&nbsp;票 /&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;<span id="rejects"><?= $post['rejects'] ?></span>&nbsp;票</span>
-<?php } ?>
 						<br><span>投稿時間：<time data-ts="<?= $ts ?>"><?= $time ?></time></span>
 					</p>
 				</div>
-<?php if ($canVote) { ?>
-				<div class="ts fluid bottom attached large buttons">
-					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文 (目前 <span id="approvals"><?= $post['approvals'] ?></span> 票)</button>
-					<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿 (目前 <span id="rejects"><?= $post['rejects'] ?></span> 票)</button>
+				<div class="ts fluid bottom attached large buttons" style="<?= $canVote ? '' : 'display: none;' ?>">
+					<button class="ts positive button" onclick="approve('<?= $uid ?>');">通過貼文</button>
+					<button class="ts negative button" onclick="reject('<?= $uid ?>');">駁回投稿</button>
 				</div>
-<?php } ?>
 			</div>
 <?php }
 if (isset($_GET['uid'])) {
