@@ -368,6 +368,7 @@ function uploadImage(string $uid): string {
 
 	/* Convert all file type to jpg */
 	system("ffmpeg -i $dst $dst.jpg");
+	unlink($dst);
 
 	return '';
 }
