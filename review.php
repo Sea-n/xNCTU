@@ -24,11 +24,10 @@ if (isset($_GET['uid'])) {
 
 } else {
 	if (isset($_GET['deleted'])) {
-		if (!isset($USER)) {
-			header('Location: /login-nctu?r=%2Fdeleted');
-			exit('Please login first. 請先登入');
-		}
-		$posts = $db->getDeletedSubmissions(50);
+		if (isset($USER)) {
+			$posts = $db->getDeletedSubmissions(50);
+		} else
+			$posts = [];
 	} else if (isset($USER))
 		$posts = $db->getSubmissionsForVoter(50, true, $USER['nctu_id']);
 	else
@@ -108,6 +107,11 @@ if (count($posts) == 0) {
 ?>
 			<h2 class="ts header">太棒了！您已審完所有投稿</h2>
 			<p>歡迎使用 Telegram Bot 接收投稿通知，並在程式內快速審查</p>
+<?php } else if (isset($_GET['deleted'])) { ?>
+			<div class="ts negative message">
+				<div class="header">你不是交大生</div>
+				<p>這邊僅限交大使用者瀏覽，請點擊右上方 Login 使用交大帳號登入。</p>
+			</div>
 <?php } else { ?>
 			<h2 class="ts header">太棒了！目前沒有待審投稿</h2>
 			<p>歡迎使用 Telegram Bot 接收投稿通知，並在程式內快速審查</p>
@@ -154,7 +158,7 @@ if (isset($post['id'])) {
 <?php if (isset($_GET['uid'])) { ?>
 					<div class="header">#投稿<?= $uid ?></div>
 <?php } else { ?>
-					<div class="header"> <a href="/review/<?= $uid ?>">#投稿<?= $uid ?></a></div>
+					<div class="header"><a href="/review/<?= $uid ?>">#投稿<?= $uid ?></a></div>
 <?php } ?>
 					<p><?= $body ?></p>
 				</div>
