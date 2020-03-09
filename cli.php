@@ -37,6 +37,10 @@ case 'dump':
 case 'reject':
 	$posts = $db->getSubmissions(0);
 	foreach ($posts as $post) {
+		/* Prevent reject demo post */
+		if ($post['status'] != 3)
+			continue;
+
 		$uid = $post['uid'];
 		$dt = time() - strtotime($post['created_at']);
 		$vote = $post['approvals'] - $post['rejects'];

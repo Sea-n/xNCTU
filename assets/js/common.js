@@ -30,6 +30,10 @@ function adjustNav() {
 function resizeNav() {
 	var right = document.getElementById('nav-right');
 	var navName = document.getElementById('nav-name');
+
+	if (!navName)
+		return;
+
 	var prev = right.previousElementSibling;
 	var rect = prev.getBoundingClientRect();
 
@@ -62,12 +66,12 @@ function timeFormat(ts = 0) {
 	var now = (new Date()).getTime();
 	var dt = now - ts;
 
-	if (dt < 0)
-		return 'Error';
-
 	var time = hour + ':' + min;
 
 	dt = Math.floor(dt / 1000);
+	if (dt < 0)
+		return time + ' (' + -dt + ' 秒後)';
+
 	if (dt < 120)
 		return time + ' (' + dt + ' 秒前)';
 

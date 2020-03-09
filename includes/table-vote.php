@@ -13,7 +13,7 @@ require_once('utils.php');
 	</thead>
 	<tbody>
 <?php
-if (isset($USER)) {
+if (isset($USER) || ($uid ?? 'x') == 'DEMO') {
 	foreach ($VOTES as $i => $vote) {
 		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
 		$id = $vote['voter'];
@@ -30,7 +30,12 @@ if (isset($USER)) {
 		</tr>
 <?php } } else { ?>
 		<tr>
-			<td colspan="5"><h2 class="ts info message">此區域僅限交大使用者查看</h2></td>
+			<td colspan="5">
+				<div class="ts info message">
+					<div class="header">此區域僅限交大使用者查看</div>
+					<p>您可以 <a href="/review/DEMO">打開 #投稿DEMO </a>，免登入即可預覽投票介面</p>
+				</div>
+			</td>
 		</tr>
 <?php } ?>
 	</tbody>

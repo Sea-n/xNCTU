@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 			$result['id'] = $post['id'];
 
 		$result['votes'] = [];
-		if (isset($_SESSION['nctu_id'])) {
+		if (isset($_SESSION['nctu_id']) || $post['status'] == 10) {
 			$votes = $db->getVotesByUid($uid);
 
 			foreach ($votes as $item) {

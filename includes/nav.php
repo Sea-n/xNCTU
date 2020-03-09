@@ -11,19 +11,12 @@ if (!isset($db)) {
 if (isset($_SESSION['nctu_id']) && !isset($USER))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
 
-if (isset($USER))
-	$items = [
-		'/' => '首頁',
-		'/submit' => '投稿',
-		'/review' => '審核',
-		'/posts' => '文章',
-	];
-else
-	$items = [
-		'/' => '首頁',
-		'/submit' => '投稿',
-		'/posts' => '文章列表',
-	];
+$items = [
+	'/' => '首頁',
+	'/submit' => '投稿',
+	'/review' => '審核',
+	'/posts' => '文章',
+];
 
 ?>
 <nav class="ts basic fluid borderless menu horizontally scrollable">

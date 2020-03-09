@@ -59,7 +59,7 @@ class MyDB {
 		if ($limit == 0) $limit = 9487;
 
 		$ORDER = $desc ? 'DESC' : 'ASC';
-		$sql = "SELECT * FROM posts WHERE status BETWEEN 1 AND 3 ORDER BY created_at $ORDER";
+		$sql = "SELECT * FROM posts WHERE status = 3 OR status = 10 ORDER BY created_at $ORDER";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
@@ -162,7 +162,7 @@ class MyDB {
 		if (!$post)
 			return ['ok' => false, 'msg' => 'uid not found. 找不到該投稿'];
 
-		if ($post['status'] > 3)
+		if ($post['status'] > 3 && $post['status'] != 10)
 			return ['ok' => false, 'msg' => 'Already posted. 太晚囉，貼文已發出'];
 
 		if ($post['status'] < 0)
@@ -265,6 +265,10 @@ class MyDB {
 	}
 
 	private function isSubmissionEligible(array $item) {
+		/* Prevent publish demo post */
+		if ($item['status'] != 3)
+			return false;
+
 		$dt = time() - strtotime($item['created_at']);
 		$vote = $item['approvals'] - $item['rejects'];
 

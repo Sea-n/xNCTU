@@ -165,7 +165,7 @@ if (isset($post['id'])) {
 				<div class="extra content">
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
-<?php if (isset($USER) && empty($post['author_id'])) { ?>
+<?php if (isset($USER) && empty($post['author_id']) || $post['status'] == 10) { ?>
 						<br><span class="right floated">(<?= $ip_masked ?>)</span>
 <?php } ?>
 					</div>
@@ -183,7 +183,7 @@ if (isset($post['id'])) {
 if (isset($_GET['uid'])) {
 	$VOTES = $db->getVotesByUid($post['uid']);
 	include('includes/table-vote.php');
-	if (isset($USER) && 1 <= $post['status'] && $post['status'] <= 3) {
+	if (isset($USER) && 1 <= $post['status'] && $post['status'] <= 3 || $post['status'] == 10) {
 ?>
 			<button id="refresh" class="ts primary button" onclick="updateVotes('<?= $uid ?>');">重新整理</button>
 <?php } } else if (!isset($_GET['deleted'])) { ?>

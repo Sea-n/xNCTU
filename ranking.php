@@ -105,7 +105,7 @@ foreach ($user_count as $i => $item) {
 				</tbody>
 			</table>
 
-			<div id="chart_wrap" class="unstyled" style="min-height: 450px;"></div>
+			<div id="chart_wrap" class="unstyled" style="min-height: 300px;"></div>
 
 			<div class="ts snackbar">
 				<div class="content"></div>

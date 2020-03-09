@@ -11,6 +11,9 @@ START TRANSACTION;
  * 3 sent all review
  * 4 selected to post
  * 5 posted to all SNS
+ *
+ * 10 demo post
+ *
  * -1 deleted for unknown reason
  * -2 rejected
  * -3 deleted by author
