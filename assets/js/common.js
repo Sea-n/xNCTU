@@ -9,15 +9,9 @@ function init() {
 
 	resizeNav();
 	adjustNav();
+	updateTime();
 
-	setInterval(() => {
-		document.querySelectorAll('time[data-ts]')
-		.forEach((elem) => {
-			var ts = parseInt(elem.dataset.ts);
-			var time = timeFormat(ts);
-			elem.innerText = time;
-		});
-	}, 500);
+	setInterval(updateTime, 500);
 }
 
 function adjustNav() {
@@ -44,6 +38,15 @@ function resizeNav() {
 		width = 0;
 
 	navName.style.maxWidth = width + 'px';
+}
+
+function updateTime() {
+	document.querySelectorAll('time[data-ts]')
+	.forEach((elem) => {
+		var ts = parseInt(elem.dataset.ts);
+		var time = timeFormat(ts);
+		elem.innerText = time;
+	});
 }
 
 function timeFormat(ts = 0) {
