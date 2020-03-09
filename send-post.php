@@ -5,8 +5,9 @@ if (!isset($argv))
 require_once('utils.php');
 require_once('database.php');
 require_once('config.php');
-require_once('/root/site/telegram/function.php');
+require_once('telegram-bot/class.php');
 $db = new MyDB();
+$TG = new Telegram();
 
 $cmd = $argv[1] ?? '';
 if ($cmd == 'update') {
@@ -79,8 +80,7 @@ foreach ($sns as $name => $key) {
 /* Remove vote keyboard in Telegram */
 $msgs = $db->getTgMsgsByUid($uid);
 foreach ($msgs as $item) {
-	getTelegram('editMessageReplyMarkup', [
-		'bot' => 'xNCTU',
+	$TG->editMarkup([
 		'chat_id' => $item['chat_id'],
 		'message_id' => $item['msg_id'],
 		'reply_markup' => [
@@ -101,21 +101,19 @@ foreach ($msgs as $item) {
 
 
 function send_telegram(int $id, string $body, string $img = ''): int {
-	global $link;
+	global $TG, $link;
 
 	/* Send to @xNCTU */
 	$msg = "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
 	if (empty($img))
-		$result = sendMsg([
-			'bot' => 'xNCTU',
+		$result = $TG->sendMsg([
 			'chat_id' => '@xNCTU',
 			'text' => $msg,
 			'parse_mode' => 'HTML',
 			'disable_web_page_preview' => true
 		]);
 	else
-		$result = getTelegram('sendPhoto', [
-			'bot' => 'xNCTU',
+		$result = $TG->sendPhoto([
 			'chat_id' => '@xNCTU',
 			'photo' => "https://x.nctu.app/img/{$img}.jpg",
 			'caption' => $msg,
@@ -314,8 +312,10 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 }
 
 function update_telegram(array $post) {
+	global $TG;
+
 	$plurk = base_convert($post['plurk_id'], 10, 36);
-	getTelegram('editMessageReplyMarkup', [
+	$TG->editMarkup([
 		'chat_id' => '@xNCTU',
 		'message_id' => $post['telegram_id'],
 		'reply_markup' => [

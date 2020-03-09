@@ -166,6 +166,13 @@ function toHTML(string $text = ''): string {
 	return $text;
 }
 
+function enHTML(string $str = ''): string {
+	$search =  array('&', '"', '<', '>');
+	$replace = array('&amp;', '&quot;', '&lt;', '&gt');
+	$str = str_replace($search, $replace, $str);
+	return $str;
+}
+
 function humanTime(string $date): string {
 	$ts = strtotime($date);
 	$now = time();

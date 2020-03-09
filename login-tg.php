@@ -2,8 +2,9 @@
 session_start();
 require('config.php');
 require('database.php');
-require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
+require_once('telegram-bot/class.php');
 $db = new MyDB();
+$TG = new Telegram();
 
 $redir = '/';  # Default value
 
@@ -36,8 +37,7 @@ if ($USER) {
 		redirect('Already login.');
 
 	$db->insertUserTg($_SESSION['nctu_id'], $auth_data);
-	sendMsg([
-		'bot' => 'xNCTU',
+	$TG->sendMsg([
 		'chat_id' => $auth_data['id'],
 		'text' => "🎉 連結成功！\n\n" .
 		"您成功找出 bug 了，將不同的 NCTU OAuth 帳號連結至同一個 Telegram 帳號，目前還沒想到如何處理比較適當，歡迎提供建議\n\n" .
@@ -54,8 +54,7 @@ if (!isset($_SESSION['nctu_id']))
 $db->insertUserTg($_SESSION['nctu_id'], $auth_data);
 
 $msg = "🎉 連結成功！\n\n將來有新投稿時，您將會收到推播，並可用 Telegram 內的按鈕審核貼文。";
-sendMsg([
-	'bot' => 'xNCTU',
+$TG->sendMsg([
 	'chat_id' => $auth_data['id'],
 	'text' => $msg
 ]);

@@ -192,8 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$msg_id = $db->getTgMsg($uid, $chat_id);
 
 		if ($msg_id) {
-			getTelegram('editMessageReplyMarkup', [
-				'bot' => 'xNCTU',
+			$TG->editMarkup([
 				'chat_id' => $chat_id,
 				'message_id' => $msg_id,
 				'reply_markup' => [

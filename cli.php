@@ -5,8 +5,9 @@ if (!isset($argv[1]))
 
 require('utils.php');
 require('database.php');
-require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
+require_once('telegram-bot/class.php');
 $db = new MyDB();
+$TG = new Telegram();
 
 
 switch ($argv[1]) {
@@ -60,8 +61,7 @@ case 'reject':
 		/* Remove vote keyboard in Telegram */
 		$msgs = $db->getTgMsgsByUid($uid);
 		foreach ($msgs as $item) {
-			getTelegram('editMessageReplyMarkup', [
-				'bot' => 'xNCTU',
+			$TG->editMarkup([
 				'chat_id' => $item['chat_id'],
 				'message_id' => $item['msg_id'],
 				'reply_markup' => [

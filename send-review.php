@@ -1,7 +1,9 @@
 <?php
 require_once('utils.php');
 require_once('database.php');
-require_once('/usr/share/nginx/sean.taipei/telegram/function.php');
+require_once('telegram-bot/class.php');
+
+$TG = new Telegram();
 
 function sendReview(string $uid) {
 	$db = new MyDB();
@@ -59,6 +61,8 @@ function sendReview(string $uid) {
 }
 
 function sendPost(string $uid, string $msg, bool $has_img, int $id) {
+	global $TG;
+
 	$keyboard = [
 		'inline_keyboard' => [
 			[
@@ -86,16 +90,14 @@ function sendPost(string $uid, string $msg, bool $has_img, int $id) {
 	$dnd = (substr(date('H'), 0, 1) != '0');
 
 	if (!$has_img)
-		return sendMsg([
-			'bot' => 'xNCTU',
+		return $TG->sendMsg([
 			'chat_id' => $id,
 			'text' => $msg,
 			'reply_markup' => $keyboard,
 			'disable_notification' => $dnd
 		]);
 	else
-		return getTelegram('sendPhoto', [
-			'bot' => 'xNCTU',
+		return $TG->sendPhoto([
 			'chat_id' => $id,
 			'photo' => "https://x.nctu.app/img/$uid.jpg",
 			'caption' => $msg,
