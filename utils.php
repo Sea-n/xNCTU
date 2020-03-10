@@ -220,7 +220,7 @@ function idToDep(string $id): string {
 
 	$idB = substr($id, 2);
 	foreach ($TABLE as $s => $n) {
-		if ($idB > $s)
+		if ($idB >= $s)
 			$dep = $n;
 	}
 
