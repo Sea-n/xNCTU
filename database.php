@@ -154,7 +154,7 @@ class MyDB {
 	}
 
 	public function getPostsByIp(string $ip, int $limit, int $offset = 0) {
-		$sql = "SELECT * FROM posts WHERE ip_addr = :ip AND status != -3 AND status > -10 AND author_id != '' ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+		$sql = "SELECT * FROM posts WHERE ip_addr = :ip AND status != -3 AND status > -10 AND author_id = '' ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 		$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
