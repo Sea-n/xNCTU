@@ -44,4 +44,11 @@ class Telegram {
 	public function editMarkup(array $query): array {
 		return $this->getTelegram('editMessageReplyMarkup', $query);
 	}
+
+	public function deleteMsg(int $chat, int $msg): array {
+		return $this->getTelegram('deleteMessage', [
+			'chat_id' => $chat,
+			'message_id' => $msg,
+		]);
+	}
 }
