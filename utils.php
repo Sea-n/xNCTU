@@ -49,6 +49,7 @@ function ip_from(string $ip_addr): string {
 		}
 
 		$name = str_replace("台灣之星電信", "台灣之星", $name);
+		$name = str_replace("台灣寬頻通訊顧問", "台灣寬頻通訊", $name);
 		return $name;
 	}
 
