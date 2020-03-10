@@ -68,8 +68,10 @@ include('includes/head.php');
 						<label>附加圖片</label>
 						<div class="two wide"><input type="file" id="img" name="img" accept="image/png, image/jpeg, image/gif" style="display: inline-block;" /></div>
 						<div class="ts spaced bordered fluid image" style="display: none !important;">
+							<div style="width: 100%; height: 100%; z-index: 1; position: absolute; display: flex; align-items: center; justify-content: center; text-align: center;">
+								<p style="transform: rotate(-30deg);text-align: center; font-size: 8vw;opacity: 0.6;">Preview</p>
+							</div>
 							<img id="img-preview" />
-							<i class="cloud upload icon"></i>
 						</div>
 					</div>
 					<div id="captcha-field" class="required inline field">
