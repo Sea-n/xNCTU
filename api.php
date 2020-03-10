@@ -69,6 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		if ($post['status'] == 5)
 			$result['id'] = $post['id'];
 
+		if ($post['status'] < 0)
+			$result['reload'] = true;
+
 		$result['votes'] = [];
 		if (isset($_SESSION['nctu_id']) || $post['status'] == 10) {
 			$votes = $db->getVotesByUid($uid);

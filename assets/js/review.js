@@ -84,6 +84,9 @@ function updateVotes() {
 	.then((resp) => {
 		console.log(resp);
 		if (resp.ok) {
+			if (resp.reload)
+				location.reload();
+
 			if (resp.id)
 				location.href = '/post/' + resp.id;
 
