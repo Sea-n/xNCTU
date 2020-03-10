@@ -81,6 +81,9 @@ case 'reject':
 	break;
 
 case 'delete':
+	if ($argc < 4)
+		exit('Usage: delete [uid] [reason] [status]');
+
 	$uid = $argv[2];
 	$reason = $argv[3];
 	$status = $argv[4] ?? -4;
