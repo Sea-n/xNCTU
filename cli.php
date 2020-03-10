@@ -85,14 +85,14 @@ case 'delete':
 	$reason = $argv[3];
 	$status = $argv[4] ?? -4;
 
-	$db->deleteSubmission($uid, $status, $reason);
-
 	/* Remove vote keyboard in Telegram */
 	$msgs = $db->getTgMsgsByUid($uid);
 	foreach ($msgs as $item) {
 		$TG->deleteMsg($item['chat_id'], $item['msg_id']);
 		$db->deleteTgMsg($uid, $item['chat_id']);
 	}
+
+	$db->deleteSubmission($uid, $status, $reason);
 	break;
 
 default:
