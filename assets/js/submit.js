@@ -3,9 +3,11 @@ var submitted = false;
 
 function init() {
 	if (document.getElementById('submit-post')) {
+		var img = document.getElementById('img');
 		document.getElementById('submit-post').onsubmit = submitForm;
 		document.getElementById('body-area').oninput = formUpdate;
-		document.getElementById('img').oninput = formUpdate;
+		img.oninput = formUpdate;
+		img.onchange = updateImg;
 		document.getElementById('captcha-input').oninput = formUpdate;
 
 		window.addEventListener("beforeunload", function (e) {
@@ -19,8 +21,37 @@ function init() {
 			return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
 		});
 
+
+		window.addEventListener('paste', (e) => {
+			var cb = e.clipboardData;
+
+			if (cb.files.length != 1)
+				return;
+
+			console.log(cb.files);
+			img.files = cb.files;
+			updateImg(e);
+		});
+
+
 		restoreForm();
 	}
+}
+
+function updateImg() {
+	var img = document.getElementById('img');
+	var preview = document.getElementById('img-preview');
+	var files = img.files;
+
+	if (!files || !files[0])
+		return;
+
+	var reader = new FileReader();
+	reader.onload = (e) => {
+		preview.src = reader.result;
+		preview.parentElement.style.display = '';
+	}
+	reader.readAsDataURL(files[0]);
 }
 
 function restoreForm() {

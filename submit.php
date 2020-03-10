@@ -66,7 +66,11 @@ include('includes/head.php');
 					</div>
 					<div class="inline field">
 						<label>附加圖片</label>
-						<div class="four wide"><input type="file" id="img" name="img" accept="image/png, image/jpeg, image/gif" style="display: inline-block;" /></p></div>
+						<div class="two wide"><input type="file" id="img" name="img" accept="image/png, image/jpeg, image/gif" style="display: inline-block;" /></div>
+						<div class="ts spaced bordered fluid image" style="display: none !important;">
+							<img id="img-preview" />
+							<i class="cloud upload icon"></i>
+						</div>
 					</div>
 					<div id="captcha-field" class="required inline field">
 						<label>驗證問答</label>
