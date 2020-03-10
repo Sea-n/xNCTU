@@ -109,16 +109,19 @@ function toHTML(str) {
 					var linkText = document.createTextNode(word);
 					a.appendChild(linkText);
 					a.href = word;
+					a.target = '_blank';
 					word = a.outerHTML;
 				} else if (/^#靠交\d+$/.test(word)) {
 					var a = document.createElement('a');
 					a.appendChild(document.createTextNode(word));
 					a.href = '/post/' + word.substr(3);
+					a.target = '_blank';
 					word = a.outerHTML;
 				} else if (/^#投稿\w+$/.test(word)) {
 					var a = document.createElement('a');
 					a.appendChild(document.createTextNode(word));
 					a.href = '/review/' + word.substr(3);
+					a.target = '_blank';
 					word = a.outerHTML;
 				} else if (/^#[^\s]+$/.test(word)) {
 					var a = document.createElement('a');
