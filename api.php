@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		/* Check rate limit */
 		if (empty($author_id)) {
-			if (strpos($item['author_name'], '境外') === false) {
+			if (strpos($author_name, '境外') !== false) {
 				$posts = $db->getPostsByIp($ip_addr, 1);
 				if (count($posts) == 1) {
 					$last = strtotime($posts[0]['created_at']);
@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						err('Please retry afetr 24 hours. 境外 IP 限制 24 小時內僅能發 1 篇文');
 					}
 				}
-			} else if ($item['author_name'] != '匿名, 交大') {
+			} else if ($author_name != '匿名, 交大') {
 				$posts = $db->getPostsByIp($ip_addr, 2);
 				if (count($posts) == 2) {
 					$last = strtotime($posts[1]['created_at']);
