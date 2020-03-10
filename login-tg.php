@@ -36,16 +36,15 @@ if ($USER) {
 	if ($_SESSION['nctu_id'] == $USER['nctu_id'])
 		redirect('Already login.');
 
-	$db->insertUserTg($_SESSION['nctu_id'], $auth_data);
 	$TG->sendMsg([
 		'chat_id' => $auth_data['id'],
-		'text' => "🎉 連結成功！\n\n" .
-		"您成功找出 bug 了，將不同的 NCTU OAuth 帳號連結至同一個 Telegram 帳號，目前還沒想到如何處理比較適當，歡迎提供建議\n\n" .
+		'text' => "⚠️ 您已連結過此帳號\n\n" .
+		"目前無法將不同的 NCTU OAuth 帳號連結至同一個 Telegram 帳號\n\n" .
 		"NCTU ID from session: {$_SESSION['nctu_id']}\n" .
 		"NCTU ID from database: {$USER['nctu_id']}\n" .
 		"Telegram UID: {$auth_data['id']}"
 	]);
-	redirect('Account linked again.');
+	redirect('Already linked to another account.');
 }
 
 if (!isset($_SESSION['nctu_id']))
