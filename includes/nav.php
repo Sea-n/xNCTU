@@ -41,7 +41,7 @@ if (isset($USER)) {
 		$photo = genPic($USER['nctu_id']);
 ?>
 			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
-			&nbsp;<b id="nav-name" style="overflow: hidden;"><?= $USER['name'] ?></b>&nbsp;
+			&nbsp;<b id="nav-name" style="overflow: hidden;"><?= toHTML($USER['name']) ?></b>&nbsp;
 			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
 				<i class="log out icon"></i>
 				<span class="tablet or large device only">Logout</span>

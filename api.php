@@ -151,6 +151,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if ($error[0] != '00000')
 			err("Database error {$error[0]}, {$error[1]}, {$error[2]}. 資料庫發生錯誤");
 
+		/* Check rate limit */
+		if (empty($author_id)) {
+			if (strpos($item['author_name'], '境外') === false) {
+				$posts = $db->getPostsByIp($ip_addr, 1);
+				if (count($posts) == 1) {
+					$last = strtotime($posts[0]['created_at']);
+					if (time() - $last < 24*60*60) {
+						$db->updateSubmissionStatus($uid, -12);
+						err('Please retry afetr 24 hours. 境外 IP 限制 24 小時內僅能發 1 篇文');
+					}
+				}
+			} else if ($item['author_name'] != '匿名, 交大') {
+				$posts = $db->getPostsByIp($ip_addr, 2);
+				if (count($posts) == 2) {
+					$last = strtotime($posts[1]['created_at']);
+					if (time() - $last < 6*60*60) {
+						$db->updateSubmissionStatus($uid, -12);
+						err('Please retry afetr 6 hours. 校外 IP 限制 6 小時內僅能發 2 篇文');
+					}
+				}
+			} else {
+				$posts = $db->getPostsByIp($ip_addr, 5);
+				if (count($posts) == 5) {
+					$last = strtotime($posts[4]['created_at']);
+					if (time() - $last < 60*60) {
+						$db->updateSubmissionStatus($uid, -12);
+						err('Please retry afetr 1 hour. 校內匿名發文限制 1 小時內僅能發 5 篇文');
+					}
+				}
+			}
+		}
+
 
 		/* Success, return post data */
 		$ip_masked = ip_mask($ip_addr);

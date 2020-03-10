@@ -18,7 +18,9 @@ START TRANSACTION;
  * -2 rejected
  * -3 deleted by author
  * -4 deleted by admin
- * -5 deleted and hidden by admin
+ *
+ * -11 deleted and hidden by admin
+ * -12 rate limited
  */
 
 DROP TABLE IF EXISTS posts;

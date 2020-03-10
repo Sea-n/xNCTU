@@ -50,7 +50,7 @@ include('includes/head.php');
 <?php if (isset($USER)) { ?>
 				<div class="ts warning message">
 					<div class="header">注意：您目前為登入狀態</div>
-					<p>所有人都能看到您（<?= $USER['name'] ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
+					<p>所有人都能看到您（<?= toHTML($USER['name']) ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
 				</div>
 <?php } else { ?>
 				<div class="ts info message">
