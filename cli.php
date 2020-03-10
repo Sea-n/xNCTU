@@ -13,6 +13,7 @@ $TG = new Telegram();
 switch ($argv[1]) {
 case 'dump':
 	$data = [];
+	$posts = [];
 
 	$tables = ['posts', 'votes', 'users', 'tg_msg'];
 	foreach ($tables as $table) {
@@ -24,8 +25,16 @@ case 'dump':
 			if (isset($item['nctu_id']))
 				$item['nctu_id'] = idToDep($item['nctu_id']) . ' ' . $item['nctu_id'];
 
-			if (isset($item['voter']))
+			if ($table == 'posts')
+				$posts[ $item['uid'] ] = $item;
+
+			if ($table == 'votes') {
+				$item['uid'] .= ' ' . mb_substr($posts[ $item['uid'] ]['body'], 0, 20) . '..';
+
 				$item['voter'] = idToDep($item['voter']) . ' ' . $item['voter'];
+
+				$item['vote'] = ($item['vote'] == '1' ? '✅ 通過' : '❌ 駁回');
+			}
 
 			$data[$table][] = $item;
 		}
