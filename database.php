@@ -492,10 +492,18 @@ class MyDB {
 		return $results;
 	}
 
+	/* For opt-out messages */
 	public function removeUserTg(int $tg_id) {
 		$sql = "UPDATE users SET tg_name = NULL WHERE tg_id = :tg_id";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':tg_id' => $tg['id']]);
+		$stmt->execute([':tg_id' => $tg_id]);
+	}
+
+	/* Unlink account from NCTU */
+	public function unlinkUserTg(int $tg_id) {
+		$sql = "UPDATE users SET tg_id = NULL, tg_name = NULL, tg_username = NULL, tg_photo = NULL WHERE tg_id = :tg_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':tg_id' => $tg_id]);
 	}
 
 	public function setTgMsg(string $uid, int $chat, int $msg) {

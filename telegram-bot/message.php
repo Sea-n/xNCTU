@@ -34,7 +34,7 @@ if (!$USER) {
 					[
 						'text' => '綁定靠交 2.0 網站',
 						'login_url' => [
-							'url' => "https://x.nctu.app/login-tg?r=/"
+							'url' => "https://x.nctu.app/login-tg?r=%2F"
 						]
 					]
 				]
@@ -119,6 +119,25 @@ if (substr($text, 0, 1) == '/') {
 								'text' => '開啟網站',
 								'login_url' => [
 									'url' => "https://x.nctu.app/login-tg"
+								]
+							]
+						]
+					]
+				]
+			]);
+			break;
+
+		case 'unlink':
+			$db->unlinkUserTg($TG->FromID);
+			$TG->sendMsg([
+				'text' => "已取消連結，請點擊下方按鈕連結新的 NCTU OAuth 帳號",
+				'reply_markup' => [
+					'inline_keyboard' => [
+						[
+							[
+								'text' => '綁定靠交 2.0 網站',
+								'login_url' => [
+									'url' => "https://x.nctu.app/login-tg?r=%2F"
 								]
 							]
 						]
