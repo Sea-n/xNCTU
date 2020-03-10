@@ -7,6 +7,8 @@ $db = new MyDB();
 
 if (($_SERVER['HTTP_CONTENT_TYPE'] ?? '') == 'application/json')
 	$_POST = json_decode(file_get_contents('php://input'), true);
+else if (count($_POST) == 0)
+	parse_str(file_get_contents('php://input'), $_POST);
 
 header('Content-Type: application/json');
 
@@ -231,6 +233,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 			$post = $db->getPostByUid($uid);
 			if (!$post)
 				err('找不到該篇投稿');
+
+			if (time() - strtotime($post['created_at']) > 10*60)
+				err('Timeout. 已超出時限，請重新投稿');
 
 			if ($post['status'] != 0)
 				err("Submission $uid status {$post['status']} is not eligible to be confirmed. 此投稿狀態不允許確認");
