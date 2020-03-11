@@ -42,8 +42,17 @@ nav .item {
 	padding-bottom: 80px;
 }
 
-.icon-row .ts.circular.image {
+.icon-row {
+	display: inline-flex;
+	max-width: 100%;
+}
+
+.icon-row .ts.rounded.image {
 	margin-right: 4px;
+}
+
+#telegram-icon {
+	background-color: #039be5;
 }
 
 footer {
