@@ -20,10 +20,10 @@ include('includes/head.php');
 		<div class="ts container" name="main">
 			<h2 class="ts header">社群平台</h2>
 			<div class="icon-row">
-				<a class="ts link tiny circular image" target="_blank" href="https://t.me/xNCTU"            ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg" alt="Telegram"></a>
-				<a class="ts link tiny circular image" target="_blank" href="https://twitter.com/x_NCTU"    ><img src="https://image.flaticon.com/icons/svg/124/124021.svg"   alt="Twitter" ></a>
-				<a class="ts link tiny circular image" target="_blank" href="https://www.plurk.com/xNCTU"   ><img src="https://image.flaticon.com/icons/svg/124/124026.svg"   alt="Plurk"   ></a>
-				<a class="ts link tiny circular image" target="_blank" href="https://www.facebook.com/xNCTU"><img src="https://image.flaticon.com/icons/svg/220/220200.svg"   alt="Facebook"></a>
+				<a id="telegram-icon" class="ts link tiny circular image" target="_blank" href="https://t.me/xNCTU"            ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg" alt="Telegram"></a>
+				<a id="twitter-icon"  class="ts link tiny circular image" target="_blank" href="https://twitter.com/x_NCTU"    ><img src="https://image.flaticon.com/icons/svg/124/124021.svg"   alt="Twitter" ></a>
+				<a id="plurk-icon"    class="ts link tiny circular image" target="_blank" href="https://www.plurk.com/xNCTU"   ><img src="https://image.flaticon.com/icons/svg/124/124026.svg"   alt="Plurk"   ></a>
+				<a id="facebook-icon" class="ts link tiny circular image" target="_blank" href="https://www.facebook.com/xNCTU"><img src="https://image.flaticon.com/icons/svg/220/220200.svg"   alt="Facebook"></a>
 			</div>
 
 			<h2 class="ts header">審文機制</h2>
