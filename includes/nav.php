@@ -4,7 +4,7 @@ if (!isset($_SESSION)) {
 }
 
 if (!isset($db)) {
-	require_once('database.php');
+	require_once(__DIR__ . '/../database.php');
 	$db = new MyDB();
 }
 
