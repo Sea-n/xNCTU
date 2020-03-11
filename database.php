@@ -78,7 +78,7 @@ class MyDB {
 		if ($limit == 0) $limit = 9487;
 
 		$ORDER = $desc ? 'DESC' : 'ASC';
-		$sql = "SELECT * FROM posts WHERE status < 0 AND status != -3 AND status > -10 ORDER BY created_at $ORDER";
+		$sql = "SELECT * FROM posts WHERE status < 0 AND status != -3 AND status > -10 ORDER BY deleted_at $ORDER";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
 
