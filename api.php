@@ -17,10 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	$ACTION = $_GET['action'] ?? 'x';
 
 	if ($ACTION == 'posts') {
-		$offset = $_GET['offset'] ?? 0;
-		$limit = $_GET['limit'] ?? 20;
-		if ($limit > 100)
-			$limit = 100;
+		$offset = (int) $_GET['offset'] ?? 0;
+		$limit = (int) $_GET['limit'] ?? 0;
+		if ($limit < 1)
+			$limit = 20;
+		if ($limit > 1000)
+			$limit = 1000;
 
 		$posts = $db->getPosts($limit, $offset);
 		$result = [];

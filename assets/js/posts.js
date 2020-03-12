@@ -16,8 +16,6 @@ document.addEventListener('keyup', (e) => {
 });
 
 function more() {
-	const limit = 20;
-
 	var button = document.getElementById('more');
 	var offset = parseInt(button.dataset.offset);
 
@@ -27,6 +25,18 @@ function more() {
 	if (button.classList.contains('disabled'))
 		return;
 	button.classList.add('disabled');
+
+	var limit = 20;
+	if (offset >= 100)
+		limit = 50;
+	if (offset >= 300)
+		limit = 100;
+	if (offset >= 800)
+		limit = 200;
+	if (offset >= 2000)
+		limit = 500;
+	if (offset >= 5000)
+		limit = 1000;
 
 	button.dataset.offset = offset + limit;
 	getPosts(limit, offset);
