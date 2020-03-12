@@ -20,22 +20,26 @@ $posts = $db->getPosts(0);
   <loc>https://x.nctu.app/submit</loc>
   <priority>1.00</priority>
 </url>
-<?php foreach ($posts as $post) { ?>
 <url>
-  <loc>https://x.nctu.app/post/<?= $post['id'] ?></loc>
+  <loc>https://x.nctu.app/ranking</loc>
   <priority>0.87</priority>
 </url>
-<?php } ?>
 <url>
   <loc>https://x.nctu.app/faq</loc>
   <priority>0.69</priority>
 </url>
 <url>
-  <loc>https://x.nctu.app/ranking</loc>
+  <loc>https://x.nctu.app/deleted</loc>
   <priority>0.69</priority>
 </url>
 <url>
   <loc>https://x.nctu.app/policies</loc>
   <priority>0.42</priority>
 </url>
+<?php foreach ($posts as $post) { ?>
+<url>
+  <loc>https://x.nctu.app/post/<?= $post['id'] ?></loc>
+  <priority>0.87</priority>
+</url>
+<?php } ?>
 </urlset>

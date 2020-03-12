@@ -4,6 +4,5 @@ Disallow: /login-nctu
 Disallow: /login-tg
 Disallow: /logout
 Disallow: /review
-Disallow: /deleted
 Disallow: /api
 Sitemap: https://x.nctu.app/sitemap.xml
