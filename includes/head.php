@@ -47,7 +47,7 @@ $URL = htmlentities($URL);
 <meta property="og:site_name" content="靠北交大 2.0" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@x_NCTU" />
-<meta property="fb:app_id" content="103461781248690" />
+<meta property="fb:app_id" content="776010579474059" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.css">
 <link rel="stylesheet" href="/assets/css/style.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158901570-1"></script>
