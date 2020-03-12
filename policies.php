@@ -3,7 +3,7 @@
 	<head>
 <?php
 $TITLE = '服務條款及隱私權政策';
-$IMG = 'https://x.nctu.app/assets/img/logo.png';
+$IMG = 'https://x.nctu.app/assets/img/og.png';
 include('includes/head.php');
 ?>
 	</head>

@@ -21,7 +21,7 @@ $captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 	<head>
 <?php
 $TITLE = '文章投稿';
-$IMG = 'https://x.nctu.app/assets/img/logo.png';
+$IMG = 'https://x.nctu.app/assets/img/og.png';
 include('includes/head.php');
 ?>
 		<script src="/assets/js/submit.js"></script>

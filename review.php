@@ -68,10 +68,10 @@ if (isset($post)) {
 		$IMG = "https://x.nctu.app/img/{$post['uid']}.jpg";
 } else if (isset($_GET['deleted'])) {
 	$TITLE = '已刪投稿';
-	$IMG = 'https://x.nctu.app/assets/img/logo.png';
+	$IMG = 'https://x.nctu.app/assets/img/og.png';
 } else {
 	$TITLE = '貼文審核';
-	$IMG = 'https://x.nctu.app/assets/img/logo.png';
+	$IMG = 'https://x.nctu.app/assets/img/og.png';
 }
 include('includes/head.php');
 ?>

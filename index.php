@@ -4,7 +4,7 @@
 	<head>
 <?php
 $TITLE = '首頁';
-$IMG = 'https://x.nctu.app/assets/img/logo.png';
+$IMG = 'https://x.nctu.app/assets/img/og.png';
 include('includes/head.php');
 ?>
 		<script src="/assets/js/index.js"></script>

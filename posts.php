@@ -19,7 +19,7 @@ $posts = $db->getPosts(50);
 	<head>
 <?php
 $TITLE = '文章列表';
-$IMG = 'https://x.nctu.app/assets/img/logo.png';
+$IMG = 'https://x.nctu.app/assets/img/og.png';
 include('includes/head.php');
 ?>
 		<script src="/assets/js/posts.js"></script>
