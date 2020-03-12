@@ -89,7 +89,7 @@ foreach ($msgs as $item) {
 					[
 						'text' => '開啟審核頁面',
 						'login_url' => [
-							'url' => "https://x.nctu.app/login-tg?r=%2Freview%3Fuid%3D$uid"
+							'url' => "https://x.nctu.app/login-tg?r=%2Freview%2F$uid"
 						]
 					]
 				]
