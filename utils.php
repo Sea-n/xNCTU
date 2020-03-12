@@ -105,11 +105,14 @@ function ccToZh(string $cc) {
 
 function ip_mask(string $ip_addr): string {
 	if (strpos($ip_addr, '.') !== false) { // IPv4
-		if (preg_match('/^140.113.136.2(09|1[0-9]|2[01])$/', $ip_addr))
+		if (preg_match('/^140\.113\.136\.2(09|1[0-9]|2[01])$/', $ip_addr))
 			return $ip_addr;  // NCTU Wireless NAT
 
-		if (preg_match('/^140.113.0.229$/', $ip_addr))
+		if (preg_match('/^140\.113\.0\.229$/', $ip_addr))
 			return $ip_addr;  // NCTU VPN
+
+		if (preg_match('/^140\.113\.[567]\.\d+$/', $ip_addr))
+			return $ip_addr;  // NTHU WLAN
 
 		$ip4 = explode('.', $ip_addr);
 		$ip4[2] = '***';
