@@ -497,7 +497,7 @@ class MyDB {
 	}
 
 	public function getTgUsers() {
-		$sql = "SELECT * FROM users WHERE tg_id > 0";
+		$sql = "SELECT * FROM users WHERE tg_id > 0 ORDER BY tg_id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([]);
 
