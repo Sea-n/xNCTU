@@ -50,11 +50,11 @@ include('includes/head.php');
 <?php if (isset($USER)) { ?>
 				<div id="warning-name" class="ts warning message">
 					<div class="header">注意：您目前為登入狀態</div>
-					<p>所有人都能看到您（<?= toHTML($USER['name']) ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
+					<p>一但送出投稿後，所有人都能看到您（<?= toHTML($USER['name']) ?>）具名投稿，如想匿名投稿請於下方勾選「匿名投稿」。</p>
 				</div>
 <?php } ?>
 				<div id="warning-ip" class="ts info message" style="<?= isset($USER) ? 'display: none;' : '' ?>">
-					<div class="header">請注意</div>
+					<div class="header">注意</div>
 					<p>一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip_addr) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</p>
 				</div>
 				<form id ="submit-post" class="ts form" action="/submit" method="POST" enctype="multipart/form-data">

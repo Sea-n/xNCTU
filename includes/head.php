@@ -11,15 +11,7 @@ if (isset($IMG))
 	$IMG = htmlentities($IMG);
 
 $URL = $_SERVER['REQUEST_URI'];
-$URL = explode('?', $URL, 2);
-parse_str($URL[1] ?? '', $q);
-$URL = $URL[0];
-$query = [];
-foreach (['uid'] as $i)
-	if (isset($q[$i]))
-		$query[$i] = $q[$i];
-if (count($query) > 0)
-	$URL .= '?' . http_build_query($query);
+$URL = explode('?', $URL, 2)[0];  // remove the query part
 $URL = "https://x.nctu.app$URL";
 $URL = htmlentities($URL);
 
