@@ -69,6 +69,22 @@ case 'reject':
 			if ($vote > 0)
 				continue;
 
+		/*
+		 * 48 hour - 60 hour
+		 *
+		 * It should be reject after 48 hour immediately,
+		 * but if someone approved foreign submission and
+		 * make it eligible for post during sleep time,
+		 * it will be frustrating if the submission just
+		 * deleted with +10 vote.
+		 *
+		 * The workaround is give it 12 hour buffer time
+		 * if the submission have +10 vote.
+		 */
+		if ($dt < 60*60*60)
+			if ($vote >= 10)
+				continue;
+
 		$db->deleteSubmission($uid, -2, '已駁回');
 
 		/* Remove vote keyboard in Telegram */
