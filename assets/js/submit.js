@@ -110,6 +110,7 @@ function submitForm(e) {
 	var body = document.getElementById('body-area');
 	var img = document.getElementById('img');
 	var captcha = document.getElementById('captcha-input');
+	var anon = document.getElementById('anon');
 	var csrf = document.getElementById('csrf_token');
 	submitted = true;
 
@@ -126,6 +127,8 @@ function submitForm(e) {
 		formData.append('img', img.files[0]);
 	formData.append('captcha', captcha.value);
 	formData.append('csrf_token', csrf.value);
+	if (anon.checked)
+		formData.append('anon', 1);
 
 	fetch('/api/submission', {
 		method: 'POST',
@@ -263,6 +266,19 @@ function deleteSubmission() {
 		console.log(resp);
 		alert(resp.msg);
 	});
+}
+
+function changeAnon() {
+	var anon = document.getElementById('anon');
+	var wName = document.getElementById('warning-name');
+	var wIp = document.getElementById('warning-ip');
+
+	wName.style.display = 'none';
+	wIp.style.display = 'none';
+	if (anon.checked)
+		wIp.style.display = '';
+	else
+		wName.style.display = '';
 }
 
 window.addEventListener("load", init);

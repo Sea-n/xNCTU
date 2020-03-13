@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$ip_addr = $_SERVER['REMOTE_ADDR'];
 
 		/* Get Author Name */
-		if (isset($_SESSION['nctu_id'])) {
+		if (isset($_SESSION['nctu_id']) && !isset($_POST['anon'])) {
 			$USER = $db->getUserByNctu($_SESSION['nctu_id']);
 			$author_id = $USER['nctu_id'];
 			$author_name = $USER['name'];

@@ -48,16 +48,15 @@ include('includes/head.php');
 			<div id="submit-section">
 				<h2>立即投稿</h2>
 <?php if (isset($USER)) { ?>
-				<div class="ts warning message">
+				<div id="warning-name" class="ts warning message">
 					<div class="header">注意：您目前為登入狀態</div>
 					<p>所有人都能看到您（<?= toHTML($USER['name']) ?>）具名投稿，如想匿名投稿請先點擊右上角登出後再發文。</p>
 				</div>
-<?php } else { ?>
-				<div class="ts info message">
+<?php } ?>
+				<div id="warning-ip" class="ts info message" style="<?= isset($USER) ? 'display: none;' : '' ?>">
 					<div class="header">請注意</div>
 					<p>一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip_addr) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</p>
 				</div>
-<?php } ?>
 				<form id ="submit-post" class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
 					<div id="body-field" class="required resizable field">
 						<label>貼文內容</label>
@@ -78,6 +77,13 @@ include('includes/head.php');
 						<label>驗證問答</label>
 						<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" /></div>
 						<span>&nbsp; <?= $captcha ?></span>
+					</div>
+					<div id="field" class="inline field" style="<?= isset($USER) ? '' : 'display: none;' ?>">
+						<label for="anon">匿名投稿</label>
+						<div class="ts toggle checkbox">
+							<input id="anon" type="checkbox" onchange="changeAnon();">
+							<label for="anon"></label>
+						</div>
 					</div>
 					<input name="csrf_token" id="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
 					<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
