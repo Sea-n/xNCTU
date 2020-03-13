@@ -252,18 +252,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		/* Send vote log to group */
 		$post = $db->getPostByUid($uid);
-		$body = mb_substr($post['body'], 0, 6) . '...';
+		$body = enHTML(mb_substr($post['body'], 0, 6)) . "<a href='https://x.nctu.app/review/$uid'>...</a>";
 		$dep = idToDep($USER['nctu_id']);
 		$name = $USER['name'];
+		if (is_numeric($name))
+			$name = "N$name";
 		$vote = ($vote == 1 ? '✅' : '❌');
 
 		$msg = "#投稿$uid $body\n" .
-			"$dep #$name\n\n" .
-			"$vote $reason";
+			enHTML("$dep #$name\n\n") .
+			enHTML("$vote $reason");
 
 		$TG->sendMsg([
 			'chat_id' => -1001489855993,
-			'text' => $msg
+			'text' => $msg,
+			'parse_mode' => 'HTML',
+			'disable_web_page_preview' => true,
 		]);
 	} else {
 		err('Unknown POST action. 未知的操作');
