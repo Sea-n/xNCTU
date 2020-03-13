@@ -405,7 +405,6 @@ function uploadImage(string $uid): string {
 	if (!($ext = array_search($finfo->file($src), [
 			'jpg' => 'image/jpeg',
 			'png' => 'image/png',
-			'gif' => 'image/gif',
 		], true)))
 		return 'Extension not recognized. 圖片副檔名錯誤';
 
