@@ -322,24 +322,25 @@ class MyDB {
 
 		/* Rule for Taiwan IP address */
 		if (strpos($item['author_name'], '境外') === false) {
-			/* Less than 10 min */
-			if ($dt < 10*60)
+			/* If no reject & more than 10 min */
+			if ($item['rejects'] == 0)
+				if ($dt > 10*60 && $vote >= 5)
+					return true;
+
+			/* Less than 30 min */
+			if ($dt < 30*60)
 				return false;
 
-			/* 10min - 1hour */
-			if ($dt < 1*60*60 && $vote < 5)
-					return false;
-
-			/* 1hour - 2hour */
-			if ($dt < 2*60*60 && $vote < 3)
+			/* 30min - 2hour */
+			if ($dt < 2*60*60 && $vote < 7)
 				return false;
 
 			/* 2hour - 6hour */
-			if ($dt < 6*60*60 && $vote < 1)
+			if ($dt < 6*60*60 && $vote < 5)
 				return false;
 
 			/* More than 6 hour */
-			if ($vote < 0)
+			if ($vote < 3)
 				return false;
 
 			return true;
