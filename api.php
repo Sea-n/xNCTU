@@ -249,6 +249,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			]);
 			$db->deleteTgMsg($uid, $tg_id);
 		}
+
+		/* Send vote log to group */
+		$post = $db->getPostByUid($uid);
+		$body = mb_substr($post['body'], 0, 6) . '...';
+		$dep = idToDep($USER['nctu_id']);
+		$name = $USER['name'];
+		$vote = ($vote == 1 ? '✅' : '❌');
+
+		$msg = "#投稿$uid $body\n" .
+			"$dep #$name\n\n" .
+			"$vote $reason";
+
+		$TG->sendMsg([
+			'chat_id' => -1001489855993,
+			'text' => $msg
+		]);
 	} else {
 		err('Unknown POST action. 未知的操作');
 	}

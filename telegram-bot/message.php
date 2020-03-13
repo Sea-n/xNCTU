@@ -1,8 +1,12 @@
 <?php
+require(__DIR__.'/../utils.php');
 require(__DIR__.'/../database.php');
 $db = new MyDB();
 
 if ($TG->ChatID < 0) {
+	if ($TG->ChatID == -1001489855993)
+		exit;  // xNCTU Votes group
+
 	$TG->sendMsg([
 		'text' => '目前尚未支援群組功能',
 		'reply_markup' => [
@@ -166,10 +170,11 @@ if (substr($text, 0, 1) == '/') {
 if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['reply_to_message']['text'] ?? '', $matches)) {
 	$vote = $matches[1] == 'approve' ? 1 : -1;
 	$uid = $matches[2];
+	$reason = $text;
 
 	$type = $vote == 1 ? '✅ 通過' : '❌ 駁回';
 
-	if (empty($text) || mb_strlen($text) > 100) {
+	if (empty($reason) || mb_strlen($reason) > 100) {
 		$TG->sendMsg([
 			'text' => '請輸入 1 - 100 字投票附註'
 		]);
@@ -178,7 +183,7 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 	}
 
 	try {
-		$result = $db->voteSubmissions($uid, $USER['nctu_id'], $vote, $text);
+		$result = $db->voteSubmissions($uid, $USER['nctu_id'], $vote, $reason);
 		if (!$result['ok'])
 			$msg = $result['msg'];
 		else {
@@ -217,6 +222,22 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 	$TG->getTelegram('deleteMessage', [
 		'chat_id' => $TG->ChatID,
 		'message_id' => $TG->data['message']['reply_to_message']['message_id'],
+	]);
+
+	/* Send vote log to group */
+	$post = $db->getPostByUid($uid);
+	$body = mb_substr($post['body'], 0, 6) . '...';
+	$dep = idToDep($USER['nctu_id']);
+	$name = $USER['name'];
+	$vote = ($vote == 1 ? '✅' : '❌');
+
+	$msg = "#投稿$uid $body\n" .
+		"$dep #$name\n\n" .
+		"$vote $reason";
+
+	$TG->sendMsg([
+		'chat_id' => -1001489855993,
+		'text' => $msg
 	]);
 
 	exit;
