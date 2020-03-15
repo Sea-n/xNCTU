@@ -191,7 +191,7 @@ function checkForm() {
 
 function showPreview(data) {
 	document.body.dataset.uid = data.uid;
-	document.getElementById('preview-body').innerText = data.body;
+	document.getElementById('preview-body').innerHTML = toHTML(data.body);
 
 	var img = document.getElementById('preview-img');
 	if (data.has_img)

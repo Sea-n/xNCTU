@@ -96,7 +96,7 @@ include('includes/head.php');
 				</div>
 				<div class="content">
 					<div class="header">投稿預覽</div>
-					<p id="preview-body"></p>
+					<div id="preview-body"></div>
 				</div>
 				<div class="extra content">
 					<div class="right floated author">
