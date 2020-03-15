@@ -11,30 +11,53 @@ $vote_sum = [1=>0, -1=>0];
 foreach ($VOTES as $item) {
 	if (!isset($user_count[ $item['voter'] ])) {
 		$user_count[ $item['voter'] ] = [
-			1 => 0,
-			-1 => 0,
+			1 => 0, -1 => 0,
+			2 => 0, -2 => 0,
+			3 => 0, -3 => 0,
+			4 => 0, -4 => 0,
+			5 => 0, -5 => 0,
 			'id' => $item['voter']
 		];
 	}
 
-	$user_count[ $item['voter']  ][ $item['vote'] ]++;
+	$user_count[ $item['voter'] ][ $item['vote'] ]++;
 	$vote_sum[ $item['vote'] ]++;
+
+	if (time() - strtotime($item['created_at']) < 3*24*60*60)
+		$user_count[ $item['voter'] ][ $item['vote'] * 2 ]++;
+	if (time() - strtotime($item['created_at']) < 7*24*60*60)
+		$user_count[ $item['voter'] ][ $item['vote'] * 3 ]++;
+	if (time() - strtotime($item['created_at']) < 14*24*60*60)
+		$user_count[ $item['voter'] ][ $item['vote'] * 4 ]++;
+	if (time() - strtotime($item['created_at']) < 30*24*60*60)
+		$user_count[ $item['voter'] ][ $item['vote'] * 5 ]++;
 }
 
 foreach($user_count as $k => $v) {
-	$total = $v[1] + $v[-1];
-	$min = min($v[1], $v[-1]);
-	$max = max($v[1], $v[-1]);
+	$pt = 0;
+	$TABLE = [
+		2 => 1,    // within  3 days
+		3 => 0.5,  // within  7 days
+		4 => 0.3,  // within 14 days
+		5 => 0.2,  // within 30 days
+		1 => 0.1,  // all the time
+	];
 
-	$point = $total + min($min, $max/4)*3.001;
-	$user_count[$k]['pt'] = $point;
+	foreach ($TABLE as $i => $weight) {
+		$total = $v[$i] + $v[-$i];
+		$min = min($v[$i], $v[-$i]);
+		$max = max($v[$i], $v[-$i]);
+		$pt += ($total*0.8 + min($min, $max/4) * (2.4 + 0.001*$weight)) * $weight;
+	}
+
+	$user_count[$k]['pt'] = $pt;
 }
 
 usort($user_count, function($A, $B) {
 	return $A['pt'] < $B['pt'];
 });
 
-$user_count = array_slice($user_count, 0, 20);
+$user_count = array_slice($user_count, 0, 50);
 
 foreach($user_count as $k => $v) {
 	$user = $db->getUserByNctu($v['id']);
@@ -59,8 +82,9 @@ include('includes/head.php');
 			</div>
 		</header>
 		<div class="ts container" name="main">
-			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名計算公式為： 總投票數 + min(少數票, 多數票/4) * 3</p>
+			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名基本計算公式為： 總投票數 + min(少數票, 多數票/4) * 3</p>
 			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;40 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;5 票」的排名相同</p>
+			<p>得到積分會再依時間遠近調整權重，短期內大量通過/駁回皆會影響排名，詳細計算方式可參見此頁面原始碼</p>
 
 			<table class="ts table">
 				<thead>
