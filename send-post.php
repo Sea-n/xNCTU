@@ -282,9 +282,14 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . (empty($img) ? '/feed' : '/photos');
    
 	$data = ['access_token' => FB_ACCESS_TOKEN];
-	if (empty($img))
+	if (empty($img)) {
 		$data['message'] = $msg;
-	else {
+
+		$lines = explode("\n", $body);
+		$end = end($lines);
+		if (filter_var($end, FILTER_VALIDATE_URL))
+			$data['link'] = $end;
+	} else {
 		$data['url'] = "https://x.nctu.app/img/$img.jpg";
 		$data['caption'] = $msg;
 	}
