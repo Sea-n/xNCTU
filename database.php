@@ -290,7 +290,7 @@ class MyDB {
 
 		/* Rule for Logged-in users */
 		if (!empty($item['author_id'])) {
-			if ($dt < 5*60)
+			if ($dt < 4*60)
 				return false;
 
 			if ($vote < 0)
@@ -302,15 +302,15 @@ class MyDB {
 		/* Rule for NCTU IP address */
 		if ($item['author_name'] == '匿名, 交大') {
 			/* Less than 10 min */
-			if ($dt < 10*60)
+			if ($dt < 9*60)
 				return false;
 
 			/* 10min - 1hour */
-			if ($dt < 1*60*60 && $vote < 2)
+			if ($dt < 59*60 && $vote < 2)
 				return false;
 
 			/* 1hour - 2hour */
-			if ($dt < 2*60*60 && $vote < 1)
+			if ($dt < 119*60 && $vote < 1)
 				return false;
 
 			/* More than 2 hour */
@@ -324,15 +324,15 @@ class MyDB {
 		if (strpos($item['author_name'], '境外') === false) {
 			/* If no reject & more than 10 min */
 			if ($item['rejects'] == 0)
-				if ($dt > 10*60 && $vote >= 5)
+				if ($dt > 9*60 && $vote >= 5)
 					return true;
 
 			/* Less than 30 min */
-			if ($dt < 30*60)
+			if ($dt < 29*60)
 				return false;
 
 			/* 30min - 2hour */
-			if ($dt < 2*60*60 && $vote < 7)
+			if ($dt < 119*60 && $vote < 7)
 				return false;
 
 			/* 2hour - 6hour */
@@ -348,7 +348,7 @@ class MyDB {
 
 		/* Rule for Foreign IP address */
 		if (true) {
-			if ($dt < 60*60)
+			if ($dt < 59*60)
 				return false;
 
 			if ($vote < 10)
