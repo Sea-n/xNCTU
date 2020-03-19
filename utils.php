@@ -210,7 +210,8 @@ function humanTime(string $date): string {
 
 function idToDep(string $id): string {
 	/* Teachers */
-	if ($id == 'X9616') return '技術發展組';
+	if ($id == 'X9616') return '技術發展組';  # 王英鼎
+	if ($id == 'E9604') return '資工系';  # 張巧涵
 
 	if (!preg_match('#^\d{7}$#', $id))
 		return "非學生 $id";
