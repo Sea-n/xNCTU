@@ -21,6 +21,7 @@ START TRANSACTION;
  *
  * -11 deleted and hidden by admin
  * -12 rate limited
+ * -13 unconfirmed timeout
  */
 
 DROP TABLE IF EXISTS posts;

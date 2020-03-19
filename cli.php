@@ -94,6 +94,20 @@ case 'reject':
 			$db->deleteTgMsg($uid, $item['chat_id']);
 		}
 	}
+
+	$sql = "SELECT * FROM posts WHERE status = 0";
+	$stmt = $db->pdo->prepare($sql);
+	$stmt->execute();
+	while ($post = $stmt->fetch()) {
+		$dt = time() - strtotime($post['created_at']);
+
+		/* Before 24 hour */
+		if ($dt < 24*60*60)
+			continue;
+
+		$db->deleteSubmission($post['uid'], -13, '逾期未確認');
+	}
+
 	break;
 
 case 'delete':
