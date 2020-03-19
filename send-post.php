@@ -80,22 +80,7 @@ foreach ($sns as $name => $key) {
 /* Remove vote keyboard in Telegram */
 $msgs = $db->getTgMsgsByUid($uid);
 foreach ($msgs as $item) {
-	$TG->editMarkup([
-		'chat_id' => $item['chat_id'],
-		'message_id' => $item['msg_id'],
-		'reply_markup' => [
-			'inline_keyboard' => [
-				[
-					[
-						'text' => '開啟審核頁面',
-						'login_url' => [
-							'url' => "https://x.nctu.app/login-tg?r=%2Freview%2F$uid"
-						]
-					]
-				]
-			]
-		]
-	]);
+	$TG->deleteMsg($item['chat_id'], $item['msg_id']);
 	$db->deleteTgMsg($uid, $item['chat_id']);
 }
 
