@@ -1,5 +1,6 @@
 var stopCountdown = 0;
 var submitted = false;
+var img_data = false;
 
 function init() {
 	if (document.getElementById('submit-post')) {
@@ -23,14 +24,19 @@ function init() {
 
 
 		window.addEventListener('paste', (e) => {
-			var cb = e.clipboardData;
-
-			if (cb.files.length != 1)
+			var items = e.clipboardData.items;
+			if(items == undefined)
 				return;
 
-			console.log(cb.files);
-			img.files = cb.files;
-			updateImg(e);
+			for (var i=0; i<items.length; i++) {
+				if (items[i].type.indexOf('image') == -1)
+					continue;
+
+				var blob = items[i].getAsFile();
+				img_data = blob;
+
+				updateImgPreview();
+			}
 		});
 
 
@@ -40,18 +46,37 @@ function init() {
 
 function updateImg() {
 	var img = document.getElementById('img');
-	var preview = document.getElementById('img-preview');
 	var files = img.files;
 
 	if (!files || !files[0])
 		return;
+
+	img_data = files[0];
+	updateImgPreview();
+}
+
+function updateImgPreview() {
+	var preview = document.getElementById('img-preview');
+
+	if (!img_data) {
+		preview.src = '';
+		preview.parentElement.setAttribute('style', 'display: none !important;');
+		return;
+	}
+
+	if (img_data.size > 5*1000*1000) {
+		alert('圖片檔案過大！請壓縮至 5MB 以下');
+		img_data = false;
+		updateImgPreview();
+		return;
+	}
 
 	var reader = new FileReader();
 	reader.onload = (e) => {
 		preview.src = reader.result;
 		preview.parentElement.style.display = '';
 	}
-	reader.readAsDataURL(files[0]);
+	reader.readAsDataURL(img_data);
 }
 
 function restoreForm() {
@@ -84,7 +109,7 @@ function formUpdate() {
 	var len = body.length;
 	bodyWc.innerText = len;
 
-	if (img.files.length) {
+	if (img_data) {
 		if (len > 870) {
 			bodyField.classList.add('error');
 		} else if (len > 690)
@@ -123,8 +148,8 @@ function submitForm(e) {
 
 	const formData  = new FormData();
 	formData.append('body', body.value);
-	if (img.files.length)
-		formData.append('img', img.files[0]);
+	if (img_data)
+		formData.append('img', img_data);
 	formData.append('captcha', captcha.value);
 	formData.append('csrf_token', csrf.value);
 	if (anon.checked)
@@ -138,6 +163,11 @@ function submitForm(e) {
 		console.log(resp);
 		if (!resp.ok) {
 			alert(resp.msg);
+			return;
+		}
+
+		if (img_data && !resp.has_img) {
+			alert('圖片上傳失敗！');
 			return;
 		}
 
