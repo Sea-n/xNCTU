@@ -417,14 +417,14 @@ function uploadImage(string $uid): string {
 	$width = $size[0];
 	$height = $size[1];
 
-	if ($width * $height < 320*320)
-		return 'Image must be at least 320x320.';
+	if ($width * $height < 160*160)
+		return 'Image must be at least 160x160.';
 
-	if ($width/4 > $height)
-		return 'Image must be at least 4:1';
+	if ($width/8 > $height)
+		return 'Image must be at least 8:1.';
 
-	if ($width < $height/2)
-		return 'Image must be at least 1:2';
+	if ($width < $height/4)
+		return 'Image must be at least 1:4.';
 
 	/* Convert all file type to jpg */
 	system("ffmpeg -i $dst $dst.jpg");
