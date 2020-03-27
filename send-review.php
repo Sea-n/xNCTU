@@ -6,6 +6,8 @@ require_once('telegram-bot/class.php');
 $TG = new Telegram();
 
 function sendReview(string $uid) {
+	global $TG;
+
 	$db = new MyDB();
 
 	$post = $db->getPostByUid($uid);
@@ -46,12 +48,12 @@ function sendReview(string $uid) {
 
 	/* Send to Votes Log */
 	if (!$has_img)
-		return $TG->sendMsg([
+		$TG->sendMsg([
 			'chat_id' => -1001489855993,
 			'text' => $msg,
 		]);
 	else
-		return $TG->sendPhoto([
+		$TG->sendPhoto([
 			'chat_id' => -1001489855993,
 			'photo' => "https://x.nctu.app/img/$uid.jpg",
 			'caption' => $msg,

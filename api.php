@@ -90,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 					'dep' => idToDep($id),
 					'name' => $user['name'],
 					'reason' => $item['reason'],
-					'reason_html' => toHTML($item['reason']),
 				];
 			}
 		}
