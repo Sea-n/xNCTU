@@ -44,6 +44,20 @@ function sendReview(string $uid) {
 
 	$db->updateSubmissionStatus($uid, 2);
 
+	/* Send to Votes Log */
+	if (!$has_img)
+		return $TG->sendMsg([
+			'chat_id' => -1001489855993,
+			'text' => $msg,
+		]);
+	else
+		return $TG->sendPhoto([
+			'chat_id' => -1001489855993,
+			'photo' => "https://x.nctu.app/img/$uid.jpg",
+			'caption' => $msg,
+		]);
+
+	/* Send to Users */
 	foreach ($USERS as $user) {
 		if (!isset($user['tg_name']))
 			continue;
