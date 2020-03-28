@@ -272,7 +272,7 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 
 		$lines = explode("\n", $body);
 		$end = end($lines);
-		if (filter_var($end, FILTER_VALIDATE_URL))
+		if (filter_var($end, FILTER_VALIDATE_URL) && strpos($end, 'facebook') === false)
 			$data['link'] = $end;
 	} else {
 		$data['url'] = "https://x.nctu.app/img/$img.jpg";
