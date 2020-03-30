@@ -95,7 +95,7 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 			'chat_id' => '@xNCTU',
 			'text' => $msg,
 			'parse_mode' => 'HTML',
-			'disable_web_page_preview' => true
+			'disable_web_page_preview' => !filter_var(end(explode("\n", $body)), FILTER_VALIDATE_URL)
 		]);
 	else
 		$result = $TG->sendPhoto([
@@ -115,7 +115,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 	$msg = "#靠交$id\n\n$body";
 	if (strlen($msg) > 250)
 		$msg = mb_substr($msg, 0, 120) . '...';
-	$msg .= "\n\n$link";
+	$msg .= "\n\n✅ $link";
 
 	if (!empty($img)) {
 		$nonce     = md5(time());
@@ -225,7 +225,7 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 	if (mb_strlen($msg) > 320)
 		$msg = mb_substr($msg, 0, 320) . '...';
 
-	$msg .= "\n\n$link (全平台連結)";
+	$msg .= "\n\n✅ $link ($link)";
 
 	$nonce     = md5(time());
 	$timestamp = time();
