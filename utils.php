@@ -127,6 +127,8 @@ function ip_mask(string $ip_addr): string {
 		while ($missing--)
 			$ip6 = str_replace('::', ':0::', $ip6);
 		$ip6 = str_replace('::', ':0:', $ip6);
+		if ($ip6[-1] == ':')
+			$ip6 .= '0';
 	}
 	$ip6 = explode(':', $ip6);
 	$ip6 = "{$ip6[0]}:{$ip6[1]}:${ip6[2]}:***:{$ip6[7]}";
