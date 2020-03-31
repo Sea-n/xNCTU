@@ -88,14 +88,24 @@ foreach ($msgs as $item) {
 function send_telegram(int $id, string $body, string $img = ''): int {
 	global $TG, $link;
 
+	/* Check latest line */
+	$lines = explode("\n", $body);
+	$end = end($lines);
+	$is_url = filter_var($end, FILTER_VALIDATE_URL);
+	if (empty($img) && $is_url)
+		$msg = "<a href='$end'>\x20\x0c</a>";
+	else
+		$msg = "";
+
+	$msg .= "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
+
 	/* Send to @xNCTU */
-	$msg = "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
 	if (empty($img))
 		$result = $TG->sendMsg([
 			'chat_id' => '@xNCTU',
 			'text' => $msg,
 			'parse_mode' => 'HTML',
-			'disable_web_page_preview' => !filter_var(end(explode("\n", $body)), FILTER_VALIDATE_URL)
+			'disable_web_page_preview' => !$is_url
 		]);
 	else
 		$result = $TG->sendPhoto([
