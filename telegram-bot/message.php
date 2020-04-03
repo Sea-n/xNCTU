@@ -226,14 +226,16 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 
 	/* Send vote log to group */
 	$post = $db->getPostByUid($uid);
-	$body = enHTML(mb_substr($post['body'], 0, 6)) . "<a href='https://x.nctu.app/review/$uid'>...</a>";
+	$body = enHTML(mb_substr(preg_replace('/\s+/', '', $post['body'], 0, 6)));
+	$link = "<a href='https://x.nctu.app/review/$uid'>...</a>";
 	$dep = idToDep($USER['nctu_id']);
 	$name = $USER['name'];
 	if (is_numeric($name))
 		$name = "N$name";
+	$name = preg_replace('/[ -/:-@[-`{-~]/iu', '_', $name);
 	$vote = ($vote == 1 ? '✅' : '❌');
 
-	$msg = "#投稿$uid $body\n" .
+	$msg = "#投稿$uid $body$link\n" .
 		enHTML("$dep #$name\n\n") .
 		enHTML("$vote $reason");
 

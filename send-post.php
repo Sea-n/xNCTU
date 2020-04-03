@@ -125,7 +125,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 	$msg = "#靠交$id\n\n$body";
 	if (strlen($msg) > 250)
 		$msg = mb_substr($msg, 0, 120) . '...';
-	$msg .= "\n\n✅ $link";
+	$msg .= "\n\n✅ $link .";
 
 	if (!empty($img)) {
 		$nonce     = md5(time());
