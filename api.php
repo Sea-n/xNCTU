@@ -3,7 +3,9 @@ session_start(['read_and_close' => true]);
 require_once('utils.php');
 require_once('database.php');
 require_once('send-review.php');
+require_once('telegram-bot/class.php');
 $db = new MyDB();
+$TG = new Telegram();
 
 if (($_SERVER['HTTP_CONTENT_TYPE'] ?? '') == 'application/json')
 	$_POST = json_decode(file_get_contents('php://input'), true);
