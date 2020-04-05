@@ -46,10 +46,9 @@ include('includes/head.php');
 			<p>當投稿被多數人 <button class="ts vote negative button">駁回</button> 或是放了很久卻達不到通過標準，就會被系統自動清理。</p>
 			<p>詳細判斷標準如下：</p>
 			<ul>
-				<li>3 小時以內：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 20 個</li>
-				<li>3 小時至 6 小時：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 10 個</li>
-				<li>6 小時至 12 小時：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 5 個</li>
-				<li>12 小時至 48 小時：<button class="ts vote negative button">駁回</button>&nbsp;多於&nbsp;<button class="ts vote positive button">通過</button></li>
+				<li>2 小時以內：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 10 個</li>
+				<li>2 小時至 6 小時：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 5 個</li>
+				<li>6 小時至 48 小時：<button class="ts vote negative button">駁回</button>&nbsp;多於&nbsp;<button class="ts vote positive button">通過</button></li>
 				<li>48 小時以後：不論條件，全數回收</li>
 			</ul>
 

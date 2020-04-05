@@ -305,12 +305,8 @@ class MyDB {
 			if ($dt < 9*60)
 				return false;
 
-			/* 10min - 1hour */
-			if ($dt < 59*60 && $vote < 2)
-				return false;
-
 			/* 1hour - 2hour */
-			if ($dt < 119*60 && $vote < 1)
+			if ($dt < 119*60 && $vote < 2)
 				return false;
 
 			/* More than 2 hour */
