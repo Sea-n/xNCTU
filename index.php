@@ -45,7 +45,7 @@ include('includes/head.php');
 						<li>等待審核至少 10 分鐘</li>
 						<li><button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 2 個</li>
 					</ul>
-					<p>經過 2 小時以後，只要無 <button class="ts vote negative button">駁回</button> 即自動發出，避免因為無人審核而造成投稿卡件的情形</p>
+					<p>經過 2 小時以後，<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button> 即自動發出，避免因為無人審核而造成投稿卡件的情形</p>
 					<h4>(C) 使用台灣 IP 位址</h4>
 					<p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下<b>任一條件</b>即發出</p>
 					<ul>

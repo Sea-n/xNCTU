@@ -64,16 +64,16 @@ case 'reject':
 			if ($vote > -5)
 				continue;
 
-		/* 6 hour - 48 hour */
-		if ($dt < 48*60*60)
+		/* 6 hour - 24 hour */
+		if ($dt < 24*60*60)
 			if ($vote >= 0)
 				continue;
 
 		/*
-		 * 48 hour - 60 hour
+		 * 24 hour - 36 hour
 		 *
-		 * It should be reject after 48 hour immediately,
-		 * but if someone approved foreign submission and
+		 * It should be reject after 24 hour immediately,
+		 * but if someone approved submission and
 		 * make it eligible for post during sleep time,
 		 * it will be frustrating if the submission just
 		 * deleted with +10 vote.
@@ -81,9 +81,15 @@ case 'reject':
 		 * The workaround is give it 12 hour buffer time
 		 * if the submission have +10 vote.
 		 */
-		if ($dt < 60*60*60)
-			if ($vote >= 10)
-				continue;
+		if ($dt < 36*60*60) {
+			if (strpos($post['author_name'], '境外') === true) {
+				if ($vote >= 10)
+					continue;
+			} else {
+				if ($vote >= 3)
+					continue;
+			}
+		}
 
 		$db->deleteSubmission($uid, -2, '已駁回');
 
