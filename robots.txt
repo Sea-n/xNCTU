@@ -1,8 +1,8 @@
 User-agent: *
-Allow: *
 Disallow: /login-nctu
 Disallow: /login-tg
 Disallow: /logout
 Disallow: /review
+Allow: /review/DEMO$
 Disallow: /api
 Sitemap: https://x.nctu.app/sitemap.xml
