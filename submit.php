@@ -7,6 +7,7 @@ $db = new MyDB();
 
 $ip_addr = $_SERVER['REMOTE_ADDR'];
 $ip_masked = ip_mask($ip_addr);
+$ip_from = ip_from($ip_addr);
 
 if (isset($_SESSION['nctu_id']))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
@@ -14,7 +15,10 @@ if (isset($_SESSION['nctu_id']))
 if (!isset($_SESSION['csrf_token']))
 	$_SESSION['csrf_token'] = rand58(8);
 
-$captcha = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
+$captcha_q = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
+$captcha_a = "";
+if (isset($USER) || $ip_from == '交大')
+	$captcha_a = "交大竹湖";
 ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -55,7 +59,7 @@ include('includes/head.php');
 <?php } ?>
 				<div id="warning-ip" class="ts info message" style="<?= isset($USER) ? 'display: none;' : '' ?>">
 					<div class="header">注意</div>
-					<p>一但送出投稿後，所有人都能看到您的網路服務商（<?= ip_from($ip_addr) ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</p>
+					<p>一但送出投稿後，所有人都能看到您的網路服務商（<?= $ip_from ?>），已登入的交大人能看見您的部分 IP 位址 (<?= $ip_masked ?>) 。</p>
 				</div>
 				<form id ="submit-post" class="ts form" action="/submit" method="POST" enctype="multipart/form-data">
 					<div id="body-field" class="required resizable field">
@@ -75,8 +79,8 @@ include('includes/head.php');
 					</div>
 					<div id="captcha-field" class="required inline field">
 						<label>驗證問答</label>
-						<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" /></div>
-						<span>&nbsp; <?= $captcha ?></span>
+						<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" value="<?= $captcha_a ?>"/></div>
+						<span>&nbsp; <?= $captcha_q ?></span>
 					</div>
 					<div id="field" class="inline field" style="<?= isset($USER) ? '' : 'display: none;' ?>">
 						<label for="anon">匿名投稿</label>
