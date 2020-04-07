@@ -250,7 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 					]
 				]
 			]);
-			$db->deleteTgMsg($uid, $tg_id);
+			$db->deleteTgMsg($uid, $chat_id);
 		}
 
 		/* Send vote log to group */
