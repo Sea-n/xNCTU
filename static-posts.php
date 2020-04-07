@@ -30,11 +30,6 @@ include('includes/head.php');
 foreach ($posts as $post) {
 ?>
 				<div class="ts card" id="post-<?= $post['id'] ?>" style="margin-bottom: 42px;">
-<?php if ($post['has_img']) { ?>
-					<div class="image">
-						<img id="img" class="post-image" style="max-height: 60vh; width: auto;" src="/img/<?= $post['uid'] ?>.jpg" />
-					</div>
-<?php } ?>
 					<div class="content">
 						<div class="header"><a id="hashtag" href="/post/<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a></div>
 						<div id="body"><?= toHTML($post['body']) ?></div>

@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	$ACTION = $_GET['action'] ?? 'x';
 
 	if ($ACTION == 'posts') {
-		$offset = (int) $_GET['offset'] ?? 0;
-		$limit = (int) $_GET['limit'] ?? 0;
+		$offset = (int) ($_GET['offset'] ?? 0);
+		$limit = (int) ($_GET['limit'] ?? 0);
 		if ($limit < 1)
 			$limit = 20;
 		if ($limit > 1000)
@@ -224,6 +224,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		$result = $db->voteSubmissions($uid, $voter, $vote, $reason);
 		echo json_encode($result, JSON_PRETTY_PRINT);
+		if (!$result['ok'])
+			exit;
 		fastcgi_finish_request();
 
 		/* Remove vote keyboard in Telegram */
