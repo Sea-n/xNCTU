@@ -47,16 +47,30 @@ function sendReview(string $uid) {
 	$db->updateSubmissionStatus($uid, 2);
 
 	/* Send to Votes Log */
+	$keyboard = [
+		'inline_keyboard' => [
+			[
+				[
+					'text' => '開啟審核頁面',
+					'login_url' => [
+						'url' => "https://x.nctu.app/login-tg?r=%2Freview%2F$uid"
+					]
+				]
+			]
+		]
+	];
 	if (!$has_img)
 		$TG->sendMsg([
 			'chat_id' => -1001489855993,
 			'text' => $msg,
+			'reply_markup' => $keyboard,
 		]);
 	else
 		$TG->sendPhoto([
 			'chat_id' => -1001489855993,
 			'photo' => "https://x.nctu.app/img/$uid.jpg",
 			'caption' => $msg,
+			'reply_markup' => $keyboard,
 		]);
 
 	/* Send to Users */
