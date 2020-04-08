@@ -189,6 +189,8 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 		else {
 			$msg = "您成功為 #投稿$uid 投下了 $type\n\n";
 			$msg .= "目前通過 {$result['approvals']} 票、駁回 {$result['rejects']} 票";
+
+			system("php " . __DIR__ . "/../jobs.php vote $uid {$USER['nctu_id']} > /dev/null &");
 		}
 	} catch (Exception $e) {
 		$msg = 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
@@ -197,9 +199,6 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 	$TG->sendMsg([
 		'text' => $msg,
 	]);
-
-	if ($result['ok'])
-		system("php jobs.php vote $uid {$USER['nctu_id']} > /dev/null &");
 
 	exit;
 }
