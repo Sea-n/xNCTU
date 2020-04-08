@@ -1,8 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+	<head>
 <?php
 session_start(['read_and_close' => true]);
 require_once('utils.php');
 require_once('database.php');
 $db = new MyDB();
+
+$CACHE = '/temp/xnctu-ranking.html';
+
+$TITLE = '排行榜';
+include('includes/head.php');
+?>
+	</head>
+	<body>
+<?php include('includes/nav.php'); ?>
+		<header class="ts fluid vertically padded heading slate">
+			<div class="ts narrow container">
+
+				<h1 class="ts header">排行榜</h1>
+				<div class="description">靠北交大 2.0</div>
+			</div>
+		</header>
+		<div class="ts container" name="main">
+			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名基本計算公式為： 總投票數 + min(少數票, 多數票/4)</p>
+			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;40 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;5 票」的排名相同</p>
+			<p>得到積分會再依時間遠近調整權重，短期內大量通過/駁回皆會影響排名，詳細計算方式可參見此頁面原始碼</p>
+
+			<table class="ts table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>系級</th>
+						<th></th>
+						<th>暱稱</th>
+						<th>✅ 通過</th>
+						<th>❌ 駁回</th>
+					</tr>
+				</thead>
+<?php
+/* Show cached page and exit */
+include($CACHE);
+fastcgi_finish_request();
+
+/* Only update cache if expired */
+if (time() - filemtime($CACHE) < 0)
+	exit;
+
+
+$time_start = microtime(true);
+ob_start();
 
 $VOTES = $db->getVotes();
 
@@ -60,39 +107,6 @@ foreach($user_count as $k => $v) {
 	$user_count[$k]['pt_int'] = (int) ($user_count[$k]['pt'] * 1000.0 / $pt_max);
 }
 ?>
-<!DOCTYPE html>
-<html lang="zh-TW">
-	<head>
-<?php
-$TITLE = '排行榜';
-include('includes/head.php');
-?>
-	</head>
-	<body>
-<?php include('includes/nav.php'); ?>
-		<header class="ts fluid vertically padded heading slate">
-			<div class="ts narrow container">
-
-				<h1 class="ts header">排行榜</h1>
-				<div class="description">靠北交大 2.0</div>
-			</div>
-		</header>
-		<div class="ts container" name="main">
-			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名基本計算公式為： 總投票數 + min(少數票, 多數票/4)</p>
-			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;40 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;5 票」的排名相同</p>
-			<p>得到積分會再依時間遠近調整權重，短期內大量通過/駁回皆會影響排名，詳細計算方式可參見此頁面原始碼</p>
-
-			<table class="ts table">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>系級</th>
-						<th></th>
-						<th>暱稱</th>
-						<th>✅ 通過</th>
-						<th>❌ 駁回</th>
-					</tr>
-				</thead>
 				<tbody>
 <?php
 foreach ($user_count as $i => $item) {
@@ -165,12 +179,23 @@ foreach ($user_count as $i => $item) {
 				}
 			</script>
 		</div>
-<?php include('includes/footer.php'); ?>
+<?php
+include('includes/footer.php');
+$time_end = microtime(true);
+$dt = ($time_end - $time_start) * 1000.0;
+$dt = number_format($dt, 2, '.', '');
+?>
+		<!-- Page generated in <?= $dt ?>ms  (<?= date('Y-m-d H:i:s') ?>) -->
 	</body>
 </html>
 
 
 <?php
+/* Save to cache file */
+$htmlStr = ob_get_contents();
+ob_end_clean();
+file_put_contents($CACHE, $htmlStr);
+
 function genData(string $id) {
 	global $db, $VOTES;
 
