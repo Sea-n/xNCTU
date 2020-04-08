@@ -61,10 +61,9 @@ case 'vote':
 	/* Send vote log to group */
 	$body = $post['body'];
 	$body = preg_replace('/\s+/', '', $body);
-	$body = mb_substr($body, 0, 6);
+	$body = mb_substr($body, 0, 10) . '..';
 	$body = enHTML($body);
 
-	$link = "<a href='https://x.nctu.app/review/$uid'>...</a>";
 	$dep = idToDep($USER['nctu_id']);
 
 	$name = $USER['name'];
@@ -75,10 +74,9 @@ case 'vote':
 	$type = ($VOTE['vote'] == 1 ? '✅' : '❌');
 	$reason = $VOTE['reason'];
 
-	$msg = "#投稿$uid $body$link\n" .
+	$msg = "#投稿$uid $body\n" .
 		enHTML("$dep #$name\n\n") .
 		enHTML("$type $reason");
-	exit($msg);
 
 	$TG->sendMsg([
 		'chat_id' => -1001489855993,
