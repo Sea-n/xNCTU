@@ -280,6 +280,17 @@ class MyDB {
 		return $results;
 	}
 
+	public function getVote(string $uid, string $nctu_id) {
+		$sql = "SELECT * FROM votes WHERE uid = :uid AND voter = :nctu_id";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':uid' => $uid,
+			':nctu_id' => $nctu_id,
+		]);
+
+		return $stmt->fetch();
+	}
+
 	private function isSubmissionEligible(array $item) {
 		/* Prevent publish demo post */
 		if ($item['status'] != 3)

@@ -198,60 +198,8 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 		'text' => $msg,
 	]);
 
-	$msg_id = $db->getTgMsg($uid, $TG->ChatID);
-	if ($msg_id) {
-		$TG->getTelegram('editMessageReplyMarkup', [
-			'chat_id' => $TG->ChatID,
-			'message_id' => $msg_id,
-			'reply_markup' => [
-				'inline_keyboard' => [
-					[
-						[
-							'text' => '開啟審核頁面',
-							'login_url' => [
-								'url' => "https://x.nctu.app/login-tg?r=%2Freview%2F$uid"
-							]
-						]
-					]
-				]
-			]
-		]);
-		$db->deleteTgMsg($uid, $TG->ChatID);
-	}
-
-	$TG->getTelegram('deleteMessage', [
-		'chat_id' => $TG->ChatID,
-		'message_id' => $TG->data['message']['reply_to_message']['message_id'],
-	]);
-
-	/* Send vote log to group */
-	$post = $db->getPostByUid($uid);
-
-	$body = $post['body'];
-	$body = preg_replace('/\s+/', '', $body);
-	$body = mb_substr($body, 0, 6);
-	$body = enHTML($body);
-
-	$link = "<a href='https://x.nctu.app/review/$uid'>...</a>";
-	$dep = idToDep($USER['nctu_id']);
-
-	$name = $USER['name'];
-	if (is_numeric($name))
-		$name = "N$name";
-	$name = preg_replace('/[ -\/:-@[-`{-~]/iu', '_', $name);
-
-	$vote = ($vote == 1 ? '✅' : '❌');
-
-	$msg = "#投稿$uid $body$link\n" .
-		enHTML("$dep #$name\n\n") .
-		enHTML("$vote $reason");
-
-	$TG->sendMsg([
-		'chat_id' => -1001489855993,
-		'text' => $msg,
-		'parse_mode' => 'HTML',
-		'disable_web_page_preview' => true,
-	]);
+	if ($result['ok'])
+		system("php jobs.php vote $uid {$USER['nctu_id']} > /dev/null &");
 
 	exit;
 }

@@ -3,8 +3,11 @@
 if (!isset($argv[1]))
 	exit;
 
+require('utils.php');
 require('database.php');
+require_once('telegram-bot/class.php');
 $db = new MyDB();
+$TG = new Telegram();
 
 
 switch ($argv[1]) {
@@ -22,6 +25,67 @@ case 'tg_photo':
 	file_put_contents("img/tg/{$tg_id}-x320.jpg", $file);
 	system("ffmpeg -y -i img/tg/{$tg_id}-x320.jpg -vf scale=64x64 img/tg/{$tg_id}-x64.jpg");
 
+	break;
+
+case 'vote':
+	$uid = $argv[2];
+	$voter = $argv[3];
+	$post = $db->getPostByUid($uid);
+	$USER = $db->getUserByNctu($voter);
+	$VOTE = $db->getVote($uid, $voter);
+
+	/* Remove vote keyboard in Telegram */
+	$chat_id = $USER['tg_id'] ?? 0;
+	$msg_id = $db->getTgMsg($uid, $chat_id);
+
+	if ($msg_id) {
+		$TG->editMarkup([
+			'chat_id' => $chat_id,
+			'message_id' => $msg_id,
+			'reply_markup' => [
+				'inline_keyboard' => [
+					[
+						[
+							'text' => '開啟審核頁面',
+							'login_url' => [
+								'url' => "https://x.nctu.app/login-tg?r=%2Freview%2F$uid"
+							]
+						]
+					]
+				]
+			]
+		]);
+		$db->deleteTgMsg($uid, $chat_id);
+	}
+
+	/* Send vote log to group */
+	$body = $post['body'];
+	$body = preg_replace('/\s+/', '', $body);
+	$body = mb_substr($body, 0, 6);
+	$body = enHTML($body);
+
+	$link = "<a href='https://x.nctu.app/review/$uid'>...</a>";
+	$dep = idToDep($USER['nctu_id']);
+
+	$name = $USER['name'];
+	if (is_numeric($name))
+		$name = "N$name";
+	$name = preg_replace('/[ -\/:-@[-`{-~]/iu', '_', $name);
+
+	$type = ($VOTE['vote'] == 1 ? '✅' : '❌');
+	$reason = $VOTE['reason'];
+
+	$msg = "#投稿$uid $body$link\n" .
+		enHTML("$dep #$name\n\n") .
+		enHTML("$type $reason");
+	exit($msg);
+
+	$TG->sendMsg([
+		'chat_id' => -1001489855993,
+		'text' => $msg,
+		'parse_mode' => 'HTML',
+		'disable_web_page_preview' => true,
+	]);
 	break;
 
 default:
