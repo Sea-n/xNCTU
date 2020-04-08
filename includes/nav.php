@@ -36,8 +36,9 @@ foreach ($items as $href => $name) {
 		<div class="right fitted item" id="nav-right">
 <?php
 if (isset($USER)) {
-	$photo = $USER['tg_photo'] ?? '';
-	if (empty($photo))
+	if (!empty($USER['tg_photo']))
+		$photo = "/img/tg/{$USER['tg_id']}.jpg";
+	else
 		$photo = genPic($USER['nctu_id']);
 ?>
 			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">

@@ -34,7 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 				$ip_masked = false;
 				$author = $db->getUserByNctu($post['author_id']);
 				$author_name = $author['name'];
-				$author_photo = $author['tg_photo'] ?? genPic($post['author_id']);
+				if (!empty($author['tg_photo']))
+					$author_photo = "/img/tg/{$author['tg_id']}.jpg";
+				else
+					$author_photo = genPic($post['author_id']);
 			} else {
 				$ip_masked = ip_mask($post['ip_addr']);
 

@@ -101,8 +101,9 @@ foreach ($user_count as $i => $item) {
 	$id = $item['id'];
 	$dep = idToDep($id);
 	$name = toHTML($item['user']['name']);
-	$photo = $item['user']['tg_photo'] ?? '';
-	if (empty($photo))
+	if (!empty($item['user']['tg_photo']))
+		$photo = "/img/tg/{$item['user']['tg_id']}.jpg";
+	else
 		$photo = genPic($id);
 ?>
 					<tr title="<?= $item['pt_int'] ?> pt">

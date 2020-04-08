@@ -21,12 +21,16 @@ try {
 $USER = $db->getUserByTg($auth_data['id']);
 
 if ($USER) {
+	if ($USER['tg_photo'] != $auth_data['photo_url']) {
+		$file = file_get_contents($auth_data['photo_url']);
+		file_put_contents("img/tg/{$auth_data['id']}.jpg", $file);
+	}
+
 	try {
 		$db->updateUserTgProfile($auth_data);
 	} catch (Exception $e) {
 		echo ' Database Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n" . $e->lastResponse;
 	}
-	$db->updateUserTgProfile($auth_data);
 
 	if (!isset($_SESSION['nctu_id'])) {
 		$_SESSION['nctu_id'] = $USER['nctu_id'];

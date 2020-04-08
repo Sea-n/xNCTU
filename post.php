@@ -60,11 +60,13 @@ $author_name = toHTML($post['author_name']);
 if (!empty($post['author_id'])) {
 	$author = $db->getUserByNctu($post['author_id']);
 	$author_name = toHTML($author['name']);
-}
-
-$author_photo = $author['tg_photo'] ?? '';
-if (empty($author_photo))
+	if (!empty($author['tg_photo'] ?? ''))
+		$author_photo = "/img/tg/{$author['tg_id']}.jpg";
+	else
+		$author_photo = genPic($post['author_id']);
+} else
 	$author_photo = genPic($ip_masked);
+
 
 $plurk = base_convert($post['plurk_id'], 10, 36);
 
