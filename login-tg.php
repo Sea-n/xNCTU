@@ -18,18 +18,18 @@ try {
 	exit($e->getMessage());
 }
 
-$USER = $db->getUserByTg($auth_data['id']);
+$id = $auth_data['id'];
+$USER = $db->getUserByTg($id);
 
 if ($USER) {
-	if ($USER['tg_photo'] != $auth_data['photo_url']) {
-		$file = file_get_contents($auth_data['photo_url']);
-		file_put_contents("img/tg/{$auth_data['id']}.jpg", $file);
-	}
-
 	try {
 		$db->updateUserTgProfile($auth_data);
 	} catch (Exception $e) {
 		echo ' Database Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n" . $e->lastResponse;
+	}
+
+	if (isset($auth_data['photo_url']) && $USER['tg_photo'] != $auth_data['photo_url']) {
+		system("php jobs.php tg_photo $id > /dev/null &");
 	}
 
 	if (!isset($_SESSION['nctu_id'])) {
@@ -55,6 +55,10 @@ if (!isset($_SESSION['nctu_id']))
 	exit('You must login NCTU first. 請先於首頁右上角登入交大帳號');
 
 $db->insertUserTg($_SESSION['nctu_id'], $auth_data);
+
+if (isset($auth_data['photo_url'])) {
+	system("php jobs.php tg_photo $id > /dev/null &");
+}
 
 $msg = "🎉 連結成功！\n\n將來有新投稿時，您將會收到推播，並可用 Telegram 內的按鈕審核貼文。";
 $TG->sendMsg([

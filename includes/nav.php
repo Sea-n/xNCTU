@@ -37,7 +37,7 @@ foreach ($items as $href => $name) {
 <?php
 if (isset($USER)) {
 	if (!empty($USER['tg_photo']))
-		$photo = "/img/tg/{$USER['tg_id']}.jpg";
+		$photo = "/img/tg/{$USER['tg_id']}-x64.jpg";
 	else
 		$photo = genPic($USER['nctu_id']);
 ?>

@@ -116,7 +116,7 @@ foreach ($user_count as $i => $item) {
 	$dep = idToDep($id);
 	$name = toHTML($item['user']['name']);
 	if (!empty($item['user']['tg_photo']))
-		$photo = "/img/tg/{$item['user']['tg_id']}.jpg";
+		$photo = "/img/tg/{$item['user']['tg_id']}-x64.jpg";
 	else
 		$photo = genPic($id);
 ?>
@@ -132,7 +132,7 @@ foreach ($user_count as $i => $item) {
 					<tr>
 						<td>*</td>
 						<td>ALL</td>
-						<td><img class="ts circular avatar image" src="/assets/img/logo.png"></td>
+						<td><img class="ts circular avatar image" src="/assets/img/logo-64.png"></td>
 						<td><a onclick="changeChart('ALL')">沒有人</a></td>
 						<td><?= $vote_sum[1] ?></td>
 						<td><?= $vote_sum[-1] ?></td>

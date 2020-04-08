@@ -61,7 +61,7 @@ if (!empty($post['author_id'])) {
 	$author = $db->getUserByNctu($post['author_id']);
 	$author_name = toHTML($author['name']);
 	if (!empty($author['tg_photo'] ?? ''))
-		$author_photo = "/img/tg/{$author['tg_id']}.jpg";
+		$author_photo = "/img/tg/{$author['tg_id']}-x64.jpg";
 	else
 		$author_photo = genPic($post['author_id']);
 } else
