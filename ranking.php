@@ -147,7 +147,7 @@ foreach ($user_count as $i => $item) {
 				<a class="action"></a>
 			</div>
 
-			<script src="/assets/js/tchart.js"></script>
+			<script src="/assets/js/tchart.min.js"></script>
 			<script src="/assets/js/health.js"></script>
 			<link href="/assets/css/tchart.css" rel="stylesheet">
 			<script>

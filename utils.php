@@ -249,6 +249,6 @@ function idToDep(string $id): string {
 
 function genPic(string $str) {
 	$sha1 = sha1($str);
-	$url = "https://www.gravatar.com/avatar/$sha1?s=160&d=monsterid";
+	$url = "https://www.gravatar.com/avatar/$sha1?s=64&d=monsterid";
 	return $url;
 }
