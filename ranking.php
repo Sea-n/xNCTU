@@ -44,7 +44,7 @@ include($CACHE);
 fastcgi_finish_request();
 
 /* Only update cache if expired */
-if (time() - filemtime($CACHE) < 0)
+if (time() - filemtime($CACHE) < 30)
 	exit;
 
 
