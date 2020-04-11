@@ -232,8 +232,8 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 	$msg = empty($img) ? '' : "https://x.nctu.app/img/$img.jpg\n";
 	$msg .= "#靠交$id\n$body";
 
-	if (mb_strlen($msg) > 320)
-		$msg = mb_substr($msg, 0, 320) . '...';
+	if (mb_strlen($msg) > 290)
+		$msg = mb_substr($msg, 0, 290) . '...';
 
 	$msg .= "\n\n✅ $link ($link)";
 
@@ -263,7 +263,7 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 		echo "Plurk Message: $msg\n\n";
 		echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
 		echo $e->lastResponse . "\n";
-		return 1;  # ignore error
+		return 0;
 	}
 }
 
