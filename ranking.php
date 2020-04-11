@@ -88,7 +88,7 @@ foreach($user_count as $k => $v) {
 		$total = $v[$i] + $v[-$i];
 		$min = min($v[$i], $v[-$i]);
 		$max = max($v[$i], $v[-$i]);
-		$pt += $total * $weight;
+		$pt += ($total + min($min, $max/4)) * $weight;
 	}
 
 	$user_count[$k]['pt'] = $pt;
