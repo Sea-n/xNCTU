@@ -200,5 +200,11 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 		'text' => $msg,
 	]);
 
+	$TG->getTelegram('deleteMessage', [
+		'chat_id' => $TG->ChatID,
+		'message_id' => $TG->data['message']['reply_to_message']['message_id'],
+	]);
+
+
 	exit;
 }
