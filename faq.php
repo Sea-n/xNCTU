@@ -70,7 +70,7 @@ include('includes/head.php');
 			<h2 class="ts header" id="rate-limit">Q：發文速率有限制嗎</h2>
 			<p>由於遭到部分校外人士濫用，目前針對匿名發文有限制發文速率</p>
 			<ul>
-				<li>校內 IP 位址：每小時最多 5 篇</li>
+				<li>校內 IP 位址：每 10 分鐘最多 5 篇</li>
 				<li>台灣 IP 位址：<b>每 6 小時最多 2 篇</b></li>
 				<li>境外 IP 位址：每天最多 1 篇</li>
 			</ul>

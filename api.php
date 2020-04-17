@@ -183,9 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$posts = $db->getPostsByIp($ip_addr, 6);
 				if (count($posts) == 6) {
 					$last = strtotime($posts[5]['created_at']);
-					if (time() - $last < 60*60) {
+					if (time() - $last < 10*60) {
 						$db->updateSubmissionStatus($uid, -12);
-						err('Please retry afetr 1 hour. 校內匿名發文限制 1 小時內僅能發 5 篇文');
+						err('Please retry afetr 10 minutes. 校內匿名發文限制 10 分鐘內僅能發 5 篇文');
 					}
 				}
 			}
