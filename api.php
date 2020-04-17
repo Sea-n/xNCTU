@@ -126,9 +126,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		/*
 		 * Generate UID in base58 space
 		 *
-		 * Caution: collision is not handled
+		 * If the uid is already in use, it will pick another one.
 		 */
-		$uid = rand58(4);
+		do {
+			$uid = rand58(4);
+		} while ($db->getPostByUid($uid));
 
 		/* Upload Image */
 		if ($has_img) {
