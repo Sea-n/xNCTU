@@ -222,8 +222,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		$reason = $_POST['reason'] ?? '';
 		$reason = trim($reason);
-		if (mb_strlen($reason) < 5)
-			err('附註請輸入 5 個字以上');
+		if (mb_strlen($reason) < 1)
+			err('附註請勿留空');
 		if (mb_strlen($reason) > 100)
 			err('附註請輸入 100 個字以內');
 
@@ -296,8 +296,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 		$reason = $_POST['reason'] ?? '';
 		$reason = trim($reason);
-		if (mb_strlen($reason) < 5)
-			err('附註請輸入 5 個字以上');
+		if (mb_strlen($reason) < 1)
+			err('附註請勿留空');
 		if (mb_strlen($reason) > 100)
 			err('附註請輸入 100 個字以內');
 

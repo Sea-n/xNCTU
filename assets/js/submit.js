@@ -272,8 +272,8 @@ function deleteSubmission() {
 		return;
 
 	var reason = prompt('請輸入刪除附註');
-	if (reason.length < 5) {
-		alert('請輸入 5 個字以上');
+	if (reason.length < 1) {
+		alert('刪除附註請勿留空');
 		return;
 	}
 

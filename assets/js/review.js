@@ -33,8 +33,8 @@ function vote(uid, type, reason_prompt) {
 	if (reason === null)
 		return;
 
-	if (reason.length < 5) {
-		alert('請輸入 5 個字以上');
+	if (reason.length < 1) {
+		alert('附註請勿留空');
 		return;
 	}
 
