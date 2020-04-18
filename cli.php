@@ -82,7 +82,7 @@ case 'reject':
 		 * if the submission have +10 vote.
 		 */
 		if ($dt < 36*60*60) {
-			if (strpos($post['author_name'], '境外') === true) {
+			if (strpos($post['author_name'], '境外') !== false) {
 				if ($vote >= 10)
 					continue;
 			} else {
