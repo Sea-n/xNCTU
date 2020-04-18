@@ -21,10 +21,30 @@ if ($cmd == 'update') {
 	exit;
 }
 
-if (!($post = $db->getPostReady()))
+
+/* Check unfinished post */
+$posts = $db->getPosts(1);
+if (isset($posts[0]) && $posts[0]['status'] == 4)
+	$post = $posts[0];
+
+/* Get all pending submissions, oldest first */
+if (!isset($post)) {
+	$submissions = $db->getSubmissions(0, false);
+
+	foreach ($submissions as $item) {
+		if (checkEligible($item)) {
+			$post = $db->setPostId($item['uid']);
+			break;
+		}
+	}
+}
+
+if (!isset($post))
 	exit;
 
+
 /* Prepare post content */
+assert(isset($post['id']));
 $id = $post['id'];
 $uid = $post['uid'];
 $body = $post['body'];
@@ -84,6 +104,85 @@ foreach ($msgs as $item) {
 	$db->deleteTgMsg($uid, $item['chat_id']);
 }
 
+
+function checkEligible(array $post): bool {
+	/* Prevent publish demo post */
+	if ($post['status'] != 3)
+		return false;
+
+	$dt = time() - strtotime($post['created_at']);
+	$vote = $post['approvals'] - $post['rejects'];
+
+	/* Rule for Logged-in users */
+	if (!empty($post['author_id'])) {
+		if ($dt < 4*60)
+			return false;
+		if ($vote < 0)
+			return false;
+
+		return true;
+	}
+
+	/* Rule for NCTU IP address */
+	if ($post['author_name'] == '匿名, 交大') {
+		/* Night mode: 02:00 - 07:59 */
+		if (2 <= idate('H') && idate('H') <= 7) {
+			if ($vote < 3)
+				return false;
+		}
+
+		/* Less than 10 min */
+		if ($dt < 9*60)
+			return false;
+
+		/* 1hour - 2hour */
+		if ($dt < 119*60 && $vote < 2)
+			return false;
+
+		/* More than 2 hour */
+		if ($vote < 0)
+			return false;
+
+		return true;
+	}
+
+	/* Rule for Taiwan IP address */
+	if (strpos($post['author_name'], '境外') === false) {
+		/* If no reject & more than 10 min */
+		if ($post['rejects'] == 0)
+			if ($dt > 9*60 && $vote >= 5)
+				return true;
+
+		/* Less than 30 min */
+		if ($dt < 29*60)
+			return false;
+
+		/* 30min - 2hour */
+		 if ($dt < 119*60 && $vote < 7)
+			 return false;
+
+		 /* 2hour - 6hour */
+		 if ($dt < 6*60*60 && $vote < 5)
+			 return false;
+
+		 /* More than 6 hour */
+		 if ($vote < 3)
+			 return false;
+
+		 return true;
+	}
+
+	/* Rule for Foreign IP address */
+	if (true) {
+		if ($dt < 59*60)
+			return false;
+
+		if ($vote < 10)
+			return false;
+
+		return true;
+	}
+}
 
 function send_telegram(int $id, string $body, string $img = ''): int {
 	global $TG, $link;

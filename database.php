@@ -291,102 +291,19 @@ class MyDB {
 		return $stmt->fetch();
 	}
 
-	private function isSubmissionEligible(array $item) {
-		/* Prevent publish demo post */
-		if ($item['status'] != 3)
-			return false;
-
-		$dt = time() - strtotime($item['created_at']);
-		$vote = $item['approvals'] - $item['rejects'];
-
-		/* Rule for Logged-in users */
-		if (!empty($item['author_id'])) {
-			if ($dt < 4*60)
-				return false;
-
-			if ($vote < 0)
-				return false;
-
-			return true;
-		}
-
-		/* Rule for NCTU IP address */
-		if ($item['author_name'] == '匿名, 交大') {
-			/* Less than 10 min */
-			if ($dt < 9*60)
-				return false;
-
-			/* 1hour - 2hour */
-			if ($dt < 119*60 && $vote < 2)
-				return false;
-
-			/* More than 2 hour */
-			if ($vote < 0)
-				return false;
-
-			return true;
-		}
-
-		/* Rule for Taiwan IP address */
-		if (strpos($item['author_name'], '境外') === false) {
-			/* If no reject & more than 10 min */
-			if ($item['rejects'] == 0)
-				if ($dt > 9*60 && $vote >= 5)
-					return true;
-
-			/* Less than 30 min */
-			if ($dt < 29*60)
-				return false;
-
-			/* 30min - 2hour */
-			if ($dt < 119*60 && $vote < 7)
-				return false;
-
-			/* 2hour - 6hour */
-			if ($dt < 6*60*60 && $vote < 5)
-				return false;
-
-			/* More than 6 hour */
-			if ($vote < 3)
-				return false;
-
-			return true;
-		}
-
-		/* Rule for Foreign IP address */
-		if (true) {
-			if ($dt < 59*60)
-				return false;
-
-			if ($vote < 10)
-				return false;
-
-			return true;
-		}
-	}
-
-	public function getPostReady() {
-		/* Check undone post */
-		$posts = $this->getPosts(1);
-		if (isset($posts[0])
-		&& $posts[0]['status'] == 4)
-			return $posts[0];
-
-		/* Get all pending submissions, oldest first */
-		$submissions = $this->getSubmissions(0, false);
-
-		foreach ($submissions as $item) {
-			if ($this->isSubmissionEligible($item)) {
-				$post = $item;
-				break;
-			}
-		}
-
-		/* No eligible pending submission */
-		if (!isset($post))
-			return false;
+	/*
+	 * Given submission uid
+	 *
+	 * It will change status from 3 to 4 and give it post id
+	 *
+	 * Return new post array
+	 */
+	public function setPostId(string $uid): array {
+		$post = $this->getPostByUid($uid);
+		assert($post['status'] == 3);
 
 		$post['id'] = $this->getLastPostId() + 1;
+
 		$sql = "UPDATE posts SET id = :id, status = 4, posted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
