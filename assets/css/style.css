@@ -79,3 +79,13 @@ table.votes thead tr th:nth-child(5) { width: 320px; }
 p {
 	word-wrap: break-word;
 }
+
+/* Hide Box */
+#hide-box {
+	position: relative;
+	margin-top: -200px;
+	padding-top: 180px;
+	text-align: center;
+	z-index: 1;
+	background-image: linear-gradient(-180deg, #FFF0 0%, #FFFF 100%);
+}
