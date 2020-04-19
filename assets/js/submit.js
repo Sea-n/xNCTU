@@ -100,6 +100,7 @@ function formUpdate() {
 	var captchaInput = document.getElementById('captcha-input');
 	var captchaField = document.getElementById('captcha-field');
 	var submit = document.getElementById('submit');
+	var preview = document.getElementById('warning-preview');
 
 	bodyField.classList.remove('error', 'warning');
 	captchaField.classList.remove('error');
@@ -121,6 +122,18 @@ function formUpdate() {
 			bodyField.classList.add('warning');
 	}
 
+	preview.style.display = 'none';
+	submit.classList.remove('negative', 'basic');
+	if (body.includes('http')) {
+		var lines = body.split('\n');
+		var last = lines[lines.length - 1];
+
+		if (!last.match(/^https?:\/\/[^\s]*$/)) {
+			preview.style.display = '';
+			submit.classList.add('negative', 'basic');
+		}
+	}
+
 	var captcha = captchaInput.value;
 	if (captcha.length > 0 &&
 		captcha.length != captchaInput.dataset.len)
@@ -137,6 +150,7 @@ function submitForm(e) {
 	var captcha = document.getElementById('captcha-input');
 	var anon = document.getElementById('anon');
 	var csrf = document.getElementById('csrf_token');
+	var submit = document.getElementById('submit');
 	submitted = true;
 
 	if (!checkForm()) {
@@ -145,6 +159,8 @@ function submitForm(e) {
 
 		return;
 	}
+
+	submit.classList.add('disabled');
 
 	const formData  = new FormData();
 	formData.append('body', body.value);

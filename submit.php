@@ -89,6 +89,9 @@ include('includes/head.php');
 							<label for="anon"></label>
 						</div>
 					</div>
+					<div id="warning-preview" class="ts info compact segment" style="display: none;">
+						<p>Tips: 只有在網址單獨寫在最後一行時，靠交才會自動顯示頁面預覽</p>
+					</div>
 					<input name="csrf_token" id="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
 					<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
 				</form>
