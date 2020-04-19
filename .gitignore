@@ -1,3 +1,5 @@
 /img/
 config.php
+.env
+node_modules/
 /backup/

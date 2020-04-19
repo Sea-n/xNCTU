@@ -62,6 +62,7 @@ $sns = [
 	'Plurk' => 'plurk',
 	'Facebook' => 'facebook',
 	'Twitter' => 'twitter',
+	'Instagram' => 'instagram',
 ];
 foreach ($sns as $name => $key) {
 	try {
@@ -408,6 +409,15 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	}
 
 	return $post_id;
+}
+
+function send_instagram(int $id, string $body, string $img = ''): int {
+	if (empty($img))
+		return 'NoIMG';
+
+	system("(node " . __DIR__ . "/post-ig.js $id >> /temp/xnctu-post-ig.log 2>> /temp/xnctu-post-ig.err) &");
+
+	return 0;
 }
 
 function update_telegram(array $post) {
