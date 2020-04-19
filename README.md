@@ -11,6 +11,7 @@
 - Plurk: [@xNCTU](https://plurk.com/xNCTU)
 - Twitter: [@x_NCTU](https://twitter.com/x_NCTU)
 - Facebook: [@xNCTU](https://fb.me/xNCTU)
+- Instagram [@x_nctu](https://www.instagram.com/x_nctu/)
 
 ## 審文機制
 新版靠北交大 2.0 採自助式審文，所有交大師生皆可加入審核者的行列

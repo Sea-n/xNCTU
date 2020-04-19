@@ -129,7 +129,7 @@ function formUpdate() {
 		var last = lines[lines.length - 1];
 
 		if (!last.match(/^https?:\/\/[^\s]*$/)) {
-			preview.style.display = '';
+			preview.style.display = 'inline-block';
 			submit.classList.add('negative', 'basic');
 		}
 	}
