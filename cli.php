@@ -52,44 +52,21 @@ case 'reject':
 
 		$uid = $post['uid'];
 		$dt = time() - strtotime($post['created_at']);
-		$vote = $post['approvals'] - $post['rejects'];
 
 		/* Before 2 hour */
 		if ($dt < 2*60*60)
-			if ($vote > -10)
+			if ($post['rejects'] < 7)
 				continue;
 
 		/* 2 hour - 6 hour*/
 		if ($dt < 6*60*60)
-			if ($vote > -5)
+			if ($post['rejects'] < 5)
 				continue;
 
 		/* 6 hour - 24 hour */
 		if ($dt < 24*60*60)
-			if ($vote >= 0)
+			if ($post['rejects'] < 3)
 				continue;
-
-		/*
-		 * 24 hour - 36 hour
-		 *
-		 * It should be reject after 24 hour immediately,
-		 * but if someone approved submission and
-		 * make it eligible for post during sleep time,
-		 * it will be frustrating if the submission just
-		 * deleted with +10 vote.
-		 *
-		 * The workaround is give it 12 hour buffer time
-		 * if the submission have +10 vote.
-		 */
-		if ($dt < 36*60*60) {
-			if (strpos($post['author_name'], '境外') !== false) {
-				if ($vote >= 10)
-					continue;
-			} else {
-				if ($vote >= 3)
-					continue;
-			}
-		}
 
 		$db->deleteSubmission($uid, -2, '已駁回');
 

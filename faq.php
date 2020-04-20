@@ -37,12 +37,12 @@ include('includes/head.php');
 			<p>通過審核之文章將會進入發文佇列，由系統<b>每 5 分鐘</b> po 出一篇至各大社群平台，如欲搶先看也可申請加入審核團隊。</p>
 
 			<h2 class="ts header" id="deleted-submissions">Q：被駁回的機制是什麼</h2>
-			<p>當投稿被多數人 <button class="ts vote negative button">駁回</button> 或是放了很久卻達不到通過標準，就會被系統自動清理。</p>
+			<p>當投稿被多數人駁回，或是放了很久卻達不到通過標準，就會被系統自動清理。</p>
 			<p>詳細判斷標準如下：</p>
 			<ul>
-				<li>2 小時以內：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 10 個</li>
-				<li>2 小時至 6 小時：<button class="ts vote negative button">駁回</button>&nbsp;比&nbsp;<button class="ts vote positive button">通過</button>&nbsp;多 5 個</li>
-				<li>6 小時至 24 小時：<button class="ts vote negative button">駁回</button>&nbsp;多於&nbsp;<button class="ts vote positive button">通過</button></li>
+				<li>2 小時以內：達到 7 個&nbsp;<button class="ts vote negative button">駁回</button></li>
+				<li>2 小時至 6 小時：達到 5 個&nbsp;<button class="ts vote negative button">駁回</button></li>
+				<li>6 小時至 24 小時：達到 3 個&nbsp;<button class="ts vote negative button">駁回</button></li>
 				<li>24 小時以後：不論條件，全數回收</li>
 			</ul>
 
