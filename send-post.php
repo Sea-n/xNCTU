@@ -326,6 +326,10 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 	if (!isset($result['id_str'])) {
 		echo "Twitter error: ";
 		var_dump($result);
+
+		if ($result['errors']['message'] == "We can't complete this request because this link has been identified by Twitter or our partners as being potentially harmful. Visit our Help Center to learn more.")
+			return 1;
+
 		return 0;
 	}
 
