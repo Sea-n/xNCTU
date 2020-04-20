@@ -67,10 +67,16 @@ $sns = [
 foreach ($sns as $name => $key) {
 	try {
 		$func = "send_$key";
-		if (isset($post["{$key}_id"]) && $post["{$key}_id"] > 0)
+		if (isset($post["{$key}_id"]) && ($post["{$key}_id"] > 0 || strlen($post["{$key}_id"]) > 1))
 			continue;
 
 		$pid = $func($id, $body, $img);
+
+		if ($pid <= 0) { // Retry limit exceed
+			$dt = time() - strtotime($post['posted_at']);
+			if ($dt > 3*5*60) // Total 3 times
+				$pid = 1;
+		}
 
 		if ($pid > 0)
 			$db->updatePostSns($id, $key, $pid);
@@ -413,9 +419,9 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 
 function send_instagram(int $id, string $body, string $img = ''): int {
 	if (empty($img))
-		return 'NoIMG';
+		return -1;
 
-	system("(node " . __DIR__ . "/post-ig.js $id >> /temp/xnctu-post-ig.log 2>> /temp/xnctu-post-ig.err) &");
+	system("(node " . __DIR__ . "/send-ig.js $id >> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err) &");
 
 	return 0;
 }
