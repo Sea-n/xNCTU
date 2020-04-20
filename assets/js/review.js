@@ -29,7 +29,7 @@ function vote(uid, type, reason_prompt) {
 		return;
 	}
 
-	var reason = prompt('請輸入' + reason_prompt + ' (5 - 100 字)');
+	var reason = prompt('請輸入' + reason_prompt + ' (1 - 100 字)');
 	if (reason === null)
 		return;
 
