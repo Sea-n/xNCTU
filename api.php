@@ -189,6 +189,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 					}
 				}
 			}
+
+			/* Global rate limit for un-loggined users */
+			$posts = $db->getSubmissions(6);
+			if (count($posts) == 6) {
+				$last = strtotime($posts[2]['created_at']);
+				if (time() - $last < 60) {
+					$db->updateSubmissionStatus($uid, -12, 'Global rate limit');
+					err('Please retry afetr 1 minutes. 系統全域限制 1 分鐘內僅能發 5 篇文');
+				}
+			}
 		}
 
 
