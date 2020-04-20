@@ -235,6 +235,10 @@ class MyDB {
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 
+		$sql = "UPDATE users SET $type = $type + 1 WHERE nctu_id = :voter";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':voter' => $voter]);
+
 		$sql = "SELECT approvals, rejects FROM posts WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
@@ -422,7 +426,7 @@ class MyDB {
 	}
 
 	public function getTgUsers() {
-		$sql = "SELECT * FROM users WHERE tg_id > 0 ORDER BY tg_id";
+		$sql = "SELECT * FROM users WHERE tg_id > 0 ORDER BY approvals + rejects DESC, tg_id ASC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([]);
 
