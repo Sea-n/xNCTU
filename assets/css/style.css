@@ -82,6 +82,7 @@ table.votes thead tr th:nth-child(5) { width: 320px; }
 
 p {
 	word-wrap: break-word;
+	word-break: break-word;
 }
 
 /* Hide Box */
