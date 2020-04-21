@@ -155,7 +155,7 @@ if (isset($post['id'])) {
 				<div class="extra content">
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
-<?php if (isset($USER) && empty($post['author_id']) || $post['status'] == 10) { ?>
+<?php if ((isset($USER) || $post['status'] == 10) && empty($post['author_id'])) { ?>
 						<br><span class="right floated">(<?= $ip_masked ?>)</span>
 <?php } ?>
 					</div>
