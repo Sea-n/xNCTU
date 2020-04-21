@@ -162,6 +162,8 @@ function toHTML(string $text = ''): string {
 				$text[$k1][$k2] = "<a target='_blank' href='$v2'>$v2</a>";
 			else if (preg_match('/^#靠交(\d+)$/', $v2, $matches))
 				$text[$k1][$k2] = "<a target='_blank' href='/post/{$matches[1]}'>$v2</a>";
+			else if (preg_match('/^#告白交大(\d+)$/', $v2, $matches))
+				$text[$k1][$k2] = "<a target='_blank' href='https://crush.nctu.app/post/{$matches[1]}'>$v2</a>";
 			else if (preg_match('/^#投稿(\w+)$/', $v2, $matches))
 				$text[$k1][$k2] = "<a target='_blank' href='/review/{$matches[1]}'>$v2</a>";
 			else if (preg_match('/^#[^ ]+$/', $v2, $matches))
