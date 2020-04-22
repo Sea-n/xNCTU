@@ -9,6 +9,12 @@ if (isset($_SESSION['nctu_id']) && !isset($USER))
 
 if (isset($_GET['uid'])) {
 	$uid = $_GET['uid'];
+
+	if (!preg_match('/^[a-zA-Z0-9]{4}$/', $uid)) {
+		http_response_code(404);
+		exit('Wrong uid format. 投稿編號格式錯誤');
+	}
+
 	if (!($post = $db->getPostByUid($uid))) {
 		http_response_code(404);
 		exit('Post not found. 文章不存在');

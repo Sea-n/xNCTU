@@ -10,7 +10,14 @@ if (!isset($_GET['id'])) {
 	exit('ID not found. 請輸入文章編號');
 }
 
-$post = $db->getPostById($_GET['id']);
+$id = $_GET['id'];
+
+if (!preg_match('/^\d+$/', $id)) {
+	http_response_code(404);
+	exit('Wrong post id format. 文章編號格式錯誤');
+}
+
+$post = $db->getPostById($id);
 if (!$post) {
 	http_response_code(404);
 	exit('Post not found. 文章不存在');
@@ -21,7 +28,7 @@ if (!$post) {
 <html lang="zh-TW">
 	<head>
 <?php
-$hashtag = "#靠交{$post['id']}";
+$hashtag = "#靠交{$id}";
 
 $DESC = $post['body'];
 $TITLE = "$hashtag $DESC";
