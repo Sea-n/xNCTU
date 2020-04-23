@@ -26,17 +26,13 @@ function more() {
 		return;
 	button.classList.add('disabled');
 
-	var limit = 20;
-	if (offset >= 100)
-		limit = 50;
-	if (offset >= 300)
-		limit = 100;
-	if (offset >= 800)
+	var limit = 50;
+	if (offset >= 200)
 		limit = 200;
-	if (offset >= 2000)
-		limit = 500;
-	if (offset >= 5000)
+	if (offset >= 1000)
 		limit = 1000;
+	if (offset >= 5000)
+		limit = 5000;
 
 	button.dataset.offset = offset + limit;
 	getPosts(limit, offset);

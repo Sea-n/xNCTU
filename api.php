@@ -22,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		$offset = (int) ($_GET['offset'] ?? 0);
 		$limit = (int) ($_GET['limit'] ?? 0);
 		if ($limit < 1)
-			$limit = 20;
-		if ($limit > 1000)
-			$limit = 1000;
+			$limit = 50;
+		if ($limit > 5000)
+			$limit = 5000;
 
 		$posts = $db->getPosts($limit, $offset);
 		$result = [];
