@@ -111,9 +111,6 @@ function ip_mask(string $ip_addr): string {
 		if (preg_match('/^140\.113\.0\.229$/', $ip_addr))
 			return $ip_addr;  // NCTU VPN
 
-		if (preg_match('/^140\.113\.[567]\.\d+$/', $ip_addr))
-			return $ip_addr;  // NTHU WLAN
-
 		$ip4 = explode('.', $ip_addr);
 		$ip4[2] = '***';
 		$ip4[3] = '*' . substr('0'.($ip4[3]%100), -2);
