@@ -84,8 +84,8 @@ case 'reject':
 	while ($post = $stmt->fetch()) {
 		$dt = time() - strtotime($post['created_at']);
 
-		/* Before 24 hour */
-		if ($dt < 24*60*60)
+		/* Before 10 min */
+		if ($dt < 10*60)
 			continue;
 
 		$db->deleteSubmission($post['uid'], -13, '逾期未確認');
