@@ -28,11 +28,7 @@ function more() {
 
 	var limit = 50;
 	if (offset >= 200)
-		limit = 200;
-	if (offset >= 1000)
-		limit = 1000;
-	if (offset >= 5000)
-		limit = 5000;
+		limit = offset;
 
 	button.dataset.offset = offset + limit;
 	getPosts(limit, offset);
