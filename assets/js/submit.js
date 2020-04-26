@@ -218,7 +218,7 @@ function checkForm() {
 	formUpdate();  // For clean & update warnings
 
 	var len = bodyArea.value.length;
-	if (len < 10) {
+	if (len == 0) {
 		bodyField.classList.add('error');
 		isValid = false;
 	}

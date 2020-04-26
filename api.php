@@ -236,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		$reason = $_POST['reason'] ?? '';
 		$reason = trim($reason);
-		if (mb_strlen($reason) < 1)
+		if (empty($reason))
 			err('附註請勿留空');
 		if (mb_strlen($reason) > 100)
 			err('附註請輸入 100 個字以內');
@@ -310,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 		$reason = $_POST['reason'] ?? '';
 		$reason = trim($reason);
-		if (mb_strlen($reason) < 1)
+		if (empty($reason))
 			err('附註請勿留空');
 		if (mb_strlen($reason) > 100)
 			err('附註請輸入 100 個字以內');
@@ -356,8 +356,8 @@ function checkSubmitData(string $body, bool $has_img): string {
 	}
 
 	/* Check Body */
-	if (mb_strlen($body) < 5)
-		return 'Body too short. 文章過短';
+	if (empty($body))
+		return 'Body is empty. 請輸入文章內容';
 
 	if ($has_img && mb_strlen($body) > 1000)
 		return 'Body too long (' . mb_strlen($body) . ' chars). 文章過長';
