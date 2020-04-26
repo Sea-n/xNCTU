@@ -9,6 +9,9 @@ $ip_addr = $_SERVER['REMOTE_ADDR'];
 $ip_masked = ip_mask($ip_addr);
 $ip_from = ip_from($ip_addr);
 
+if (strpos($ip_from, '境外') !== false)
+	$ip_masked = $ip_addr;
+
 if (isset($_SESSION['nctu_id']))
 	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
 

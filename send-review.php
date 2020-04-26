@@ -23,6 +23,9 @@ function sendReview(string $uid) {
 	$ip_addr = $post['ip_addr'];
 
 	$ip_masked = ip_mask($ip_addr);
+	if (strpos($author_name, '境外') !== false)
+		$ip_masked = $ip_addr;
+
 	$ip_masked = preg_replace('/[.:*]/u', '_', $ip_masked);
 	$ip_masked = preg_replace('/___+/', '___', $ip_masked);
 

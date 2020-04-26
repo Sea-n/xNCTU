@@ -61,9 +61,11 @@ $timeS = humanTime($post['created_at']);
 $timeP = humanTime($post['posted_at']);
 $tsS = strtotime($post['created_at']);
 
-$ip_masked = ip_mask($post['ip_addr']);
-
 $author_name = toHTML($post['author_name']);
+$ip_masked = ip_mask($post['ip_addr']);
+if (strpos($author_name, '境外') !== false)
+	$ip_masked = $post['ip_addr'];
+
 if (!empty($post['author_id'])) {
 	$author = $db->getUserByNctu($post['author_id']);
 	$author_name = toHTML($author['name']);

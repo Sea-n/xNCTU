@@ -39,9 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 				else
 					$author_photo = genPic($post['author_id']);
 			} else {
-				$ip_masked = ip_mask($post['ip_addr']);
-
 				$author_name = $post['author_name'];
+				$ip_masked = ip_mask($post['ip_addr']);
+				if (strpos($author_name, '境外') !== false)
+					$ip_masked = $post['ip_addr'];
+
 				$author_photo = genPic($ip_masked);
 
 				if (!isset($_SESSION['nctu_id']))
@@ -204,6 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		/* Success, return post data */
 		$ip_masked = ip_mask($ip_addr);
+		if (strpos($author_name, '境外') !== false)
+			$ip_masked = $ip_addr;
 		if (empty($author_photo))
 			$author_photo = genPic($ip_masked);
 

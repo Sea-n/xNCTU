@@ -117,6 +117,9 @@ foreach ($posts as $post) {
 	$ip_masked = ip_mask($post['ip_addr']);
 	$author_name = toHTML($post['author_name']);
 
+	if (strpos($author_name, '境外') !== false)
+		$ip_masked = $post['ip_addr'];
+
 	$author_photo = $post['author_photo'] ?? '';
 	if (empty($author_photo))
 		$author_photo = genPic($ip_masked);
