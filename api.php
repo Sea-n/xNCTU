@@ -399,8 +399,40 @@ function uploadImage(string $uid): string {
 	if ($width < $height/4)
 		return 'Image must be at least 1:4.';
 
+	/* Fix orientation */
+	$orien = shell_exec("exiftool -Orientation -S -n $dst |cut -c14- |tr -d '\\n'");
+	switch ($orien) {
+	case '1':  # Horizontal (normal)
+		$transpose = "";
+		break;
+	case '2':  # Mirror horizontal
+		$transpose = "-vf transpose=0,transpose=1";
+		break;
+	case '3':  # Rotate 180
+		$transpose = "-vf transpose=1,transpose=1";
+		break;
+	case '4':  # Mirror vertical
+		$transpose = "-vf transpose=3,transpose=1";
+		break;
+	case '5':  # Mirror horizontal and rotate 270 CW
+		$transpose = "-vf transpose=0";
+		break;
+	case '6':  # Rotate 90 CW
+		$transpose = "-vf transpose=1";
+		break;
+	case '7':  # Mirror horizontal and rotate 90 CW
+		$transpose = "-vf transpose=3";
+		break;
+	case '8':  # Rotate 270 CW
+		$transpose = "-vf transpose=2";
+		break;
+	default:
+		$transpose = "";
+		break;
+	}
+
 	/* Convert all file type to jpg */
-	system("ffmpeg -i $dst $dst.jpg");
+	shell_exec("ffmpeg -i $dst $transpose $dst.jpg 2>&1");
 	unlink($dst);
 
 	return '';
