@@ -15,8 +15,8 @@ class MyDB {
 		if (strlen($uid) != 4)
 			return ['SEAN', 0, 'UID invalid. (should be 4 chars)'];
 
-		if (mb_strlen($body) < 5)
-			return ['SEAN', 0, 'Body too short. (at least 5 chars)'];
+		if (empty($body))
+			return ['SEAN', 0, 'Body cannot be empty.'];
 
 		if (mb_strlen($body) > 4000)
 			return ['SEAN', 0, 'Body too long. (max 4000 chars)'];
