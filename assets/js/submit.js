@@ -104,7 +104,7 @@ function formUpdate() {
 
 	bodyField.classList.remove('error', 'warning');
 	captchaField.classList.remove('error');
-	submit.classList.remove('disabled');
+	submit.classList.remove('disabled', 'negative', 'basic');
 
 	var body = bodyArea.value;
 	var len = body.length;
@@ -123,14 +123,21 @@ function formUpdate() {
 	}
 
 	preview.style.display = 'none';
-	submit.classList.remove('negative', 'basic');
 	if (body.includes('http')) {
 		var lines = body.split('\n');
-		var last = lines[lines.length - 1];
 
+		var last = lines[lines.length - 1];
 		if (!last.match(/^https?:\/\/[^\s]*$/)) {
-			preview.style.display = 'inline-block';
-			submit.classList.add('negative', 'basic');
+			preview.style.display = '';
+			submit.classList.add('negative');
+		}
+
+		/* Even if last line is URL, first line cannot be URL. */
+		var first = lines[0];
+		if (first.match(/https?:\/\//)) {
+			preview.style.display = '';
+			submit.classList.add('negative');
+			submit.classList.add('disabled');
 		}
 	}
 

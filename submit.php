@@ -70,6 +70,9 @@ include('includes/head.php');
 						<textarea id="body-area" name="body" rows="6" placeholder="請在這輸入您的投稿內容。"></textarea>
 						<span>目前字數：<span id="body-wc">0</span></span>
 					</div>
+					<div id="warning-preview" class="ts negative segment" style="display: none;">
+						<p>Tips: 請將網址單獨寫在最後一行時，靠交才會自動顯示頁面預覽。第一行不可為網址。</p>
+					</div>
 					<div class="inline field">
 						<label>附加圖片</label>
 						<div class="two wide"><input type="file" id="img" name="img" accept="image/png, image/jpeg" style="display: inline-block;" /></div>
@@ -82,7 +85,7 @@ include('includes/head.php');
 					</div>
 					<div id="captcha-field" class="required inline field">
 						<label>驗證問答</label>
-						<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" value="<?= $captcha_a ?>"/></div>
+						<div class="two wide"><input id="captcha-input" name="captcha" data-len="4" placeholder="<?= $captcha_a ?>" value="<?= $captcha_a ?>"/></div>
 						<span>&nbsp; <?= $captcha_q ?></span>
 					</div>
 					<div id="field" class="inline field" style="<?= isset($USER) ? '' : 'display: none;' ?>">
@@ -94,9 +97,6 @@ include('includes/head.php');
 					</div>
 					<input name="csrf_token" id="csrf_token" type="hidden" value="<?= $_SESSION['csrf_token'] ?>" />
 					<input id="submit" type="submit" class="ts disabled button" value="提交貼文" />
-					<div id="warning-preview" class="ts info compact segment" style="margin: -8px 0 -6px 12px; display: none;">
-						<p>Tips: 只有在網址單獨寫在最後一行時，靠交才會自動顯示頁面預覽</p>
-					</div>
 				</form>
 			</div>
 

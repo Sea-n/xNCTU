@@ -365,6 +365,10 @@ function checkSubmitData(string $body, bool $has_img): string {
 	if (mb_strlen($body) > 4000)
 		return 'Body too long (' . mb_strlen($body) . ' chars). 文章過長';
 
+	$lines = explode("\n", $body);
+	if (preg_match('#https?://#', $lines[0]))
+		return 'First line cannot be URL. 第一行不能為網址';
+
 	return '';
 }
 
