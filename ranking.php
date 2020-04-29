@@ -23,8 +23,8 @@ include('includes/head.php');
 			</div>
 		</header>
 		<div class="ts container" name="main">
-			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名基本計算公式為： 總投票數 + min(少數票, 多數票/4)</p>
-			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;40 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;20 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;5 票」的排名相同</p>
+			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名基本計算公式為： 總投票數 + min(少數票, 多數票/5) * 3</p>
+			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;90 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;50 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;10 票」的排名相同</p>
 			<p>得到積分會再依時間遠近調整權重，短期內大量通過/駁回皆會影響排名，詳細計算方式可參見此頁面原始碼</p>
 
 			<table class="ts table">
@@ -61,8 +61,6 @@ foreach ($VOTES as $item) {
 			1 => 0, -1 => 0,
 			2 => 0, -2 => 0,
 			3 => 0, -3 => 0,
-			4 => 0, -4 => 0,
-			5 => 0, -5 => 0,
 			'id' => $item['voter']
 		];
 	}
@@ -88,7 +86,7 @@ foreach($user_count as $k => $v) {
 		$total = $v[$i] + $v[-$i];
 		$min = min($v[$i], $v[-$i]);
 		$max = max($v[$i], $v[-$i]);
-		$pt += ($total + min($min, $max/4)) * $weight;
+		$pt += ($total + min($min, $max/5)*3) * $weight;
 	}
 
 	$user_count[$k]['pt'] = $pt;
