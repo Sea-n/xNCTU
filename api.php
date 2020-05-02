@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if ($ACTION == 'submission') {
 		/* Prepare post content */
-		$body = $_POST['body'] ?? 'X';
+		$body = $_POST['body'] ?? '';
 		$body = str_replace("\r", "", $body);
 		$body = preg_replace("#\n\s+\n#", "\n\n", $body);
 		$body = trim($body);
