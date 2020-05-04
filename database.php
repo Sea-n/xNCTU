@@ -326,6 +326,15 @@ class MyDB {
 		return $item['id'] ?? 0;
 	}
 
+	public function updatePostBody(string $uid, string $body) {
+		$sql = "UPDATE posts SET body = :body WHERE uid = :uid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':body' => $body,
+			':uid'  => $uid,
+		]);
+	}
+
 	/* Update SNS post ID */
 	public function updatePostSns(int $id, string $type, int $pid) {
 		if (!in_array($type, ['telegram', 'plurk', 'twitter', 'facebook']))
