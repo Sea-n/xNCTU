@@ -160,8 +160,6 @@ function submitForm(e) {
 	var submit = document.getElementById('submit');
 
 	if (!checkForm()) {
-		e.preventDefault();
-
 		return;
 	}
 

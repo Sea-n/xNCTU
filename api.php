@@ -116,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$body = $_POST['body'] ?? '';
 		$body = str_replace("\r", "", $body);
 		$body = preg_replace("#\n\s+\n#", "\n\n", $body);
+		$body = preg_replace("#[&?](fbclid|igshid|utm_[a-z]+)=[a-zA-Z0-9_-]+#", "", $body);
 		$body = trim($body);
 
 		$has_img = (isset($_FILES['img']) && $_FILES['img']['size']);
