@@ -178,14 +178,41 @@ if (substr($text, 0, 1) == '/') {
 			$db->updatePostBody($uid, $body);
 
 			$TG->sendMsg([
-				'text' => "Done.\n"
+				'text' => "Done."
 			]);
 			break;
 
 		case 'delete':
+			if ($TG->FromID != 109780439) {
+				$TG->sendMsg([
+					'text' => "此功能僅限管理員使用\n\n" .
+						"如果您有興趣為靠交 2.0 盡一份心力的話，歡迎聯絡開發團隊 🙃"
+				]);
+				exit;
+			}
+
+			[$uid, $status, $reason] = explode(' ', $arg, 3);
+
+			if (empty($reason)) {
+				$TG->sendMsg([
+					'text' => "Usage: /delete <uid> <status> <reason>\n\n" .
+						"-2 rejected\n" .
+						"-3 deleted by author (hidden)\n" .
+						"-4 deleted by admin\n" .
+						"-11 deleted and hidden by admin"
+				]);
+				exit;
+			}
+
+			$msgs = $db->getTgMsgsByUid($uid);
+			foreach ($msgs as $item) {
+				$TG->deleteMsg($item['chat_id'], $item['msg_id']);
+				$db->deleteTgMsg($uid, $item['chat_id']);
+			}
+			$db->deleteSubmission($uid, $status, $reason);
+
 			$TG->sendMsg([
-				'text' => "此功能僅限管理員使用\n\n" .
-					"如果您有興趣為靠交 2.0 盡一份心力的話，歡迎聯絡開發團隊 🙃"
+				'text' => "Done."
 			]);
 			break;
 

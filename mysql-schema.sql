@@ -16,7 +16,7 @@ START TRANSACTION;
  *
  * -1 deleted for unknown reason
  * -2 rejected
- * -3 deleted by author
+ * -3 deleted by author (hidden)
  * -4 deleted by admin
  *
  * -11 deleted and hidden by admin
