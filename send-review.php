@@ -56,7 +56,7 @@ function sendReview(string $uid) {
 				[
 					'text' => '開啟審核頁面',
 					'login_url' => [
-						'url' => "https://$DOMAIN/login-tg?r=%2Freview%2F$uid"
+						'url' => 'https://' . DOMAIN . "/login-tg?r=%2Freview%2F$uid"
 					]
 				]
 			]
@@ -71,7 +71,7 @@ function sendReview(string $uid) {
 	else
 		$TG->sendPhoto([
 			'chat_id' => -1001489855993,
-			'photo' => "https://$DOMAIN/img/$uid.jpg",
+			'photo' => 'https://' . DOMAIN . "/img/$uid.jpg",
 			'caption' => $msg,
 			'reply_markup' => $keyboard,
 		]);
@@ -114,7 +114,7 @@ function sendPost(string $uid, string $msg, bool $has_img, int $id) {
 				[
 					'text' => '開啟審核頁面',
 					'login_url' => [
-						'url' => "https://$DOMAIN/login-tg?r=%2Freview%2F$uid"
+						'url' => 'https://' . DOMAIN . "/login-tg?r=%2Freview%2F$uid"
 					]
 				]
 			]
@@ -134,7 +134,7 @@ function sendPost(string $uid, string $msg, bool $has_img, int $id) {
 	else
 		return $TG->sendPhoto([
 			'chat_id' => $id,
-			'photo' => "https://$DOMAIN/img/$uid.jpg",
+			'photo' => 'https://' . DOMAIN . "/img/$uid.jpg",
 			'caption' => $msg,
 			'reply_markup' => $keyboard,
 			'disable_notification' => $dnd
