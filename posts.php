@@ -13,15 +13,13 @@ if (isset($_GET['id'])) {
 
 $posts = $db->getPosts(50);
 
+$TITLE = '文章列表';
+$IMG = "https://$DOMAIN/assets/img/og.png";
 ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php
-$TITLE = '文章列表';
-$IMG = "https://$DOMAIN/assets/img/og.png";
-include('includes/head.php');
-?>
+<?php include('includes/head.php'); ?>
 		<script src="/assets/js/posts.js"></script>
 	</head>
 	<body>

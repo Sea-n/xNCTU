@@ -22,15 +22,14 @@ $captcha_q = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 $captcha_a = "";
 if (isset($USER) || $ip_from == '交大')
 	$captcha_a = "交大竹湖";
+
+$TITLE = '文章投稿';
+$IMG = "https://$DOMAIN/assets/img/og.png";
 ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php
-$TITLE = '文章投稿';
-$IMG = "https://$DOMAIN/assets/img/og.png";
-include('includes/head.php');
-?>
+<?php include('includes/head.php'); ?>
 		<script src="/assets/js/submit.js"></script>
 	</head>
 	<body>

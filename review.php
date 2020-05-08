@@ -53,11 +53,6 @@ if (isset($_GET['all'])) {
 if (!$showAll)
 	$posts = $postsCanVote;
 
-?>
-<!DOCTYPE html>
-<html lang="zh-TW">
-	<head>
-<?php
 if (isset($post)) {
 	$hashtag = "待審貼文 {$post['uid']}";
 
@@ -79,8 +74,11 @@ if (isset($post)) {
 	$TITLE = '貼文審核';
 	$IMG = "https://$DOMAIN/assets/img/og.png";
 }
-include('includes/head.php');
 ?>
+<!DOCTYPE html>
+<html lang="zh-TW">
+	<head>
+<?php include('includes/head.php'); ?>
 		<script src="/assets/js/review.js"></script>
 	</head>
 <?php if (isset($uid)) { ?>

@@ -1,12 +1,14 @@
-<?php session_start(['read_and_close' => true]); ?>
+<?php
+session_start(['read_and_close' => true]);
+require_once('config.php');
+
+$TITLE = '首頁';
+$IMG = "https://$DOMAIN/assets/img/og.png";
+?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php
-$TITLE = '首頁';
-$IMG = "https://$DOMAIN/assets/img/og.png";
-include('includes/head.php');
-?>
+<?php include('includes/head.php'); ?>
 		<script src="/assets/js/index.js"></script>
 	</head>
 	<body>

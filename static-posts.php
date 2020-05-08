@@ -5,15 +5,13 @@ $db = new MyDB();
 
 $posts = $db->getPosts(0);
 
+$TITLE = '文章列表';
+$IMG = "https://$DOMAIN/assets/img/og.png";
 ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php
-$TITLE = '文章列表';
-$IMG = "https://$DOMAIN/assets/img/og.png";
-include('includes/head.php');
-?>
+<?php include('includes/head.php'); ?>
 	</head>
 	<body>
 <?php include('includes/nav.php'); ?>

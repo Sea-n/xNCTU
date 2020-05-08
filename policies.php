@@ -1,11 +1,12 @@
+<?php
+require_once('config.php');
+$TITLE = '服務條款及隱私權政策';
+$IMG = "https://$DOMAIN/assets/img/og.png";
+?>
 <!DOCTYPE html>
 <html lang="zh-TW">
 	<head>
-<?php
-$TITLE = '服務條款及隱私權政策';
-$IMG = "https://$DOMAIN/assets/img/og.png";
-include('includes/head.php');
-?>
+<?php include('includes/head.php'); ?>
 	</head>
 	<body>
 <?php include('includes/nav.php'); ?>

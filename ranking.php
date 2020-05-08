@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-	<head>
 <?php
 session_start(['read_and_close' => true]);
 require_once('utils.php');
@@ -10,8 +7,11 @@ $db = new MyDB();
 $CACHE = '/temp/xnctu-ranking.html';
 
 $TITLE = '排行榜';
-include('includes/head.php');
 ?>
+<!DOCTYPE html>
+<html lang="zh-TW">
+	<head>
+<?php include('includes/head.php'); ?>
 	</head>
 	<body>
 <?php include('includes/nav.php'); ?>

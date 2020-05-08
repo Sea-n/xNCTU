@@ -23,11 +23,6 @@ if (!$post) {
 	exit('Post not found. 文章不存在');
 }
 
-?>
-<!DOCTYPE html>
-<html lang="zh-TW">
-	<head>
-<?php
 $hashtag = "#靠交{$id}";
 
 $DESC = $post['body'];
@@ -41,9 +36,11 @@ if (mb_strlen($DESC) > 150)
 
 if ($post['has_img'])
 	$IMG = "https://$DOMAIN/img/{$post['uid']}.jpg";
-
-include('includes/head.php');
 ?>
+<!DOCTYPE html>
+<html lang="zh-TW">
+	<head>
+<?php include('includes/head.php'); ?>
 	</head>
 	<body>
 <?php include('includes/nav.php'); ?>

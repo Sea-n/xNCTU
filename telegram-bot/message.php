@@ -214,7 +214,7 @@ if (substr($text, 0, 1) == '/') {
 			$args = explode(' ', $arg);
 			if (count($args) != 2) {
 				$TG->sendMsg([
-					'text' => "使用方式：/adduser <NCTU ID> <TG ID>",
+					'text' => "使用方式：/adduser <Student ID> <TG ID>",
 				]);
 				exit;
 			}
