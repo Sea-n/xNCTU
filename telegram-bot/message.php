@@ -13,7 +13,7 @@ if ($TG->ChatID < 0) {
 				'inline_keyboard' => [
 					[
 						[
-							'text' => '📢 靠交 2.0 頻道',
+							'text' => "📢 $SITENAME 頻道",
 							'url' => 'https://t.me/xNCTU'
 						]
 					]
@@ -27,7 +27,7 @@ if ($TG->ChatID < 0) {
 
 $USER = $db->getUserByTg($TG->FromID);
 if (!$USER) {
-	$msg = "您尚未綁定 NCTU 帳號，請至靠北交大 2.0 網站登入\n\n";
+	$msg = "您尚未綁定 NCTU 帳號，請至$SITENAME 網站登入\n\n";
 	$msg .= "操作步驟：\n";
 	$msg .= "1. 登入 NCTU OAuth 帳號\n";
 	$msg .= "2. 點擊下方按鈕連結 Telegram 帳號\n";
@@ -38,9 +38,9 @@ if (!$USER) {
 			'inline_keyboard' => [
 				[
 					[
-						'text' => '綁定靠交 2.0 網站',
+						'text' => "綁定$SITENAME 網站",
 						'login_url' => [
-							'url' => "https://x.nctu.app/login-tg"
+							'url' => "https://$DOMAIN/login-tg"
 						]
 					]
 				]
@@ -56,7 +56,7 @@ if (substr($text, 0, 1) == '/') {
 
 	switch($cmd) {
 		case 'start':
-			$msg = "歡迎使用靠北交大 2.0 機器人\n\n";
+			$msg = "歡迎使用$SITENAME 機器人\n\n";
 			$msg .= "使用 /help 顯示指令清單";
 
 			$TG->sendMsg([
@@ -65,9 +65,9 @@ if (substr($text, 0, 1) == '/') {
 					'inline_keyboard' => [
 						[
 							[
-								'text' => '登入靠北清大 2.0',
+								'text' => "登入$SITENAME",
 								'login_url' => [
-									'url' => "https://x.nctu.app/login-tg"
+									'url' => "https://$DOMAIN/login-tg"
 								]
 							]
 						]
@@ -109,7 +109,7 @@ if (substr($text, 0, 1) == '/') {
 							[
 								'text' => '開啟網站',
 								'login_url' => [
-									'url' => "https://x.nctu.app/login-tg"
+									'url' => "https://$DOMAIN/login-tg"
 								]
 							]
 						]
@@ -126,9 +126,9 @@ if (substr($text, 0, 1) == '/') {
 					'inline_keyboard' => [
 						[
 							[
-								'text' => '綁定靠交 2.0 網站',
+								'text' => "綁定$SITENAME 網站",
 								'login_url' => [
-									'url' => "https://x.nctu.app/login-tg"
+									'url' => "https://$DOMAIN/login-tg"
 								]
 							]
 						]
@@ -173,7 +173,7 @@ if (substr($text, 0, 1) == '/') {
 			if ($TG->FromID != 109780439) {
 				$TG->sendMsg([
 					'text' => "此功能僅限管理員使用\n\n" .
-						"如果您有興趣為靠交 2.0 盡一份心力的話，歡迎聯絡開發團隊 🙃"
+						"如果您有興趣為$SITENAME 盡一份心力的話，歡迎聯絡開發團隊 🙃"
 				]);
 				exit;
 			}
@@ -226,14 +226,14 @@ if (substr($text, 0, 1) == '/') {
 
 			$result = $TG->sendMsg([
 				'chat_id' => $tg_id,
-				'text' => "🎉 驗證成功！\n\n請點擊以下按鈕登入靠北交大 2.0 網站",
+				'text' => "🎉 驗證成功！\n\n請點擊以下按鈕登入$SITENAME 網站",
 				'reply_markup' => [
 					'inline_keyboard' => [
 						[
 							[
-								'text' => '登入靠北清大 2.0',
+								'text' => "登入$SITENAME",
 								'login_url' => [
-									'url' => "https://x.nctu.app/login-tg?r=%2Freview"
+									'url' => "https://$DOMAIN/login-tg?r=%2Freview"
 								]
 							]
 						]

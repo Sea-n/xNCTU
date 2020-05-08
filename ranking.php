@@ -19,7 +19,7 @@ include('includes/head.php');
 			<div class="ts narrow container">
 
 				<h1 class="ts header">排行榜</h1>
-				<div class="description">靠北交大 2.0</div>
+				<div class="description"><?= SITENAME ?></div>
 			</div>
 		</header>
 		<div class="ts container" name="main">

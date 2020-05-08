@@ -48,7 +48,7 @@ case 'vote':
 						[
 							'text' => '開啟審核頁面',
 							'login_url' => [
-								'url' => "https://x.nctu.app/login-tg?r=%2Freview%2F$uid"
+								'url' => "https://$DOMAIN/login-tg?r=%2Freview%2F$uid"
 							]
 						]
 					]

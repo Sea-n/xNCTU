@@ -9,36 +9,36 @@ $posts = $db->getPosts(0);
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://x.nctu.app/</loc>
+    <loc>https://<?= DOMAIN ?>/</loc>
     <priority>1.00</priority>
   </url>
   <url>
-	<loc>https://x.nctu.app/posts</loc>
+	<loc>https://<?= DOMAIN ?>/posts</loc>
     <changefreq>hourly</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://x.nctu.app/submit</loc>
+    <loc>https://<?= DOMAIN ?>/submit</loc>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://x.nctu.app/review/DEMO</loc>
+    <loc>https://<?= DOMAIN ?>/review/DEMO</loc>
   </url>
   <url>
-    <loc>https://x.nctu.app/ranking</loc>
+    <loc>https://<?= DOMAIN ?>/ranking</loc>
     <changefreq>daily</changefreq>
   </url>
   <url>
-    <loc>https://x.nctu.app/faq</loc>
+    <loc>https://<?= DOMAIN ?>/faq</loc>
   </url>
   <url>
-    <loc>https://x.nctu.app/deleted</loc>
+    <loc>https://<?= DOMAIN ?>/deleted</loc>
   </url>
   <url>
-    <loc>https://x.nctu.app/policies</loc>
+    <loc>https://<?= DOMAIN ?>/policies</loc>
   </url>
 
 <?php foreach ($posts as $post) { ?>
-  <url><loc>https://x.nctu.app/post/<?= $post['id'] ?></loc></url>
+  <url><loc>https://<?= DOMAIN ?>/post/<?= $post['id'] ?></loc></url>
 <?php } ?>
 </urlset>

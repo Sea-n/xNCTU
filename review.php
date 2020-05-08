@@ -71,13 +71,13 @@ if (isset($post)) {
 		$DESC = mb_substr($DESC, 0, 150) . '...';
 
 	if ($post['has_img'])
-		$IMG = "https://x.nctu.app/img/{$post['uid']}.jpg";
+		$IMG = "https://$DOMAIN/img/{$post['uid']}.jpg";
 } else if (isset($_GET['deleted'])) {
 	$TITLE = '已刪投稿';
-	$IMG = 'https://x.nctu.app/assets/img/og.png';
+	$IMG = "https://$DOMAIN/assets/img/og.png";
 } else {
 	$TITLE = '貼文審核';
-	$IMG = 'https://x.nctu.app/assets/img/og.png';
+	$IMG = "https://$DOMAIN/assets/img/og.png";
 }
 include('includes/head.php');
 ?>
@@ -93,7 +93,7 @@ include('includes/nav.php');
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header"><?= isset($_GET['deleted']) ? '已刪投稿' : '貼文審核' ?></h1>
-				<div class="description">靠北交大 2.0</div>
+				<div class="description"><?= SITENAME ?></div>
 			</div>
 		</header>
 		<div class="ts container" name="main">

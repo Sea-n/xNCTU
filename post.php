@@ -40,7 +40,7 @@ if (mb_strlen($DESC) > 150)
 	$DESC = mb_substr($DESC, 0, 150) . '...';
 
 if ($post['has_img'])
-	$IMG = "https://x.nctu.app/img/{$post['uid']}.jpg";
+	$IMG = "https://$DOMAIN/img/{$post['uid']}.jpg";
 
 include('includes/head.php');
 ?>
@@ -49,7 +49,7 @@ include('includes/head.php');
 <?php include('includes/nav.php'); ?>
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
-				<h1 class="ts header">靠北交大 2.0</h1>
+				<h1 class="ts header"><?= SITENAME ?></h1>
 				<div class="description">不要問為何沒有人審文，先承認你就是沒有人。</div>
 			</div>
 		</header>
@@ -134,7 +134,7 @@ if ($post['twitter_id'] > 10) { ?>
 						<div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
 							<meta itemprop="url" content="/assets/img/logo.png">
 						</div>
-						<span itemprop="name">靠北交大 2.0</span>
+						<span itemprop="name"><?= SITENAME ?></span>
 					</div>
 					<link itemprop="mainEntityOfPage" href="<?= $URL ?>" />
 				</div>

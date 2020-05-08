@@ -28,7 +28,7 @@ if (isset($USER) || $ip_from == '交大')
 	<head>
 <?php
 $TITLE = '文章投稿';
-$IMG = 'https://x.nctu.app/assets/img/og.png';
+$IMG = "https://$DOMAIN/assets/img/og.png";
 include('includes/head.php');
 ?>
 		<script src="/assets/js/submit.js"></script>
@@ -38,7 +38,7 @@ include('includes/head.php');
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">文章投稿</h1>
-				<div class="description">靠北交大 2.0</div>
+				<div class="description"><?= SITENAME ?></div>
 			</div>
 		</header>
 		<div class="ts container" name="main">
@@ -71,7 +71,7 @@ include('includes/head.php');
 						<span>目前字數：<span id="body-wc">0</span></span>
 					</div>
 					<div id="warning-preview" class="ts negative segment" style="display: none;">
-						<p>Tips: 請將網址單獨寫在最後一行時，靠交才會自動顯示頁面預覽。第一行不可為網址。</p>
+						<p>Tips: 請將網址單獨寫在最後一行時，系統才會自動顯示頁面預覽。第一行不可為網址。</p>
 					</div>
 					<div class="inline field">
 						<label>附加圖片</label>

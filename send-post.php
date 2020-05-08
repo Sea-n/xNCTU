@@ -54,7 +54,7 @@ $img = $post['has_img'] ? $uid : '';
 
 $time = strtotime($post['created_at']);
 $time = date("Y 年 m 月 d 日 H:i", $time);
-$link = "https://x.nctu.app/post/$id";
+$link = "https://$DOMAIN/post/$id";
 
 /* Send post to every SNS */
 $sns = [
@@ -216,7 +216,7 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 	else
 		$result = $TG->sendPhoto([
 			'chat_id' => '@xNCTU',
-			'photo' => "https://x.nctu.app/img/{$img}.jpg",
+			'photo' => "https://$DOMAIN/img/{$img}.jpg",
 			'caption' => $msg,
 			'parse_mode' => 'HTML',
 		]);
@@ -339,7 +339,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 function send_plurk(int $id, string $body, string $img = ''): int {
 	global $link;
 
-	$msg = empty($img) ? '' : "https://x.nctu.app/img/$img.jpg\n";
+	$msg = empty($img) ? '' : "https://$DOMAIN/img/$img.jpg\n";
 	$msg .= "#靠交$id\n$body";
 
 	if (mb_strlen($msg) > 290)
@@ -395,7 +395,7 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 		if (filter_var($end, FILTER_VALIDATE_URL) && strpos($end, 'facebook') === false)
 			$data['link'] = $end;
 	} else {
-		$data['url'] = "https://x.nctu.app/img/$img.jpg";
+		$data['url'] = "https://$DOMAIN/img/$img.jpg";
 		$data['caption'] = $msg;
 	}
 

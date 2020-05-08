@@ -3,7 +3,7 @@
 	<head>
 <?php
 $TITLE = '服務條款及隱私權政策';
-$IMG = 'https://x.nctu.app/assets/img/og.png';
+$IMG = "https://$DOMAIN/assets/img/og.png";
 include('includes/head.php');
 ?>
 	</head>
@@ -12,11 +12,11 @@ include('includes/head.php');
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">服務條款及隱私權政策</h1>
-				<div class="description">靠北交大 2.0</div>
+				<div class="description"><?= SITENAME ?></div>
 			</div>
 		</header>
 		<div class="ts container" name="main">
-			<p>非常歡迎您光臨「靠北交大 2.0」（以下簡稱<strong>本網站</strong>），為了讓您能夠安心使用本網站的各項服務與資訊，特此向您說明本網站的隱私權保護政策，以保障您的權益，請您詳閱下列內容：</p>
+			<p>非常歡迎您光臨「<?= SITENAME ?>」（以下簡稱<strong>本網站</strong>），為了讓您能夠安心使用本網站的各項服務與資訊，特此向您說明本網站的隱私權保護政策，以保障您的權益，請您詳閱下列內容：</p>
 
 			<h2 class="ts header">一、隱私權保護政策的適用範圍</h2>
 			<p>隱私權保護政策內容，包括本網站如何處理在您使用網站服務時收集到的個人識別資料。隱私權保護政策不適用於本網站以外的相關連結網站，亦如另行登錄 NCTU OAuth、Telegram、Twitter、Facebook、Instagram，或 Plurk 平台後的互動，依個別平台與使用者另訂的隱私條款，本網站的隱私政策也不適用於非本網站所委託或參與管理的人員。</p>

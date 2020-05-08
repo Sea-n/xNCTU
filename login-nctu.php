@@ -19,7 +19,7 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, [
 	'code' => $_GET['code'],
 	'client_id' => NCTU_OAUTH_ID,
 	'client_secret' => NCTU_OAUTH_SECRET,
-	'redirect_uri' => 'https://x.nctu.app/login-nctu'
+	'redirect_uri' => "https://$DOMAIN/login-nctu",
 ]);
 $data = curl_exec($curl);
 curl_close($curl);

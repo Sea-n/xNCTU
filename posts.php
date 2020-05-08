@@ -19,7 +19,7 @@ $posts = $db->getPosts(50);
 	<head>
 <?php
 $TITLE = '文章列表';
-$IMG = 'https://x.nctu.app/assets/img/og.png';
+$IMG = "https://$DOMAIN/assets/img/og.png";
 include('includes/head.php');
 ?>
 		<script src="/assets/js/posts.js"></script>
@@ -29,7 +29,7 @@ include('includes/head.php');
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
 				<h1 class="ts header">文章列表</h1>
-				<div class="description">靠北交大 2.0</div>
+				<div class="description"><?= SITENAME ?></div>
 			</div>
 		</header>
 

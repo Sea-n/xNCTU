@@ -4,7 +4,7 @@
 	<head>
 <?php
 $TITLE = '首頁';
-$IMG = 'https://x.nctu.app/assets/img/og.png';
+$IMG = "https://$DOMAIN/assets/img/og.png";
 include('includes/head.php');
 ?>
 		<script src="/assets/js/index.js"></script>
@@ -13,7 +13,7 @@ include('includes/head.php');
 <?php include('includes/nav.php'); ?>
 		<header class="ts fluid vertically padded heading slate">
 			<div class="ts narrow container">
-				<h1 class="ts header">靠北交大 2.0</h1>
+				<h1 class="ts header"><?= SITENAME ?></h1>
 				<div class="description">不要問為何沒有人審文，先承認你就是沒有人。</div>
 			</div>
 		</header>
@@ -29,7 +29,7 @@ include('includes/head.php');
 
 			<h2 class="ts header">審文機制</h2>
 			<div id="review-content" style="height: 320px; overflow-y: hidden;">
-				<p>新版靠北交大 2.0 採自助式審文，所有交大師生皆可加入審核者的行列，以下是系統判斷標準</p>
+				<p>新版<?= SITENAME ?> 採自助式審文，所有交大師生皆可加入審核者的行列，以下是系統判斷標準</p>
 				<h4>(A) 具名投稿</h4>
 				<p>如在 5 分鐘內無 <button class="ts vote negative button">駁回</button>，免審核即自動發出，詳細判斷條件如下：</p>
 				<ul>
@@ -73,11 +73,11 @@ include('includes/head.php');
 <?php if (!isset($USER)) { ?>
 			<h2 class="ts header">使用 Telegram 登入</h2>
 			<p>只要您曾綁定 NCTU 帳號，點擊下面按鈕即可以 Telegram 登入服務。</p>
-			<script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="xNCTUbot" data-size="large" data-auth-url="https://x.nctu.app/login-tg" data-request-access="write"></script>
+			<script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="xNCTUbot" data-size="large" data-auth-url="https://<?= DOMAIN ?>/login-tg" data-request-access="write"></script>
 <?php } else if (!isset($USER['tg_id'])) { ?>
 			<h2 class="ts header">使用 Telegram 快速審核</h2>
 			<p>點擊下面按鈕即可綁定 Telegram 帳號，讓您收到最即時的投稿通知，並快速通過/駁回貼文。</p>
-			<script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="xNCTUbot" data-size="large" data-auth-url="https://x.nctu.app/login-tg" data-request-access="write"></script>
+			<script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="xNCTUbot" data-size="large" data-auth-url="https://<?= DOMAIN ?>/login-tg" data-request-access="write"></script>
 <?php } else if ($USER['name'] == $USER['stuid']) { ?>
 			<h2 class="ts header">使用 Telegram 快速審核</h2>
 			<div class="ts positive message">
@@ -92,7 +92,7 @@ include('includes/head.php');
 			<p>您可以在 <a href="/ranking">這個頁面</a> 查看前 50 名</p>
 
 			<h2 class="ts header">服務聲明</h2>
-			<p>感謝您使用「靠北交大 2.0」（以下簡稱本網站），本網站之所有文章皆為不特定使用者自行投稿、不特定師生進行審核，並不代表本網站立場。</p>
+			<p>感謝您使用「<?= SITENAME ?>」（以下簡稱本網站），本網站之所有文章皆為不特定使用者自行投稿、不特定師生進行審核，並不代表本網站立場。</p>
 			<p>如有侵害您權益之貼文，麻煩寄信至服務團隊，將在最短時間協助您撤下貼文或進行澄清。</p>
 			<p>投稿者如散播不實訊息而遭司法單位追究，在司法機關提供調取票等充分條件下，本網站將依法提供 IP 位址配合偵辦，切勿以身試法。</p>
 		</div>

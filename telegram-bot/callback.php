@@ -14,7 +14,7 @@ if (!$USER) {
 	$TG->getTelegram('answerCallbackQuery', [
 		'callback_query_id' => $TG->data['callback_query']['id'],
 		'show_alert' => true,
-		'text' => "您尚未綁定 NCTU 帳號，請至靠北交大 2.0 網站登入"
+		'text' => "您尚未綁定 NCTU 帳號，請至$SITENAME 網站登入"
 	]);
 	exit;
 }
@@ -44,7 +44,7 @@ switch ($args[0]) {
 							[
 								'text' => '開啟審核頁面',
 								'login_url' => [
-									'url' => "https://x.nctu.app/login-tg?r=%2Freview%2F$uid"
+									'url' => "https://$DOMAIN/login-tg?r=%2Freview%2F$uid"
 								]
 							]
 						]
