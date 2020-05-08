@@ -40,7 +40,7 @@ if (!$USER) {
 					[
 						'text' => '綁定靠交 2.0 網站',
 						'login_url' => [
-							'url' => "https://x.nctu.app/login-tg?r=%2F"
+							'url' => "https://x.nctu.app/login-tg"
 						]
 					]
 				]
@@ -56,50 +56,37 @@ if (substr($text, 0, 1) == '/') {
 
 	switch($cmd) {
 		case 'start':
-		case 'help':
 			$msg = "歡迎使用靠北交大 2.0 機器人\n\n";
-			$msg .= "目前支援的指令：\n";
-			$msg .= "/name 更改網站上的暱稱\n";
-			$msg .= "/send 發送測試貼文\n";
-			$msg .= "/delete 刪除貼文\n";
+			$msg .= "使用 /help 顯示指令清單";
 
 			$TG->sendMsg([
-				'text' => $msg
-			]);
-			break;
-
-		case 'send':
-			$body = "學生計算機年會（Students’ Information Technology Conference）自 2013 年發起，以學生為本、由學生自發舉辦，長期投身學生資訊教育與推廣開源精神，希望引領更多學子踏入資訊的殿堂，更冀望所有對資訊有興趣的學生，能夠在年會裏齊聚一堂，彼此激盪、傳承、啟發，達到「學以致用、教學相長」的實際展現。";
-
-			$result = $TG->getTelegram('sendPhoto', [
-				'chat_id' => $TG->ChatID,
-				'photo' => "https://x.nctu.app/img/TEST.jpg",
-				'caption' => $body,
+				'text' => $msg,
 				'reply_markup' => [
 					'inline_keyboard' => [
 						[
 							[
-								'text' => '✅ 通過',
-								'callback_data' => "approve_TEST"
-							],
-							[
-								'text' => '❌ 駁回',
-								'callback_data' => "reject_TEST"
-							]
-						],
-						[
-							[
-								'text' => '開啟審核頁面',
+								'text' => '登入靠北清大 2.0',
 								'login_url' => [
-									'url' => "https://x.nctu.app/login-tg?r=%2Freview%2FTEST"
+									'url' => "https://x.nctu.app/login-tg"
 								]
 							]
 						]
 					]
 				]
 			]);
+			break;
 
-			$db->setTgMsg('TEST', $TG->ChatID, $result['result']['message_id']);
+		case 'help':
+			$msg = "目前支援的指令：\n\n";
+			$msg .= "/name 更改網站上的暱稱\n";
+			$msg .= "/unlink 解除 Telegram 綁定\n";
+			$msg .= "/delete 刪除貼文\n";
+			$msg .= "/help 顯示此訊息\n";
+			$msg .= "\nℹ️ 由 @SeanChannel 提供";
+
+			$TG->sendMsg([
+				'text' => $msg
+			]);
 			break;
 
 		case 'name':
@@ -141,7 +128,7 @@ if (substr($text, 0, 1) == '/') {
 							[
 								'text' => '綁定靠交 2.0 網站',
 								'login_url' => [
-									'url' => "https://x.nctu.app/login-tg?r=%2F"
+									'url' => "https://x.nctu.app/login-tg"
 								]
 							]
 						]
@@ -214,6 +201,54 @@ if (substr($text, 0, 1) == '/') {
 			$TG->sendMsg([
 				'text' => "Done."
 			]);
+			break;
+
+		case 'adduser':
+			if ($TG->FromID != 109780439) {
+				$TG->sendMsg([
+					'text' => "此功能僅限管理員使用",
+				]);
+				exit;
+			}
+
+			$args = explode(' ', $arg);
+			if (count($args) != 2) {
+				$TG->sendMsg([
+					'text' => "使用方式：/adduser <NCTU ID> <TG ID>",
+				]);
+				exit;
+			}
+
+			$nctu_id = $args[0];
+			$tg_id = $args[1];
+
+			$db->insertUserNctuTg($nctu_id, $tg_id);
+
+			$result = $TG->sendMsg([
+				'chat_id' => $tg_id,
+				'text' => "🎉 驗證成功！\n\n請點擊以下按鈕登入靠北交大 2.0 網站",
+				'reply_markup' => [
+					'inline_keyboard' => [
+						[
+							[
+								'text' => '登入靠北清大 2.0',
+								'login_url' => [
+									'url' => "https://x.nctu.app/login-tg?r=%2Freview"
+								]
+							]
+						]
+					]
+				]
+			]);
+
+			if ($result['ok'])
+				$TG->sendMsg([
+					'text' => "Done.\n"
+				]);
+			else
+				$TG->sendMsg([
+					'text' => "Failed.\n\n" . json_encode($result, JSON_PRETTY_PRINT)
+				]);
 			break;
 
 		default:
