@@ -32,29 +32,29 @@ if ($USER) {
 		system("php jobs.php tg_photo $id > /dev/null &");
 	}
 
-	if (!isset($_SESSION['nctu_id'])) {
-		$_SESSION['nctu_id'] = $USER['nctu_id'];
+	if (!isset($_SESSION['stuid'])) {
+		$_SESSION['stuid'] = $USER['stuid'];
 		redirect('Login via Telegram success.');
 	}
 
-	if ($_SESSION['nctu_id'] == $USER['nctu_id'])
+	if ($_SESSION['stuid'] == $USER['stuid'])
 		redirect('Already login.');
 
 	$TG->sendMsg([
 		'chat_id' => $auth_data['id'],
 		'text' => "⚠️ 您已連結過此帳號\n\n" .
 		"目前無法將不同的 NCTU OAuth 帳號連結至同一個 Telegram 帳號\n\n" .
-		"NCTU ID from session: {$_SESSION['nctu_id']}\n" .
-		"NCTU ID from database: {$USER['nctu_id']}\n" .
+		"NCTU ID from session: {$_SESSION['stuid']}\n" .
+		"NCTU ID from database: {$USER['stuid']}\n" .
 		"Telegram UID: {$auth_data['id']}"
 	]);
 	redirect('Already linked to another account.');
 }
 
-if (!isset($_SESSION['nctu_id']))
+if (!isset($_SESSION['stuid']))
 	exit('You must login NCTU first. 請先於首頁右上角登入交大帳號');
 
-$db->insertUserTg($_SESSION['nctu_id'], $auth_data);
+$db->insertUserTg($_SESSION['stuid'], $auth_data);
 
 if (isset($auth_data['photo_url'])) {
 	system("php jobs.php tg_photo $id > /dev/null &");

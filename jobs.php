@@ -64,7 +64,7 @@ case 'vote':
 	$body = mb_substr($body, 0, 10) . '..';
 	$body = enHTML($body);
 
-	$dep = idToDep($USER['nctu_id']);
+	$dep = idToDep($USER['stuid']);
 
 	$name = $USER['name'];
 	if (is_numeric($name))

@@ -4,8 +4,8 @@ require_once('utils.php');
 require_once('database.php');
 $db = new MyDB();
 
-if (isset($_SESSION['nctu_id']) && !isset($USER))
-	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
+if (isset($_SESSION['stuid']) && !isset($USER))
+	$USER = $db->getUserByNctu($_SESSION['stuid']);
 
 if (isset($_GET['uid'])) {
 	$uid = $_GET['uid'];
@@ -21,7 +21,7 @@ if (isset($_GET['uid'])) {
 	}
 
 	if (isset($USER)) {
-		$canVote = $db->canVote($uid, $USER['nctu_id']);
+		$canVote = $db->canVote($uid, $USER['stuid']);
 		if (!$canVote['ok'])
 			$post['vote'] = 87;
 	}
@@ -35,7 +35,7 @@ if (isset($_GET['uid'])) {
 		} else
 			$posts = [];
 	} else if (isset($USER))
-		$posts = $db->getSubmissionsForVoter(50, true, $USER['nctu_id']);
+		$posts = $db->getSubmissionsForVoter(50, true, $USER['stuid']);
 	else
 		$posts = $db->getSubmissions(50);
 }

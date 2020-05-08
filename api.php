@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 				$author_photo = genPic($ip_masked);
 
-				if (!isset($_SESSION['nctu_id']))
+				if (!isset($_SESSION['stuid']))
 					$ip_masked = false;
 			}
 
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 			$result['reload'] = true;
 
 		$result['votes'] = [];
-		if (isset($_SESSION['nctu_id']) || $post['status'] == 10) {
+		if (isset($_SESSION['stuid']) || $post['status'] == 10) {
 			$votes = $db->getVotesByUid($uid);
 
 			foreach ($votes as $item) {
@@ -145,9 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$ip_addr = $_SERVER['REMOTE_ADDR'];
 
 		/* Get Author Name */
-		if (isset($_SESSION['nctu_id']) && !isset($_POST['anon'])) {
-			$USER = $db->getUserByNctu($_SESSION['nctu_id']);
-			$author_id = $USER['nctu_id'];
+		if (isset($_SESSION['stuid']) && !isset($_POST['anon'])) {
+			$USER = $db->getUserByNctu($_SESSION['stuid']);
+			$author_id = $USER['stuid'];
 			$author_name = $USER['name'];
 			$author_photo = $USER['tg_photo'] ?? '';
 		} else {
@@ -222,14 +222,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			'author_photo' => $author_photo,
 		], JSON_PRETTY_PRINT);
 	} else if ($ACTION == 'vote') {
-		if (!isset($_SESSION['nctu_id']))
+		if (!isset($_SESSION['stuid']))
 			err('請先登入');
 
 		$uid = $_POST['uid'] ?? '';
 		if (strlen($uid) != 4)
 			err('uid invalid. 投稿編號無效');
 
-		$voter = $_SESSION['nctu_id'];
+		$voter = $_SESSION['stuid'];
 
 		$vote = $_POST['vote'] ?? 0;
 		if ($vote != 1 && $vote != -1)

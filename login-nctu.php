@@ -50,7 +50,7 @@ $USER = $db->getUserByNctu($data['username']);
 if (!$USER)
 	$db->insertUserNctu($data['username'], $data['email']);
 
-$_SESSION['nctu_id'] = $data['username'];
+$_SESSION['stuid'] = $data['username'];
 
 echo "Login success!";
 $uri = '/';

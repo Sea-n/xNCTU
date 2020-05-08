@@ -22,8 +22,8 @@ case 'dump':
 		$stmt->execute();
 		$data[$table] = [];
 		while ($item = $stmt->fetch()) {
-			if (isset($item['nctu_id']))
-				$item['nctu_id'] = idToDep($item['nctu_id']) . ' ' . $item['nctu_id'];
+			if (isset($item['stuid']))
+				$item['stuid'] = idToDep($item['stuid']) . ' ' . $item['stuid'];
 
 			if ($table == 'posts')
 				$posts[ $item['uid'] ] = $item;

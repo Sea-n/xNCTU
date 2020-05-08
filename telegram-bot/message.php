@@ -219,10 +219,10 @@ if (substr($text, 0, 1) == '/') {
 				exit;
 			}
 
-			$nctu_id = $args[0];
+			$stuid = $args[0];
 			$tg_id = $args[1];
 
-			$db->insertUserNctuTg($nctu_id, $tg_id);
+			$db->insertUserNctuTg($stuid, $tg_id);
 
 			$result = $TG->sendMsg([
 				'chat_id' => $tg_id,
@@ -277,14 +277,14 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 	}
 
 	try {
-		$result = $db->voteSubmissions($uid, $USER['nctu_id'], $vote, $reason);
+		$result = $db->voteSubmissions($uid, $USER['stuid'], $vote, $reason);
 		if (!$result['ok'])
 			$msg = $result['msg'];
 		else {
 			$msg = "您成功為 #投稿$uid 投下了 $type\n\n";
 			$msg .= "目前通過 {$result['approvals']} 票、駁回 {$result['rejects']} 票";
 
-			system("php " . __DIR__ . "/../jobs.php vote $uid {$USER['nctu_id']} > /dev/null &");
+			system("php " . __DIR__ . "/../jobs.php vote $uid {$USER['stuid']} > /dev/null &");
 		}
 	} catch (Exception $e) {
 		$msg = 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";

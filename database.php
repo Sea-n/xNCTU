@@ -94,10 +94,10 @@ class MyDB {
 	}
 
 	/* Return submissions with previous vote */
-	public function getSubmissionsForVoter(int $limit, bool $desc = true, string $nctu_id) {
+	public function getSubmissionsForVoter(int $limit, bool $desc = true, string $stuid) {
 		if ($limit == 0) $limit = 9487;
 
-		$data = $this->getVotesByUser($nctu_id);
+		$data = $this->getVotesByUser($stuid);
 		$votes = [];
 		foreach ($data as $item)
 			$votes[ $item['uid'] ] = $item['vote'];
@@ -235,7 +235,7 @@ class MyDB {
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 
-		$sql = "UPDATE users SET $type = $type + 1 WHERE nctu_id = :voter";
+		$sql = "UPDATE users SET $type = $type + 1 WHERE stuid = :voter";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':voter' => $voter]);
 
@@ -272,10 +272,10 @@ class MyDB {
 		return $results;
 	}
 
-	private function getVotesByUser(string $nctu_id) {
-		$sql = "SELECT * FROM votes WHERE voter = :nctu_id ORDER BY created_at DESC";
+	private function getVotesByUser(string $stuid) {
+		$sql = "SELECT * FROM votes WHERE voter = :stuid ORDER BY created_at DESC";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':nctu_id' => $nctu_id]);
+		$stmt->execute([':stuid' => $stuid]);
 
 		$results = [];
 		while ($item = $stmt->fetch())
@@ -284,12 +284,12 @@ class MyDB {
 		return $results;
 	}
 
-	public function getVote(string $uid, string $nctu_id) {
-		$sql = "SELECT * FROM votes WHERE uid = :uid AND voter = :nctu_id";
+	public function getVote(string $uid, string $stuid) {
+		$sql = "SELECT * FROM votes WHERE uid = :uid AND voter = :stuid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
-			':nctu_id' => $nctu_id,
+			':stuid' => $stuid,
 		]);
 
 		return $stmt->fetch();
@@ -356,27 +356,27 @@ class MyDB {
 			$this->updateSubmissionStatus($post['uid'], 5);
 	}
 
-	public function insertUserNctu(string $nctu_id, string $mail) {
-		$sql = "SELECT nctu_id FROM users WHERE nctu_id = :nctu_id";
+	public function insertUserNctu(string $stuid, string $mail) {
+		$sql = "SELECT stuid FROM users WHERE stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':nctu_id' => $nctu_id]);
+		$stmt->execute([':stuid' => $stuid]);
 
 		if ($stmt->fetch())
 			return false;
 
-		$sql = "INSERT INTO users(name, nctu_id, nctu_mail) VALUES (:name, :nctu_id, :mail)";
+		$sql = "INSERT INTO users(name, stuid, mail) VALUES (:name, :stuid, :mail)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
-			':name' => $nctu_id,
-			':nctu_id' => $nctu_id,
+			':name' => $stuid,
+			':stuid' => $stuid,
 			':mail' => $mail
 		]);
 	}
 
-	public function insertUserTg(string $nctu_id, array $tg) {
-		$sql = "SELECT nctu_id FROM users WHERE nctu_id = :nctu_id";
+	public function insertUserTg(string $stuid, array $tg) {
+		$sql = "SELECT stuid FROM users WHERE stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':nctu_id' => $nctu_id]);
+		$stmt->execute([':stuid' => $stuid]);
 
 		if (!$stmt->fetch())
 			return false;
@@ -385,10 +385,10 @@ class MyDB {
 		if (isset($tg['last_name']))
 			$name .= ' ' . $tg['last_name'];
 
-		$sql = "UPDATE users SET tg_id = :tg_id, tg_name = :name, tg_username = :username, tg_photo = :photo WHERE nctu_id = :nctu_id";
+		$sql = "UPDATE users SET tg_id = :tg_id, tg_name = :name, tg_username = :username, tg_photo = :photo WHERE stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
-			':nctu_id' => $nctu_id,
+			':stuid' => $stuid,
 			':tg_id' => $tg['id'],
 			':name' => $name,
 			':username' => $tg['username'] ?? '',
@@ -396,21 +396,21 @@ class MyDB {
 		]);
 	}
 
-	public function insertUserNctuTg(string $nctu_id, string $tg_id) {
-		$sql = "SELECT nctu_id FROM users WHERE nctu_id = :nctu_id OR tg_id = :tg_id";
+	public function insertUserNctuTg(string $stuid, string $tg_id) {
+		$sql = "SELECT stuid FROM users WHERE stuid = :stuid OR tg_id = :tg_id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
-			':nctu_id' => $nctu_id,
+			':stuid' => $stuid,
 			':tg_id' => $tg_id,
 		]);
 
 		if ($stmt->fetch())
 			return false;
 
-		$sql = "INSERT INTO users(name, nctu_id, tg_id) VALUES (:nctu_id, :nctu_id, :tg_id)";
+		$sql = "INSERT INTO users(name, stuid, tg_id) VALUES (:stuid, :stuid, :tg_id)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
-			':nctu_id' => $nctu_id,
+			':stuid' => $stuid,
 			':tg_id' => $tg_id,
 		]);
 	}
@@ -440,7 +440,7 @@ class MyDB {
 	}
 
 	public function getUserByNctu(string $id) {
-		$sql = "SELECT * FROM users WHERE nctu_id = :id";
+		$sql = "SELECT * FROM users WHERE stuid = :id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':id' => $id]);
 		return $stmt->fetch();

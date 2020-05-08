@@ -39,7 +39,7 @@ function sendReview(string $uid) {
 		$msg .= "\n\n$hashtag | $hashtag_author | $hashtag_ip";
 	} else {
 		if (preg_match('/^\d+$/', $author_name))
-			$hashtag_author = "#NCTU_$author_name";
+			$hashtag_author = "#N$author_name";
 		$msg .= "\n\n$hashtag | $hashtag_author";
 	}
 

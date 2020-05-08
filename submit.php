@@ -12,8 +12,8 @@ $ip_from = ip_from($ip_addr);
 if (strpos($ip_from, '境外') !== false)
 	$ip_masked = $ip_addr;
 
-if (isset($_SESSION['nctu_id']))
-	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
+if (isset($_SESSION['stuid']))
+	$USER = $db->getUserByNctu($_SESSION['stuid']);
 
 if (!isset($_SESSION['csrf_token']))
 	$_SESSION['csrf_token'] = rand58(8);

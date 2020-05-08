@@ -152,7 +152,7 @@ foreach ($user_count as $i => $item) {
 				var data = {};
 				data['ALL'] = <?= json_encode(genData('')) ?>;
 <?php foreach ($user_count as $i => $item) { ?>
-				data['<?= $i ?>'] = <?= json_encode(genData($item['user']['nctu_id'])) ?>;
+				data['<?= $i ?>'] = <?= json_encode(genData($item['user']['stuid'])) ?>;
 <?php } ?>
 
 				var d = JSON.parse(JSON.stringify(data['ALL']));  // Deep copy

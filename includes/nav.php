@@ -8,8 +8,8 @@ if (!isset($db)) {
 	$db = new MyDB();
 }
 
-if (isset($_SESSION['nctu_id']) && !isset($USER))
-	$USER = $db->getUserByNctu($_SESSION['nctu_id']);
+if (isset($_SESSION['stuid']) && !isset($USER))
+	$USER = $db->getUserByNctu($_SESSION['stuid']);
 
 $items = [
 	'/' => '首頁',
@@ -39,7 +39,7 @@ if (isset($USER)) {
 	if (!empty($USER['tg_photo']))
 		$photo = "/img/tg/{$USER['tg_id']}-x64.jpg";
 	else
-		$photo = genPic($USER['nctu_id']);
+		$photo = genPic($USER['stuid']);
 ?>
 			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
 			&nbsp;<b id="nav-name" style="overflow: hidden;"><?= toHTML($USER['name']) ?></b>&nbsp;

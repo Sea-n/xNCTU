@@ -27,7 +27,7 @@ switch ($args[0]) {
 		$type = $args[0];
 		$uid = $args[1];
 
-		$check = $db->canVote($uid, $USER['nctu_id']);
+		$check = $db->canVote($uid, $USER['stuid']);
 		if (!$check['ok']) {
 			$TG->getTelegram('answerCallbackQuery', [
 				'callback_query_id' => $TG->data['callback_query']['id'],
