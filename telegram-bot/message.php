@@ -222,7 +222,7 @@ if (substr($text, 0, 1) == '/') {
 			$stuid = $args[0];
 			$tg_id = $args[1];
 
-			$db->insertUserNctuTg($stuid, $tg_id);
+			$db->insertUserStuTg($stuid, $tg_id);
 
 			$result = $TG->sendMsg([
 				'chat_id' => $tg_id,

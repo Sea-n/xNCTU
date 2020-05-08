@@ -5,7 +5,7 @@ require_once('database.php');
 $db = new MyDB();
 
 if (isset($_SESSION['stuid']) && !isset($USER))
-	$USER = $db->getUserByNctu($_SESSION['stuid']);
+	$USER = $db->getUserByStuid($_SESSION['stuid']);
 
 if (isset($_GET['uid'])) {
 	$uid = $_GET['uid'];

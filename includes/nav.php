@@ -9,7 +9,7 @@ if (!isset($db)) {
 }
 
 if (isset($_SESSION['stuid']) && !isset($USER))
-	$USER = $db->getUserByNctu($_SESSION['stuid']);
+	$USER = $db->getUserByStuid($_SESSION['stuid']);
 
 $items = [
 	'/' => '首頁',

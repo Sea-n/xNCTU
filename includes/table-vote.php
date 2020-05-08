@@ -17,7 +17,7 @@ if (isset($USER) || ($uid ?? 'x') == 'DEMO' || ($uid ?? 'x') == '2C8j') {
 	foreach ($VOTES as $i => $vote) {
 		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
 		$id = $vote['voter'];
-		$user = $db->getUserByNctu($id);
+		$user = $db->getUserByStuid($id);
 		$dep = idToDep($id);
 		$name = toHTML($user['name']);
 ?>

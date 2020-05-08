@@ -31,7 +31,7 @@ case 'vote':
 	$uid = $argv[2];
 	$voter = $argv[3];
 	$post = $db->getPostByUid($uid);
-	$USER = $db->getUserByNctu($voter);
+	$USER = $db->getUserByStuid($voter);
 	$VOTE = $db->getVote($uid, $voter);
 
 	/* Remove vote keyboard in Telegram */

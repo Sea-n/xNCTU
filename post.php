@@ -67,7 +67,7 @@ if (strpos($author_name, '境外') !== false)
 	$ip_masked = $post['ip_addr'];
 
 if (!empty($post['author_id'])) {
-	$author = $db->getUserByNctu($post['author_id']);
+	$author = $db->getUserByStuid($post['author_id']);
 	$author_name = toHTML($author['name']);
 	if (!empty($author['tg_photo'] ?? ''))
 		$author_photo = "/img/tg/{$author['tg_id']}-x64.jpg";

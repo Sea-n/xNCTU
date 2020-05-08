@@ -356,7 +356,7 @@ class MyDB {
 			$this->updateSubmissionStatus($post['uid'], 5);
 	}
 
-	public function insertUserNctu(string $stuid, string $mail) {
+	public function insertUserStuid(string $stuid, string $mail) {
 		$sql = "SELECT stuid FROM users WHERE stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':stuid' => $stuid]);
@@ -396,7 +396,7 @@ class MyDB {
 		]);
 	}
 
-	public function insertUserNctuTg(string $stuid, string $tg_id) {
+	public function insertUserStuTg(string $stuid, string $tg_id) {
 		$sql = "SELECT stuid FROM users WHERE stuid = :stuid OR tg_id = :tg_id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
@@ -439,7 +439,7 @@ class MyDB {
 		]);
 	}
 
-	public function getUserByNctu(string $id) {
+	public function getUserByStuid(string $id) {
 		$sql = "SELECT * FROM users WHERE stuid = :id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':id' => $id]);
@@ -472,7 +472,7 @@ class MyDB {
 		$stmt->execute([':tg_id' => $tg_id]);
 	}
 
-	/* Unlink account from NCTU */
+	/* Unlink account from Telegram */
 	public function unlinkUserTg(int $tg_id) {
 		$sql = "UPDATE users SET tg_id = NULL, tg_name = NULL, tg_username = NULL, tg_photo = NULL WHERE tg_id = :tg_id";
 		$stmt = $this->pdo->prepare($sql);

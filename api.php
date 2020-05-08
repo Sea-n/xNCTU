@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 			if (!empty($post['author_id'])) {
 				$ip_masked = false;
-				$author = $db->getUserByNctu($post['author_id']);
+				$author = $db->getUserByStuid($post['author_id']);
 				$author_name = $author['name'];
 				if (!empty($author['tg_photo']))
 					$author_photo = "/img/tg/{$author['tg_id']}-x64.jpg";
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 			foreach ($votes as $item) {
 				$id = $item['voter'];
-				$user = $db->getUserByNctu($id);
+				$user = $db->getUserByStuid($id);
 
 				$result['votes'][] = [
 					'vote' => (int) $item['vote'],
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		/* Get Author Name */
 		if (isset($_SESSION['stuid']) && !isset($_POST['anon'])) {
-			$USER = $db->getUserByNctu($_SESSION['stuid']);
+			$USER = $db->getUserByStuid($_SESSION['stuid']);
 			$author_id = $USER['stuid'];
 			$author_name = $USER['name'];
 			$author_photo = $USER['tg_photo'] ?? '';

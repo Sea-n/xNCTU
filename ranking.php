@@ -100,7 +100,7 @@ $pt_max = $user_count[0]['pt'];
 $user_count = array_slice($user_count, 0, 50);
 
 foreach($user_count as $k => $v) {
-	$user = $db->getUserByNctu($v['id']);
+	$user = $db->getUserByStuid($v['id']);
 	$user_count[$k]['user'] = $user;
 	$user_count[$k]['pt_int'] = (int) ($user_count[$k]['pt'] * 1000.0 / $pt_max);
 }
@@ -226,7 +226,7 @@ function genData(string $id) {
 
 	if (!empty($id)) {
 		$dep = idToDep($id);
-		$USER = $db->getUserByNctu($id);
+		$USER = $db->getUserByStuid($id);
 		$name = "{$dep} {$USER['name']}";
 		$step = 6*60*60;
 	} else {
