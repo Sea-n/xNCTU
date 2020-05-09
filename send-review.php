@@ -1,9 +1,11 @@
 <?php
-require_once('utils.php');
-require_once('database.php');
-require_once('telegram-bot/class.php');
+require_once(__DIR__ . '/utils.php');
+require_once(__DIR__ . '/database.php');
 
-$TG = new Telegram();
+if (!isset($TG)) {
+	require_once(__DIR__ . '/telegram-bot/class.php');
+	$TG = new Telegram();
+}
 
 function sendReview(string $uid) {
 	global $TG;

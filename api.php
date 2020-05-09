@@ -266,8 +266,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 			if (!$post)
 				err('找不到該篇投稿');
 
-			if (time() - strtotime($post['created_at']) > 10*60)
-				err('Timeout. 已超出時限，請重新投稿');
+			if ($post['status'] == 3 || $post['status'] == 5) {
+				echo json_encode([
+					'ok' => true,
+					'msg' => '投稿已送出'
+				], JSON_PRETTY_PRINT);
+				exit;
+			}
 
 			if ($post['status'] != 0)
 				err("Submission $uid status {$post['status']} is not eligible to be confirmed. 此投稿狀態不允許確認");

@@ -178,6 +178,9 @@ class MyDB {
 		if (!$post)
 			return ['ok' => false, 'msg' => 'uid not found. 找不到該投稿'];
 
+		if ($post['status'] == 0)
+			return ['ok' => false, 'msg' => 'Submission not confirmed. 請先確認投稿'];
+
 		if ($post['status'] > 3 && $post['status'] != 10)
 			return ['ok' => false, 'msg' => 'Already posted. 太晚囉，貼文已發出'];
 

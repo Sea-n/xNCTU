@@ -1,5 +1,5 @@
 <?php
-require_once('config.php');
+require_once(__DIR__ . '/../config.php');
 
 $TITLE = htmlentities($TITLE);
 $TITLE = str_replace("\n", "  ", $TITLE);

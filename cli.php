@@ -84,11 +84,51 @@ case 'reject':
 	while ($post = $stmt->fetch()) {
 		$dt = time() - strtotime($post['created_at']);
 
-		/* Before 10 min */
-		if ($dt < 10*60)
+		/* Not within 3 - 4 min */
+		if ($dt < 3*60 || $dt > 4*60)
 			continue;
 
-		$db->deleteSubmission($post['uid'], -13, '逾期未確認');
+		$uid = $post['uid'];
+
+		$msg = "<未確認投稿>\n\n";
+		$msg .= $post['body'];
+
+		$keyboard = [
+			'inline_keyboard' => [
+				[
+					[
+						'text' => '✅ 確認投稿',
+						'callback_data' => "confirm_$uid"
+					],
+					[
+						'text' => '❌ 刪除投稿',
+						'callback_data' => "delete_$uid"
+					]
+				],
+				[
+					[
+						'text' => '開啟審核頁面',
+						'login_url' => [
+							'url' => 'https://' . DOMAIN . "/login-tg?r=%2Freview%2F$uid"
+						]
+					]
+				]
+			]
+		];
+
+		if (!$post['has_img'])
+			$TG->sendMsg([
+				'chat_id' => -1001489855993,
+				'text' => $msg,
+				'reply_markup' => $keyboard,
+			]);
+		else
+			$TG->sendPhoto([
+				'chat_id' => -1001489855993,
+				'photo' => 'https://' . DOMAIN . "/img/$uid.jpg",
+				'caption' => $msg,
+				'reply_markup' => $keyboard,
+			]);
 	}
 
 	break;

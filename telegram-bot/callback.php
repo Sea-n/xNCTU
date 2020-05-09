@@ -1,5 +1,6 @@
 <?php
-require(__DIR__.'/../database.php');
+require_once(__DIR__ . '/../database.php');
+require_once(__DIR__ . '/../send-review.php');
 $db = new MyDB();
 
 if (!isset($TG->data['callback_query']['data'])) {
@@ -67,6 +68,57 @@ switch ($args[0]) {
 		$TG->getTelegram('answerCallbackQuery', [
 			'callback_query_id' => $TG->data['callback_query']['id']
 		]);
+
+		break;
+
+	case 'confirm':
+	case 'delete':
+		if (!in_array($TG->data['callback_query']['from']['id'], [
+			109780439,  # Sean
+			351382660,  # Eugene
+			859018590,  # s960194d
+		])) {
+			$TG->getTelegram('answerCallbackQuery', [
+				'callback_query_id' => $TG->data['callback_query']['id'],
+				'text' => '401 Unauthorized.',
+				'show_alert' => true,
+			]);
+			exit;
+		}
+
+		$TG->editMarkup([
+			'chat_id' => $TG->data['callback_query']['message']['chat']['id'],
+			'message_id' => $TG->data['callback_query']['message']['message_id'],
+			'reply_markup' => [
+				'inline_keyboard' => []
+			],
+		]);
+
+		$uid = $args[1];
+		$post = $db->getPostByUid($uid);
+
+		if ($post['status'] != 0) {
+			$TG->getTelegram('answerCallbackQuery', [
+				'callback_query_id' => $TG->data['callback_query']['id'],
+				'text' => "Status {$post['status']} invalid.",
+				'show_alert' => true,
+			]);
+			exit;
+		}
+
+		if ($args[0] == 'confirm')
+			$db->updateSubmissionStatus($uid, 1);
+		else
+			$db->deleteSubmission($uid, -13, '逾期未確認');
+
+		$TG->getTelegram('answerCallbackQuery', [
+			'callback_query_id' => $TG->data['callback_query']['id'],
+			'text' => 'Done.',
+			'show_alert' => true,
+		]);
+
+		if ($args[0] == 'confirm')
+			sendReview($uid);
 
 		break;
 
