@@ -41,8 +41,8 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<h4>(B) 交大 IP 位址</h4>
 				<p>使用 113 位址投稿者，滿足以下條件即發出</p>
 				<ul>
-					<li>10 分鐘至 2 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 2 個</li>
-					<li>2 小時以後：<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></p>
+					<li>10 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 2 個</li>
+					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></p>
 				</ul>
 				<div class="ts negative raised compact segment">
 					<h5>例外狀況</h5>
@@ -53,9 +53,9 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<ul>
 					<li>等待審核 10 分鐘：達到 5 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
 					<li>扣除&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;後拿到足夠的&nbsp;<button class="ts vote positive button">通過</button>&nbsp;數<ul>
-						<li>30 分鐘至 2 小時：達到 7 個&nbsp;<button class="ts vote positive button">通過</button></li>
-						<li>2 小時至 6 小時：達到 5 個&nbsp;<button class="ts vote positive button">通過</button></li>
-						<li>6 小時以後：達到 3 個&nbsp;<button class="ts vote positive button">通過</button></li>
+						<li>20 分鐘至 1 小時：達到 7 個&nbsp;<button class="ts vote positive button">通過</button></li>
+						<li>1 小時至 3 小時：達到 5 個&nbsp;<button class="ts vote positive button">通過</button></li>
+						<li>3 小時以後：達到 3 個&nbsp;<button class="ts vote positive button">通過</button></li>
 					</ul></li>
 				</ul>
 				<h4>(D) 境外 IP 位址</h4>

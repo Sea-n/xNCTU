@@ -142,11 +142,11 @@ function checkEligible(array $post): bool {
 		if ($dt < 9*60)
 			return false;
 
-		/* 1hour - 2hour */
-		if ($dt < 119*60 && $vote < 2)
+		/* 10 min - 1 hour */
+		if ($dt < 59*60 && $vote < 2)
 			return false;
 
-		/* More than 2 hour */
+		/* More than 1 hour */
 		if ($vote < 0)
 			return false;
 
@@ -160,19 +160,19 @@ function checkEligible(array $post): bool {
 			if ($dt > 9*60 && $vote >= 5)
 				return true;
 
-		/* Less than 30 min */
-		if ($dt < 29*60)
+		/* Less than 20 min */
+		if ($dt < 19*60)
 			return false;
 
-		/* 30min - 2hour */
-		 if ($dt < 119*60 && $vote < 7)
+		/* 20 min - 1 hour */
+		 if ($dt < 59*60 && $vote < 7)
 			 return false;
 
-		 /* 2hour - 6hour */
-		 if ($dt < 6*60*60 && $vote < 5)
+		 /* 1 hour - 3 hour */
+		 if ($dt < 179*60 && $vote < 5)
 			 return false;
 
-		 /* More than 6 hour */
+		 /* More than 3 hour */
 		 if ($vote < 3)
 			 return false;
 

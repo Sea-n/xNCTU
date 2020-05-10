@@ -53,20 +53,20 @@ case 'reject':
 		$uid = $post['uid'];
 		$dt = time() - strtotime($post['created_at']);
 
-		/* Before 2 hour */
-		if ($dt < 2*60*60)
-			if ($post['rejects'] < 7)
+		if (strpos($post['author_name'], '境外') !== false) {
+			if ($post['rejects'] < 2)
 				continue;
+		} else {
+			/* Before 2 hour */
+			if ($dt < 2*60*60)
+				if ($post['rejects'] < 5)
+					continue;
 
-		/* 2 hour - 6 hour*/
-		if ($dt < 6*60*60)
-			if ($post['rejects'] < 5)
-				continue;
-
-		/* 6 hour - 24 hour */
-		if ($dt < 24*60*60)
-			if ($post['rejects'] < 3)
-				continue;
+			/* 2 hour - 12 hour*/
+			if ($dt < 12*60*60)
+				if ($post['rejects'] < 3)
+					continue;
+		}
 
 		$db->deleteSubmission($uid, -2, '已駁回');
 
