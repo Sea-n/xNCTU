@@ -23,9 +23,8 @@ $TITLE = '排行榜';
 			</div>
 		</header>
 		<div class="ts container" name="main">
-			<p>為鼓勵用心審文，避免全部通過/全部駁回，排名基本計算公式為： 總投票數 + min(少數票, 多數票/5) * 3</p>
-			<p>意即「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;90 票」與「&nbsp;<button class="ts vote positive button">通過</button>&nbsp;50 票 +&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;10 票」的排名相同</p>
-			<p>得到積分會再依時間遠近調整權重，短期內大量通過/駁回皆會影響排名，詳細計算方式可參見此頁面原始碼</p>
+			<p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每五天積分減半。</p>
+			<p>正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數，誤通過則倒扣 1 倍。</a>
 
 			<table class="ts table">
 				<thead>
@@ -51,6 +50,11 @@ if (time() - filemtime($CACHE) < 30)
 $time_start = microtime(true);
 ob_start();
 
+$DELS = $db->getDeletedSubmissions(0);
+$DEL = array_map(function ($item) {
+	return $item['uid'];
+}, $DELS);
+
 $VOTES = $db->getVotes();
 
 $user_count = [];
@@ -59,37 +63,26 @@ foreach ($VOTES as $item) {
 	if (!isset($user_count[ $item['voter'] ])) {
 		$user_count[ $item['voter'] ] = [
 			1 => 0, -1 => 0,
-			2 => 0, -2 => 0,
-			3 => 0, -3 => 0,
-			'id' => $item['voter']
+			'pt' => 0,
+			'id' => $item['voter'],
 		];
 	}
 
 	$user_count[ $item['voter'] ][ $item['vote'] ]++;
 	$vote_sum[ $item['vote'] ]++;
 
-	if (time() - strtotime($item['created_at']) < 7*24*60*60)
-		$user_count[ $item['voter'] ][ $item['vote'] * 2 ]++;
-	if (time() - strtotime($item['created_at']) < 30*24*60*60)
-		$user_count[ $item['voter'] ][ $item['vote'] * 3 ]++;
-}
+	$dt = (time() - strtotime($item['created_at'])) / (24*60*60);
+	$dt = max(1, $dt);
+	$pt = pow(0.5, $dt/5);
 
-foreach($user_count as $k => $v) {
-	$pt = 0;
-	$TABLE = [
-		2 => 4,  // within  7 days
-		3 => 2,  // within 30 days
-		1 => 1,  // all the time
-	];
-
-	foreach ($TABLE as $i => $weight) {
-		$total = $v[$i] + $v[-$i];
-		$min = min($v[$i], $v[-$i]);
-		$max = max($v[$i], $v[-$i]);
-		$pt += ($total + min($min, $max/5)*3) * $weight;
+	if (in_array($item['uid'], $DEL)) {
+		if ($item['vote'] == 1)
+			$pt *= -1;
+		else
+			$pt *= 10;
 	}
 
-	$user_count[$k]['pt'] = $pt;
+	$user_count[ $item['voter'] ]['pt'] += $pt;
 }
 
 usort($user_count, function($A, $B) {
