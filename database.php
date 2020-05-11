@@ -171,9 +171,6 @@ class MyDB {
 
 	/* Check can user vote for certain submission or not */
 	public function canVote(string $uid, string $voter): array {
-		if ($uid == 'TEST')
-			return ['ok' => true];
-
 		$post = $this->getPostByUid($uid);
 		if (!$post)
 			return ['ok' => false, 'msg' => 'uid not found. 找不到該投稿'];
@@ -203,13 +200,6 @@ class MyDB {
 	}
 
 	public function voteSubmissions(string $uid, string $voter, int $vote, string $reason = '') {
-		if ($uid == 'TEST')
-			return [
-				'ok' => true,
-				'approvals' => 87,
-				'rejects' => 42,
-			];
-
 		if ($vote == 1)
 			$type = 'approvals';
 		else if ($vote == -1)

@@ -49,7 +49,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 
 			<h2 class="ts header" id="deleted-submissions">Q：可以去哪找到被黑箱的投稿</h2>
 			<p>如果達到上述駁回條件，或是管理團隊覺得投稿不適合發出，就會放到 <a href="/deleted">已刪投稿</a> 頁面。</p>
-			<p>不過有些投稿包含個人資訊，所以限制僅供已登入交大帳號的使用者才能檢閱。</p>
+			<p>目前此區域限制只有已登入交大帳號的使用者才能檢閱，可見篇數將依審文數量而定，預設會顯示最近 3 篇被駁回的投稿。</p>
 
 			<h2 class="ts header" id="apply-account">Q：怎麼註冊帳號</h2>
 			<p>如果您是交大的學生、老師、校友，請直接點擊右上角 Login 使用 NCTU OAuth 登入，不需另外註冊即可使用。</p>

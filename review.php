@@ -31,7 +31,9 @@ if (isset($_GET['uid'])) {
 } else {
 	if (isset($_GET['deleted'])) {
 		if (isset($USER)) {
-			$posts = $db->getDeletedSubmissions(50);
+			$votes = $USER['approvals'] + $USER['rejects'];
+			$count = max($votes/10, 3);
+			$posts = $db->getDeletedSubmissions($count);
 		} else
 			$posts = [];
 	} else if (isset($USER))
