@@ -23,7 +23,7 @@ $TITLE = '排行榜';
 			</div>
 		</header>
 		<div class="ts container" name="main">
-			<p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每五天積分減半。</p>
+			<p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半。</p>
 			<p>正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數，誤通過則倒扣 1 倍。</a>
 
 			<table class="ts table">
@@ -73,7 +73,7 @@ foreach ($VOTES as $item) {
 
 	$dt = (time() - strtotime($item['created_at'])) / (24*60*60);
 	$dt = max(1, $dt);
-	$pt = pow(0.5, $dt/5);
+	$pt = pow(0.5, $dt/7);
 
 	if (in_array($item['uid'], $DEL)) {
 		if ($item['vote'] == 1)
@@ -85,18 +85,35 @@ foreach ($VOTES as $item) {
 	$user_count[ $item['voter'] ]['pt'] += $pt;
 }
 
+foreach($user_count as $k => $v) {
+	$user = $db->getUserByStuid($v['id']);
+
+	if (!isset($user['tg_name']))
+		$user_count[$k]['pt'] *= 0.8;
+
+	if (!isset($user['tg_photo']))
+		$user_count[$k]['pt'] *= 0.8;
+
+	if ($user['name'] == $user['stuid'])
+		$user_count[$k]['pt'] *= 0.8;
+
+	$user_count[$k]['user'] = $user;
+}
+
 usort($user_count, function($A, $B) {
 	return $A['pt'] < $B['pt'];
 });
+
 $pt_max = $user_count[0]['pt'];
-
-$user_count = array_slice($user_count, 0, 50);
-
 foreach($user_count as $k => $v) {
-	$user = $db->getUserByStuid($v['id']);
-	$user_count[$k]['user'] = $user;
+	if ($k%5 == 0 && $user_count[$k]['pt'] < 5) {
+		$end = $k;
+		break;
+	}
 	$user_count[$k]['pt_int'] = (int) ($user_count[$k]['pt'] * 1000.0 / $pt_max);
 }
+
+$user_count = array_slice($user_count, 0, $end);
 ?>
 				<tbody>
 <?php
@@ -199,7 +216,7 @@ function genData(string $id) {
 		'subchart' => [
 			'show' => true,
 			'defaultZoom' => [
-				strtotime("14 days ago") * 1000,
+				strtotime("28 days ago") * 1000,
 				strtotime("now") * 1000
 			]
 		],
@@ -225,7 +242,7 @@ function genData(string $id) {
 	} else {
 		$name = '所有人';
 		$step = 60*60;
-		$data['subchart']['defaultZoom'][0] = strtotime("3 days ago") * 1000;
+		$data['subchart']['defaultZoom'][0] = strtotime("7 days ago") * 1000;
 	}
 
 	$data['title'] = $name;

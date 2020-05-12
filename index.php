@@ -90,7 +90,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 
 			<h2 class="ts header">排行榜</h2>
 			<p>排名積分會依時間遠近調整權重，正確的駁回 <a href="/deleted">已刪投稿</a> 將大幅提升排名。</p>
-			<p>您可以在 <a href="/ranking">這個頁面</a> 查看前 50 名。</p>
+			<p>您可以在 <a href="/ranking">這個頁面</a> 查看排行榜。</p>
 
 			<h2 class="ts header">服務聲明</h2>
 			<p>感謝您使用「<?= SITENAME ?>」（以下簡稱本網站），本網站之所有文章皆為不特定使用者自行投稿、不特定師生進行審核，並不代表本網站立場。</p>

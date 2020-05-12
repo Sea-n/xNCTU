@@ -53,6 +53,7 @@ if (!$USER) {
 if (substr($text, 0, 1) == '/') {
 	$text = substr($text, 1);
 	[$cmd, $arg] = explode(' ', $text, 2);
+	$cmd = explode('@', $cmd, 2)[0];
 
 	switch($cmd) {
 		case 'start':
