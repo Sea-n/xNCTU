@@ -6,7 +6,7 @@ $db = new MyDB();
 $text = $TG->data['message']['text'] ?? '';
 
 if ($TG->ChatID < 0) {
-	if ($TG->ChatID != -1001489855993)
+	if ($TG->ChatID != LOG_GROUP)
 		$TG->sendMsg([
 			'text' => '目前尚未支援群組功能',
 			'reply_markup' => [

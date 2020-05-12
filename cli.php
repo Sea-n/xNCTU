@@ -118,13 +118,13 @@ case 'reject':
 
 		if (!$post['has_img'])
 			$TG->sendMsg([
-				'chat_id' => -1001489855993,
+				'chat_id' => LOG_GROUP,
 				'text' => $msg,
 				'reply_markup' => $keyboard,
 			]);
 		else
 			$TG->sendPhoto([
-				'chat_id' => -1001489855993,
+				'chat_id' => LOG_GROUP,
 				'photo' => 'https://' . DOMAIN . "/img/$uid.jpg",
 				'caption' => $msg,
 				'reply_markup' => $keyboard,

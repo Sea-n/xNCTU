@@ -24,5 +24,6 @@ define('FB_ACCESS_TOKEN', '');
 define('IG_PAGES_ID', '17841430128933487');
 
 define('BOT_TOKEN', '');
+define('LOG_GROUP', -1001489855993);
 
 define('MYSQL_PASSWORD', '');
