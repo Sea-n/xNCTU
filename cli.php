@@ -54,15 +54,17 @@ case 'reject':
 		$dt = time() - strtotime($post['created_at']);
 
 		if (strpos($post['author_name'], '境外') !== false) {
-			if ($post['rejects'] < 2)
-				continue;
+			/* Before 12 hour */
+			if ($dt < 12*60*60)
+				if ($post['rejects'] < 2)
+					continue;
 		} else {
 			/* Before 2 hour */
 			if ($dt < 2*60*60)
 				if ($post['rejects'] < 5)
 					continue;
 
-			/* 2 hour - 12 hour*/
+			/* 2 hour - 12 hour */
 			if ($dt < 12*60*60)
 				if ($post['rejects'] < 3)
 					continue;

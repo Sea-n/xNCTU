@@ -274,6 +274,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 				exit;
 			}
 
+			if (time() - strtotime($post['created_at']) > 3*60)
+				err('Timeout. 已超出時限，請重新投稿');
+
 			if ($post['status'] != 0)
 				err("Submission $uid status {$post['status']} is not eligible to be confirmed. 此投稿狀態不允許確認");
 
