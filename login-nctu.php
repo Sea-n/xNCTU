@@ -51,6 +51,7 @@ if (!$USER)
 	$db->insertUserStuid($data['username'], $data['email']);
 
 $_SESSION['stuid'] = $data['username'];
+$db->updateUserLogin($_SESSION['stuid']);
 
 echo "Login success!";
 $uri = '/';
