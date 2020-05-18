@@ -44,10 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 				if (strpos($author_name, '境外') !== false)
 					$ip_masked = $post['ip_addr'];
 
-				$author_photo = genPic($ip_masked);
-
 				if (!isset($_SESSION['stuid']))
-					$ip_masked = false;
+					$ip_masked = ip_mask_anon($ip_masked);
+
+				$author_photo = genPic($ip_masked);
 			}
 
 			$result[] = [

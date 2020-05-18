@@ -63,6 +63,12 @@ $ip_masked = ip_mask($post['ip_addr']);
 if (strpos($author_name, '境外') !== false)
 	$ip_masked = $post['ip_addr'];
 
+if (!isset($USER))
+	$ip_masked = ip_mask_anon($ip_masked);
+
+if (!empty($post['author_id']))
+	$ip_masked = false;
+
 if (!empty($post['author_id'])) {
 	$author = $db->getUserByStuid($post['author_id']);
 	$author_name = toHTML($author['name']);
@@ -116,7 +122,7 @@ if ($post['twitter_id'] > 10) { ?>
 
 					<div itemprop="author" itemscope itemtype="http://schema.org/Person" class="right floated author">
 						<img itemprop="image" class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <span itemprop="name"><?= $author_name ?></span>
-<?php if (isset($USER) && empty($post['author_id'])) { ?>
+<?php if ($ip_masked) { ?>
 						<br>
 						<span class="right floated">(<?= $ip_masked ?>)</span>
 <?php } ?>

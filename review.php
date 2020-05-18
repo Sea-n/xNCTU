@@ -120,6 +120,12 @@ foreach ($posts as $post) {
 	if (strpos($author_name, '境外') !== false)
 		$ip_masked = $post['ip_addr'];
 
+	if (!isset($USER))
+		$ip_masked = ip_mask_anon($ip_masked);
+
+	if (!empty($post['author_id']))
+		$ip_masked = false;
+
 	$author_photo = $post['author_photo'] ?? '';
 	if (empty($author_photo))
 		$author_photo = genPic($ip_masked);
@@ -164,7 +170,7 @@ if (isset($post['id'])) {
 				<div class="extra content">
 					<div class="right floated author">
 						<img class="ts circular avatar image" src="<?= $author_photo ?>" onerror="this.src='/assets/img/avatar.jpg';"> <?= $author_name ?>
-<?php if ((isset($USER) || $post['status'] == 10) && empty($post['author_id'])) { ?>
+<?php if ($ip_masked) { ?>
 						<br><span class="right floated">(<?= $ip_masked ?>)</span>
 <?php } ?>
 					</div>

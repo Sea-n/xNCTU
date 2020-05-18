@@ -133,6 +133,19 @@ function ip_mask(string $ip_addr): string {
 	return $ip6;
 }
 
+function ip_mask_anon(string $ip_addr): string {
+	if (strpos($ip_addr, '.') !== false) { // IPv4
+		$ip4 = explode('.', $ip_addr);
+		$ip4 = $ip4[0] . '.***.***.***';
+		return $ip4;
+	}
+
+	$ip6 = $ip_addr;
+	$ip6 = explode(':', $ip6);
+	$ip6 = $ip6[0] . ':' . $ip6[1] . ':****:****';
+	return $ip6;
+}
+
 function rand58(int $len = 1): string {
 	$base58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
