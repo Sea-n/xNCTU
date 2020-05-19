@@ -32,38 +32,40 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 			<h2 class="ts header">審文機制</h2>
 			<div id="review-content" style="height: 320px; overflow-y: hidden;">
 				<p>新版<?= SITENAME ?> 採自助式審文，所有交大師生皆可加入審核者的行列，以下是系統判斷標準</p>
+
 				<h4>(A) 具名投稿</h4>
-				<p>如在 5 分鐘內無 <button class="ts vote negative button">駁回</button>，免審核即自動發出，詳細判斷條件如下：</p>
+				<p>即使無人審核，經過 10 分鐘也會自動發出，詳細判斷條件如下：</p>
 				<ul>
-					<li>等待審核至少 5 分鐘</li>
-					<li><button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></li>
+					<li>2 分鐘至 10 分鐘：達到 3 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
+					<li>10 分鐘以後：<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></li>
 				</ul>
+
 				<h4>(B) 交大 IP 位址</h4>
-				<p>使用 113 位址投稿者，滿足以下條件即發出</p>
+				<p>使用 113 位址投稿者，滿足以下條件即發出：</p>
 				<ul>
+					<li>2 分鐘至 10 分鐘：達到 5 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
 					<li>10 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 2 個</li>
-					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></p>
+					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></li>
 				</ul>
 				<div class="ts negative raised compact segment">
 					<h5>例外狀況</h5>
 					<p>為避免非法文章意外通過，每天 02:00 - 08:00 門檻提升為 <button class="ts vote positive button">通過</button> 需比 <button class="ts vote negative button">駁回</button> 多 3 個</p>
 				</div>
+
 				<h4>(C) 使用台灣 IP 位址</h4>
-				<p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下<b>任一條件</b>即發出</p>
+				<p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下條件即發出：</p>
 				<ul>
-					<li>等待審核 10 分鐘：達到 5 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
-					<li>扣除&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;後拿到足夠的&nbsp;<button class="ts vote positive button">通過</button>&nbsp;數<ul>
-						<li>20 分鐘至 1 小時：達到 7 個&nbsp;<button class="ts vote positive button">通過</button></li>
-						<li>1 小時至 3 小時：達到 5 個&nbsp;<button class="ts vote positive button">通過</button></li>
-						<li>3 小時以後：達到 3 個&nbsp;<button class="ts vote positive button">通過</button></li>
-					</ul></li>
+					<li>5 分鐘至 20 分鐘：達到 7 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
+					<li>20 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 5 個</li>
+					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 3 個</li>
 				</ul>
+
 				<h4>(D) 境外 IP 位址</h4>
-				<p>使用境外 IP 發文除了自動化的廣告機器人外，很可能是心虛怕用台灣 IP 位址做壞事會被抓到，因此除非通過群眾嚴厲的審核，否則一概不發出</p>
+				<p>使用境外 IP 發文除了自動化的廣告機器人外，很可能是心虛怕用台灣 IP 位址做壞事會被抓到，因此除非通過群眾嚴厲的審核，否則一概不發出。</p>
 				<ul>
-					<li>等待審核至少 60 分鐘</li>
-					<li><button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個</li>
+					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個</li>
 				</ul>
+
 			</div>
 			<div id="hide-box">
 				<big onclick="more();" style="cursor: pointer; color: black;">展開完整規則 <i class="dropdown icon"></i></big>

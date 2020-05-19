@@ -122,8 +122,18 @@ function checkEligible(array $post): bool {
 
 	/* Rule for Logged-in users */
 	if (!empty($post['author_id'])) {
-		if ($dt < 4*60)
+		/* Less than 2 min */
+		if ($dt < 2*60)
 			return false;
+
+		/* No reject: 3 votes */
+		if ($post['rejects'] == 0 && $vote >= 3)
+			return true;
+
+		/* More than 10 min */
+		if ($dt < 9*60)
+			return false;
+
 		if ($vote < 0)
 			return false;
 
@@ -137,6 +147,14 @@ function checkEligible(array $post): bool {
 			if ($vote < 3)
 				return false;
 		}
+
+		/* Less than 2 min */
+		if ($dt < 2*60)
+			return false;
+
+		/* No reject: 5 votes */
+		if ($post['rejects'] == 0 && $vote >= 5)
+			return true;
 
 		/* Less than 10 min */
 		if ($dt < 9*60)
@@ -155,9 +173,12 @@ function checkEligible(array $post): bool {
 
 	/* Rule for Taiwan IP address */
 	if (strpos($post['author_name'], '境外') === false) {
-		/* If no reject & more than 10 min */
-		if ($post['rejects'] == 0)
-			if ($dt > 9*60 && $vote >= 5)
+		/* Less than 5 min */
+		if ($dt < 4*60)
+			return false;
+
+		/* No reject: 7 votes */
+		if ($post['rejects'] == 0 && $vote >= 7)
 				return true;
 
 		/* Less than 20 min */
@@ -165,22 +186,19 @@ function checkEligible(array $post): bool {
 			return false;
 
 		/* 20 min - 1 hour */
-		 if ($dt < 59*60 && $vote < 7)
-			 return false;
+		if ($dt < 59*60 && $vote < 5)
+			return false;
 
-		 /* 1 hour - 3 hour */
-		 if ($dt < 179*60 && $vote < 5)
-			 return false;
+		/* More than 1 hour */
+		if ($vote < 3)
+			return false;
 
-		 /* More than 3 hour */
-		 if ($vote < 3)
-			 return false;
-
-		 return true;
+		return true;
 	}
 
 	/* Rule for Foreign IP address */
 	if (true) {
+		/* More than 1 hour */
 		if ($dt < 59*60)
 			return false;
 
