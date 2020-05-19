@@ -20,7 +20,19 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 			</div>
 		</header>
 		<div class="ts container" name="main">
+			<h2 class="ts header">成立契機</h2>
+			<p>2014 年初，原版 <a target="_blank" href="https://www.facebook.com/CowBeiNCTU">@CowBeiNCTU</a> 成立，當時有公正的審文標準、系統性的 <a target="_blank" href="https://www.facebook.com/castnet.nctu/videos/2329809693899900/">交接傳承</a>，無奈於 2020 年 1 月中剛突破十萬篇時，遭不明人士檢舉下架。</p>
+			<p>隨後有人開設了 <a target="_blank" href="https://www.facebook.com/grumbleNCTU">@grumbleNCTU</a> 頂替，但因更新不夠即時、審文標準不夠明確等問題遭到同學們詬病。</p>
+			<p>2020 年 2 月中，由資工系學生推出靠北交大 2.0，並做出了數項改變避免重蹈覆徹：</p>
+			<ul>
+				<li>為了維持更新頻率，將審核工作下放至全體師生，任何師生只要登入 NCTU OAuth 帳號即可自助審文；除緊急刪除明顯違法文章外，所有師生與管理者票票等值。</li>
+				<li>為了達到審文透明化，雖然所有審核者皆為自由心證，未經過訓練也不強制遵從統一標準；但透過保留所有審核紀錄、被駁回的投稿皆提供全校師生檢視，增加審核標準的透明度。</li>
+				<li>除了改善制度面，也參考&nbsp;<a target="_blank" href="https://www.facebook.com/init.kobeengineer/">靠北工程師</a>&nbsp;概念，提供不同社群平台支援。</li>
+			</ul>
+			<p>期望能以嶄新的姿態，透過不斷精進制度與架構，將偉大大學推向靠北生態系巔峰。</p>
+
 			<h2 class="ts header">社群平台</h2>
+			<p>除了本站文章列表外，您可以在以下 5 個社群媒體平台追蹤<?= SITENAME ?> 帳號。</p>
 			<div class="icon-row">
 				<a id="telegram-icon"  class="ts link tiny rounded image" target="_blank" href="https://t.me/xNCTU"              ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg"   alt="Telegram" ></a>
 				<a id="twitter-icon"   class="ts link tiny rounded image" target="_blank" href="https://twitter.com/x_NCTU"      ><img src="https://image.flaticon.com/icons/svg/124/124021.svg"     alt="Twitter"  ></a>
