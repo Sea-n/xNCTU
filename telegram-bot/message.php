@@ -92,7 +92,7 @@ if (substr($text, 0, 1) == '/') {
 
 		case 'name':
 			$arg = $TG->enHTML(trim($arg));
-			if (empty($arg) || mb_strlen($arg) > 10) {
+			if (mb_strlen($arg) < 1 || mb_strlen($arg) > 10) {
 				$TG->sendMsg([
 					'text' => "使用方式：`/name 新暱稱`\n\n字數上限：10 個字",
 					'parse_mode' => 'Markdown'
@@ -181,7 +181,7 @@ if (substr($text, 0, 1) == '/') {
 
 			[$uid, $status, $reason] = explode(' ', $arg, 3);
 
-			if (empty($reason)) {
+			if (mb_strlen($reason) == 0) {
 				$TG->sendMsg([
 					'text' => "Usage: /delete <uid> <status> <reason>\n\n" .
 						"-2 rejected\n" .
@@ -269,7 +269,7 @@ if (preg_match('#^\[(approve|reject)/([a-zA-Z0-9]+)\]#', $TG->data['message']['r
 
 	$type = $vote == 1 ? '✅ 通過' : '❌ 駁回';
 
-	if (empty($reason) || mb_strlen($reason) > 100) {
+	if (mb_strlen($reason) < 1 || mb_strlen($reason) > 100) {
 		$TG->sendMsg([
 			'text' => '請輸入 1 - 100 字投票附註'
 		]);
