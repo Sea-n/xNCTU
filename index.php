@@ -75,7 +75,8 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<h4>(D) 境外 IP 位址</h4>
 				<p>使用境外 IP 發文除了自動化的廣告機器人外，很可能是心虛怕用台灣 IP 位址做壞事會被抓到，因此除非通過群眾嚴厲的審核，否則一概不發出。</p>
 				<ul>
-					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個</li>
+					<li>20 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個</li>
+					<li>1 小時以後：投稿掰掰</li>
 				</ul>
 
 			</div>

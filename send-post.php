@@ -199,7 +199,7 @@ function checkEligible(array $post): bool {
 	/* Rule for Foreign IP address */
 	if (true) {
 		/* More than 1 hour */
-		if ($dt < 59*60)
+		if ($dt < 19*60)
 			return false;
 
 		if ($vote < 10)
