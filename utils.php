@@ -224,10 +224,8 @@ function humanTime(string $date): string {
 }
 
 function idToDep(string $id): string {
-	/* Teachers */
-	if ($id == 'X9616') return '技術發展組';  # 王英鼎
-	if ($id == 'E9604') return '資工系';  # 張巧涵
-	if ($id == 'T0818') return '電子所';  # 林柏宏
+	if (preg_match('#^[A-Z][A-Z0-9][0-9]{3}$#', $id))
+		return '教職員';
 
 	if (!preg_match('#^\d{7}$#', $id))
 		return "非學生 $id";
@@ -248,9 +246,11 @@ function idToDep(string $id): string {
 			$dep = $n;
 	}
 
-	/* 4 year + (040 ~ 139) */
+	/* 040 ~ 139 */
 	$deg = (int)(($id[0] > '3' ? '0' : '1') . $id[0] . $id[1]);
-	if ($dep == '台中一中')
+	if ($id[3] == '5' || $id[3] == '6')
+		$deg += 2;
+	else if ($id[3] == '4')
 		$deg += 1;
 	else
 		$deg += 4;
