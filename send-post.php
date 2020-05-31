@@ -14,8 +14,7 @@ if ($cmd == 'update') {
 	if (!isset($argv[2]))
 		exit('No ID.');
 
-	$id = $argv[2];
-	$post = $db->getPostById($id);
+	$post = $db->getPostById($argv[2]);
 
 	update_telegram($post);
 	exit;
@@ -45,16 +44,16 @@ if (!isset($post))
 
 /* Prepare post content */
 assert(isset($post['id']));
-$id = $post['id'];
 $uid = $post['uid'];
-$body = $post['body'];
-
-/* img cannot be URL, Twitter required local file upload */
-$img = $post['has_img'] ? $uid : '';
 
 $time = strtotime($post['created_at']);
+
+$delay = floor(time() / 60) - floor($time / 60);  // Use what user see (without seconds)
+var_dump($delay);
+
 $time = date("Y 年 m 月 d 日 H:i", $time);
-$link = "https://$DOMAIN/post/$id";
+
+$link = "https://$DOMAIN/post/{$post['id']}";
 
 /* Send post to every SNS */
 $sns = [
@@ -70,7 +69,7 @@ foreach ($sns as $name => $key) {
 		if (isset($post["{$key}_id"]) && ($post["{$key}_id"] > 0 || strlen($post["{$key}_id"]) > 1))
 			continue;
 
-		$pid = $func($id, $body, $img);
+		$pid = $func($post);
 
 		if ($pid <= 0) { // Retry limit exceed
 			$dt = time() - strtotime($post['posted_at']);
@@ -79,7 +78,7 @@ foreach ($sns as $name => $key) {
 		}
 
 		if ($pid > 0)
-			$db->updatePostSns($id, $key, $pid);
+			$db->updatePostSns($post['id'], $key, $pid);
 		$post["{$key}_id"] = $pid;
 	} catch (Exception $e) {
 		echo "Send $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
@@ -90,6 +89,7 @@ foreach ($sns as $name => $key) {
 /* Update with link to other SNS */
 $sns = [
 	'Telegram' => 'telegram',
+	'Plurk' => 'plurk',
 ];
 foreach ($sns as $name => $key) {
 	try {
@@ -209,22 +209,23 @@ function checkEligible(array $post): bool {
 	}
 }
 
-function send_telegram(int $id, string $body, string $img = ''): int {
+function send_telegram(array $post): int {
 	global $TG, $link;
 
 	/* Check latest line */
-	$lines = explode("\n", $body);
+	$lines = explode("\n", $post['body']);
 	$end = end($lines);
 	$is_url = filter_var($end, FILTER_VALIDATE_URL);
-	if (empty($img) && $is_url)
-		$msg = "<a href='$end'>\x20\x0c</a>";
+	if (!$post['has_img'] && $is_url)
+		$msg = "<a href='$end'>#</a><a href='$link'>靠交{$post['id']}</a>";
 	else
-		$msg = "";
+		$msg = "<a href='$link'>#靠交{$post['id']}</a>";
 
-	$msg .= "<a href='$link'>#靠交$id</a>\n\n" . enHTML($body);
+	$msg .= "\n\n" . enHTML($post['body']);
+
 
 	/* Send to @xNCTU */
-	if (empty($img))
+	if (!$post['has_img'])
 		$result = $TG->sendMsg([
 			'chat_id' => '@xNCTU',
 			'text' => $msg,
@@ -234,7 +235,7 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 	else
 		$result = $TG->sendPhoto([
 			'chat_id' => '@xNCTU',
-			'photo' => 'https://' . DOMAIN . "/img/{$img}.jpg",
+			'photo' => 'https://' . DOMAIN . "/img/{$post['uid']}.jpg",
 			'caption' => $msg,
 			'parse_mode' => 'HTML',
 		]);
@@ -244,14 +245,14 @@ function send_telegram(int $id, string $body, string $img = ''): int {
 	return $tg_id;
 }
 
-function send_twitter(int $id, string $body, string $img = ''): int {
+function send_twitter(array $post): int {
 	global $link;
-	$msg = "#靠交$id\n\n$body";
+	$msg = "#靠交{$post['id']}\n\n{$post['body']}";
 	if (strlen($msg) > 250)
 		$msg = mb_substr($msg, 0, 120) . '...';
 	$msg .= "\n\n✅ $link .";
 
-	if (!empty($img)) {
+	if ($post['has_img']) {
 		$nonce     = md5(time());
 		$timestamp = time();
 
@@ -278,7 +279,7 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 			$authStr .= $key . '="' . urlencode($val) . '", ';
 		$authStr .= 'oauth_version="1.0"';
 
-		$file = ['media' => curl_file_create(__DIR__ . "/img/$img.jpg")];
+		$file = ['media' => curl_file_create(__DIR__ . "/img/{$post['uid']}.jpg")];
 
 		$curl = curl_init();
 		curl_setopt_array($curl, [
@@ -354,11 +355,11 @@ function send_twitter(int $id, string $body, string $img = ''): int {
 	return $result['id_str'];
 }
 
-function send_plurk(int $id, string $body, string $img = ''): int {
+function send_plurk(array $post): int {
 	global $link;
 
-	$msg = empty($img) ? '' : ('https://' . DOMAIN . "/img/$img.jpg\n");
-	$msg .= "#靠交$id\n$body";
+	$msg = $post['has_img'] ? ('https://' . DOMAIN . "/img/{$post['uid']}.jpg\n") : '';
+	$msg .= "#靠交{$post['id']}\n{$post['body']}";
 
 	if (mb_strlen($msg) > 290)
 		$msg = mb_substr($msg, 0, 290) . '...';
@@ -395,25 +396,25 @@ function send_plurk(int $id, string $body, string $img = ''): int {
 	}
 }
 
-function send_facebook(int $id, string $body, string $img = ''): int {
+function send_facebook(array $post): int {
 	global $link, $time;
-	$msg = "#靠交$id\n\n";
-	$msg .= "$body\n\n";
+	$msg = "#靠交{$post['id']}\n\n";
+	$msg .= "{$post['body']}\n\n";
 	$msg .= "投稿時間：$time\n";
 	$msg .= "✅ $link";
 
-	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . (empty($img) ? '/feed' : '/photos');
-   
+	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . ($post['has_img'] ? '/photos' : '/feed');
+
 	$data = ['access_token' => FB_ACCESS_TOKEN];
-	if (empty($img)) {
+	if (!$post['has_img']) {
 		$data['message'] = $msg;
 
-		$lines = explode("\n", $body);
+		$lines = explode("\n", $post['body']);
 		$end = end($lines);
 		if (filter_var($end, FILTER_VALIDATE_URL) && strpos($end, 'facebook') === false)
 			$data['link'] = $end;
 	} else {
-		$data['url'] = 'https://' . DOMAIN . "/img/$img.jpg";
+		$data['url'] = 'https://' . DOMAIN . "/img/{$post['uid']}.jpg";
 		$data['caption'] = $msg;
 	}
 
@@ -439,39 +440,102 @@ function send_facebook(int $id, string $body, string $img = ''): int {
 	return $post_id;
 }
 
-function send_instagram(int $id, string $body, string $img = ''): int {
-	if (empty($img))
+function send_instagram(array $post): int {
+	if (!$post['has_img'])
 		return -1;
 
-	system("(node " . __DIR__ . "/send-ig.js $id >> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err) &");
+	system("(node " . __DIR__ . "/send-ig.js {$post['id']} >> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err) &");
 
 	return 0;
 }
 
+
 function update_telegram(array $post) {
 	global $TG;
 
+	$buttons = [];
+
+	if ($post['facebook_id'] > 10)
+		$buttons[] = [
+			'text' => 'Facebook',
+			'url' => "https://www.facebook.com/xNCTU/posts/{$post['facebook_id']}"
+		];
+
 	$plurk = base_convert($post['plurk_id'], 10, 36);
+	if (strlen($plurk) > 1)
+		$buttons[] = [
+			'text' => 'Plurk',
+			'url' => "https://www.plurk.com/p/$plurk"
+		];
+
+	if ($post['twitter_id'] > 10)
+		$buttons[] = [
+			'text' => 'Twitter',
+			'url' => "https://twitter.com/x_NCTU/status/{$post['twitter_id']}"
+		];
+
+	if (strlen($post['instagram_id']) > 1)
+		$buttons[] = [
+			'text' => 'Instagram',
+			'url' => "https://www.instagram.com/p/{$post['instagram_id']}"
+		];
+
 	$TG->editMarkup([
 		'chat_id' => '@xNCTU',
 		'message_id' => $post['telegram_id'],
 		'reply_markup' => [
 			'inline_keyboard' => [
-				[
-					[
-						'text' => 'Facebook',
-						'url' => "https://www.facebook.com/xNCTU/posts/{$post['facebook_id']}"
-					],
-					[
-						'text' => 'Plurk',
-						'url' => "https://www.plurk.com/p/$plurk"
-					],
-					[
-						'text' => 'Twitter',
-						'url' => "https://twitter.com/x_NCTU/status/{$post['twitter_id']}"
-					],
-				]
+				$buttons
 			]
 		]
 	]);
+}
+
+function update_plurk(array $post) {
+	global $time, $delay, $link;
+
+	if ($delay <= 60)
+		$msg = "🕓 投稿時間：$time ($delay 分鐘前)\n\n";
+	else
+		$msg = "🕓 投稿時間：$time\n\n";
+
+	if ($post['rejects'])
+		$msg .= "審核結果：✅ 通過 {$post['approvals']} 票 / ❌ 駁回 {$post['rejects']} 票\n";
+	else
+		$msg .= "審核結果：✅ 通過 {$post['approvals']} 票\n";
+
+	$msg .= "🥙 其他平台：https://www.facebook.com/xNCTU/posts/{$post['facebook_id']} (Facebook)"
+		. "、https://twitter.com/x_NCTU/status/{$post['twitter_id']} (Twitter)";
+	if (strlen($post['instagram_id']) > 1)
+		$msg .= "、https://www.instagram.com/p/{$post['instagram_id']} (Instagram)";
+	$msg .= "、https://t.me/xNCTU/{$post['telegram_id']} (Telegram)\n\n";
+
+	$msg .= "👉 立即投稿：https://x.nctu.app/submit (https://x.nctu.app/submit)";
+
+	$nonce     = md5(time());
+	$timestamp = time();
+
+	/* Add Plurk */
+	$URL = 'https://www.plurk.com/APP/Responses/responseAdd?' . http_build_query([
+		'plurk_id' => $post['plurk_id'],
+		'content' => $msg,
+		'qualifier' => 'freestyle',
+		'lang' => 'tr_ch',
+	]);
+
+	$oauth = new OAuth(PLURK_CONSUMER_KEY, PLURK_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
+	$oauth->enableDebug();
+	$oauth->setToken(PLURK_TOKEN, PLURK_TOKEN_SECRET);
+	$oauth->setNonce($nonce);
+	$oauth->setTimestamp($timestamp);
+	$signature = $oauth->generateSignature('POST', $URL);
+
+	try {
+		$oauth->fetch($URL);
+		$oauth->getLastResponse();
+	} catch (Exception $e) {
+		echo "Plurk Message: $msg\n\n";
+		echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
+		echo $e->lastResponse . "\n";
+	}
 }
