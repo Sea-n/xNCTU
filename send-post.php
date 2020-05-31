@@ -148,8 +148,8 @@ function checkEligible(array $post): bool {
 				return false;
 		}
 
-		/* Less than 2 min */
-		if ($dt < 2*60)
+		/* Less than 3 min */
+		if ($dt < 3*60)
 			return false;
 
 		/* No reject: 5 votes */
@@ -198,8 +198,8 @@ function checkEligible(array $post): bool {
 
 	/* Rule for Foreign IP address */
 	if (true) {
-		/* More than 1 hour */
-		if ($dt < 19*60)
+		/* 10 min - 1 hour */
+		if ($dt < 9*60)
 			return false;
 
 		if ($vote < 10)
