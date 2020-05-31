@@ -46,12 +46,9 @@ if (!isset($post))
 assert(isset($post['id']));
 $uid = $post['uid'];
 
-$time = strtotime($post['created_at']);
-
-$delay = floor(time() / 60) - floor($time / 60);  // Use what user see (without seconds)
-var_dump($delay);
-
-$time = date("Y 年 m 月 d 日 H:i", $time);
+$created = strtotime($post['created_at']);
+$time = date("Y 年 m 月 d 日 H:i", $created);
+$dt = floor(time() / 60) - floor($created / 60);  // Use what user see (without seconds)
 
 $link = "https://$DOMAIN/post/{$post['id']}";
 
@@ -72,8 +69,8 @@ foreach ($sns as $name => $key) {
 		$pid = $func($post);
 
 		if ($pid <= 0) { // Retry limit exceed
-			$dt = time() - strtotime($post['posted_at']);
-			if ($dt > 3*5*60) // Total 3 times
+			$dtP = time() - strtotime($post['posted_at']);
+			if ($dtP > 3*5*60) // Total 3 times
 				$pid = 1;
 		}
 
@@ -90,6 +87,7 @@ foreach ($sns as $name => $key) {
 $sns = [
 	'Telegram' => 'telegram',
 	'Plurk' => 'plurk',
+	'Facebook' => 'facebook',
 ];
 foreach ($sns as $name => $key) {
 	try {
@@ -117,13 +115,13 @@ function checkEligible(array $post): bool {
 	if ($post['status'] != 3)
 		return false;
 
-	$dt = time() - strtotime($post['created_at']);
+	$dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
 	$vote = $post['approvals'] - $post['rejects'];
 
 	/* Rule for Logged-in users */
 	if (!empty($post['author_id'])) {
 		/* Less than 2 min */
-		if ($dt < 2*60)
+		if ($dt < 2)
 			return false;
 
 		/* No reject: 3 votes */
@@ -131,7 +129,7 @@ function checkEligible(array $post): bool {
 			return true;
 
 		/* More than 10 min */
-		if ($dt < 9*60)
+		if ($dt < 10)
 			return false;
 
 		if ($vote < 0)
@@ -149,7 +147,7 @@ function checkEligible(array $post): bool {
 		}
 
 		/* Less than 3 min */
-		if ($dt < 3*60)
+		if ($dt < 3)
 			return false;
 
 		/* No reject: 5 votes */
@@ -157,11 +155,11 @@ function checkEligible(array $post): bool {
 			return true;
 
 		/* Less than 10 min */
-		if ($dt < 9*60)
+		if ($dt < 10)
 			return false;
 
 		/* 10 min - 1 hour */
-		if ($dt < 59*60 && $vote < 2)
+		if ($dt < 60 && $vote < 2)
 			return false;
 
 		/* More than 1 hour */
@@ -174,7 +172,7 @@ function checkEligible(array $post): bool {
 	/* Rule for Taiwan IP address */
 	if (strpos($post['author_name'], '境外') === false) {
 		/* Less than 5 min */
-		if ($dt < 4*60)
+		if ($dt < 5)
 			return false;
 
 		/* No reject: 7 votes */
@@ -182,11 +180,11 @@ function checkEligible(array $post): bool {
 				return true;
 
 		/* Less than 20 min */
-		if ($dt < 19*60)
+		if ($dt < 20)
 			return false;
 
 		/* 20 min - 1 hour */
-		if ($dt < 59*60 && $vote < 5)
+		if ($dt < 60 && $vote < 5)
 			return false;
 
 		/* More than 1 hour */
@@ -199,7 +197,7 @@ function checkEligible(array $post): bool {
 	/* Rule for Foreign IP address */
 	if (true) {
 		/* 10 min - 1 hour */
-		if ($dt < 9*60)
+		if ($dt < 10)
 			return false;
 
 		if ($vote < 10)
@@ -247,6 +245,7 @@ function send_telegram(array $post): int {
 
 function send_twitter(array $post): int {
 	global $link;
+
 	$msg = "#靠交{$post['id']}\n\n{$post['body']}";
 	if (strlen($msg) > 250)
 		$msg = mb_substr($msg, 0, 120) . '...';
@@ -397,11 +396,8 @@ function send_plurk(array $post): int {
 }
 
 function send_facebook(array $post): int {
-	global $link, $time;
 	$msg = "#靠交{$post['id']}\n\n";
-	$msg .= "{$post['body']}\n\n";
-	$msg .= "投稿時間：$time\n";
-	$msg .= "✅ $link";
+	$msg .= "{$post['body']}";
 
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . ($post['has_img'] ? '/photos' : '/feed');
 
@@ -492,17 +488,17 @@ function update_telegram(array $post) {
 }
 
 function update_plurk(array $post) {
-	global $time, $delay, $link;
+	global $time, $dt;
 
-	if ($delay <= 60)
-		$msg = "🕓 投稿時間：$time ($delay 分鐘前)\n\n";
+	if ($dt <= 60)
+		$msg = "🕓 投稿時間：$time ($dt 分鐘前)\n\n";
 	else
 		$msg = "🕓 投稿時間：$time\n\n";
 
 	if ($post['rejects'])
-		$msg .= "審核結果：✅ 通過 {$post['approvals']} 票 / ❌ 駁回 {$post['rejects']} 票\n";
+		$msg .= "審核結果：✅ 通過 {$post['approvals']} 票 / ❌ 駁回 {$post['rejects']} 票\n\n";
 	else
-		$msg .= "審核結果：✅ 通過 {$post['approvals']} 票\n";
+		$msg .= "審核結果：✅ 通過 {$post['approvals']} 票\n\n";
 
 	$msg .= "🥙 其他平台：https://www.facebook.com/xNCTU/posts/{$post['facebook_id']} (Facebook)"
 		. "、https://twitter.com/x_NCTU/status/{$post['twitter_id']} (Twitter)";
@@ -537,5 +533,67 @@ function update_plurk(array $post) {
 		echo "Plurk Message: $msg\n\n";
 		echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
 		echo $e->lastResponse . "\n";
+	}
+}
+
+function update_facebook(array $post) {
+	global $time, $dt, $link;
+
+	$tips_all = [
+		"投稿時將網址放在最後一行，發文時將自動顯示頁面預覽",
+		"透過自動化審文系統，多數投稿會在 10 分鐘內發出",
+		"靠北交大 2.0 採自助式審文，全校師生皆能登入審核",
+
+		"靠北交大 2.0 除了 Facebook 外，還支援 Twitter、Plurk 等平台",
+		"你知道靠交也有 Instagram 帳號嗎？只要投稿圖片就會同步發佈至 IG 喔\nhttps://www.instagram.com/x_nctu/",
+
+		"審核紀錄公開透明，你可以看到誰以什麼原因通過/駁回了投稿",
+		"網站上「已刪投稿」區域可以看到被黑箱的記錄\nhttps://x.nctu.app/deleted",
+		"知道都是哪些系的同學在審文嗎？打開排行榜看看吧\nhttps://x.nctu.app/ranking",
+	];
+	$tip = $tips_all[ mt_rand(0, count($tips_all)-1) ];
+
+	$msg = "\n";  // First line is empty
+	if ($dt <= 60)
+		$msg .= "🕓 投稿時間：$time ($dt 分鐘前)\n\n";
+	else
+		$msg .= "🕓 投稿時間：$time\n\n";
+
+	if ($post['rejects'])
+		$msg .= "🗳 審核結果：✅ 通過 {$post['approvals']} 票 / ❌ 駁回 {$post['rejects']} 票\n";
+	else
+		$msg .= "🗳 審核結果：✅ 通過 {$post['approvals']} 票\n";
+	$msg .= "$link\n\n";
+
+	$msg .= "---\n\n";
+	if ($post['approvals'] > 7 || $dt < 10)
+		$msg .= "💡 $tips\n\n";
+
+	$msg .= "👉 立即投稿： https://x.nctu.app/submit";
+
+	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . "_{$post['facebook_id']}/comments";
+
+	$data = [
+		'access_token' => FB_ACCESS_TOKEN,
+		'message' => $msg,
+	];
+
+	$curl = curl_init();
+	curl_setopt_array($curl, [
+		CURLOPT_URL => $URL,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_POSTFIELDS => $data
+	]);
+
+	$result = curl_exec($curl);
+	curl_close($curl);
+	$result = json_decode($result, true);
+
+	$fb_id = $result['post_id'] ?? $result['id'] ?? '0_0';
+	$post_id = (int) explode('_', $fb_id)[0];
+
+	if ($post_id != $post['facebook_id']) {
+		echo "Facebook comment error:";
+		var_dump($result);
 	}
 }
