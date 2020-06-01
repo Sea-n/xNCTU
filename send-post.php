@@ -551,7 +551,7 @@ function update_facebook(array $post) {
 		"網站上「已刪投稿」區域可以看到被黑箱的記錄\nhttps://x.nctu.app/deleted",
 		"知道都是哪些系的同學在審文嗎？打開排行榜看看吧\nhttps://x.nctu.app/ranking",
 	];
-	$tip = $tips_all[ mt_rand(0, count($tips_all)-1) ];
+	$tips = $tips_all[ mt_rand(0, count($tips_all)-1) ];
 
 	$msg = "\n";  // First line is empty
 	if ($dt <= 60)

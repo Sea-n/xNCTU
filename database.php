@@ -40,7 +40,11 @@ class MyDB {
 	}
 
 	public function updateSubmissionStatus(string $uid, int $status) {
-		$sql = "UPDATE posts SET status = :status WHERE uid = :uid";
+		if ($status == 1)
+			$sql = "UPDATE posts SET status = :status, created_at = CURRENT_TIMESTAMP WHERE uid = :uid";
+		else
+			$sql = "UPDATE posts SET status = :status WHERE uid = :uid";
+
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,

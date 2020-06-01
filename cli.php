@@ -80,14 +80,15 @@ case 'reject':
 		}
 	}
 
+	/* Unconfirmed submissions */
 	$sql = "SELECT * FROM posts WHERE status = 0";
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
 	while ($post = $stmt->fetch()) {
-		$dt = time() - strtotime($post['created_at']);
+		$dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
 
 		/* Not within 3 - 4 min */
-		if ($dt < 3*60 || $dt > 4*60)
+		if ($dt <= 3 || $dt > 4)
 			continue;
 
 		$uid = $post['uid'];
@@ -137,4 +138,5 @@ case 'reject':
 
 default:
 	echo "Unknown argument: {$argv[1]}";
+	break;
 }
