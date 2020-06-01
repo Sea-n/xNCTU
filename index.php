@@ -67,8 +67,8 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<h4>(C) 使用台灣 IP 位址</h4>
 				<p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下條件即發出：</p>
 				<ul>
-					<li>5 分鐘至 20 分鐘：達到 7 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
-					<li>20 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 5 個</li>
+					<li>5 分鐘至 10 分鐘：達到 7 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
+					<li>10 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 5 個</li>
 					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 3 個</li>
 				</ul>
 

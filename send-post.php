@@ -179,11 +179,11 @@ function checkEligible(array $post): bool {
 		if ($post['rejects'] == 0 && $vote >= 7)
 				return true;
 
-		/* Less than 20 min */
-		if ($dt < 20)
+		/* Less than 10 min */
+		if ($dt < 10)
 			return false;
 
-		/* 20 min - 1 hour */
+		/* 10 min - 1 hour */
 		if ($dt < 60 && $vote < 5)
 			return false;
 
@@ -566,7 +566,7 @@ function update_facebook(array $post) {
 	$msg .= "$link\n\n";
 
 	$msg .= "---\n\n";
-	if ($post['approvals'] > 7 || $dt < 10)
+	if ($post['rejects'] == 0 && ($post['approvals'] >= 8 || $dt <= 9))
 		$msg .= "💡 $tips\n\n";
 
 	$msg .= "👉 立即投稿： https://x.nctu.app/submit";
