@@ -551,7 +551,16 @@ function update_facebook(array $post) {
 		"網站上「已刪投稿」區域可以看到被黑箱的記錄\nhttps://x.nctu.app/deleted",
 		"知道都是哪些系的同學在審文嗎？打開排行榜看看吧\nhttps://x.nctu.app/ranking",
 	];
-	$tips = $tips_all[ mt_rand(0, count($tips_all)-1) ];
+	$tips = $tips_all[ $post['id'] % count($tips_all) ];
+
+	$go_all = [
+		"立即投稿",
+		"匿名投稿",
+		"投稿連結",
+		"投稿點我",
+		"我要投稿",
+	];
+	$go = $go_all[ mt_rand(0, count($go_all)-1) ];
 
 	$msg = "\n";  // First line is empty
 	if ($dt <= 60)
@@ -566,10 +575,10 @@ function update_facebook(array $post) {
 	$msg .= "$link\n\n";
 
 	$msg .= "---\n\n";
-	if ($post['rejects'] == 0 && ($post['approvals'] >= 8 || $dt <= 9))
+	if ($post['rejects'] == 0 && ($dt <= 9 || $post['approvals'] >= 8))
 		$msg .= "💡 $tips\n\n";
 
-	$msg .= "👉 立即投稿： https://x.nctu.app/submit";
+	$msg .= "👉 {$go}： https://x.nctu.app/submit";
 
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . "_{$post['facebook_id']}/comments";
 
