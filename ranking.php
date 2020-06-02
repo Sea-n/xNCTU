@@ -106,7 +106,7 @@ usort($user_count, function($A, $B) {
 
 $pt_max = $user_count[0]['pt'];
 foreach($user_count as $k => $v) {
-	if ($k%5 == 0 && $user_count[$k]['pt'] < 5) {
+	if ($k > 0 && $k%5 == 0 && $user_count[$k]['pt'] < 5) {
 		$end = $k;
 		break;
 	}
@@ -128,7 +128,7 @@ foreach ($user_count as $i => $item) {
 	else
 		$photo = genPic($id);
 ?>
-					<tr title="<?= $item['pt_int'] ?> pt">
+					<tr title="<?= $item['pt_int'] ?> pt (<?= round($item['pt'], 1) ?>)">
 						<td><?= $no ?></td>
 						<td><?= $dep ?></td>
 						<td><img class="ts circular avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';"></td>
