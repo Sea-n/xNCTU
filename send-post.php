@@ -540,18 +540,28 @@ function update_facebook(array $post) {
 	global $time, $dt, $link;
 
 	$tips_all = [
-		"投稿時將網址放在最後一行，發文時將自動顯示頁面預覽",
+		"投稿時將網址放在最後一行，發文會自動顯示頁面預覽",
+		"電腦版投稿可以使用 Ctrl-V 上傳圖片",
+		"使用交大網路投稿會自動填入驗證碼",
+
 		"透過自動化審文系統，多數投稿會在 10 分鐘內發出",
+		"所有人皆可匿名投稿，全校師生皆可具名審核",
 		"靠北交大 2.0 採自助式審文，全校師生皆能登入審核",
+		"靠北交大 2.0 有 50% 以上投稿來自交大 IP 位址",
+		"登入後可看到 140.113.**.*87 格式的部分 IP 位址",
 
-		"靠北交大 2.0 除了 Facebook 外，還支援 Twitter、Plurk 等平台",
+		"靠北交大 2.0 除了 Facebook 外，還支援 Twitter、Plurk 等平台\nhttps://twitter.com/x_NCTU/",
+		"靠北交大 2.0 除了 Facebook 外，還支援 Plurk、Twitter 等平台\nhttps://www.plurk.com/xNCTU",
 		"你知道靠交也有 Instagram 帳號嗎？只要投稿圖片就會同步發佈至 IG 喔\nhttps://www.instagram.com/x_nctu/",
+		"告白交大 2.0 使用同套系統，在此為大家服務\nhttps://www.facebook.com/CrushNCTU/",
 
-		"審核紀錄公開透明，你可以看到誰以什麼原因通過/駁回了投稿",
+		"審核紀錄公開透明，你可以看到誰以什麼原因通過/駁回了投稿\nhttps://x.nctu.app/posts",
+		"覺得審核太慢嗎？你也可以來投票\nhttps://x.nctu.app/review",
 		"網站上「已刪投稿」區域可以看到被黑箱的記錄\nhttps://x.nctu.app/deleted",
 		"知道都是哪些系的同學在審文嗎？打開排行榜看看吧\nhttps://x.nctu.app/ranking",
 	];
-	$tips = $tips_all[ $post['id'] % count($tips_all) ];
+	assert(count($tips_all) % 7 != 0);
+	$tips = $tips_all[ ($post['id'] * 7) % count($tips_all) ];
 
 	$go_all = [
 		"立即投稿",
