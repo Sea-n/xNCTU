@@ -248,9 +248,9 @@ function idToDep(string $id): string {
 
 	/* 040 ~ 139 */
 	$deg = (int)(($id[0] > '3' ? '0' : '1') . $id[0] . $id[1]);
-	if ($id[3] == '5' || $id[3] == '6')
+	if ($id[2] == '5' || $id[2] == '6')
 		$deg += 2;
-	else if ($id[3] == '4')
+	else if ($id[2] == '4')
 		$deg += 1;
 	else
 		$deg += 4;
