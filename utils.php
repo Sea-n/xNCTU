@@ -109,6 +109,9 @@ function ip_mask(string $ip_addr): string {
 		if (preg_match('/^140\.113\.136\.2(09|1[0-9]|2[01])$/', $ip_addr))
 			return $ip_addr;  // NCTU Wireless NAT
 
+		if (preg_match('/^140\.113\.163\.2(3[89]|4[012])$/', $ip_addr))
+			return $ip_addr;  // NCTU Wireless
+
 		if (preg_match('/^140\.113\.0\.229$/', $ip_addr))
 			return $ip_addr;  // NCTU VPN
 
