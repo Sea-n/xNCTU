@@ -59,12 +59,12 @@ case 'reject':
 				if ($post['rejects'] < 2)
 					continue;
 		} else {
-			/* Before 2 hour */
-			if ($dt < 2*60*60)
+			/* Before 1 hour */
+			if ($dt < 1*60*60)
 				if ($post['rejects'] < 5)
 					continue;
 
-			/* 2 hour - 12 hour */
+			/* 1 hour - 12 hour */
 			if ($dt < 12*60*60)
 				if ($post['rejects'] < 3)
 					continue;
