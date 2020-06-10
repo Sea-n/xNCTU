@@ -440,7 +440,9 @@ function send_instagram(array $post): int {
 	if (!$post['has_img'])
 		return -1;
 
-	system("(node " . __DIR__ . "/send-ig.js {$post['id']} >> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err) &");
+	system("(node " . __DIR__ . "/send-ig.js {$post['id']} "
+		. ">> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err; "
+		. "php " . __FILE__ . " {$post['id']}) &");
 
 	return 0;
 }
