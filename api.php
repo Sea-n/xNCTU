@@ -274,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 				exit;
 			}
 
-			if (time() - strtotime($post['created_at']) > 3*60)
+			if (time() - strtotime($post['created_at']) > 15*60)
 				err('Timeout. 已超出時限，請重新投稿');
 
 			if ($post['status'] != 0)

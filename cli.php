@@ -85,10 +85,10 @@ case 'reject':
 	$stmt = $db->pdo->prepare($sql);
 	$stmt->execute();
 	while ($post = $stmt->fetch()) {
-		$dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
+		$dt = (int) (floor(time() / 60) - floor(strtotime($post['created_at']) / 60));
 
-		/* Not within 3 - 4 min */
-		if ($dt <= 3 || $dt > 4)
+		/* Only send notify when 10 min */
+		if ($dt != 10)
 			continue;
 
 		$uid = $post['uid'];
