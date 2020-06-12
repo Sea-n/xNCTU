@@ -55,10 +55,10 @@ $link = "https://$DOMAIN/post/{$post['id']}";
 /* Send post to every SNS */
 $sns = [
 	'Telegram' => 'telegram',
-	'Plurk' => 'plurk',
-	'Facebook' => 'facebook',
 	'Twitter' => 'twitter',
 	'Instagram' => 'instagram',
+	'Plurk' => 'plurk',
+	'Facebook' => 'facebook',
 ];
 foreach ($sns as $name => $key) {
 	try {
@@ -85,9 +85,9 @@ foreach ($sns as $name => $key) {
 
 /* Update with link to other SNS */
 $sns = [
-	'Telegram' => 'telegram',
-	'Plurk' => 'plurk',
 	'Facebook' => 'facebook',
+	'Plurk' => 'plurk',
+	'Telegram' => 'telegram',
 ];
 foreach ($sns as $name => $key) {
 	try {
@@ -440,9 +440,8 @@ function send_instagram(array $post): int {
 	if (!$post['has_img'])
 		return -1;
 
-	system("(node " . __DIR__ . "/send-ig.js {$post['id']} "
-		. ">> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err; "
-		. "php " . __FILE__ . " {$post['id']}) &");
+	system("node " . __DIR__ . "/send-ig.js {$post['id']} "
+		. ">> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err");
 
 	return 0;
 }
