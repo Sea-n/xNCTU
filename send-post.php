@@ -609,6 +609,9 @@ function update_facebook(array $post) {
 	curl_close($curl);
 	$result = json_decode($result, true);
 
+	if (strlen($result['id'] ?? '') > 10)
+		return;  // Success, id = Comment ID
+
 	$fb_id = $result['post_id'] ?? $result['id'] ?? '0_0';
 	$post_id = (int) explode('_', $fb_id)[0];
 
