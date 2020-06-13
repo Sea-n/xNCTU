@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			} else if ($author_name != '匿名, 交大') {
 				$posts = $db->getPostsByIp($ip_addr, 6);
 				if (count($posts) == 6) {
-					$last = strtotime($posts[2]['created_at']);
+					$last = strtotime($posts[5]['created_at']);
 					if (time() - $last < 3*60*60) {
 						$db->updateSubmissionStatus($uid, -12);
 						err('Please retry afetr 3 hours. 校外 IP 限制 3 小時內僅能發 5 篇文');
