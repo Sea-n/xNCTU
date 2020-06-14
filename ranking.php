@@ -217,7 +217,7 @@ function genData(string $id) {
 			'show' => true,
 			'defaultZoom' => [
 				strtotime("28 days ago") * 1000,
-				strtotime("now") * 1000
+				strtotime("today 24:00") * 1000
 			]
 		],
 		'types' => ['y0' => 'bar', 'y1' => 'bar', 'x' => 'x'],
@@ -241,12 +241,14 @@ function genData(string $id) {
 		$step = 6*60*60;
 	} else {
 		$name = '所有人';
-		$step = 60*60;
+		$step = 2*60*60;
 		$data['subchart']['defaultZoom'][0] = strtotime("7 days ago") * 1000;
 	}
 
 	$data['title'] = $name;
 	$begin = strtotime("2020-02-21 00:00");
+	if (!empty($id))
+		$begin = strtotime(explode(' ', $USER['created_at'], 2)[0] . " 00:00");
 	$end = strtotime("today 24:00");
 
 	for ($i=$begin; $i<=$end; $i+=$step) {
