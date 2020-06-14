@@ -69,19 +69,21 @@ foreach ($sns as $name => $key) {
 		$pid = $func($post);
 
 		if ($pid <= 0) { // Retry limit exceed
-			$dtP = time() - strtotime($post['posted_at']);
-			if ($dtP > 3*5*60) // Total 3 times
+			$dtP = floor(time()/60) - floor(strtotime($post['posted_at'])/60);
+			if ($dtP > 3*5) // Total 3 times
 				$pid = 1;
 		}
 
 		if ($pid > 0)
 			$db->updatePostSns($post['id'], $key, $pid);
-		$post["{$key}_id"] = $pid;
 	} catch (Exception $e) {
 		echo "Send $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
 		echo $e->lastResponse . "\n\n";
 	}
 }
+
+/* Update SNS ID (mainly for Instagram) */
+$post = $db->getPostById($post['id']);
 
 /* Update with link to other SNS */
 $sns = [
