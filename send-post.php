@@ -141,7 +141,8 @@ function checkEligible(array $post): bool {
 	}
 
 	/* Rule for NCTU IP address */
-	if ($post['author_name'] == '匿名, 交大') {
+	if ($post['author_name'] == '匿名, 交大'
+	 && $post['ip_addr'] != ip_mask($post['ip_addr'])) {
 		/* Night mode: 02:00 - 07:59 */
 		if (2 <= idate('H') && idate('H') <= 7) {
 			if ($vote < 3)
