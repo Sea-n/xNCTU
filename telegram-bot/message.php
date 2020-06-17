@@ -29,8 +29,8 @@ $USER = $db->getUserByTg($TG->FromID);
 if (!$USER) {
 	$msg = "*【$SITENAME 帳號申請單】*\n\n";
 	$msg .= "1. 姓名： `韋詠祥`\n";
-	$msg .= "2. 學號： `0816146`\n";
-	$msg .= "3. 系級： `資工系 112 級`\n";
+	$msg .= "2. 學號： `109550001`\n";
+	$msg .= "3. 系級： `資工系 113 級`\n";
 	$msg .= "4. Telegram Username： `@{$TG->data['message']['from']['username']}`\n";
 	$msg .= "5. Telegram UID： `{$TG->FromID}`\n";
 	$result = $TG->sendMsg([
