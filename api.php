@@ -449,7 +449,7 @@ function uploadImage(string $uid): string {
 	}
 
 	/* Convert all file type to jpg */
-	shell_exec("ffmpeg -i $dst $transpose $dst.jpg 2>&1");
+	shell_exec("ffmpeg -i $dst -q:v 1 $transpose $dst.jpg 2>&1");
 	unlink($dst);
 
 	return '';
