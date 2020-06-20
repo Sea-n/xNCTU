@@ -124,7 +124,7 @@ class MyDB {
 	}
 
 	public function deleteSubmission(string $uid, int $status = -1, string $reason) {
-		$sql = "UPDATE posts SET status = :status, delete_note = :reason, deleted_at = CURRENT_TIMESTAMP WHERE uid = :uid";
+		$sql = "UPDATE posts SET status = :status, delete_note = :reason, deleted_at = IF(deleted_at IS NULL, CURRENT_TIMESTAMP, deleted_at) WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
