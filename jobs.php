@@ -23,7 +23,7 @@ case 'tg_photo':
 	curl_close($curl);
 
 	file_put_contents("img/tg/{$tg_id}-x320.jpg", $file);
-	system("ffmpeg -y -i img/tg/{$tg_id}-x320.jpg -vf scale=64x64 img/tg/{$tg_id}-x64.jpg");
+	system("ffmpeg -y -i img/tg/{$tg_id}-x320.jpg -q:v 1 -vf scale=64x64 img/tg/{$tg_id}-x64.jpg");
 
 	break;
 
