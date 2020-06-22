@@ -141,9 +141,7 @@ foreach ($posts as $post) {
 				<div class="header">此文已刪除</div>
 				<p>刪除原因：<?= toHTML($post['delete_note']) ?? '(無)' ?></p>
 			</div>
-<?php }
-if (isset($post['id'])) {
-?>
+<?php } else if (isset($post['id'])) { ?>
 			<div class="ts positive message">
 				<div class="header">文章已發出</div>
 				<p>您可以在 <a href="/post/<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a> 找到這篇文章</p>
