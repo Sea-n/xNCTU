@@ -11,7 +11,7 @@ function init() {
 	adjustNav();
 	updateTime();
 
-	setInterval(updateTime, 500);
+	setInterval(updateTime, 200);
 }
 
 function adjustNav() {
@@ -49,7 +49,8 @@ function updateTime() {
 	.forEach((elem) => {
 		var ts = parseInt(elem.dataset.ts);
 		var time = timeFormat(ts);
-		elem.innerText = time;
+		if (elem.innerText != time)
+			elem.innerText = time;
 	});
 }
 
@@ -64,35 +65,34 @@ function timeFormat(ts = 0) {
 	var year = date.getFullYear();
 
 	var now = (new Date()).getTime();
-	var dt = now - ts;
+	var dt = Math.floor(now / 1000) - Math.floor(ts / 1000);
 
-	var time = hour + ':' + min;
+	var time = `${hour}:${min}`;
 
-	dt = Math.floor(dt / 1000);
 	if (dt < 0)
-		return time + ' (' + -dt + ' 秒後)';
+		return `${time} (${-dt} 秒後)`;
 
 	if (dt < 120)
-		return time + ' (' + dt + ' 秒前)';
+		return `${time} (${dt} 秒前)`;
 
-	dt = Math.floor(dt / 60);
+	dt = Math.floor(now / 1000 / 60) - Math.floor(ts / 1000 / 60);
 	if (dt < 90)
-		return time + ' (' + dt + ' 分鐘前)';
+		return `${time} (${dt} 分鐘前)`;
 
-	time = mon + ' 月 ' + day + ' 日 ' + time;
+	time = `${mon} 月 ${day} 日 ${time}`;
 
 	dt = Math.floor(dt / 60);
 	if (dt < 48)
-		return time + ' (' + dt + ' 小時前)';
+		return `${time} (${dt} 小時前)`;
 
 	dt = Math.floor(dt / 24);
 	if (dt < 45)
-		return time + ' (' + dt + ' 天前)';
+		return `${time} (${dt} 天前)`;
 
-	time = year + ' 年 ' + time;
+	time = `${year} 年 ${time}`;
 
 	dt = Math.floor(dt / 30);
-	return time + ' (' + dt + ' 個月前)';
+	return `${time} (${dt} 個月前)`;
 }
 
 function toHTML(str) {

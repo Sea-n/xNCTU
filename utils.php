@@ -207,7 +207,7 @@ function humanTime(string $date): string {
 	if ($dt <= 120)
 		return "$time ($dt 秒前)";
 
-	$dt = floor($dt / 60);
+	$dt = floor($now / 60) - floor($ts / 60);
 	if ($dt <= 90)
 		return "$time ($dt 分鐘前)";
 
