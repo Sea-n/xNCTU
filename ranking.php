@@ -71,8 +71,10 @@ foreach ($VOTES as $item) {
 	$user_count[ $item['voter'] ][ $item['vote'] ]++;
 	$vote_sum[ $item['vote'] ]++;
 
-	$dt = (time() - strtotime($item['created_at'])) / (24*60*60);
-	$dt = max(1, $dt);
+	/* After 1 day, half the score every week */
+	$dt = time() - strtotime($item['created_at']);
+	$dt = $dt / 24 / 60 / 60;
+	$dt = max($dt-1, 0);
 	$pt = pow(0.5, $dt/7);
 
 	if (in_array($item['uid'], $DEL)) {
