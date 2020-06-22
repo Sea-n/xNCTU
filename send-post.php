@@ -119,6 +119,7 @@ function checkEligible(array $post): bool {
 
 	$dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
 	$vote = $post['approvals'] - $post['rejects'];
+	$vote3 = $post['approvals'] - $post['rejects']*3;
 
 	/* Rule for Logged-in users */
 	if (!empty($post['author_id'])) {
@@ -127,7 +128,7 @@ function checkEligible(array $post): bool {
 			return false;
 
 		/* No reject: 3 votes */
-		if ($post['rejects'] == 0 && $vote >= 3)
+		if ($vote3 >= 3)
 			return true;
 
 		/* More than 10 min */
@@ -154,7 +155,7 @@ function checkEligible(array $post): bool {
 			return false;
 
 		/* No reject: 5 votes */
-		if ($post['rejects'] == 0 && $vote >= 5)
+		if ($vote3 >= 5)
 			return true;
 
 		/* Less than 10 min */
@@ -179,7 +180,7 @@ function checkEligible(array $post): bool {
 			return false;
 
 		/* No reject: 7 votes */
-		if ($post['rejects'] == 0 && $vote >= 7)
+		if ($vote3 >= 7)
 				return true;
 
 		/* Less than 10 min */
@@ -591,7 +592,8 @@ function update_facebook(array $post) {
 	$msg .= "$link\n\n";
 
 	$msg .= "---\n\n";
-	if ($dt <= 9 || $post['approvals'] - $post['rejects']*2 >= 6)
+	$vote2 = $post['approvals'] - $post['rejects']*2;
+	if ($dt <= 10 || $vote2 >= 6)
 		$msg .= "💡 $tips\n\n";
 
 	$msg .= "👉 {$go}： https://x.nctu.app/submit";

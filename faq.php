@@ -36,6 +36,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 
 			<h2 class="ts header" id="post-schedule">Q：投稿什麼時候會發出</h2>
 			<p>通過審核之文章將會進入發文佇列，由系統<b>每 5 分鐘</b> po 出一篇至各大社群平台，如欲搶先看也可申請加入審核團隊。</p>
+			<p>所謂無人 <button class="ts vote negative button">駁回</button> 門檻意指 <button class="ts vote positive button">通過</button> - <button class="ts vote negative button">駁回</button> * 3，以降低個人誤觸影響。</p>
 
 			<h2 class="ts header" id="deleted-submissions">Q：被駁回的機制是什麼</h2>
 			<p>當投稿被多數人駁回，或是放了很久卻達不到通過標準，就會被系統自動清理。</p>

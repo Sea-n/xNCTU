@@ -86,6 +86,8 @@ function sendReview(string $uid) {
 		$result = sendPost($uid, $msg, $has_img, $user['tg_id']);
 
 		if (!$result['ok']) {
+			if ($result['description'] == 'Forbidden: bot was blocked by the user')
+				$db->removeUserTg($user['tg_id']);
 			if ($result['description'] == 'Bad Request: chat not found')
 				$db->removeUserTg($user['tg_id']);
 			continue;
