@@ -50,12 +50,13 @@ function ip_from(string $ip_addr): string {
 
 		$name = str_replace("台灣之星電信", "台灣之星", $name);
 		$name = str_replace("台灣寬頻通訊顧問", "台灣寬頻通訊", $name);
+		$name = str_replace("台灣碩網網路娛樂", "台灣碩網", $name);
 		$name = str_replace("國家發展委員會", "國發會", $name);
 		return $name;
 	}
 
 	/* IPv6 address only have English org name for unknown reason */
-	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(\s*Co.,\s*Ltd.)*</td></tr>#', $resp, $matches)) {
+	if (preg_match('#<tr><td>Organization Name</td><td>([^<]+?)(\s*Co.,\s*Ltd.)*</td></tr>#i', $resp, $matches)) {
 		$name = $matches[1];
 		/* Check TANet Whois */
 		if ($name == 'Ministry of Education Computer Center') {
