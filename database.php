@@ -236,6 +236,36 @@ class MyDB {
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':stuid' => $stuid]);
 
+		/* Calculate vote streak, the users table record is independent from votes table */
+		$sql = "SELECT * FROM users WHERE stuid = :stuid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':stuid' => $stuid]);
+		$USER = $stmt->fetch();
+
+		$lv = strtotime($USER['last_vote']);
+		if (date('Ymd', $lv) == date('Ymd'))  // Already voted today
+			$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP"
+				. " WHERE stuid = :stuid";
+		else if (date('Ymd', $lv) == date('Ymd') - 1) {  // Streak from yesterday
+			if ($USER['current_vote_streak'] == $USER['highest_vote_streak'])
+				$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
+					. "current_vote_streak = current_vote_streak + 1, "
+					. "highest_vote_streak = highest_vote_streak + 1 "
+					. "WHERE stuid = :stuid";
+			else  // Streaking but not highest
+				$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
+					. "current_vote_streak = current_vote_streak + 1, "
+					. "highest_vote_streak = GREATEST(highest_vote_streak, current_vote_streak + 1) "
+					. "WHERE stuid = :stuid";
+		} else  // New day
+			$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
+				. "current_vote_streak = 1, "
+				. "highest_vote_streak = GREATEST(highest_vote_streak, 1)"
+				. " WHERE stuid = :stuid";
+
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':stuid' => $stuid]);
+
 		/* Return votes for submission */
 		$sql = "SELECT approvals, rejects FROM posts WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
