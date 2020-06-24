@@ -138,7 +138,7 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'update':
-			if ($TG->FromID != 109780439) {
+			if (!in_array($TG->FromID, TG_ADMINS)) {
 				$TG->sendMsg([
 					'text' => "此功能僅限管理員使用",
 				]);
@@ -170,7 +170,7 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'delete':
-			if ($TG->FromID != 109780439) {
+			if (!in_array($TG->FromID, TG_ADMINS)) {
 				$TG->sendMsg([
 					'text' => "此功能僅限管理員使用\n\n" .
 						"如果您有興趣為$SITENAME 盡一份心力的話，歡迎聯絡開發團隊 🙃"
@@ -204,7 +204,7 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'adduser':
-			if ($TG->FromID != 109780439) {
+			if (!in_array($TG->FromID, TG_ADMINS)) {
 				$TG->sendMsg([
 					'text' => "此功能僅限管理員使用",
 				]);

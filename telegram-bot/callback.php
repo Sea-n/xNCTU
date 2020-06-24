@@ -73,11 +73,7 @@ switch ($args[0]) {
 
 	case 'confirm':
 	case 'delete':
-		if (!in_array($TG->data['callback_query']['from']['id'], [
-			109780439,  # Sean
-			351382660,  # Eugene
-			859018590,  # s960194d
-		])) {
+		if (!in_array($TG->data['callback_query']['from']['id'], TG_ADMINS)) {
 			$TG->getTelegram('answerCallbackQuery', [
 				'callback_query_id' => $TG->data['callback_query']['id'],
 				'text' => '401 Unauthorized.',
