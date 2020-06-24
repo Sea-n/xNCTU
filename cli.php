@@ -135,6 +135,47 @@ case 'reject':
 
 	break;
 
+case 'update_likes':
+	$curl = curl_init();
+	curl_setopt_array($curl, [
+		CURLOPT_RETURNTRANSFER => true,
+	]);
+
+	$last = $db->getLastPostId();
+
+	for ($id=$last-100; $id<$last; $id++) {
+		$post = $db->getPostById($id);
+		$URL = 'https://graph.facebook.com/v7.0/' . FB_PAGES_ID . '_' . $post['facebook_id'] . '/reactions?fields=type,name,profile_type&limit=100000&access_token=' . FB_ACCESS_TOKEN;
+
+		curl_setopt_array($curl, [
+			CURLOPT_URL => $URL,
+		]);
+		$result = curl_exec($curl);
+		$result = json_decode($result, true);
+
+		if (!isset($result['data'])) {
+			echo "Error: $id\n";
+			var_dump($result);
+			$json = json_encode($result, JSON_PRETTY_PRINT);
+			file_put_contents("backup/fb-stat/error-$id", $json);
+			sleep(5);
+			continue;
+		}
+
+		$result = $result['data'];
+		$json = json_encode($result, JSON_PRETTY_PRINT);
+		file_put_contents("backup/fb-stat/reactions-$id", $json);
+
+		$likes = count($result);
+		$sql = "UPDATE posts SET fb_likes = :likes WHERE id = :id";
+		$stmt = $db->pdo->prepare($sql);
+		$stmt->execute([
+			':likes' => $likes,
+			':id' => $id,
+		]);
+	}
+	break;
+
 default:
 	echo "Unknown argument: {$argv[1]}";
 	break;

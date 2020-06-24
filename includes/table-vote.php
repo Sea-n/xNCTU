@@ -16,9 +16,9 @@ require_once(__DIR__ . '/../utils.php');
 if (isset($USER) || ($uid ?? 'x') == 'DEMO' || ($uid ?? 'x') == '2C8j') {
 	foreach ($VOTES as $i => $vote) {
 		$type = $vote['vote'] == 1 ? '✅ 通過' : '❌ 駁回';
-		$id = $vote['stuid'];
-		$user = $db->getUserByStuid($id);
-		$dep = idToDep($id);
+		$stuid = $vote['stuid'];
+		$user = $db->getUserByStuid($stuid);
+		$dep = idToDep($stuid);
 		$name = toHTML($user['name']);
 ?>
 		<tr>

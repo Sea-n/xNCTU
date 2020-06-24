@@ -145,6 +145,46 @@ if ($post['twitter_id'] > 10) { ?>
 <?php
 include('includes/table-vote.php');
 ?>
+			<br><hr>
+			<div class="recommended-posts">
+				<h2 class="ts header">推薦文章</h2>
+				<div class="ts three cards">
+<?php
+$posts = $db->getPosts(500);
+$posts = array_filter($posts, function($post) {
+	return $post['id'] != $id;
+});
+
+usort($posts, function (array $a, array $b) {
+	return $b['fb_likes'] <=> $a['fb_likes'];
+});
+$posts = array_slice($posts, 0, 50);
+
+$posts2 = [];
+for ($i=1; $i<=12; $i++) {
+	$pos = $id % ($i*4);
+	$posts2[] = array_splice($posts, $pos, 1)[0];
+}
+
+foreach ($posts2 as $post) {
+	$body = $post['body'];
+	$body = mb_substr($body, 0, 200) . '....';
+	$body = toHTML($body);
+?>
+	<div class="ts card" onclick="location.href = '/post/<?= $post['id'] ?>';" style="cursor: pointer;">
+		<div class="content">
+			<div class="header"><a href="/post/<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a></div>
+			<div class="description" style="height: 200px; overflow-y: hidden;">
+				<?= $body ?>
+			</div>
+			<div id="hide-box">
+				<sub>點擊打開全文</sub>
+			</div>
+		</div>
+	</div>
+<?php } ?>
+				</div>
+			</div>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>
