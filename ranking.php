@@ -25,7 +25,7 @@ $TITLE = '排行榜';
 		<div class="ts container" name="main">
 			<p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半。</p>
 			<p>正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</a>
-			<p>連續投票天數顯示最高連續天數，以台灣時間換日線為基準。如目前仍未中斷則標記 ⚡️ 符號。</p>
+			<p>連續投票天數以台灣時間 24:00 為計算基準，如當日已投票、仍未中斷將標記 ⚡️ 符號。</p>
 			<p>點擊名字可將頁尾圖表切換為個人投票記錄。</p>
 
 			<table class="ts table">
@@ -134,12 +134,19 @@ foreach ($user_count as $i => $item) {
 		$photo = genPic($id);
 
 	$lv = strtotime($item['user']['last_vote']);
-	$streak = $item['user']['highest_vote_streak'];
-	if ($item['user']['current_vote_streak'] == $item['user']['highest_vote_streak']
-	&& (date('Ymd') == date('Ymd', $lv) || date('Ymd') == date('Ymd', $lv-24*60*60)))
-		$streak = "⚡️ {$streak} 天";
+	$sc = $item['user']['current_vote_streak'];
+	$sh = $item['user']['highest_vote_streak'];
+	$smx = max($smx, $sh);
+
+	if (date('Ymd') == date('Ymd', $lv))
+		$streak = "$sc 天 ⚡️";  // Currently streak
+	else if (date('Ymd') == date('Ymd', $lv + 24*60*60))
+		$streak = "$sc 天";  // Not voted today
 	else
-		$streak = "⬜️ {$streak} 天";
+		$streak = "<sub>最高 $sh 天</sub>";
+
+	if ($streak[-1] != ">" && $sc != $sh)
+		$streak .= "<sub> / 最高 $sh 天</sub>";
 ?>
 					<tr title="<?= $item['pt_int'] ?> pt (<?= round($item['pt'], 1) ?>)">
 						<td><?= $no ?></td>
@@ -158,7 +165,7 @@ foreach ($user_count as $i => $item) {
 						<td><a onclick="changeChart('ALL')">沒有人</a></td>
 						<td><?= $vote_sum[1] ?></td>
 						<td><?= $vote_sum[-1] ?></td>
-						<td>-</td>
+						<td><sub>總共 <?= $smx ?> 天</sub></td>
 					</tr>
 				</tbody>
 			</table>
