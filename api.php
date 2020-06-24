@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 			$votes = $db->getVotesByUid($uid);
 
 			foreach ($votes as $item) {
-				$id = $item['voter'];
+				$id = $item['stuid'];
 				$user = $db->getUserByStuid($id);
 
 				$result['votes'][] = [
@@ -229,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if (strlen($uid) != 4)
 			err('uid invalid. 投稿編號無效');
 
-		$voter = $_SESSION['stuid'];
+		$stuid = $_SESSION['stuid'];
 
 		$vote = $_POST['vote'] ?? 0;
 		if ($vote != 1 && $vote != -1)
@@ -242,11 +242,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if (mb_strlen($reason) > 100)
 			err('附註請輸入 100 個字以內');
 
-		$result = $db->voteSubmissions($uid, $voter, $vote, $reason);
+		$result = $db->voteSubmissions($uid, $stuid, $vote, $reason);
 		echo json_encode($result, JSON_PRETTY_PRINT);
 
 		if ($result['ok'])
-			system("php jobs.php vote $uid $voter > /dev/null &");
+			system("php jobs.php vote $uid $stuid > /dev/null &");
 	} else {
 		err('Unknown POST action. 未知的操作');
 	}

@@ -31,8 +31,6 @@ case 'dump':
 			if ($table == 'votes') {
 				$item['uid'] .= ' ' . mb_substr($posts[ $item['uid'] ]['body'], 0, 20) . '..';
 
-				$item['voter'] = idToDep($item['voter']) . ' ' . $item['voter'];
-
 				$item['vote'] = ($item['vote'] == '1' ? '✅ 通過' : '❌ 駁回');
 			}
 

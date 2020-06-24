@@ -174,7 +174,7 @@ class MyDB {
 	}
 
 	/* Check can user vote for certain submission or not */
-	public function canVote(string $uid, string $voter): array {
+	public function canVote(string $uid, string $stuid): array {
 		$post = $this->getPostByUid($uid);
 		if (!$post)
 			return ['ok' => false, 'msg' => 'uid not found. 找不到該投稿'];
@@ -191,11 +191,11 @@ class MyDB {
 				'msg' => '投稿已刪除，理由：' . $post['delete_note']
 			];
 
-		$sql = "SELECT created_at FROM votes WHERE uid = :uid AND voter = :voter";
+		$sql = "SELECT created_at FROM votes WHERE uid = :uid AND stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
-			':voter' => $voter
+			':stuid' => $stuid
 		]);
 		if ($stmt->fetch())
 			return ['ok' => false, 'msg' => 'Already voted. 您已投過票'];
@@ -203,7 +203,7 @@ class MyDB {
 		return ['ok' => true];
 	}
 
-	public function voteSubmissions(string $uid, string $voter, int $vote, string $reason = '') {
+	public function voteSubmissions(string $uid, string $stuid, int $vote, string $reason = '') {
 		if ($vote == 1)
 			$type = 'approvals';
 		else if ($vote == -1)
@@ -214,17 +214,17 @@ class MyDB {
 		if (mb_strlen($reason) > 100)
 			return ['ok' => false, 'msg' => 'Reason too long. 附註文字過長'];
 
-		$check = $this->canVote($uid, $voter);
+		$check = $this->canVote($uid, $stuid);
 		if (!$check['ok'])
 			return $check;
 
-		$sql = "INSERT INTO votes(uid, vote, reason, voter) VALUES (:uid, :vote, :reason, :voter)";
+		$sql = "INSERT INTO votes(uid, vote, reason, stuid) VALUES (:uid, :vote, :reason, :stuid)";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,
 			':vote' => $vote,
 			':reason' => $reason,
-			':voter' => $voter
+			':stuid' => $stuid
 		]);
 
 		/* Caution: use string combine in SQL query */
@@ -232,10 +232,11 @@ class MyDB {
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
 
-		$sql = "UPDATE users SET $type = $type + 1 WHERE stuid = :voter";
+		$sql = "UPDATE users SET $type = $type + 1 WHERE stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':voter' => $voter]);
+		$stmt->execute([':stuid' => $stuid]);
 
+		/* Return votes for submission */
 		$sql = "SELECT approvals, rejects FROM posts WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
@@ -270,7 +271,7 @@ class MyDB {
 	}
 
 	private function getVotesByUser(string $stuid) {
-		$sql = "SELECT * FROM votes WHERE voter = :stuid ORDER BY created_at DESC";
+		$sql = "SELECT * FROM votes WHERE stuid = :stuid ORDER BY created_at DESC";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':stuid' => $stuid]);
 
@@ -282,7 +283,7 @@ class MyDB {
 	}
 
 	public function getVote(string $uid, string $stuid) {
-		$sql = "SELECT * FROM votes WHERE uid = :uid AND voter = :stuid";
+		$sql = "SELECT * FROM votes WHERE uid = :uid AND stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([
 			':uid' => $uid,

@@ -60,15 +60,15 @@ $VOTES = $db->getVotes();
 $user_count = [];
 $vote_sum = [1=>0, -1=>0];
 foreach ($VOTES as $item) {
-	if (!isset($user_count[ $item['voter'] ])) {
-		$user_count[ $item['voter'] ] = [
+	if (!isset($user_count[ $item['stuid'] ])) {
+		$user_count[ $item['stuid'] ] = [
 			1 => 0, -1 => 0,
 			'pt' => 0,
-			'id' => $item['voter'],
+			'id' => $item['stuid'],
 		];
 	}
 
-	$user_count[ $item['voter'] ][ $item['vote'] ]++;
+	$user_count[ $item['stuid'] ][ $item['vote'] ]++;
 	$vote_sum[ $item['vote'] ]++;
 
 	/* After 1 day, half the score every week */
@@ -84,7 +84,7 @@ foreach ($VOTES as $item) {
 			$pt *= 10;
 	}
 
-	$user_count[ $item['voter'] ]['pt'] += $pt;
+	$user_count[ $item['stuid'] ]['pt'] += $pt;
 }
 
 foreach($user_count as $k => $v) {
@@ -260,7 +260,7 @@ function genData(string $id) {
 	}
 
 	foreach ($VOTES as $vote) {
-		if (!empty($id) && $vote['voter'] != $id)
+		if (!empty($id) && $vote['stuid'] != $id)
 			continue;
 
 		$ts = strtotime($vote['created_at']);
