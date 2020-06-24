@@ -18,6 +18,7 @@ case 'dump':
 	$tables = ['posts', 'votes', 'users', 'tg_msg'];
 	foreach ($tables as $table) {
 		$sql = "SELECT * FROM $table ORDER BY created_at DESC";
+		$db->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		$stmt = $db->pdo->prepare($sql);
 		$stmt->execute();
 		$data[$table] = [];

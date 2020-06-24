@@ -25,6 +25,8 @@ $TITLE = '排行榜';
 		<div class="ts container" name="main">
 			<p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半。</p>
 			<p>正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</a>
+			<p>連續投票天數顯示最高連續天數，以台灣時間換日線為基準。如目前仍未中斷則標記 ⚡️ 符號。</p>
+			<p>點擊名字可將頁尾圖表切換為個人投票記錄。</p>
 
 			<table class="ts table">
 				<thead>
@@ -35,6 +37,7 @@ $TITLE = '排行榜';
 						<th>暱稱</th>
 						<th>✅ 通過</th>
 						<th>❌ 駁回</th>
+						<th>🚀 連續投票</th>
 					</tr>
 				</thead>
 <?php
@@ -129,6 +132,14 @@ foreach ($user_count as $i => $item) {
 		$photo = "/img/tg/{$item['user']['tg_id']}-x64.jpg";
 	else
 		$photo = genPic($id);
+
+	$lv = strtotime($item['user']['last_vote']);
+	$streak = $item['user']['highest_vote_streak'];
+	if ($item['user']['current_vote_streak'] == $item['user']['highest_vote_streak']
+	&& (date('Ymd') == date('Ymd', $lv) || date('Ymd') == date('Ymd', $lv-24*60*60)))
+		$streak = "⚡️ {$streak} 天";
+	else
+		$streak = "⬜️ {$streak} 天";
 ?>
 					<tr title="<?= $item['pt_int'] ?> pt (<?= round($item['pt'], 1) ?>)">
 						<td><?= $no ?></td>
@@ -137,6 +148,7 @@ foreach ($user_count as $i => $item) {
 						<td><a onclick="changeChart('<?= $i ?>')"><?= $name ?></a></td>
 						<td><?= $item[1] ?></td>
 						<td><?= $item[-1] ?></td>
+						<td><?= $streak ?></td>
 					</tr>
 <?php } ?>
 					<tr>
@@ -146,6 +158,7 @@ foreach ($user_count as $i => $item) {
 						<td><a onclick="changeChart('ALL')">沒有人</a></td>
 						<td><?= $vote_sum[1] ?></td>
 						<td><?= $vote_sum[-1] ?></td>
+						<td>-</td>
 					</tr>
 				</tbody>
 			</table>
