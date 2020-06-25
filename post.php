@@ -148,10 +148,11 @@ include('includes/table-vote.php');
 			<br><hr>
 			<div class="recommended-posts">
 				<h2 class="ts header">推薦文章</h2>
-				<div class="ts three cards">
+				<div class="ts two cards">
 <?php
 $posts = $db->getPosts(500);
 $posts = array_filter($posts, function($post) {
+	global $id;
 	return $post['id'] != $id;
 });
 
@@ -161,20 +162,20 @@ usort($posts, function (array $a, array $b) {
 $posts = array_slice($posts, 0, 50);
 
 $posts2 = [];
-for ($i=1; $i<=12; $i++) {
-	$pos = $id % ($i*4);
+for ($i=1; $i<=8; $i++) {
+	$pos = $id % ($i*3);
 	$posts2[] = array_splice($posts, $pos, 1)[0];
 }
 
 foreach ($posts2 as $post) {
 	$body = $post['body'];
-	$body = mb_substr($body, 0, 200) . '....';
+	$body = mb_substr($body, 0, 480) . '....';
 	$body = toHTML($body);
 ?>
 	<div class="ts card" onclick="location.href = '/post/<?= $post['id'] ?>';" style="cursor: pointer;">
 		<div class="content">
 			<div class="header"><a href="/post/<?= $post['id'] ?>">#靠交<?= $post['id'] ?></a></div>
-			<div class="description" style="height: 200px; overflow-y: hidden;">
+			<div class="description" style="height: 360px; overflow-y: hidden;">
 				<?= $body ?>
 			</div>
 			<div id="hide-box">

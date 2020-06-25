@@ -157,14 +157,14 @@ case 'update_likes':
 			echo "Error: $id\n";
 			var_dump($result);
 			$json = json_encode($result, JSON_PRETTY_PRINT);
-			file_put_contents("backup/fb-stat/error-$id", $json);
+			file_put_contents(__DIR__ . "/backup/fb-stat/error-$id", $json);
 			sleep(5);
 			continue;
 		}
 
 		$result = $result['data'];
 		$json = json_encode($result, JSON_PRETTY_PRINT);
-		file_put_contents("backup/fb-stat/reactions-$id", $json);
+		file_put_contents(__DIR__ . "/backup/fb-stat/reactions-$id", $json);
 
 		$likes = count($result);
 		$sql = "UPDATE posts SET fb_likes = :likes WHERE id = :id";

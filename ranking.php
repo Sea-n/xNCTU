@@ -239,7 +239,7 @@ function genData(string $id) {
 			'show' => true,
 			'defaultZoom' => [
 				strtotime("28 days ago") * 1000,
-				strtotime("today 24:00") * 1000
+				strtotime(" 0 days ago") * 1000
 			]
 		],
 		'types' => ['y0' => 'bar', 'y1' => 'bar', 'x' => 'x'],
