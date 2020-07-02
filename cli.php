@@ -145,6 +145,9 @@ case 'update_likes':
 
 	for ($id=$last-100; $id<$last; $id++) {
 		$post = $db->getPostById($id);
+		if ($post['status'] != 5)
+			continue;
+
 		$URL = 'https://graph.facebook.com/v7.0/' . FB_PAGES_ID . '_' . $post['facebook_id'] . '/reactions?fields=type,name,profile_type&limit=100000&access_token=' . FB_ACCESS_TOKEN;
 
 		curl_setopt_array($curl, [

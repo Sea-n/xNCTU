@@ -246,16 +246,15 @@ class MyDB {
 		if (date('Ymd', $lv) == date('Ymd'))  // Already voted today
 			$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP"
 				. " WHERE stuid = :stuid";
-		else if (date('Ymd', $lv) == date('Ymd') - 1) {  // Streak from yesterday
+		else if (date('Ymd', $lv) == date('Ymd', time() - 24*60*60)) {  // Streak from yesterday
 			if ($USER['current_vote_streak'] == $USER['highest_vote_streak'])
 				$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
 					. "current_vote_streak = current_vote_streak + 1, "
-					. "highest_vote_streak = highest_vote_streak + 1 "
+					. "highest_vote_streak = current_vote_streak "
 					. "WHERE stuid = :stuid";
 			else  // Streaking but not highest
 				$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
 					. "current_vote_streak = current_vote_streak + 1, "
-					. "highest_vote_streak = GREATEST(highest_vote_streak, current_vote_streak + 1) "
 					. "WHERE stuid = :stuid";
 		} else  // New day
 			$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
