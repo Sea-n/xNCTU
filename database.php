@@ -254,13 +254,13 @@ class MyDB {
 					. "WHERE stuid = :stuid";
 			else  // Streaking but not highest
 				$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
-					. "current_vote_streak = current_vote_streak + 1, "
+					. "current_vote_streak = current_vote_streak + 1 "
 					. "WHERE stuid = :stuid";
 		} else  // New day
 			$sql = "UPDATE users SET last_vote = CURRENT_TIMESTAMP, "
 				. "current_vote_streak = 1, "
-				. "highest_vote_streak = GREATEST(highest_vote_streak, 1)"
-				. " WHERE stuid = :stuid";
+				. "highest_vote_streak = GREATEST(highest_vote_streak, 1) "
+				. "WHERE stuid = :stuid";
 
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':stuid' => $stuid]);
