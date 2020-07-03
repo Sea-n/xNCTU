@@ -94,3 +94,8 @@ p {
 	z-index: 1;
 	background-image: linear-gradient(-180deg, #FFF0 0%, #FFFF 100%);
 }
+
+.faq-anchor {
+	top: -40px;
+	visibility: hidden;
+}
