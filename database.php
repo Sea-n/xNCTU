@@ -97,32 +97,6 @@ class MyDB {
 		return $results;
 	}
 
-	/* Return submissions with previous vote */
-	public function getSubmissionsForVoter(int $limit, bool $desc = true, string $stuid) {
-		if ($limit == 0) $limit = 9487;
-
-		$data = $this->getVotesByUser($stuid);
-		$votes = [];
-		foreach ($data as $item)
-			$votes[ $item['uid'] ] = $item['vote'];
-
-		$posts = $this->getSubmissions(0, $desc);
-
-		$results = [];
-		foreach ($posts as $item) {
-			/* Should be 1 or -1 or NULL, not 0 */
-			if (isset($votes[ $item['uid'] ]))
-				$item['vote'] = $votes[ $item['uid'] ];
-
-			if (!$limit--)
-				break;
-
-			$results[] = $item;
-		}
-
-		return $results;
-	}
-
 	public function deleteSubmission(string $uid, int $status = -1, string $reason) {
 		$sql = "UPDATE posts SET status = :status, delete_note = :reason, deleted_at = IF(deleted_at IS NULL, CURRENT_TIMESTAMP, deleted_at) WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
@@ -299,18 +273,6 @@ class MyDB {
 		return $results;
 	}
 
-	private function getVotesByUser(string $stuid) {
-		$sql = "SELECT * FROM votes WHERE stuid = :stuid ORDER BY created_at DESC";
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':stuid' => $stuid]);
-
-		$results = [];
-		while ($item = $stmt->fetch())
-			$results[] = $item;
-
-		return $results;
-	}
-
 	public function getVote(string $uid, string $stuid) {
 		$sql = "SELECT * FROM votes WHERE uid = :uid AND stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
@@ -474,7 +436,9 @@ class MyDB {
 		]);
 	}
 
-	public function getUserByStuid(string $id) {
+	public function getUserByStuid(string $id = ''): ?array {
+		if (empty($id))
+			return NULL;
 		$sql = "SELECT * FROM users WHERE stuid = :id";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':id' => $id]);
