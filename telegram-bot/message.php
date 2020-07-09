@@ -251,6 +251,72 @@ if (substr($text, 0, 1) == '/') {
 				]);
 			break;
 
+		case 'migrate':
+			if (!in_array($TG->FromID, TG_ADMINS)) {
+				$TG->sendMsg([
+					'text' => "此功能僅限管理員使用",
+				]);
+				exit;
+			}
+
+			if ($arg == '') {
+				$TG->sendMsg([
+					'text' => "使用方式：/migrate <old stuid> [new stuid]",
+				]);
+				exit;
+			}
+			$args = explode(' ', $arg);
+
+			$stuid_old = $args[0];
+			$stuid_new = $args[1] ?? '';
+
+			$user_old = $db->getUserByStuid($stuid_old);
+			$user_new = $db->getUserByStuid($stuid_new);
+
+			if ($stuid_new == '') {
+				$posts = $db->getPostsByStuid($stuid_old);
+				$votes = $db->getVotesByStuid($stuid_old);
+
+				$text = "舊使用者資訊：\n";
+				$text .= "暱稱：{$user_old['name']}\n";
+				if (count($posts)) $text .= "投稿數：" . count($posts) . " 篇\n";
+				if (count($votes)) $text .= "投票數：" . count($votes) . " 篇\n";
+
+				$TG->sendMsg([
+					'text' => $text
+				]);
+				break;
+			}
+
+			if (isset($user_new)) {
+				$TG->sendMsg([
+					'text' => "新帳號 {$user_new['name']} 已註冊"
+				]);
+				break;
+			}
+
+			$sql = "UPDATE posts SET author_id = :new WHERE author_id = :old";
+
+			$TG->sendMsg([
+				'text' => "SQL: $sql"
+			]);
+			$stmt = $db->pdo->prepare($sql);
+			$stmt->execute([':old' => $stuid_old, ':new' => $stuid_new]);
+
+			$sql = "UPDATE votes SET stuid = :new WHERE stuid = :old";
+			$stmt = $db->pdo->prepare($sql);
+			$stmt->execute([':old' => $stuid_old, ':new' => $stuid_new]);
+
+			$sql = "UPDATE users SET stuid = :new WHERE stuid = :old";
+			$stmt = $db->pdo->prepare($sql);
+			$stmt->execute([':old' => $stuid_old, ':new' => $stuid_new]);
+
+			$TG->sendMsg([
+				'text' => 'Done.'
+			]);
+
+			break;
+
 		default:
 			$TG->sendMsg([
 				'text' => "未知的指令\n\n如需查看使用說明請使用 /help 功能"

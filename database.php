@@ -147,6 +147,19 @@ class MyDB {
 		return $stmt->fetch();
 	}
 
+	public function getPostsByStuid(string $stuid) {
+		$sql = "SELECT * FROM posts WHERE author_id = :stuid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':stuid' => $stuid]);
+
+		$results = [];
+		while ($item = $stmt->fetch())
+			$results[] = $item;
+
+		return $results;
+		return $stmt->fetch();
+	}
+
 	/* Check can user vote for certain submission or not */
 	public function canVote(string $uid, string $stuid): array {
 		$post = $this->getPostByUid($uid);
@@ -265,6 +278,18 @@ class MyDB {
 		$sql = "SELECT * FROM votes WHERE uid = :uid";
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([':uid' => $uid]);
+
+		$results = [];
+		while ($item = $stmt->fetch())
+			$results[] = $item;
+
+		return $results;
+	}
+
+	public function getVotesByStuid(string $stuid) {
+		$sql = "SELECT * FROM votes WHERE stuid = :stuid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':stuid' => $stuid]);
 
 		$results = [];
 		while ($item = $stmt->fetch())
@@ -436,13 +461,17 @@ class MyDB {
 		]);
 	}
 
-	public function getUserByStuid(string $id = ''): ?array {
-		if (empty($id))
+	public function getUserByStuid(string $stuid = ''): ?array {
+		if (empty($stuid))
 			return NULL;
-		$sql = "SELECT * FROM users WHERE stuid = :id";
+		$sql = "SELECT * FROM users WHERE stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute([':id' => $id]);
-		return $stmt->fetch();
+		$stmt->execute([':stuid' => $stuid]);
+		$result = $stmt->fetch();
+
+		if ($result === false)
+			return NULL;
+		return $result;
 	}
 
 	public function getUserByTg(int $id) {
