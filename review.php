@@ -131,7 +131,8 @@ if ($deleted) {
 			<p>您可以在 <a href="/ranking">這個頁面</a> 查看排行榜。</p>
 <?php
 } else {
-	renderPost($post, true);
+	/* use $posts[0] instead of $post for .voted attr */
+	renderPost($posts[0], true);
 
 	$VOTES = $db->getVotesByUid($post['uid']);
 	include('includes/table-vote.php');

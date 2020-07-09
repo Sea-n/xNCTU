@@ -51,6 +51,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				</ol>
 			</div>
 
+			<br>
 			<div id="submit-section">
 				<h2>立即投稿</h2>
 <?php if (isset($USER)) { ?>
