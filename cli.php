@@ -142,10 +142,14 @@ case 'update_likes':
 	]);
 
 	$last = $db->getLastPostId();
+	$begin = $argv[2] ?? ($last - 100);
 
-	for ($id=$last-100; $id<$last; $id++) {
+	for ($id=$last; $id>=$begin; $id--) {
 		$post = $db->getPostById($id);
 		if ($post['status'] != 5)
+			continue;
+
+		if ($post['facebook_id'] < 10)
 			continue;
 
 		$URL = 'https://graph.facebook.com/v7.0/' . FB_PAGES_ID . '_' . $post['facebook_id'] . '/reactions?fields=type,name,profile_type&limit=100000&access_token=' . FB_ACCESS_TOKEN;

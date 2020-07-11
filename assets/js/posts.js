@@ -24,7 +24,7 @@ function more() {
 
 	var urlParams = new URLSearchParams(window.location.search);
 	var likes = urlParams.get('likes');
-	console.log(likes);
+	if (!likes) likes = 0;
 
 	if (button.classList.contains('disabled'))
 		return;
