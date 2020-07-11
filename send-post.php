@@ -144,11 +144,18 @@ function checkEligible(array $post): bool {
 	/* Rule for NCTU IP address */
 	if ($post['author_name'] == '匿名, 交大'
 	 && $post['ip_addr'] != ip_mask($post['ip_addr'])) {
-		/* Night mode: 02:00 - 07:59 */
-		if (2 <= idate('H') && idate('H') <= 7) {
+		/* Night mode */
+		if (strtotime("03:00") <= time() && time() <= strtotime("09:00"))
 			if ($vote < 3)
 				return false;
-		}
+
+		if (strtotime("02:30") <= time() && time() <= strtotime("09:30"))
+			if ($vote < 2)
+				return false;
+
+		if (strtotime("02:00") <= time() && time() <= strtotime("10:00"))
+			if ($vote < 1)
+				return false;
 
 		/* Less than 3 min */
 		if ($dt < 3)

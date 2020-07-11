@@ -61,7 +61,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				</ul>
 				<div class="ts negative raised compact segment">
 					<h5>例外狀況</h5>
-					<p>為避免非法文章意外通過，每天 02:00 - 08:00 門檻提升為 <button class="ts vote positive button">通過</button> 需比 <button class="ts vote negative button">駁回</button> 多 3 個</p>
+					<p>為避免非法文章意外通過，每天 03:00 - 09:00 門檻提升為 <button class="ts vote positive button">通過</button> 需比 <button class="ts vote negative button">駁回</button> 多 3 個</p>
 				</div>
 
 				<h4>(C) 使用台灣 IP 位址</h4>
