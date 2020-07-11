@@ -22,6 +22,10 @@ function more() {
 	if (offset < 0)
 		return;
 
+	var urlParams = new URLSearchParams(window.location.search);
+	var likes = urlParams.get('likes');
+	console.log(likes);
+
 	if (button.classList.contains('disabled'))
 		return;
 	button.classList.add('disabled');
@@ -31,15 +35,15 @@ function more() {
 		limit = offset;
 
 	button.dataset.offset = offset + limit;
-	getPosts(limit, offset);
+	getPosts(likes, limit, offset);
 	setTimeout(() => {
 		if (button.dataset.offset >= 0)
 			button.classList.remove('disabled');
 	}, 1000);
 }
 
-function getPosts(limit, offset) {
-	fetch('/api/posts?limit=' + limit + '&offset=' + offset)
+function getPosts(likes, limit, offset) {
+	fetch(`/api/posts?likes=${likes}&limit=${limit}&offset=${offset}`)
 	.then(resp => resp.json())
 	.then((resp) => {
 		if (resp.length < limit) {

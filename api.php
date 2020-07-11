@@ -21,12 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	if ($ACTION == 'posts') {
 		$offset = (int) ($_GET['offset'] ?? 0);
 		$limit = (int) ($_GET['limit'] ?? 0);
+		$likes = (int) ($_GET['likes'] ?? 0);
 		if ($limit < 1)
 			$limit = 50;
 		if ($limit > 5000)
 			$limit = 5000;
 
-		$posts = $db->getPosts($limit, $offset);
+		$posts = $db->getPostsByLikes($likes, $limit, $offset);
 		$result = [];
 		foreach ($posts as $post) {
 
