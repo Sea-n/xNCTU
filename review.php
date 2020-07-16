@@ -90,6 +90,10 @@ if ($deleted) {
 			<p>這邊僅限交大使用者瀏覽，外校生僅可在知道投稿編號的情況下看到刪除記錄，例如 <a href="/review/2C8j">#投稿2C8j</a>。</p>
 		</div>
 <?php } else
+?>
+		<p>此頁面列出所有已刪除的投稿，預設顯示最近 3 篇，依照審文數量增加，目前僅 3 人看得到完整清單。</p>
+		<p>除未通過投票門檻的投稿外，您也可以在 <a href="/transparency">透明度報告</a> 頁面看到貼文遭下架的理由。</p>
+<?php
 	foreach ($posts as $post)
 		renderPost($post);
 } else if (!$uid) {

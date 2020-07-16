@@ -13,10 +13,10 @@ define('TWITTER_CONSUMER_SECRET', '');
 define('TWITTER_TOKEN', '');
 define('TWITTER_TOKEN_SECRET', '');
 
-define('PLURK_CONSUMER_KEY','');
-define('PLURK_CONSUMER_SECRET','');
-define('PLURK_TOKEN','');
-define('PLURK_TOKEN_SECRET','');
+define('PLURK_CONSUMER_KEY', '');
+define('PLURK_CONSUMER_SECRET', '');
+define('PLURK_TOKEN', '');
+define('PLURK_TOKEN_SECRET', '');
 
 define('FB_PAGES_ID', '103461781248690');
 define('FB_ACCESS_TOKEN', '');
