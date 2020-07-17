@@ -17,7 +17,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 			</div>
 		</header>
 		<div class="ts container" name="main">
-			<p>秉持公開透明原則，除了 <a href="/deleted">已刪投稿</a> 保留完整審核紀錄外，如本站收到來自司法單位、校方、個人的內容移除請求，將定期於此頁面公開。</p>
+			<p>秉持公開透明原則，除了 <a href="/deleted">已刪投稿</a> 保留完整審核紀錄外，如本站收到來自司法單位、校方、同學、個人的內容移除請求，也將定期於此頁面公開。</p>
 
 			<h2>來自 Facebook 的刪除紀錄</h2>
 			<table class="ts striped table">
@@ -75,23 +75,24 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 			</table>
 
 			<h2>請求刪除紀錄</h2>
-			<p>校方定義包含各處室、教職員工，不限於正式信函通知；個人指外校人士、交大學生。此表格不包含各社群平台檢舉下架貼文。</p>
+			<p>校方定義不限於正式信函通知，包含各處室、教職員工；此處同學僅計算交大在學學生，他校學生列入個人計算。此表格不包含各社群平台檢舉下架貼文。</p>
 			<table class="ts striped table">
 				<thead>
 					<tr>
 						<th>月份</th>
 						<th>校方請求數</th>
+						<th>同學請求數</th>
 						<th>個人請求數</th>
 						<th>實際受理貼文數</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr><td>2020 Jul</td><td>0</td><td>0</td><td>0</td></tr>
-					<tr class="negative indicated"><td>2020 Jun</td><td>0</td><td>2</td><td>0</td></tr>
-					<tr><td>2020 May</td><td>0</td><td>0</td><td>0</td></tr>
-					<tr class="negative indicated"><td>2020 Apr</td><td>0</td><td>2</td><td>0</td></tr>
-					<tr><td>2020 Mar</td><td>0</td><td>0</td><td>0</td></tr>
-					<tr><td>2020 Feb</td><td>0</td><td>0</td><td>0</td></tr>
+					<tr><td>2020 Jul</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+					<tr class="negative indicated"><td>2020 Jun</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+					<tr><td>2020 May</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+					<tr class="negative indicated"><td>2020 Apr</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+					<tr><td>2020 Mar</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+					<tr><td>2020 Feb</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
 				</tbody>
 			</table>
 
