@@ -383,7 +383,7 @@ class MyDB {
 		$post = $this->getPostById($id);
 		if ($post['telegram_id'] > 0
 		 && $post['plurk_id']    > 0
-#		 && $post['facebook_id'] > 0
+		 && $post['facebook_id'] > 0
 		 && $post['twitter_id']  > 0)
 			$this->updateSubmissionStatus($post['uid'], 5);
 	}

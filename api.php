@@ -30,13 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		$posts = $db->getPostsByLikes($likes, $limit, $offset);
 		$result = [];
 
-		$pinned = $db->getPostById(3005);
-		array_unshift($posts, $pinned);
-
 		foreach ($posts as $i => $post) {
-			if ($i && $post['id'] == $pinned['id'])
-				continue;
-
 			if (!empty($post['author_id'])) {
 				$ip_masked = false;
 				$author = $db->getUserByStuid($post['author_id']);
