@@ -565,6 +565,7 @@ function update_facebook(array $post) {
 
 		"靠北交大 2.0 除了 Facebook 外，還支援 Twitter、Plurk 等平台\nhttps://twitter.com/x_NCTU/",
 		"靠北交大 2.0 除了 Facebook 外，還支援 Plurk、Twitter 等平台\nhttps://www.plurk.com/xNCTU",
+		"加入靠北交大 2.0 Telegram 頻道，第一時間看到所有貼文\nhttps://t.me/xNCTU",
 		"你知道靠交也有 Instagram 帳號嗎？只要投稿圖片就會同步發佈至 IG 喔\nhttps://www.instagram.com/x_nctu/",
 		"告白交大 2.0 使用同套系統，在此為大家服務\nhttps://www.facebook.com/CrushNCTU/",
 
@@ -572,9 +573,10 @@ function update_facebook(array $post) {
 		"覺得審核太慢嗎？你也可以來投票\nhttps://x.nctu.app/review",
 		"網站上「已刪投稿」區域可以看到被黑箱的記錄\nhttps://x.nctu.app/deleted",
 		"知道都是哪些系的同學在審文嗎？打開排行榜看看吧\nhttps://x.nctu.app/ranking",
+		"秉持公開透明原則，您可以在透明度報告看到師長同學請求刪文的紀錄\nhttps://x.nctu.app/transparency",
 		"靠交 2.0 是交大資工學生自行開發的系統，程式原始碼公開於 GitHub 平台\nhttps://git.io/xNCTU",
 	];
-	assert(count($tips_all) % 7 != 0);
+	assert(count($tips_all) % 7 != 0);  // current count = 20
 	$tips = $tips_all[ ($post['id'] * 7) % count($tips_all) ];
 
 	$go_all = [
