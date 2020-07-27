@@ -119,26 +119,16 @@ function checkEligible(array $post): bool {
 
 	$dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
 	$vote = $post['approvals'] - $post['rejects'];
-	$vote3 = $post['approvals'] - $post['rejects']*3;
+	$vote2 = $post['approvals'] - $post['rejects']*2;
 
 	/* Rule for Logged-in users */
 	if (!empty($post['author_id'])) {
-		/* Less than 2 min */
-		if ($dt < 2)
-			return false;
-
 		/* No reject: 3 votes */
-		if ($vote3 >= 3)
-			return true;
+		if ($dt < 10)
+			return ($vote2 >= 3);
 
 		/* More than 10 min */
-		if ($dt < 10)
-			return false;
-
-		if ($vote < 0)
-			return false;
-
-		return true;
+		return ($vote >= 0);
 	}
 
 	/* Rule for NCTU IP address */
@@ -157,64 +147,35 @@ function checkEligible(array $post): bool {
 			if ($vote < 1)
 				return false;
 
-		/* Less than 3 min */
-		if ($dt < 3)
-			return false;
-
 		/* No reject: 5 votes */
-		if ($vote3 >= 5)
-			return true;
-
-		/* Less than 10 min */
 		if ($dt < 10)
-			return false;
+			return ($vote2 >= 5);
 
 		/* 10 min - 1 hour */
-		if ($dt < 60 && $vote < 2)
-			return false;
+		if ($dt < 60)
+			return ($vote >= 3);
 
 		/* More than 1 hour */
-		if ($vote < 0)
-			return false;
-
-		return true;
+		return ($vote >= 0);
 	}
 
 	/* Rule for Taiwan IP address */
 	if (strpos($post['author_name'], '境外') === false) {
-		/* Less than 5 min */
-		if ($dt < 5)
-			return false;
-
 		/* No reject: 7 votes */
-		if ($vote3 >= 7)
-				return true;
-
-		/* Less than 10 min */
 		if ($dt < 10)
-			return false;
+			return ($vote2 >= 7);
 
 		/* 10 min - 1 hour */
-		if ($dt < 60 && $vote < 5)
-			return false;
+		if ($dt < 60)
+			return ($vote >= 5);
 
 		/* More than 1 hour */
-		if ($vote < 3)
-			return false;
-
-		return true;
+		return ($vote >= 3);
 	}
 
 	/* Rule for Foreign IP address */
 	if (true) {
-		/* 10 min - 1 hour */
-		if ($dt < 10)
-			return false;
-
-		if ($vote < 10)
-			return false;
-
-		return true;
+		return ($vote >= 10);
 	}
 }
 

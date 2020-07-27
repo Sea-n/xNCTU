@@ -48,15 +48,15 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<h4>(A) 具名投稿</h4>
 				<p>即使無人審核，經過 10 分鐘也會自動發出，詳細判斷條件如下：</p>
 				<ul>
-					<li>2 分鐘至 10 分鐘：達到 3 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
+					<li>10 分鐘以內：達到 3 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
 					<li>10 分鐘以後：<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></li>
 				</ul>
 
 				<h4>(B) 交大 IP 位址</h4>
 				<p>使用 113 位址投稿者，滿足以下條件即發出：</p>
 				<ul>
-					<li>3 分鐘至 10 分鐘：達到 5 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
-					<li>10 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 2 個</li>
+					<li>10 分鐘以內：達到 5 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
+					<li>10 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 3 個</li>
 					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button></li>
 				</ul>
 				<div class="ts negative raised compact segment">
@@ -67,7 +67,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<h4>(C) 使用台灣 IP 位址</h4>
 				<p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下條件即發出：</p>
 				<ul>
-					<li>5 分鐘至 10 分鐘：達到 7 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
+					<li>10 分鐘以內：達到 7 個&nbsp;<button class="ts vote positive button">通過</button>&nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button></li>
 					<li>10 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 5 個</li>
 					<li>1 小時以後：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 3 個</li>
 				</ul>
