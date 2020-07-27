@@ -74,8 +74,8 @@ function appendPost(item) {
 		post.querySelector('#img').src = '/img/' + item.uid + '.jpg';
 	}
 
-	body = item.body;
-	block = body.split('\n.\n.\n.\n.\n.\n.\n.\n.\n.\n.\n');
+	var body = item.body;
+	var block = body.split('\n.\n.\n.\n.\n.\n.\n.\n.\n.\n.\n');
 	if (block.length > 1) {
 		body = block[0];
 		read_more = true;

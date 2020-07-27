@@ -75,7 +75,7 @@ function updateImgPreview() {
 	reader.onload = (e) => {
 		preview.src = reader.result;
 		preview.parentElement.style.display = '';
-	}
+	};
 	reader.readAsDataURL(img_data);
 }
 
@@ -96,7 +96,6 @@ function formUpdate() {
 	var bodyArea = document.getElementById('body-area');
 	var bodyField = document.getElementById('body-field');
 	var bodyWc = document.getElementById('body-wc');
-	var img = document.getElementById('img');
 	var captchaInput = document.getElementById('captcha-input');
 	var captchaField = document.getElementById('captcha-field');
 	var submit = document.getElementById('submit');
@@ -153,7 +152,6 @@ function formUpdate() {
 function submitForm(e) {
 	e.preventDefault();
 	var body = document.getElementById('body-area');
-	var img = document.getElementById('img');
 	var captcha = document.getElementById('captcha-input');
 	var anon = document.getElementById('anon');
 	var csrf = document.getElementById('csrf_token');
@@ -267,7 +265,7 @@ function confirmSubmission() {
 
 	var uid = document.body.dataset.uid;
 
-	data = {
+	var data = {
 		uid: uid,
 		status: 'confirmed',
 	};
@@ -304,7 +302,7 @@ function deleteSubmission() {
 
 	clearInterval(stopCountdown);
 
-	data = {
+	var data = {
 		uid: document.body.dataset.uid,
 		reason: reason
 	};

@@ -43,7 +43,7 @@ window.Graph = {
     TAnimator.prototype = {
         add: function(params) {
             var i = 0;
-            var j = 0;
+//          var j = 0;
             var cur = +new Date();
             var item, param, delta;
             var queue = this.queue;
@@ -61,7 +61,7 @@ window.Graph = {
 
                     item = {
                         lastStart: 1
-                    }
+                    };
                     queue[param.prop] = item;
                     this.queueSize++;
                 }
@@ -187,7 +187,7 @@ window.Graph = {
         },
 
         render: function() {
-            var i, j, y, o, y1, y2, xScale, yScale, xShift, yShift;
+            var i, j, y, o, y1, y2, xScale, yScale, xShift, yShift, hBottom;
             var opts = this.opts;
             var ys = opts.data.ys;
             var state = opts.state;
@@ -205,18 +205,18 @@ window.Graph = {
             var ctx = mini ? this.ctx : this.opts.ctx;
             var prevY = [];
             var totalPerX = [];
-            var totalPerY = [];
+//          var totalPerY = [];
             var overlap = mini ? 0 : 0;
             var dims = mini ? state.dims.mini : state.dims.graph;
             var zoomMorph = state.zoomMorph == undefined ? 0 : state.zoomMorph;
             var morph = zoomMorph;
-            var zoom = state.zoomMode;
+//          var zoom = state.zoomMode;
             var ysLen = ys.length;
 
             //cache rendered version
             if (mini) {
                 var hash = [dims.w, dims.h, state.xg1, state.xg2, this.isDarkMode, state.zoomMode, zoomMorph];
-                for (i = 0; i < ysLen; i++) {
+                for (var i = 0; i < ysLen; i++) {
                     hash.push(state['om_' + i]);
                     hash.push(state['f_' + i]);
                 }
@@ -244,7 +244,7 @@ window.Graph = {
             var fullyVisibleCount = 0;
             var fullyVisibleInd = 0;
             var hasUnfocusedColumns = false;
-            for (i = 0; i < ysLen; i++) {
+            for (var i = 0; i < ysLen; i++) {
                 o = mini ? state['om_' + i] : state['o_' + i];
 
                 hasUnfocusedColumns = hasUnfocusedColumns || state['f_' + i] < 1;
@@ -267,8 +267,8 @@ window.Graph = {
             var colsLen = visibleCols.length;
             textToCenter = fullyVisibleCount == 1 ? textToCenter : 1;
 
-            y1 = mini ? state['y1m'] : state['y1'];
-            y2 = mini ? state['y2m'] : state['y2'];
+//          y1 = mini ? state['y1m'] : state['y1'];
+//          y2 = mini ? state['y2m'] : state['y2'];
             var optData = units.TUtils.simplifyData('line', x, ys, xScale, xShift, visibleCols, xInd1, xInd2, dims.w - pRight - pLeft);
 
             xInd1 = optData.xInd1;
@@ -277,10 +277,10 @@ window.Graph = {
             var optYs = optData.ys;
             var hasGapsInData = false;
 
-            for (j = xInd1; j <= xInd2; j++) {
+            for (var j = xInd1; j <= xInd2; j++) {
                 prevY[j] = 0;
                 totalPerX[j] = 0;
-                for (i = 0; i < colsLen; i++) {
+                for (var i = 0; i < colsLen; i++) {
                     totalPerX[j] += (optYs[visibleCols[i]].y[j] || 0) * opacityCols[i];
                 }
                 if (totalPerX[j] == 0) {
@@ -303,8 +303,8 @@ window.Graph = {
                 if (morph < 1) {
                     var x1AnimItem = this.opts.animator.get('x1');
                     var x2AnimItem = this.opts.animator.get('x2');
-                    x1End = x1AnimItem ? x1AnimItem.end : this.opts.state['x1'];
-                    x2End = x2AnimItem ? x2AnimItem.end : this.opts.state['x2'];
+                    var x1End = x1AnimItem ? x1AnimItem.end : this.opts.state['x1'];
+                    var x2End = x2AnimItem ? x2AnimItem.end : this.opts.state['x2'];
                     var xInd1Real = units.TUtils.getXIndex(x, this.opts.state.zoomDir == -1 ? this.savedX1 : x1End, true);
                     var xInd2Real = units.TUtils.getXIndex(x, this.opts.state.zoomDir == -1 ? this.savedX2 : x2End, true);
                 } else {
@@ -320,11 +320,11 @@ window.Graph = {
                 var totalForAll = 0;
                 var totalPerItem = [];
 
-                for (i = 0; i < colsLen; i++) {
+                for (var i = 0; i < colsLen; i++) {
                     totalPerItem[i] = 0;
                     var tmpY = ys[visibleCols[i]].y;
 
-                    for (j = xInd1RealCeil; j <= xInd2RealFloor; j++) {
+                    for (var j = xInd1RealCeil; j <= xInd2RealFloor; j++) {
                         var tmp = (tmpY[j] || 0) * opacityCols[i];
                         totalPerItem[i] += tmp;
                         totalForAll += tmp;
@@ -361,7 +361,7 @@ window.Graph = {
                 var cy = dpi * (dims.h / 2 + dims.t + 2);
                 var rLen =  2 * Math.PI * radius / dpi;
                 var pointsPerArcLen = 1 / 13; //1 point per each 10 pixels of arc
-                for (i = 0; i < colsLen; i++) {
+                for (var i = 0; i < colsLen; i++) {
                     var percentage = totalPerItem[i] / totalForAll;
                     percentage = percentage || 0; //absent data
                     var len = 2 * Math.PI * percentage;
@@ -395,7 +395,7 @@ window.Graph = {
 
             var colInd = 0;
 
-            for (i = 0; i < ysLen; i++) {
+            for (var i = 0; i < ysLen; i++) {
                 o = mini ? state['om_' + i] : state['o_' + i];
 
                 if (o > 0) {
@@ -414,7 +414,7 @@ window.Graph = {
 
                             if (i > 0) {
                                 ctx.moveTo(optX[xInd2] * xScale + xShift << 0, hBottom - prevY[xInd2] + overlap << 0);
-                                for (j = xInd2 - 1; j >= xInd1; j--) {
+                                for (var j = xInd2 - 1; j >= xInd1; j--) {
                                     ctx.lineTo(optX[j] * xScale + xShift << 0, hBottom - prevY[j] + overlap << 0);
                                 }
                             } else {
@@ -423,7 +423,7 @@ window.Graph = {
                             }
 
                             if (colInd < colsLen - 1 || hasGapsInData) {
-                                for (j = xInd1; j <= xInd2; j++) {
+                                for (var j = xInd1; j <= xInd2; j++) {
                                     var curY = (yShift - ((y[j] * k / totalPerX[j]) || 0));
                                     var curH = hBottom - curY;
                                     var sy = prevY[j] + curH;
@@ -466,7 +466,7 @@ window.Graph = {
                                 ];
 
                                 return res;
-                            }
+                            };
 
                             var additionalSteps = (zoomMorph < 1 ? 4 : angles[colInd].additionalPoints);
                             var res;
@@ -482,7 +482,7 @@ window.Graph = {
                             ctx.moveTo(res[0], res[1]);
 
                             if (colInd > 0) {
-                                for (j = xInd2 - 1; j >= xInd1; j--) {
+                                for (var j = xInd2 - 1; j >= xInd1; j--) {
                                     xj = optX[j] * xScale + xShift;
                                     if (xj == cx) cBot = true;
                                     if (xj >= cx) {
@@ -515,7 +515,7 @@ window.Graph = {
 
                             if (colInd < colsLen - 1) {
 
-                                for (j = 0; j <= additionalSteps; j++) {
+                                for (var j = 0; j <= additionalSteps; j++) {
                                     var curY = (yShift - ((y[xInd1] * k / totalPerX[xInd1]) || 0));
                                     var curH = hBottom - curY;
                                     var sy1 = hBottom - prevY[xInd1] + overlap;
@@ -531,7 +531,7 @@ window.Graph = {
                                     ctx.lineTo(res[0], res[1]);
                                 }
 
-                                for (j = xInd1; j <= xInd2; j++) {
+                                for (var j = xInd1; j <= xInd2; j++) {
 
                                     var curY = (yShift - ((y[j] * k / totalPerX[j]) || 0));
                                     var curH = hBottom - curY;
@@ -568,7 +568,7 @@ window.Graph = {
                                     }
                                 }
                             } else {
-                                for (j = 0; j <= additionalSteps; j++) {
+                                for (var j = 0; j <= additionalSteps; j++) {
                                     res = calcTrans(
                                         (optX[xInd1] + (j / additionalSteps) * (optX[xInd2] - optX[xInd1])) * xScale + xShift,
                                         0,
@@ -589,7 +589,7 @@ window.Graph = {
                         if (i > 0) {
                             ctx.lineTo(optX[xInd2] * xScale + xShift, hBottom - prevY[xInd2]);
 
-                            for (j = xInd2; j >= xInd1 + 1; j--) {
+                            for (var j = xInd2; j >= xInd1 + 1; j--) {
                                 ctx.lineTo(optX[j] * xScale + xShift, hBottom - (prevY[j] + morph * (prevY[j - 1] - prevY[j])) + overlap);
                                 ctx.lineTo(optX[j - 1] * xScale + xShift, hBottom - prevY[j - 1] + overlap);
                             }
@@ -598,7 +598,7 @@ window.Graph = {
                         }
 
                         if (colInd < colsLen - 1) {
-                            for (j = xInd1; j <= xInd2 - 1; j++) {
+                            for (var j = xInd1; j <= xInd2 - 1; j++) {
                                 var curY = (yShift - ((y[j] * k / totalPerX[j]) || 0));
                                 var curH = hBottom - curY;
 
@@ -755,7 +755,7 @@ window.Graph = {
             var pRight = opts.settings.PADD[1];
             var pLeft = opts.settings.PADD[3];
             var animator = opts.animator;
-            var xLen = x.length;
+//          var xLen = x.length;
             var dims = this.opts.state.dims.axisX;
             var dimsDates = this.opts.state.dims.dates;
             var zoomMode = state.zoomMode;
@@ -850,7 +850,7 @@ window.Graph = {
                             state: {
                                 ind: id
                             }
-                        }
+                        };
                         item.state['ox_' + id] = 0;
                         this.items[id] = item;
 
@@ -896,7 +896,7 @@ window.Graph = {
 
 
             //remove the old ones, which is outside the current range
-            for (i in this.items) {
+            for (var i in this.items) {
                 var item = this.items[i];
                 if (item.tp == 1 && ((item.xi < state.x1 - pLeft / lxScale) || (item.xi > state.x2 + pRight / lxScale))) {
                     this.hideItem(i, k);
@@ -1002,7 +1002,7 @@ window.Graph = {
             var state = this.opts.state;
             var pTop = this.opts.settings.PADD[0];
             var pBottom = this.opts.settings.PADD[2];
-            var linesCount = Math.floor(this.opts.settings.Y_AXIS_RANGE);
+//          var linesCount = Math.floor(this.opts.settings.Y_AXIS_RANGE);
             var withAnimation = false;
 
             var y1AnimItem = this.opts.animator.get(y1Name);
@@ -1036,19 +1036,19 @@ window.Graph = {
                 yRealStart: yRealStart,
                 yScaleCur: yScaleCur,
                 yScaleEnd: yScaleEnd
-            }
+            };
         },
 
 
         updateAxisState: function(y1Name, y2Name, numName, baseData, leftData, rightData) {
             var opts = this.opts;
-            var settings = opts.settings;
-            var dpi = opts.settings.dpi;
+//          var settings = opts.settings;
+//          var dpi = opts.settings.dpi;
             var state = opts.state;
-            var pTop = opts.settings.PADD[0];
+ //         var pTop = opts.settings.PADD[0];
             var pBottom = opts.settings.PADD[2];
-            var pLeft = opts.settings.PADD[3];
-            var pRight = opts.settings.PADD[1];
+ //         var pLeft = opts.settings.PADD[3];
+ //         var pRight = opts.settings.PADD[1];
             var animator = opts.animator;
             var item;
             var linesCount = Math.floor(opts.settings.Y_AXIS_RANGE);
@@ -1088,7 +1088,7 @@ window.Graph = {
                             numRight: numRealRight,
                             strRight: numDisplayRightStr,
                             y: newTo
-                        }
+                        };
                     } else {
                         startedAtLeastOne = true;
 
@@ -1103,7 +1103,7 @@ window.Graph = {
                             state: {
                                 id: 't_' + this.uuid
                             }
-                        }
+                        };
                         item.state[item.oProp] = 1;
                         item.state[item.yProp] = oldFrom;
                         this.items[item.state.id] = item;
@@ -1144,7 +1144,7 @@ window.Graph = {
                                 numRight: numRealRight,
                                 strRight: numDisplayRightStr,
                             }
-                        }
+                        };
                         item.state[item.oProp] = 0;
                         item.state[item.yProp] = newFrom;
                         this.items[item.state.id] = item;
@@ -1172,7 +1172,7 @@ window.Graph = {
                                     numRight: state.numRight,
                                     strRight: state.strRight,
                                     y: state['yy_' + state.id]
-                                }
+                                };
 
                                 clearTimeout(this.animationEndTimeout);
                                 this.animationEndTimeout = setTimeout(function() {
@@ -1225,7 +1225,7 @@ window.Graph = {
             this.ctx.lineCap = 'square';
             this.ctx.lineJoin = 'square';
 
-            for (i in this.items) {
+            for (var i in this.items) {
                 item = this.items[i];
 
                 if (item.animated) {
@@ -1312,8 +1312,8 @@ window.Graph = {
             var x1 = mini ? state.xg1 : state.x1;
             var x2 = mini ? state.xg2 : state.x2;
             var settings = opts.settings;
-            var w = this.w;
-            var h = this.h;
+//          var w = this.w;
+//          var h = this.h;
             var pTop = settings['PADD' + (mini ? '_MINI_BAR' : '')][0];
             var pRight = settings['PADD' + (mini ? '_MINI_BAR' : '')][1];
             var pBottom = settings['PADD' + (mini ? '_MINI_BAR' : '')][2];
@@ -1341,7 +1341,7 @@ window.Graph = {
                 hash.push(state.y1);
                 hash.push(state.y2);
             }
-            for (i = 0; i < ysLength; i++) {
+            for (var i = 0; i < ysLength; i++) {
                 hash.push(mini ? state['om_' + i] : state['o_' + i]);
                 hash.push(state['f_' + i]);
             }
@@ -1374,7 +1374,7 @@ window.Graph = {
                 var xw;
                 var filteredInd = 0;
 
-                for (j = xInd1; j <= xInd2; j++) {
+                for (var j = xInd1; j <= xInd2; j++) {
 
                     if (zoom) {
                         if (j >= d1 && j <= d2) {
@@ -1399,7 +1399,7 @@ window.Graph = {
 
                 }
 
-                for (i = 0; i < ysLength; i++) {
+                for (var i = 0; i < ysLength; i++) {
                     o = mini ? state['om_' + i] : state['o_' + i];
 
                     if (o > 0) {
@@ -1423,7 +1423,7 @@ window.Graph = {
                         ctx.moveTo(Math.round(x[xInd2] * xScale + xShift + (zoomMorph == 1 ? xwDetail : xwMain)), Math.round(hBottom));
 
                         if (i > 0) {
-                            for (j = filteredInd - 1; j >= 0; j--) {
+                            for (var j = filteredInd - 1; j >= 0; j--) {
                                 var curY = hBottom - prevY[j];
                                 ctx.lineTo(filteredX2[j], Math.round(curY));
                                 ctx.lineTo(filteredX1[j], Math.round(curY));
@@ -1432,7 +1432,7 @@ window.Graph = {
                             ctx.lineTo(Math.round(x[xInd1] * xScale + xShift), Math.round(hBottom));
                         }
 
-                        for (j = 0; j < filteredInd; j++) {
+                        for (var j = 0; j < filteredInd; j++) {
                             var jInd = filteredJ[j];
                             if (zoom) {
                                 if (jInd >= d1 && jInd <= d2) {
@@ -1473,7 +1473,7 @@ window.Graph = {
                 this.opts.ctx.fillRect(0, 0, dims.w * dpi, dims.h * dpi);
                 var yStart = 0;
 
-                for (i = 0; i < ysLength; i++) {
+                for (var i = 0; i < ysLength; i++) {
                     o = state['o_' + i];
                     if (o > 0) {
                         y = ys[i].y;
@@ -1533,8 +1533,8 @@ window.Graph = {
         this.specialZoomTransition = undefined;
         this.darkMode = !!document.documentElement.classList.contains('dark');
 
-        var isIEOld = ((!!window.ActiveXObject && +(/msie\s(\d+)/i.exec(navigator.userAgent)[1])) || NaN - 0) < 11
-        var isIE11 = navigator.userAgent.indexOf('Trident/') != -1 && (navigator.userAgent.indexOf('rv:') != -1 || navigator.appName.indexOf('Netscape') != -1)
+        var isIEOld = ((!!window.ActiveXObject && +(/msie\s(\d+)/i.exec(navigator.userAgent)[1])) || NaN - 0) < 11;
+        var isIE11 = navigator.userAgent.indexOf('Trident/') != -1 && (navigator.userAgent.indexOf('rv:') != -1 || navigator.appName.indexOf('Netscape') != -1);
 
         this.settings = {
             isIE: isIEOld || isIE11,
@@ -1770,8 +1770,8 @@ window.Graph = {
             this.data.ys.forEach(function(item, ind) {
                 var y = params.useSaved ? this.data.saved.y[ind] : item.y;
                 if (this.state['e_' + ind]) {
-                    for (i = xg1Ind; i <= xg2Ind - shift; i++) {
-                        v = y[i];
+                    for (var i = xg1Ind; i <= xg2Ind - shift; i++) {
+                        var v = y[i];
                         if (v != undefined) {
                             minXInd = Math.min(minXInd, i);
                             maxXInd = Math.max(maxXInd, i);
@@ -1787,7 +1787,7 @@ window.Graph = {
             if (minXInd >= maxXInd) {
                 return {
                     isReduced: false
-                }
+                };
             }
 
 
@@ -1797,7 +1797,7 @@ window.Graph = {
             if (xg1Orig == xg1 && xg2Orig == xg2) {
                 return {
                     isReduced: false
-                }
+                };
             }
 
             if (x2 > xg2) {
@@ -1822,7 +1822,7 @@ window.Graph = {
                 xg2: xg2,
                 xg1Ind: minXInd,
                 xg2Ind: maxXInd,
-            }
+            };
         },
 
         getDefaultZoom: function(params) {
@@ -1830,7 +1830,7 @@ window.Graph = {
                 return {
                     x1: params.x1,
                     x2: params.x2
-                }
+                };
             }
 
             var res = {};
@@ -1852,9 +1852,9 @@ window.Graph = {
             var periods = (this.state.deviceSpeed * points / 16.66 << 0);
             var k = Math.max(1 - 0.25 * periods, 0);
             k = Math.pow(k, 0.85);
-            if (this.state.deviceSpeed == undefined) {
-                speed = 1;
-            }
+//          if (this.state.deviceSpeed == undefined) {
+//              speed = 1;
+//          }
             speed = 1;
             this.state.speed = speed == undefined ? k : speed;
             return this.state.speed;
@@ -1865,7 +1865,7 @@ window.Graph = {
                 return {
                     min: 0,
                     max: 102
-                }
+                };
             }
 
             var graphAreaWidth = this.state.dims ? this.state.dims.graph.w : this.getGraphWidth(this.data.sideLegend).width;
@@ -1876,7 +1876,7 @@ window.Graph = {
 
             var start = units.TUtils.getXIndex(useSaved ? this.data.saved.x : this.data.x, x1 - datePerPixel * this.settings.PADD[3]);
             var end = units.TUtils.getXIndex(useSaved ? this.data.saved.x : this.data.x, x2 + datePerPixel * this.settings.PADD[1]);
-            var i, v, data, yFirst, yLast, j;
+            var i, v, yFirst, yLast, j;
             var resMin = [];
             var resMax = [];
             var settings = this.settings;
@@ -1903,7 +1903,7 @@ window.Graph = {
                     var endIndex = this.graphStyle == 'step' ? ceilEnd : floorEnd;
 
                     if (state['e_' + ind] || (ind == 0 && this.pairY)) {
-                        for (i = startIndex; i <= endIndex; i++) {
+                        for (var i = startIndex; i <= endIndex; i++) {
                             v = y[i];
                             if (v === undefined) continue;
                             if (v < yMin) yMin = v;
@@ -1941,7 +1941,7 @@ window.Graph = {
             if (this.graphStyle == 'bar') {
                 var visibleCols = [];
 
-                for (j = 0; j < this.data.ys.length; j++) {
+                for (var j = 0; j < this.data.ys.length; j++) {
                     if (state['e_' + j]) {
                         visibleCols.push(j);
                     }
@@ -1949,9 +1949,9 @@ window.Graph = {
 
                 var colsLen = visibleCols.length;
 
-                for (i = floorStart; i <= ceilEnd; i++) {
-                    yCur = 0;
-                    for (j = 0; j < colsLen; j++) {
+                for (var i = floorStart; i <= ceilEnd; i++) {
+                    var yCur = 0;
+                    for (var j = 0; j < colsLen; j++) {
                         yCur += (useSaved ? this.data.saved.y[visibleCols[j]][i] : this.data.ys[visibleCols[j]].y[i]) || 0;
                     }
                     if (yCur > yMax) yMax = yCur;
@@ -1969,13 +1969,13 @@ window.Graph = {
                 return {
                     min: resMin,
                     max: resMax
-                }
+                };
             } else {
                 var tunedY = proceedMinMax(yMin, yMax);
                 return {
                     min: tunedY.min,
                     max: tunedY.max
-                }
+                };
             }
 
             function proceedMinMax(yMin, yMax, ind, refRange) {
@@ -2019,7 +2019,7 @@ window.Graph = {
                     min: yMin,
                     max: yMax,
                     range: range
-                }
+                };
             }
         },
 
@@ -2049,17 +2049,17 @@ window.Graph = {
                     return {
                         hasSpaceForLegend: true,
                         width: Math.max(rectEl.width - rectLegend.width, 1),
-                    }
+                    };
                 } else {
                     return {
                         hasSpaceForLegend: false,
                         width: rectEl.width,
-                    }
+                    };
                 }
             } else {
                 return {
                     width: rectEl.width
-                }
+                };
             }
         },
 
@@ -2162,7 +2162,7 @@ window.Graph = {
                     l: 0,
                     t: s.DATES_HEIGHT
                 }
-            }
+            };
 
             this.graph.onResize();
             this.axisY.onResize();
@@ -2223,7 +2223,7 @@ window.Graph = {
             rangeMini = this.getYMinMax(this.state.xg1, this.state.xg2, true);
 
             if (this.pairY) {
-                for (i = 0; i < this.data.ys.length; i++) {
+                for (var i = 0; i < this.data.ys.length; i++) {
                     this.state['y1_' + i] = rangeGraph.min[i];
                     this.state['y2_' + i] = rangeGraph.max[i];
                     this.state['y1m_' + i] = rangeMini.min[i];
@@ -2306,6 +2306,7 @@ window.Graph = {
 
             isMagnet = false; //due to range reducers on detail data gaps
 
+			/*
             if (isMagnet) {
                 var periodLen = this.data.mainPeriodLen;
                 x1 = Math.round(x1 / periodLen) * periodLen;
@@ -2320,13 +2321,14 @@ window.Graph = {
 
                 var x1AnimItem = this.animator.get('x1');
                 var x2AnimItem = this.animator.get('x2');
-                x1End = x1AnimItem ? x1AnimItem.end : this.state['x1'];
-                x2End = x2AnimItem ? x2AnimItem.end : this.state['x2'];
+                var x1End = x1AnimItem ? x1AnimItem.end : this.state['x1'];
+                var x2End = x2AnimItem ? x2AnimItem.end : this.state['x2'];
 
                 if (x1 == x1End && x2 == x2End) {
                     return;
                 }
             }
+			*/
 
 
             var props = [];
@@ -2363,7 +2365,7 @@ window.Graph = {
                 }
             });
 
-            for (i = 0; i < this.data.ys.length; i++) {
+            for (var i = 0; i < this.data.ys.length; i++) {
                 if (this.graphStyle == 'line' || this.graphStyle == 'step') {
                     props.push({
                         prop: this.pairY ? 'y1_' + i : 'y1',
@@ -2404,7 +2406,7 @@ window.Graph = {
 
             var props = [];
 
-            for (i = 0; i < this.data.ys.length; i++) {
+            for (var i = 0; i < this.data.ys.length; i++) {
                 props.push({
                     prop: 'f_' + i,
                     state: this.state,
@@ -2436,7 +2438,7 @@ window.Graph = {
             this.switcherLeaveTimeout = setTimeout(function () {
                 var props = [];
 
-                for (i = 0; i < this.data.ys.length; i++) {
+                for (var i = 0; i < this.data.ys.length; i++) {
                     props.push({
                         prop: 'f_' + i,
                         state: this.state,
@@ -2476,14 +2478,14 @@ window.Graph = {
                 ind = enabled;
 
                 isAllOffExceptCurrent = true;
-                for (i = 0; i < this.data.ys.length; i++) {
+                for (var i = 0; i < this.data.ys.length; i++) {
                     isAllOffExceptCurrent = isAllOffExceptCurrent && (i == ind ? this.state['e_' + i] : !this.state['e_' + i]);
                 }
             }
 
             var maxYSize = 0;
 
-            for (i = 0; i < this.data.ys.length; i++) {
+            for (var i = 0; i < this.data.ys.length; i++) {
                 isCurrent = i == ind;
 
                 prevE[i] = this.state['e_' + i];
@@ -2571,7 +2573,7 @@ window.Graph = {
 
             this.state.activeColumnsCount = 0;
 
-            for (i = 0; i < e.length; i++) {
+            for (var i = 0; i < e.length; i++) {
                 e[i] && this.state.activeColumnsCount++;
 
                 if (prevE[i] != e[i]) {
@@ -2599,7 +2601,7 @@ window.Graph = {
                 }
             }
 
-            for (i = 0; i < (this.pairY ? e.length : 1); i++) {
+            for (var i = 0; i < (this.pairY ? e.length : 1); i++) {
                 if (this.graphStyle == 'line' || this.graphStyle == 'step') {
                     props.push({
                         prop: this.pairY ? 'y1_' + i : 'y1',
@@ -2941,7 +2943,7 @@ window.Graph = {
                 data.subchart = {
                     show: data.subchart && data.subchart.show != undefined ? data.subchart.show : true,
                     defaultZoom: data.subchart && data.subchart.defaultZoom
-                }
+                };
                 data.details.subchart = data.subchart;
                 data.details.hidden = data.hidden || [];
             }
@@ -2990,7 +2992,7 @@ window.Graph = {
                     this.data.saved.datesRange = this.data.datesRange.slice();
                     this.data.saved.y = [];
 
-                    for (j = 0; j < this.data.ys.length; j++) {
+                    for (var j = 0; j < this.data.ys.length; j++) {
                         this.data.saved.y[j] = this.data.ys[j].y.slice();
                     }
                     this.hasSavedData = true;
@@ -3012,7 +3014,7 @@ window.Graph = {
                     xg2: this.state.xg2,
                     xgMin: this.state.xgMin,
                     xgMax: this.state.xgMax
-                }
+                };
 
                 var periodLen = this.data.mainPeriodLen;
                 var x1 = dt;
@@ -3219,7 +3221,7 @@ window.Graph = {
                 }
             });
 
-            for (i = 0; i < (this.pairY ? this.data.ys.length : 1); i++) {
+            for (var i = 0; i < (this.pairY ? this.data.ys.length : 1); i++) {
                 if (this.graphStyle == 'line' || this.graphStyle == 'step') {
                     props.push({
                         prop: this.pairY ? 'y1_' + i : 'y1',
@@ -3303,18 +3305,18 @@ window.Graph = {
             var newY = [];
             var newYFrom = [];
 
-            for (i = xl1; i < xl2; i++) {
+            for (var i = xl1; i < xl2; i++) {
                 newInd = i - xl1;
                 newX[newInd] = this.data.x[i];
                 newDates[newInd] = this.data.dates[i];
                 newDatesShort[newInd] = this.data.datesShort[i];
                 newDatesRange[newInd] = this.data.datesRange[i];
             }
-            for (j = 0; j < this.data.ys.length; j++) {
+            for (var j = 0; j < this.data.ys.length; j++) {
                 newY[j] = newY[j] || [];
                 y = newY[j];
                 origY = this.data.ys[j].y;
-                for (i = xl1; i < xl2; i++) {
+                for (var i = xl1; i < xl2; i++) {
                     y[i - xl1] = origY[i];
                 }
             }
@@ -3331,7 +3333,7 @@ window.Graph = {
             var xRangeFormatter = units.TUtils.getFormatter('xRangeFormatter', this.data, 1);
             var maxXTickLength = 0;
 
-            for (i = startDetail; i <= endDetail; i++) {
+            for (var i = startDetail; i <= endDetail; i++) {
                 newInd = i - startDetail + xl2;
                 newX[newInd] = details.x[i];
 
@@ -3351,14 +3353,14 @@ window.Graph = {
 
             this.data.details.maxXTickLength = maxXTickLength;
 
-            for (j = 0; j < this.data.ys.length; j++) {
+            for (var j = 0; j < this.data.ys.length; j++) {
                 newY[j] = newY[j] || [];
                 y = newY[j];
                 origY = this.data.ys[j].y;
                 origYDet = details.y[j];
                 newYFrom[j] = newYFrom[j] || [];
                 yFrom = newYFrom[j];
-                for (i = startDetail; i <= endDetail; i++) {
+                for (var i = startDetail; i <= endDetail; i++) {
                     if (this.graphStyle == 'bar') {
                         var yInter = origY[fdx[i]] || 0;
                     } else if (this.graphStyle == 'step') {
@@ -3381,18 +3383,18 @@ window.Graph = {
             }
 
 
-            for (i = xr1 + 1; i <= xr2; i++) {
+            for (var i = xr1 + 1; i <= xr2; i++) {
                 newInd = i - xr1 + endDetail + xl2;
                 newX[newInd] = this.data.x[i];
                 newDates[newInd] = this.data.dates[i];
                 newDatesShort[newInd] = this.data.datesShort[i];
                 newDatesRange[newInd] = this.data.datesRange[i];
             }
-            for (j = 0; j < this.data.ys.length; j++) {
+            for (var j = 0; j < this.data.ys.length; j++) {
                 newY[j] = newY[j] || [];
                 y = newY[j];
                 origY = this.data.ys[j].y;
-                for (i = xr1 + 1; i <= xr2; i++) {
+                for (var i = xr1 + 1; i <= xr2; i++) {
                     y[i - xr1 + endDetail + xl2] = origY[i];
                 }
             }
@@ -3406,7 +3408,7 @@ window.Graph = {
             this.data.datesShort = newDatesShort;
             this.data.datesRange = newDatesRange;
 
-            for (j = 0; j < this.data.ys.length; j++) {
+            for (var j = 0; j < this.data.ys.length; j++) {
                 this.data.ys[j].y = newY[j];
                 this.data.ys[j].yFrom = newYFrom[j];
             }
@@ -3419,7 +3421,7 @@ window.Graph = {
             this.data.datesShort = this.data.saved.datesShort;
             this.data.datesRange = this.data.saved.datesRange;
 
-            for (i = 0; i < this.data.ys.length; i++) {
+            for (var i = 0; i < this.data.ys.length; i++) {
                 this.data.ys[i].y = this.data.saved.y[i];
             }
         }
@@ -3500,7 +3502,7 @@ window.Graph = {
             if (this.opts.data.slave) {
                 this.$canvas.style.opacity = state.slaveVisibility;
 
-                this.opts.chart.$el.style.visibility = state.slaveVisibility > 0 ? 'visible' : 'hidden'
+                this.opts.chart.$el.style.visibility = state.slaveVisibility > 0 ? 'visible' : 'hidden';
             }
 
             if (groups.top) {
@@ -3943,7 +3945,7 @@ window.Graph = {
             var minRange = 32 / xScale; //45 min handle width
             var x1 = this.opts.state.x1;
             var x2 = this.opts.state.x2;
-            var xg1 = this.opts.state.xg1;
+//          var xg1 = this.opts.state.xg1;
             var xg2 = this.opts.state.xg2;
 
             this.minRange = minRange;
@@ -4123,7 +4125,7 @@ window.Graph = {
                     hash.push(state.y1);
                     hash.push(state.y2);
                 }
-                for (i = 0; i < ysLen; i++) {
+                for (var i = 0; i < ysLen; i++) {
                     hash.push(mini ? state['om_' + i] : state['o_' + i]);
                     hash.push(state['f_' + i]);
                 }
@@ -4147,7 +4149,7 @@ window.Graph = {
             ctx.lineCap = opts.additional.mini ? 'square' : 'round';
             ctx.lineJoin = opts.additional.mini ? 'square' : 'round';
 
-            for (i = 0; i < ysLen; i++) {
+            for (var i = 0; i < ysLen; i++) {
                 o = mini ? state['om_' + i] : state['o_' + i];
                 e = state['e_' + i];
 
@@ -4193,7 +4195,7 @@ window.Graph = {
                     var hasPrev = false;
                     var needMove = true;
 
-                    for (j = xInd1; j <= xInd2; j++) {
+                    for (var j = xInd1; j <= xInd2; j++) {
                         if (zoom) {
                             if (j >= d1 && j <= d2) {
                                 yVal = yFrom[j] + morph * (y[j] - yFrom[j]);
@@ -4943,7 +4945,7 @@ window.Graph = {
         render: function(params) {
             if (!this.shown) return;
 
-            var i = 0;
+//          var i = 0;
             var opts = this.opts;
             var state = opts.state;
             var settings = this.opts.settings;
@@ -4988,7 +4990,7 @@ window.Graph = {
                 var lx = (opts.data.x[xInd] - state.x1) / (state.x2 - state.x1 + offsetForBarGraphScale);
                 var cx = ((lx * (dims.w - pLeft - pRight) + pLeft) << 0);
                 if (cx < 0) {
-                    xInd++
+                    xInd++;
                 }
                 if (cx > dims.w - 1) {
                     xInd--;
@@ -5073,7 +5075,7 @@ window.Graph = {
                 opts.data.ys.forEach(function(item, ind) {
                     if (opts.state['e_' + ind] && !isNaN(item.y[xInd])) {
                         this.labels[ind].$valueText.nodeValue = formatter(item.y[xInd]);
-                        sumAll += item.y[xInd] || 0
+                        sumAll += item.y[xInd] || 0;
 
                         if (this.points) {
                             $el = this.points[ind];
@@ -5249,8 +5251,8 @@ window.Graph = {
         return Math.log(x) * Math.LOG10E;
     };
 
-    var cache = {};
-    var timeout;
+//  var cache = {};
+//  var timeout;
 
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -5269,7 +5271,7 @@ window.Graph = {
                     xInd2: xInd2,
                     x: x,
                     ys: ys
-                }
+                };
             } else {
                 var xInd = 0;
                 var xPrev = -999999999;
@@ -5288,7 +5290,7 @@ window.Graph = {
                     }
 
                     //calc avg y per column that fits inside same x in pixels
-                    for (j = 0; j < colsLen; j++) {
+                    for (var j = 0; j < colsLen; j++) {
                         var visColInd = visibleCols[j];
                         optYs[visColInd] = optYs[visColInd] || {y: []};
                         var prevOptY = optYs[visColInd].y[xInd - 1];
@@ -5315,8 +5317,8 @@ window.Graph = {
                     xPrev = tmpX;
                 }
 
-                xInd1 = 0;
-                xInd2 = xInd - 1;
+//              xInd1 = 0;
+//              xInd2 = xInd - 1;
 
                 return {
                     isOptimized: pointsPerPixel > 1,
@@ -5324,7 +5326,7 @@ window.Graph = {
                     xInd2: xInd - 1,
                     x: optX,
                     ys: optYs
-                }
+                };
             }
         },
 
@@ -5334,7 +5336,7 @@ window.Graph = {
             return {
                 x: rect.left + (window.pageXOffset || document.documentElement.scrollLeft),
                 y: rect.top + (window.pageYOffset || document.documentElement.scrollTop)
-            }
+            };
         },
 
         getXIndex: function(x, xc, doNotClip) {
@@ -5585,7 +5587,7 @@ window.Graph = {
                     yMax: y2 + (y2 - y1) * yd2,
                     yMinOrig: y1,
                     yMaxOrig: y2,
-                }
+                };
             }
 
             var calc = function(d) {
@@ -5599,7 +5601,7 @@ window.Graph = {
                     yMax: Math.round(max),
                     yMinOrig: y1,
                     yMaxOrig: y2,
-                }
+                };
             }
 
             var scale = 1 / cnt;
@@ -5626,7 +5628,7 @@ window.Graph = {
                         yMaxOrig: y2,
                         yMin: y1,
                         yMax: y2
-                    }
+                    };
                 }
             }
 

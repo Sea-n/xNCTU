@@ -2,7 +2,7 @@ require("dotenv").config({ path: '/usr/share/nginx/x.nctu.app/.env' });
 const { readFileSync, writeFileSync } = require('fs');
 const { promisify } = require('util');
 const { createConnection } = require('mysql');
-const { strictEqual, isAbove } = require('assert');
+const { strictEqual } = require('assert');
 const { IgApiClient } = require('instagram-private-api');
 
 (async () => {
@@ -40,7 +40,7 @@ const { IgApiClient } = require('instagram-private-api');
 	const state = JSON.parse(session);
 	await ig.state.deserialize(state);
 
-	const auth = await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+	await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
 
 	const publishResult = await ig.publish.photo({
 		file: await readFileSync(img),

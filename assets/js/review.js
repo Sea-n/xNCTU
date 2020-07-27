@@ -44,7 +44,7 @@ function vote(uid, type, reason_prompt) {
 	}
 
 
-	data = {
+	var data = {
 		uid: uid,
 		vote: type,
 		reason: reason
@@ -67,7 +67,7 @@ function vote(uid, type, reason_prompt) {
 		} else
 			alert("Error: " + resp.msg);
 
-			updateVotes();
+		updateVotes();
 	});
 }
 
