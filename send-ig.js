@@ -10,7 +10,7 @@ const { IgApiClient } = require('instagram-private-api');
 
 	const conn = createConnection({
 		host: 'localhost',
-		user: 'xnctu',
+		user: process.env.MYSQL_USERNAME,
 		password: process.env.MYSQL_PASSWORD,
 		database: 'xnctu',
 	});

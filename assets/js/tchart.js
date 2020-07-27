@@ -187,7 +187,7 @@ window.Graph = {
         },
 
         render: function() {
-            var i, j, y, o, y1, y2, xScale, yScale, xShift, yShift, hBottom;
+            var i, j, y, o, xScale, yScale, xShift, yShift, hBottom;
             var opts = this.opts;
             var ys = opts.data.ys;
             var state = opts.state;
@@ -2300,13 +2300,13 @@ window.Graph = {
 
         onHandleMove: function(x1, x2, tp, firstMove) {
             //snap to days behaviour
-            var isMagnet = this.state.zoomMode;
+            // var isMagnet = this.state.zoomMode;
 
             this.updateSpeed();
 
-            isMagnet = false; //due to range reducers on detail data gaps
+            // isMagnet = false; //due to range reducers on detail data gaps
 
-			/*
+            /*
             if (isMagnet) {
                 var periodLen = this.data.mainPeriodLen;
                 x1 = Math.round(x1 / periodLen) * periodLen;
@@ -2328,13 +2328,13 @@ window.Graph = {
                     return;
                 }
             }
-			*/
+            */
 
 
             var props = [];
             var range = this.getYMinMax(x1, x2, false, true);
 
-            this.axisX.setAnimation(isMagnet || tp != 'both');
+            this.axisX.setAnimation(tp != 'both');
             this.axisY.setAnimation(true);
             this.axisY.setForceUpdate(false);
             firstMove && units.TUtils.triggerEvent('chart-hide-tips', {
@@ -2346,7 +2346,7 @@ window.Graph = {
                 state: this.state,
                 end: x1,
                 fixed: true,
-                duration: isMagnet ? 250 : 0,
+                duration: 0,
                 group: {
                     top: true,
                     bottom: true
@@ -2358,7 +2358,7 @@ window.Graph = {
                 state: this.state,
                 end: x2,
                 fixed: true,
-                duration: isMagnet ? 250 : 0,
+                duration: 0,
                 group: {
                     top: true,
                     bottom: true
@@ -4188,6 +4188,7 @@ window.Graph = {
 
                     var yVal;
                     var xc;
+                    var yc;
                     var minY = Number.MAX_VALUE;
                     var maxY = -Number.MAX_VALUE;
                     var prevXc = -Number.MAX_VALUE;
@@ -4959,7 +4960,7 @@ window.Graph = {
             var dims = this.opts.state.dims.tip;
             var formatter = units.TUtils.getFormatter('yTooltipFormatter', opts.data, state.zoomMorph);
 
-            var zoomMorph = state.zoomMorph == undefined ? 0 : state.zoomMorph;
+            var zoomMorph = (state.zoomMorph == undefined) ? 0 : state.zoomMorph;
             var offsetForBarGraphMain = opts.graphStyle == 'bar' || opts.graphStyle == 'step' ? this.opts.data.mainPeriodLen : 0;
             var offsetForBarGraphScale = offsetForBarGraphMain * (1 - zoomMorph);
 
@@ -5602,7 +5603,7 @@ window.Graph = {
                     yMinOrig: y1,
                     yMaxOrig: y2,
                 };
-            }
+            };
 
             var scale = 1 / cnt;
             var step = (y2 - y1) * scale;
