@@ -535,7 +535,7 @@ function update_facebook(array $post) {
 		"網站上「已刪投稿」區域可以看到被黑箱的記錄\nhttps://x.nctu.app/deleted",
 		"知道都是哪些系的同學在審文嗎？打開排行榜看看吧\nhttps://x.nctu.app/ranking",
 		"秉持公開透明原則，您可以在透明度報告看到師長同學請求刪文的紀錄\nhttps://x.nctu.app/transparency",
-		"靠交 2.0 是交大資工學生自行開發的系統，程式原始碼公開於 GitHub 平台\nhttps://git.io/xNCTU",
+		"靠交 2.0 是交大資工學生自行開發的系統，程式原始碼公開於 GitHub 平台\nhttps://github.com/Sea-n/xNCTU",
 	];
 	assert(count($tips_all) % 7 != 0);  // current count = 20
 	$tips = $tips_all[ ($post['id'] * 7) % count($tips_all) ];
