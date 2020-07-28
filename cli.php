@@ -49,26 +49,33 @@ case 'reject':
 		if ($post['status'] != 3)
 			continue;
 
-		$uid = $post['uid'];
-		$dt = time() - strtotime($post['created_at']);
+		/*
+		 * $dt: Time after submit in minute
+		 *
+		 * If submitted at 04:20 and voted 6:3, it will be racing condition at 05:20,
+		 * so we delete it when checker run at 05:19.
+		 */
+		$now = floor(time()/60);
+		$created = floor(strtotime($post['created_at'])/60);
+		$dt = $now - $created;
+		if ($created % 5 == 0)
+			$dt += 1;
 
-		if (strpos($post['author_name'], '境外') !== false) {
+		if (strpos($post['author_name'], '境外') === false) {
 			/* Before 1 hour */
-			if ($dt < 1*60*60)
-				if ($post['rejects'] < 2)
-					continue;
-		} else {
-			/* Before 1 hour */
-			if ($dt < 1*60*60)
-				if ($post['rejects'] < 5)
-					continue;
+			if ($dt <  1*60 && $post['rejects'] < 5)
+				continue;
 
 			/* 1 hour - 12 hour */
-			if ($dt < 12*60*60)
-				if ($post['rejects'] < 3)
-					continue;
+			if ($dt < 12*60 && $post['rejects'] < 3)
+				continue;
+		} else {
+			/* Before 1 hour */
+			if ($dt <  1*60 && $post['rejects'] < 2)
+				continue;
 		}
 
+		$uid = $post['uid'];
 		$db->deleteSubmission($uid, -2, '已駁回');
 
 		/* Remove vote keyboard in Telegram */
