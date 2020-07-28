@@ -145,28 +145,37 @@ if (substr($text, 0, 1) == '/') {
 				exit;
 			}
 
-			[$column, $body] = explode(' ', $arg, 2);
-
-			if ($column != "body") {
-				$TG->sendMsg([
-					'text' => "Column '$column' unsupported."
-				]);
-				exit;
-			}
+			[$column, $new] = explode(' ', $arg, 2);
 
 			if (!preg_match('/^#投稿(\w{4})/um', $TG->data['message']['reply_to_message']['text'] ?? $TG->data['message']['reply_to_message']['caption'] ?? '', $matches)) {
-				$TG->sendMsg([
-					'text' => 'Please reply to submission message.'
-				]);
-				exit;
+					$TG->sendMsg([
+						'text' => 'Please reply to submission message.'
+					]);
+					exit;
 			}
 			$uid = $matches[1];
 
-			$db->updatePostBody($uid, $body);
+			switch ($column) {
+				case 'body':
+					$db->updatePostBody($uid, $new);
+					break;
+
+				case 'status':
+					$db->updatePostStatus($uid, $new);
+					break;
+
+				default:
+					$TG->sendMsg([
+						'text' => "Column '$column' unsupported."
+					]);
+					exit;
+					break;
+			}
 
 			$TG->sendMsg([
 				'text' => "Done."
 			]);
+
 			break;
 
 		case 'delete':

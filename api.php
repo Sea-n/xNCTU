@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				if (count($posts) == 2) {
 					$last = strtotime($posts[1]['created_at']);
 					if (time() - $last < 24*60*60) {
-						$db->updateSubmissionStatus($uid, -12);
+						$db->updatePostStatus($uid, -12);
 						err('Please retry afetr 24 hours. 境外 IP 限制 24 小時內僅能發 1 篇文');
 					}
 				}
@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				if (count($posts) == 6) {
 					$last = strtotime($posts[5]['created_at']);
 					if (time() - $last < 3*60*60) {
-						$db->updateSubmissionStatus($uid, -12);
+						$db->updatePostStatus($uid, -12);
 						err('Please retry afetr 3 hours. 校外 IP 限制 3 小時內僅能發 5 篇文');
 					}
 				}
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				if (count($posts) == 6) {
 					$last = strtotime($posts[5]['created_at']);
 					if (time() - $last < 10*60) {
-						$db->updateSubmissionStatus($uid, -12);
+						$db->updatePostStatus($uid, -12);
 						err('Please retry afetr 10 minutes. 校內匿名發文限制 10 分鐘內僅能發 5 篇文');
 					}
 				}
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			if (count($posts) == 6) {
 				$last = strtotime($posts[2]['created_at']);
 				if (time() - $last < 60) {
-					$db->updateSubmissionStatus($uid, -12, 'Global rate limit');
+					$db->updatePostStatus($uid, -12, 'Global rate limit');
 					err('Please retry afetr 1 minutes. 系統全域限制 1 分鐘內僅能發 5 篇文');
 				}
 			}
@@ -284,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 			if ($_SERVER['REMOTE_ADDR'] !== $post['ip_addr'])
 				err('無法驗證身份：IP 位址不相符');
 
-			$db->updateSubmissionStatus($uid, 1);
+			$db->updatePostStatus($uid, 1);
 			echo json_encode([
 				'ok' => true,
 				'msg' => '投稿已送出'

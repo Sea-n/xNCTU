@@ -49,7 +49,7 @@ function sendReview(string $uid) {
 
 	$USERS = $db->getTgUsers();
 
-	$db->updateSubmissionStatus($uid, 2);
+	$db->updatePostStatus($uid, 2);
 
 	/* Send to Votes Log */
 	$keyboard = [
@@ -96,7 +96,7 @@ function sendReview(string $uid) {
 		$db->setTgMsg($uid, $user['tg_id'], $result['result']['message_id']);
 	}
 
-	$db->updateSubmissionStatus($uid, 3);
+	$db->updatePostStatus($uid, 3);
 }
 
 function sendPost(string $uid, string $msg, bool $has_img, int $id) {

@@ -103,7 +103,7 @@ switch ($args[0]) {
 		}
 
 		if ($args[0] == 'confirm')
-			$db->updateSubmissionStatus($uid, 1);
+			$db->updatePostStatus($uid, 1);
 		else
 			$db->deleteSubmission($uid, -13, '逾期未確認');
 
