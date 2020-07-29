@@ -1856,7 +1856,7 @@ window.Graph = {
 //              speed = 1;
 //          }
             speed = 1;
-            this.state.speed = speed == undefined ? k : speed;
+            this.state.speed = speed; // speed == undefined ? k : speed;
             return this.state.speed;
         },
 
