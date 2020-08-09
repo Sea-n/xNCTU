@@ -94,7 +94,7 @@ $sns = [
 foreach ($sns as $name => $key) {
 	try {
 		$func = "update_$key";
-		if (!isset($post["{$key}_id"]) || $post["{$key}_id"] < 0)
+		if (!isset($post["{$key}_id"]) || $post["{$key}_id"] < 10)
 			continue;  // not posted, could be be edit
 
 		$func($post);
