@@ -279,6 +279,7 @@ function idToDep(string $id): string {
 		$idD = $id[6] . $id[7] . $id[8];  // Serial number(3)
 
 		$TABLE = [
+			"1-101"=>"電機系",
 			"1-511"=>"電機系",
 			"1-550"=>"資工系",
 			"1-950"=>"百川",
