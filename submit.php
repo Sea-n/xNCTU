@@ -46,8 +46,8 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<ol>
 					<li>攻擊性投稿內容不能含有姓名、暱稱等可能洩漏對方身分的資料，請把關鍵字自行碼掉。
 						<ol><li>登入後具名投稿者，不受此條文之限制。</li></ol></li>
-					<li>含有歧視、人身攻擊、色情內容、不實訊息等文章，將由審核團隊衡量發文尺度。</li>
-					<li>如果對文章感到不舒服，請來信審核團隊，如有合理理由將協助刪文。</li>
+					<li>在不影響整體內容的前提下，審核團隊有權對投稿進行微調，包括但不限於&nbsp;<a href="https://github.com/vinta/pangu.js/#readme">中英文空格</a>、<a href="https://github.com/sparanoid/chinese-copywriting-guidelines#readme">排版格式</a>、錯別字、偏激措辭。</li>
+					<li>如果對文章感到不舒服，請&nbsp;<a href="mailto:x@nctu.app">來信審核團隊</a>，如有合理理由將協助刪文。</li>
 				</ol>
 			</div>
 
