@@ -409,13 +409,18 @@ function uploadImage(string $uid): string {
 	$height = $size[1];
 
 	if ($width * $height < 160*160)
-		return 'Image must be at least 160x160.';
+		$err = 'Image must be at least 160x160.';
 
 	if ($width/8 > $height)
-		return 'Image must be at least 8:1.';
+		$err = 'Image must be at least 8:1.';
 
 	if ($width < $height/4)
-		return 'Image must be at least 1:4.';
+		$err = 'Image must be at least 1:4.';
+
+	if (isset($err)) {
+		unlink($dst);
+		return $err;
+	}
 
 	/* Fix orientation */
 	$orien = shell_exec("exiftool -Orientation -S -n $dst |cut -c14- |tr -d '\\n'");
