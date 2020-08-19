@@ -53,7 +53,10 @@ function getPosts(likes, limit, offset) {
 			button.dataset.offset = -87;
 		}
 		resp.forEach((item) => {
-			appendPost(item);
+			var urlParams = new URLSearchParams(window.location.search);
+			var filter_img = urlParams.get('img');
+			if (!filter_img || filter_img == item.has_img)
+				appendPost(item);
 		})
 	});
 }
