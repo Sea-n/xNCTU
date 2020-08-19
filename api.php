@@ -34,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 			if (!empty($post['author_id'])) {
 				$ip_masked = false;
 				$author = $db->getUserByStuid($post['author_id']);
-				$author_name = $author['name'];
+				$dep = idToDep($post['author_id']);
+				$author_name = $dep . ' ' . $author['name'];
 				if (!empty($author['tg_photo']))
 					$author_photo = "/img/tg/{$author['tg_id']}-x64.jpg";
 				else

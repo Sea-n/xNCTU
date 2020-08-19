@@ -71,7 +71,8 @@ if (!empty($post['author_id']))
 
 if (!empty($post['author_id'])) {
 	$author = $db->getUserByStuid($post['author_id']);
-	$author_name = toHTML($author['name']);
+	$dep = idToDep($post['author_id']);
+	$author_name = toHTML($dep . ' ' . $author['name']);
 	if (!empty($author['tg_photo'] ?? ''))
 		$author_photo = "/img/tg/{$author['tg_id']}-x64.jpg";
 	else
