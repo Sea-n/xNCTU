@@ -309,8 +309,8 @@ function idToDep(string $id): string {
 	return "非學生 $id";
 }
 
-function genPic(string $str) {
-	$sha1 = sha1($str);
-	$url = "https://www.gravatar.com/avatar/$sha1?s=64&d=monsterid";
-	return $url;
+function genPic(string $seed) {
+	$seed = preg_replace('/[^A-Za-z0-9]/', '_', $seed);
+	$seed = preg_replace('/____+/', '___', $seed);
+	return "/avatar.php?seed=$seed";
 }
