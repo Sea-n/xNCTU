@@ -312,5 +312,5 @@ function idToDep(string $id): string {
 function genPic(string $seed) {
 	$seed = preg_replace('/[^A-Za-z0-9]/', '_', $seed);
 	$seed = preg_replace('/____+/', '___', $seed);
-	return "/avatar.php?seed=$seed";
+	return "/avatar?seed=$seed";
 }
