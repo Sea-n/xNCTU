@@ -13,6 +13,7 @@ const { IgApiClient } = require('instagram-private-api');
 		user: process.env.MYSQL_USERNAME,
 		password: process.env.MYSQL_PASSWORD,
 		database: 'xnctu',
+		charset : 'utf8mb4',
 	});
 	const query = promisify(conn.query).bind(conn);
 
