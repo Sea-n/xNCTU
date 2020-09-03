@@ -171,6 +171,9 @@ case 'update_likes':
 		$result = json_decode($result, true);
 
 		if (isset($result['error']) && $result['error']['error_user_title'] == "Exceeded asset access limit") {
+			echo "Error 1: $id\n";
+			var_dump($result);
+
 			$URL = str_replace("/reactions?", "/likes?", $URL);
 			curl_setopt_array($curl, [
 				CURLOPT_URL => $URL,
@@ -180,7 +183,7 @@ case 'update_likes':
 		}
 
 		if (!isset($result['data'])) {
-			echo "Error: $id\n";
+			echo "Error 2: $id\n";
 			var_dump($result);
 			$json = json_encode($result, JSON_PRETTY_PRINT);
 			file_put_contents(__DIR__ . "/backup/fb-stat/error-$id", $json);
