@@ -152,7 +152,7 @@ case 'update_likes':
 	$begin = $argv[2] ?? ($last - 100);
 
 	for ($id=$last; $id>=$begin; $id--) {
-		if (in_array($id, [581, 1597]))
+		if (in_array($id, [581, 1597, 2211, 3849, 3870, 3975]))
 			continue; // API error but post exists
 
 		$post = $db->getPostById($id);
@@ -170,16 +170,18 @@ case 'update_likes':
 		$result = curl_exec($curl);
 		$result = json_decode($result, true);
 
-		if (isset($result['error']) && $result['error']['error_user_title'] == "Exceeded asset access limit") {
+		if (isset($result['error'])) {
 			echo "Error 1: $id\n";
 			var_dump($result);
 
-			$URL = str_replace("/reactions?", "/likes?", $URL);
-			curl_setopt_array($curl, [
-				CURLOPT_URL => $URL,
-			]);
-			$result = curl_exec($curl);
-			$result = json_decode($result, true);
+			if (($result['error']['error_user_title'] ?? '') == "Exceeded asset access limit") {
+				$URL = str_replace("/reactions?", "/likes?", $URL);
+				curl_setopt_array($curl, [
+					CURLOPT_URL => $URL,
+				]);
+				$result = curl_exec($curl);
+				$result = json_decode($result, true);
+			}
 		}
 
 		if (!isset($result['data'])) {
