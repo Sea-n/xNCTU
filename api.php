@@ -389,7 +389,7 @@ function uploadImage(string $uid): string {
 	if (!file_exists($src) || !is_uploaded_file($src))
 		return 'Uploaded file not found. 上傳發生錯誤';
 
-	if ($_FILES['img']['size'] > 5*1000*1000)
+	if ($_FILES['img']['size'] > 20*1000*1000)
 		return 'Image too large. 圖片過大';
 
 	/* Check file type */

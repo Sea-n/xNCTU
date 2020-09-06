@@ -64,8 +64,8 @@ function updateImgPreview() {
 		return;
 	}
 
-	if (img_data.size > 5*1000*1000) {
-		alert('圖片檔案過大！請壓縮至 5MB 以下');
+	if (img_data.size > 20*1000*1000) {
+		alert('圖片檔案過大！請壓縮至 20 MB 以下');
 		img_data = false;
 		updateImgPreview();
 		return;
