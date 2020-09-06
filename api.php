@@ -389,7 +389,7 @@ function uploadImage(string $uid): string {
 	if (!file_exists($src) || !is_uploaded_file($src))
 		return 'Uploaded file not found. 上傳發生錯誤';
 
-	if ($_FILES['img']['size'] > 20*1000*1000)
+	if ($_FILES['img']['size'] > 50*1000*1000)
 		return 'Image too large. 圖片過大';
 
 	/* Check file type */
@@ -458,6 +458,12 @@ function uploadImage(string $uid): string {
 	/* Convert all file type to jpg */
 	shell_exec("ffmpeg -i $dst -q:v 1 $transpose $dst.jpg 2>&1");
 	unlink($dst);
+
+	while (filesize("$dst.jpg") > 1*1000*1000) {
+		rename("$dst.jpg", "$dst.ori.jpg");
+		shell_exec("ffmpeg -i $dst.ori.jpg -q:v 1 -vf scale='(iw/2):(ih/2)' $dst.jpg 2>&1");
+		unlink("$dst.ori.jpg");
+	}
 
 	return '';
 }
