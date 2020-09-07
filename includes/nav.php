@@ -53,3 +53,37 @@ if (isset($USER)) {
 		</div>
 	</div>
 </nav>
+
+<div class="login-wrapper" style="display: none;">
+	<div class="login-background"></div>
+	<div class="login-inner">
+		<dialog class="ts fullscreen modal" open>
+			<div class="header">
+				靠北交大 2.0 登入
+			</div>
+			<div class="content">
+				<div style="display: inline-flex; width: 100%; justify-content: space-around;">
+					<a href="/login-nctu" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
+						<img class="logo" src="/assets/img/login-nctu.png">
+					</a>
+					<a onclick="gSignIn();">
+						<img class="logo" src="/assets/img/login-google.png">
+					</a>
+					<a href="https://t.me/xNCTUbot?start=login" onclick="this.href+='?start=login_'+encodeURIComponent(location.pathname+location.search);">
+						<img class="logo" src="/assets/img/login-telegram.png">
+					</a>
+				</div>
+			</div>
+		</dialog>
+	</div>
+</div>
+
+<script>
+	function gSignIn() {
+		location.href = 'https://accounts.google.com/o/oauth2/v2/auth'
+			+ '?client_id=980594892712-ffhev6flnet47c83du107qsosjo9htrp.apps.googleusercontent.com'
+			+ '&redirect_uri=https://x.nctu.app/login-google'
+			+ '&response_type=code'
+			+ '&scope=profile';
+	}
+</script>

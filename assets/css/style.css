@@ -99,3 +99,49 @@ p {
 	top: -40px;
 	visibility: hidden;
 }
+
+/* Login Pop-up */
+.login-wrapper {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 40;
+	overflow: auto;
+}
+
+.login-background {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background: #000a none repeat scroll 0% 0%;
+}
+
+.login-inner {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	top: 50%;
+	width: 520px;
+}
+
+@media screen and (max-width: 768px) {
+	.login-inner {
+		width: 400px;
+	}
+	.logo {
+		width: 96px;
+	}
+}
+
+@media screen and (max-width: 536px) {
+	.login-inner {
+		width: 280px;
+	}
+	.logo {
+		width: 64px;
+	}
+}
