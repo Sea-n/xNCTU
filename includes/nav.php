@@ -10,7 +10,8 @@ if (!isset($db)) {
 
 if (isset($_SESSION['stuid']) && !isset($USER))
 	$USER = $db->getUserByStuid($_SESSION['stuid']);
-else if (isset($_SESSION['google_sub']) && !isset($GOOGLE))
+
+if (isset($_SESSION['google_sub']) && !isset($GOOGLE))
 	$GOOGLE = $db->getGoogleBySub($_SESSION['google_sub']);
 
 $items = [

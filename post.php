@@ -23,6 +23,9 @@ if (!$post) {
 	exit('Post not found. 文章不存在');
 }
 
+if (isset($_SESSION['stuid']) && !isset($USER))
+	$USER = $db->getUserByStuid($_SESSION['stuid']);
+
 $id = $post['id'];
 $body = toHTML($post['body']);
 $timeS = humanTime($post['created_at']);
