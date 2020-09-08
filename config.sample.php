@@ -8,6 +8,9 @@ $SITENAME = SITENAME;
 define('NCTU_OAUTH_ID', 'ZPs9jfRuBzI0Zlrc2p38GBoZuTF1jfO3uq6hrh07');
 define('NCTU_OAUTH_SECRET', '');
 
+define('GOOGLE_OAUTH_ID', '980594892712-ffhev6flnet47c83du107qsosjo9htrp.apps.googleusercontent.com');
+define('GOOGLE_OAUTH_SECRET', '');
+
 define('TWITTER_CONSUMER_KEY', '');
 define('TWITTER_CONSUMER_SECRET', '');
 define('TWITTER_TOKEN', '');

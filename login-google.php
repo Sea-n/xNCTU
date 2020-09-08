@@ -33,8 +33,8 @@ curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_POSTFIELDS, [
 	'grant_type' => 'authorization_code',
 	'code' => $_GET['code'],
-	'client_id' => '980594892712-ffhev6flnet47c83du107qsosjo9htrp.apps.googleusercontent.com',
-	'client_secret' => 'R2u0eflv_kkBA-P-alZ13W5d',
+	'client_id' => GOOGLE_OAUTH_ID,
+	'client_secret' => GOOGLE_OAUTH_SECRET,
 	'redirect_uri' => "https://$DOMAIN/login-google",
 ]);
 $data = curl_exec($curl);
@@ -85,9 +85,11 @@ if (!empty($GOOGLE['stuid'])) {
 
 
 function fail(string $msg = '', int $time) {
+	global $DOMAIN;
+
 	$url = 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query([
-		'client_id' => '980594892712-ffhev6flnet47c83du107qsosjo9htrp.apps.googleusercontent.com',
-		'redirect_uri' => 'https://x.nctu.app/login-google',
+		'client_id' => GOOGLE_OAUTH_ID,
+		'redirect_uri' => "https://$DOMAIN/login-google",
 		'response_type' => 'code',
 		'scope' => 'email profile'
 	]);
