@@ -27,24 +27,22 @@ if ($TG->ChatID < 0) {
 
 $USER = $db->getUserByTg($TG->FromID);
 if (!$USER) {
-	$msg = "*【$SITENAME 帳號申請單】*\n\n";
-	$msg .= "1. 姓名： `韋詠祥`\n";
-	$msg .= "2. 學號： `109550001`\n";
-	$msg .= "3. 系級： `資工系 113 級`\n";
-	$msg .= "4. Telegram Username： `@{$TG->data['message']['from']['username']}`\n";
-	$msg .= "5. Telegram UID： `{$TG->FromID}`\n";
-	$result = $TG->sendMsg([
-		'text' => $msg,
-		'parse_mode' => 'Markdown',
-	]);
-
-	$msg = "您尚未驗證交大身份，如果是個人申請、繁星推薦等管道已確定錄取的準交大生，請複製並填寫以上申請單後，使用*交大信箱*寄至維護團隊\n\n";
-	$msg .= "主旨： *$SITENAME - 帳號申請*\n";
-	$msg .= "收件人： x@nctu.app\n";
-	$msg .= "\n目前為人工審核，寄出後約需 5 - 30 分鐘處理，確認身份後將會由此機器人通知並提供登入連結";
+	$msg = "您尚未綁定任何交大身份\n\n";
+	$msg .= "請先至網站登入後，再點擊下方按鈕綁定帳號";
 	$TG->sendMsg([
 		'text' => $msg,
-		'parse_mode' => 'Markdown',
+		'reply_markup' => [
+			'inline_keyboard' => [
+				[
+					[
+						'text' => "綁定$SITENAME 帳號",
+						'login_url' => [
+							'url' => "https://$DOMAIN/login-tg"
+						]
+					]
+				]
+			]
+		]
 	]);
 	exit;
 }
