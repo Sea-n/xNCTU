@@ -5,7 +5,26 @@ require_once('config.php');
 require_once('database.php');
 $db = new MyDB();
 
+if (isset($_SESSION['stuid'])) {
+	$uri = '/';
+	if (isset($_SESSION['redir'])) {
+		$uri = $_SESSION['redir'];
+		unset($_SESSION['redir']);
+	}
+	header("Location: $uri");
+	exit;
+}
+
+if (isset($_SESSION['google_sub'])) {
+	header('Location: /verify');
+	exit;
+}
+
+
 if (!isset($_GET['code'])) {
+	if (preg_match('#^/[a-z]*(\?[a-z0-9=&]*)?$#i', $_GET['r'] ?? 'X'))
+		$_SESSION['redir'] = $_GET['r'];
+
 	fail('Redirecting...', 0);
 }
 
@@ -42,6 +61,27 @@ if (!isset($data['email']))
 	fail('No email from Google.', 5);
 
 echo json_encode($data, JSON_PRETTY_PRINT);
+
+$GOOGLE = $db->getGoogleBySub($data['sub']);
+if (!$GOOGLE)
+	$db->insertGoogle($data);
+
+if (!empty($GOOGLE['stuid'])) {
+	$_SESSION['stuid'] = $GOOGLE['stuid'];
+	echo "Login success!";
+
+	$uri = '/';
+	if (isset($_SESSION['redir'])) {
+		$uri = $_SESSION['redir'];
+		unset($_SESSION['redir']);
+	}
+	header("Location: $uri");
+} else {
+	$_SESSION['google_sub'] = $data['sub'];
+	echo "Please verify your NCTU account.";
+
+	header("Location: /verify");
+}
 
 
 function fail(string $msg = '', int $time) {

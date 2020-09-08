@@ -591,4 +591,47 @@ class MyDB {
 			':chat' => $chat,
 		]);
 	}
+
+	public function insertGoogle(array $user) {
+		$sql = "SELECT stuid FROM google_accounts WHERE sub = :sub";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':sub' => $user['sub']]);
+
+		if ($stmt->fetch())
+			return false;
+
+		$sql = "INSERT INTO google_accounts(sub, email, name, picture, given_name, family_name, locale) VALUES (:sub, :email, :name, :picture, :given_name, :family_name, :locale)";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':sub' => $user['sub'],
+			':email' => $user['email'],
+			':name' => $user['name'],
+			':picture' => $user['picture'],
+			':given_name' => $user['given_name'],
+			':family_name' => $user['family_name'],
+			':locale' => $user['locale'],
+		]);
+	}
+
+	public function getGoogleBySub(string $sub = ''): ?array {
+		if (empty($sub))
+			return NULL;
+		$sql = "SELECT * FROM google_accounts WHERE sub = :sub";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([':sub' => $sub]);
+		$result = $stmt->fetch();
+
+		if ($result === false)
+			return NULL;
+		return $result;
+	}
+
+	public function bindGoogleToStuid(string $sub, string $stuid) {
+		$sql = "UPDATE google_accounts SET stuid = :stuid WHERE sub = :sub";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':sub' => $sub,
+			':stuid' => $stuid,
+		]);
+	}
 }

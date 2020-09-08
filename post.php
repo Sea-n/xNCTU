@@ -23,35 +23,6 @@ if (!$post) {
 	exit('Post not found. 文章不存在');
 }
 
-$hashtag = "#靠交{$id}";
-
-$DESC = $post['body'];
-$TITLE = "$hashtag $DESC";
-
-if (mb_strlen($TITLE) > 40)
-	$TITLE = mb_substr($TITLE, 0, 40) . '...';
-
-if (mb_strlen($DESC) > 150)
-	$DESC = mb_substr($DESC, 0, 150) . '...';
-
-if ($post['has_img'])
-	$IMG = "https://$DOMAIN/img/{$post['uid']}.jpg";
-?>
-<!DOCTYPE html>
-<html lang="zh-TW">
-	<head>
-<?php include('includes/head.php'); ?>
-	</head>
-	<body>
-<?php include('includes/nav.php'); ?>
-		<header class="ts fluid vertically padded heading slate">
-			<div class="ts narrow container">
-				<h1 class="ts header"><?= SITENAME ?></h1>
-				<div class="description">不要問為何沒有人審文，先承認你就是沒有人。</div>
-			</div>
-		</header>
-		<div class="ts container" name="main">
-<?php
 $id = $post['id'];
 $body = toHTML($post['body']);
 $timeS = humanTime($post['created_at']);
@@ -81,19 +52,50 @@ if (!empty($post['author_id'])) {
 	$author_photo = genPic($ip_masked);
 
 
+$hashtag = "#靠交{$id}";
+
+$DESC = $post['body'];
+$TITLE = "$hashtag $DESC";
+
+if (mb_strlen($TITLE) > 40)
+	$TITLE = mb_substr($TITLE, 0, 40) . '...';
+
+if (mb_strlen($DESC) > 150)
+	$DESC = mb_substr($DESC, 0, 150) . '...';
+
+if ($post['has_img'])
+	$IMG = "https://$DOMAIN/img/{$post['uid']}.jpg";
+else
+	$IMG = $author_photo;
+
+
 $plurk = base_convert($post['plurk_id'], 10, 36);
 
 $VOTES = $db->getVotesByUid($post['uid']);
 
-if (isset($post['deleted_at'])) {
 ?>
+<!DOCTYPE html>
+<html lang="zh-TW">
+	<head>
+<?php include('includes/head.php'); ?>
+	</head>
+	<body>
+<?php include('includes/nav.php'); ?>
+		<header class="ts fluid vertically padded heading slate">
+			<div class="ts narrow container">
+				<h1 class="ts header"><?= SITENAME ?></h1>
+				<div class="description">不要問為何沒有人審文，先承認你就是沒有人。</div>
+			</div>
+		</header>
+		<div class="ts container" name="main">
+<?php if (isset($post['deleted_at'])) { ?>
 			<div class="ts negative message">
 				<div class="header">此文已刪除</div>
 				<p>刪除原因：<?= $post['delete_note'] ?? '(無)' ?></p>
 			</div>
 <?php } ?>
 			<article itemscope itemtype="http://schema.org/Article" class="ts card" style="margin-bottom: 42px;">
-<?php if (isset($IMG)) { ?>
+<?php if ($post['has_img']) { ?>
 				<div class="image">
 					<img itemprop="image" class="post-image" src="<?= $IMG ?>" />
 				</div>

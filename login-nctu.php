@@ -53,6 +53,11 @@ if (!$USER)
 $_SESSION['stuid'] = $data['username'];
 $db->updateUserLogin($_SESSION['stuid']);
 
+if (isset($_SESSION['google_sub'])) {
+	$db->bindGoogleToStuid($_SESSION['google_sub'], $_SESSION['stuid']);
+	unset($_SESSION['google_sub']);
+}
+
 echo "Login success!";
 $uri = '/';
 if (isset($_SESSION['redir'])) {

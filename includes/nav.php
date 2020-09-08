@@ -10,6 +10,8 @@ if (!isset($db)) {
 
 if (isset($_SESSION['stuid']) && !isset($USER))
 	$USER = $db->getUserByStuid($_SESSION['stuid']);
+else if (isset($_SESSION['google_sub']) && !isset($GOOGLE))
+	$GOOGLE = $db->getGoogleBySub($_SESSION['google_sub']);
 
 $items = [
 	'/' => '首頁',
@@ -47,15 +49,24 @@ if (isset($USER)) {
 				<i class="log out icon"></i>
 				<span class="tablet or large device only">Logout</span>
 			</a>
+<?php } else if (isset($GOOGLE)) {
+	if (!empty($GOOGLE['picture']))
+		$photo = $GOOGLE['picture'];
+	else
+		$photo = genPic($GOOGLE['sub']);
+?>
+			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
+			&nbsp;<b id="nav-name" style="overflow: hidden;">Guest</b>&nbsp;
+			<a class="item" href="/verify" data-type="login">Verify</a>
 <?php } else { ?>
-			<a class="item" href="/login-nctu" data-type="login" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">Login</a>
+			<a class="item" href="/login-nctu" data-type="login" onclick="document.getElementById('login-wrapper').style.display = ''; return false;">Login</a>
 <?php } ?>
 		</div>
 	</div>
 </nav>
 
-<div class="login-wrapper" style="display: none;">
-	<div class="login-background"></div>
+<div class="login-wrapper" id="login-wrapper" style="display: none;">
+	<div class="login-background" onclick="this.parentNode.style.display = 'none';"></div>
 	<div class="login-inner">
 		<dialog class="ts fullscreen modal" open>
 			<div class="header">
@@ -66,7 +77,7 @@ if (isset($USER)) {
 					<a href="/login-nctu" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
 						<img class="logo" src="/assets/img/login-nctu.png">
 					</a>
-					<a onclick="gSignIn();">
+					<a href="/login-google" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
 						<img class="logo" src="/assets/img/login-google.png">
 					</a>
 					<a href="https://t.me/xNCTUbot?start=login" onclick="this.href+='?start=login_'+encodeURIComponent(location.pathname+location.search);">
@@ -77,13 +88,3 @@ if (isset($USER)) {
 		</dialog>
 	</div>
 </div>
-
-<script>
-	function gSignIn() {
-		location.href = 'https://accounts.google.com/o/oauth2/v2/auth'
-			+ '?client_id=980594892712-ffhev6flnet47c83du107qsosjo9htrp.apps.googleusercontent.com'
-			+ '&redirect_uri=https://x.nctu.app/login-google'
-			+ '&response_type=code'
-			+ '&scope=profile';
-	}
-</script>
