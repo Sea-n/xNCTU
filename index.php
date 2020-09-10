@@ -30,7 +30,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<li>除了改善制度面，也參考&nbsp;<a target="_blank" href="https://www.facebook.com/init.kobeengineer/">靠北工程師</a>&nbsp;概念，提供不同社群平台支援。</li>
 			</ul>
 			<p>期望能以嶄新的姿態，透過不斷精進制度與架構，將偉大大學推向靠北生態系巔峰。</p>
-			<p>此專案收錄於 <a href="https://awesome.nctu.app/">Awesome NCTU</a> 網站。</p>
+			<p>此專案收錄於 <a target="_blank" href="https://awesome.nctu.app/">Awesome NCTU</a> 網站，也可參考 <a target="_blank" href="https://x.nthu.io/">靠北清大 2.0</a> 系統。</p>
 
 			<h2 class="ts header">社群平台</h2>
 			<p>除了本站文章列表外，您可以在以下 5 個社群媒體平台追蹤<?= SITENAME ?> 帳號。</p>
