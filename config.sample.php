@@ -22,6 +22,8 @@ define('PLURK_TOKEN', '');
 define('PLURK_TOKEN_SECRET', '');
 
 define('FB_PAGES_ID', '103461781248690');
+define('FB_APP_ID', '776010579474059');
+define('FB_APP_SECRET', '');
 define('FB_ACCESS_TOKEN', '');
 
 define('IG_PAGES_ID', '17841430128933487');
