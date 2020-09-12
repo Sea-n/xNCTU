@@ -79,6 +79,7 @@ function ip_from(string $ip_addr): string {
 		$name = str_replace("Chunghwa Telecom", "中華電信", $name);
 		$name = str_replace("ASIA PACIFIC TELECOM", "亞太電信", $name);
 		$name = str_replace("Taiwan Mobile", "台灣大哥大", $name);
+		$name = str_replace("TBC", "台灣寬頻通訊", $name);
 		return $name;
 	}
 
