@@ -58,7 +58,7 @@ $sns = [
 	'Twitter' => 'twitter',
 	'Instagram' => 'instagram',
 	'Plurk' => 'plurk',
-#	'Facebook' => 'facebook',
+	'Facebook' => 'facebook',
 ];
 foreach ($sns as $name => $key) {
 	try {
@@ -87,7 +87,7 @@ $post = $db->getPostById($post['id']);
 
 /* Update with link to other SNS */
 $sns = [
-#	'Facebook' => 'facebook',
+	'Facebook' => 'facebook',
 	'Plurk' => 'plurk',
 	'Telegram' => 'telegram',
 ];

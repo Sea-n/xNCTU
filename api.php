@@ -30,9 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		$posts = $db->getPostsByLikes($likes, $limit, $offset);
 		$result = [];
 
+		/*
 		$pinned = $db->getPostById(4290);
 		if ($offset == 0)
 			array_unshift($posts, $pinned);
+		 */
 
 		foreach ($posts as $i => $post) {
 			if (!empty($post['author_id'])) {
