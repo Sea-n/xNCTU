@@ -9,13 +9,10 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 <?php include('includes/head.php'); ?>
 	</head>
 	<body>
-<?php include('includes/nav.php'); ?>
-		<header class="ts fluid vertically padded heading slate">
-			<div class="ts narrow container">
-				<h1 class="ts header"><?= $TITLE ?></h1>
-				<div class="description"><?= SITENAME ?></div>
-			</div>
-		</header>
+<?php
+include('includes/nav.php');
+include('includes/header.php');
+?>
 		<div class="ts container" name="main">
 			<p>秉持公開透明原則，除了 <a href="/deleted">已刪投稿</a> 保留完整審核紀錄外，如本站收到來自司法單位、校方、同學、個人的內容移除請求，也將定期於此頁面公開。</p>
 

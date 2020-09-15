@@ -9,13 +9,10 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 <?php include('includes/head.php'); ?>
 	</head>
 	<body>
-<?php include('includes/nav.php'); ?>
-		<header class="ts fluid vertically padded heading slate">
-			<div class="ts narrow container">
-				<h1 class="ts header">常見問答</h1>
-				<div class="description"><?= SITENAME ?></div>
-			</div>
-		</header>
+<?php
+include('includes/nav.php');
+include('includes/header.php');
+?>
 		<div class="ts container" name="main">
 			<p>下面列出了幾個關於此服務的問題，如有疏漏可聯絡開發團隊，將儘快答覆您。</p>
 

@@ -74,13 +74,8 @@ else
 	<body>
 <?php }
 include('includes/nav.php');
+include('includes/header.php');
 ?>
-		<header class="ts fluid vertically padded heading slate">
-			<div class="ts narrow container">
-				<h1 class="ts header"><?= $deleted ? '已刪投稿' : '貼文審核' ?></h1>
-				<div class="description"><?= SITENAME ?></div>
-			</div>
-		</header>
 		<div class="ts container" name="main">
 <?php
 if ($deleted) {

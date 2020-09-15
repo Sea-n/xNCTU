@@ -9,13 +9,10 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 <?php include('includes/head.php'); ?>
 	</head>
 	<body>
-<?php include('includes/nav.php'); ?>
-		<header class="ts fluid vertically padded heading slate">
-			<div class="ts narrow container">
-				<h1 class="ts header">服務條款及隱私權政策</h1>
-				<div class="description"><?= SITENAME ?></div>
-			</div>
-		</header>
+<?php
+include('includes/nav.php');
+include('includes/header.php');
+?>
 		<div class="ts container" name="main">
 			<p>非常歡迎您光臨「<?= SITENAME ?>」（以下簡稱<strong>本網站</strong>），為了讓您能夠安心使用本網站的各項服務與資訊，特此向您說明本網站的隱私權保護政策，以保障您的權益，請您詳閱下列內容：</p>
 

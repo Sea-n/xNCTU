@@ -14,14 +14,10 @@ $TITLE = '排行榜';
 <?php include('includes/head.php'); ?>
 	</head>
 	<body>
-<?php include('includes/nav.php'); ?>
-		<header class="ts fluid vertically padded heading slate">
-			<div class="ts narrow container">
-
-				<h1 class="ts header">排行榜</h1>
-				<div class="description"><?= SITENAME ?></div>
-			</div>
-		</header>
+<?php
+include('includes/nav.php');
+include('includes/header.php');
+?>
 		<div class="ts container" name="main">
 			<p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半，正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</a>
 			<p>連續投票天數以台灣時間 24:00 為計算基準，如當日已投票、仍未中斷將標記 ⚡️ 符號。</p>
