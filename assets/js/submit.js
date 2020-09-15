@@ -1,4 +1,3 @@
-var stopCountdown = 0;
 var submitted = false;
 var img_data = false;
 
@@ -188,25 +187,9 @@ function submitForm(e) {
 			return;
 		}
 
-		showPreview(resp);
-
-		var deadline = (new Date()).getTime() + 3*1000;
-		stopCountdown = setInterval(() => {
-			var dt = Math.floor((deadline - (new Date()).getTime()) / 1000);
-			if (dt < 0)
-				dt = 0;
-
-			if (dt == 0) {
-				document.getElementById('confirm-button').classList.remove('disabled');
-				clearInterval(stopCountdown);
-			}
-
-			var min = Math.floor(dt/60);
-			var sec = dt % 60;
-			if (sec < 10)
-				sec = '0' + sec;
-			document.getElementById('countdown').innerText = min + ':' + sec;
-		}, 100);
+		localStorage.setItem('draft', '');
+		submitted = true;
+		location.href = '/review/' + resp.uid;
 	});
 }
 
@@ -236,87 +219,6 @@ function checkForm() {
 	}
 
 	return isValid;
-}
-
-function showPreview(data) {
-	document.body.dataset.uid = data.uid;
-	document.getElementById('preview-body').innerHTML = toHTML(data.body);
-
-	var img = document.getElementById('preview-img');
-	if (data.has_img)
-		img.src = '/img/' + data.uid + '.jpg';
-	else
-		img.src = '';
-
-	document.getElementById('author-photo').src = data.author_photo;
-	document.getElementById('author-name').innerText = data.author_name;
-	document.getElementById('author-ip').innerText = data.ip_masked;
-
-	document.getElementById('preview-section').style.display = '';
-	document.getElementById('submit-section').style.display = 'none';
-}
-
-function confirmSubmission() {
-	if (!confirm('確定要送出此投稿嗎？\n\n這是你反悔的最後機會'))
-		return;
-
-	document.getElementById('confirm-button').classList.add('disabled');
-	document.getElementById('delete-button').classList.add('disabled');
-
-	var uid = document.body.dataset.uid;
-
-	var data = {
-		uid: uid,
-		status: 'confirmed',
-	};
-
-	fetch('/api/submission', {
-		method: 'PATCH',
-		body: JSON.stringify(data),
-		headers: {'content-type': 'application/json'}
-	}).then(resp => resp.json())
-	.then((resp) => {
-		console.log(resp);
-		if (!resp.ok) {
-			alert(resp.msg);
-			return;
-		}
-		localStorage.setItem('draft', '');
-		submitted = true;
-		location.href = '/review/' + uid;
-	});
-}
-
-function deleteSubmission() {
-	if (!confirm('您確定要刪除此投稿嗎？'))
-		return;
-
-	var reason = prompt('請輸入刪除附註');
-	if (reason.length < 1) {
-		alert('刪除附註請勿留空');
-		return;
-	}
-
-	document.getElementById('confirm-button').classList.add('disabled');
-	document.getElementById('delete-button').classList.add('disabled');
-
-	clearInterval(stopCountdown);
-
-	var data = {
-		uid: document.body.dataset.uid,
-		reason: reason
-	};
-
-	fetch('/api/submission', {
-		method: 'DELETE',
-		body: JSON.stringify(data),
-		headers: {'content-type': 'application/json'}
-	}).then(resp => resp.json())
-	.then((resp) => {
-		console.log(resp);
-		alert(resp.msg);
-		submitted = true;
-	});
 }
 
 function changeAnon() {

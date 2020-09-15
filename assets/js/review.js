@@ -56,7 +56,6 @@ function vote(uid, type, reason_prompt) {
 		headers: {'content-type': 'application/json'}
 	}).then(resp => resp.json())
 	.then((resp) => {
-		console.log(resp);
 		var card = document.getElementById('post-' + uid);
 		if (resp.ok) {
 			card.querySelector('#approvals').innerText = resp.approvals;
@@ -82,7 +81,6 @@ function updateVotes() {
 	fetch('/api/votes?uid=' + uid)
 	.then(resp => resp.json())
 	.then((resp) => {
-		console.log(resp);
 		if (resp.ok) {
 			if (resp.reload)
 				location.reload();
@@ -135,4 +133,61 @@ function voteRow(no, vote, dep, name, reason) {
 	tr.cells[4].innerHTML = toHTML(reason);
 
 	return tr;
+}
+
+function confirmSubmission(uid) {
+	if (!confirm('確定要送出此投稿嗎？\n\n這是你反悔的最後機會'))
+		return;
+
+	document.getElementById('confirm-button').classList.add('disabled');
+	document.getElementById('delete-button').classList.add('disabled');
+
+	var data = {
+		uid: uid,
+		status: 'confirmed',
+	};
+
+	fetch('/api/submission', {
+		method: 'PATCH',
+		body: JSON.stringify(data),
+		headers: {'content-type': 'application/json'}
+	}).then(resp => resp.json())
+	.then((resp) => {
+		if (!resp.ok) {
+			alert(resp.msg);
+			return;
+		}
+		localStorage.setItem('draft', '');
+		submitted = true;
+		location.href = '/review/' + uid;
+	});
+}
+
+function deleteSubmission(uid) {
+	if (!confirm('您確定要刪除此投稿嗎？'))
+		return;
+
+	var reason = prompt('請輸入刪除附註');
+	if (reason.length < 1) {
+		alert('刪除附註請勿留空');
+		return;
+	}
+
+	document.getElementById('confirm-button').classList.add('disabled');
+	document.getElementById('delete-button').classList.add('disabled');
+
+	var data = {
+		uid: uid,
+		reason: reason
+	};
+
+	fetch('/api/submission', {
+		method: 'DELETE',
+		body: JSON.stringify(data),
+		headers: {'content-type': 'application/json'}
+	}).then(resp => resp.json())
+	.then((resp) => {
+		alert(resp.msg);
+		submitted = true;
+	});
 }
