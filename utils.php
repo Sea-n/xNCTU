@@ -44,7 +44,7 @@ function ip_from(string $ip_addr): string {
 		$name = $matches[1];
 		/* Check TANet Whois */
 		if ($name == '教育部') {
-			$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip_addr");
+			$curl = curl_init("http://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip_addr");
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			$resp = curl_exec($curl);
 			if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立|私立)*([^<]+?)(大學|區網|中心)*</td></tr>#', $resp, $matches)) {
@@ -66,7 +66,7 @@ function ip_from(string $ip_addr): string {
 		$name = $matches[1];
 		/* Check TANet Whois */
 		if ($name == 'Ministry of Education Computer Center') {
-			$curl = curl_init("https://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip_addr");
+			$curl = curl_init("http://whois.tanet.edu.tw/showWhoisPublic.php?queryString=$ip_addr");
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			$resp = curl_exec($curl);
 			if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立|私立)*([^<]+?)(大學|區網|中心)*</td></tr>#', $resp, $matches)) {
