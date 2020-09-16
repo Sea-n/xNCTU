@@ -1,9 +1,13 @@
 <?php
-session_start(['read_and_close' => true]);
+session_start();
 require_once('utils.php');
 require_once('database.php');
 $db = new MyDB();
 
+
+if (isset($_SESSION['uid']) && $db->getPostByUid($_SESSION['uid'])['status'] != 0)
+	unset($_SESSION['uid']);
+session_write_close();
 
 $USER = $db->getUserByStuid($_SESSION['stuid'] ?? '');
 $uid = $_GET['uid'] ?? '';

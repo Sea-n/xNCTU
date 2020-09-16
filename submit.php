@@ -5,6 +5,11 @@ require_once('database.php');
 require_once('send-review.php');
 $db = new MyDB();
 
+if (isset($_SESSION['uid'])) {
+	header("Location: /review/{$_SESSION['uid']}");
+	exit;
+}
+
 $ip_addr = $_SERVER['REMOTE_ADDR'];
 $ip_masked = ip_mask($ip_addr);
 $ip_from = ip_from($ip_addr);
