@@ -4,7 +4,7 @@ require_once('config.php');
 if (!isset($_GET['code'])) {
 	$url = 'https://www.facebook.com/v8.0/dialog/oauth'
 		. '?client_id=' . FB_APP_ID
-		. '&redirect_uri=' . urlencode('https://x.nctu.app/login-fb')
+		. '&redirect_uri=' . urlencode("https://$DOMAIN/login-fb")
 		. '&response_type=code'
 		. '&scope=pages_show_list,pages_read_engagement,pages_manage_metadata,pages_read_user_content,pages_manage_posts,pages_manage_engagement,public_profile';
 	header("Location: $url");
@@ -13,7 +13,7 @@ if (!isset($_GET['code'])) {
 
 $url = 'https://graph.facebook.com/v8.0/oauth/access_token'
 	. '?client_id=' . FB_APP_ID
-	. '&redirect_uri=' . urlencode('https://x.nctu.app/login-fb')
+	. '&redirect_uri=' . urlencode("https://$DOMAIN/login-fb")
 	. '&client_secret=' . FB_APP_SECRET
 	. '&code=' . urlencode($_GET['code']);
 $data = file_get_contents($url);
