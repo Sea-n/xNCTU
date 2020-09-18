@@ -78,8 +78,17 @@ else
 	<body>
 <?php }
 include('includes/nav.php');
-include('includes/header.php');
+if (empty($uid)) {
+	include('includes/header.php');
+} else {
 ?>
+		<header class="ts fluid vertically padded heading slate">
+			<div class="ts narrow container">
+				<h1 class="ts header"><?= SITENAME ?></h1>
+				<div class="description">不要問為何沒有人審文，先承認你就是沒有人。</div>
+			</div>
+		</header>
+<?php } ?>
 		<div class="ts container" name="main">
 <?php
 if ($deleted) {
