@@ -1,4 +1,6 @@
-require("dotenv").config({ path: '/usr/share/nginx/x.nctu.app/.env' });
+const PATH = '/usr/share/nginx/x.nctu.app';
+
+require("dotenv").config({ path: PATH + '/.env' });
 const { readFileSync, writeFileSync } = require('fs');
 const { promisify } = require('util');
 const { createConnection } = require('mysql');
@@ -12,7 +14,7 @@ const { IgApiClient } = require('instagram-private-api');
 		host: 'localhost',
 		user: process.env.MYSQL_USERNAME,
 		password: process.env.MYSQL_PASSWORD,
-		database: 'xnctu',
+		database: process.env.MYSQL_USERNAME,
 		charset : 'utf8mb4',
 	});
 	const query = promisify(conn.query).bind(conn);
@@ -23,7 +25,7 @@ const { IgApiClient } = require('instagram-private-api');
 	const post = rows[0];
 	strictEqual(post.has_img, 1);
 	strictEqual(post.instagram_id, '');
-	const img = '/usr/share/nginx/x.nctu.app/img/' + post.uid + '.jpg';
+	const img = PATH + '/img/' + post.uid + '.jpg';
 	const msg = post.body + '\n\n#靠交' + post.id + ' #靠北交大';
 
 	/* Instagram */
@@ -34,10 +36,10 @@ const { IgApiClient } = require('instagram-private-api');
 		const serialized = await ig.state.serialize();
 		delete serialized.constants;
 		const json = JSON.stringify(serialized);
-		writeFileSync('/temp/xnctu-ig.session', json);
+		writeFileSync('/temp/' + process.env.MYSQL_USERNAME + '-ig.session', json);
 	});
 
-	const session = readFileSync('/temp/xnctu-ig.session');
+	const session = readFileSync('/temp/' + process.env.MYSQL_USERNAME + '-ig.session');
 	const state = JSON.parse(session);
 	await ig.state.deserialize(state);
 
