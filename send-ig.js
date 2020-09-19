@@ -1,7 +1,7 @@
 const PATH = '/usr/share/nginx/x.nctu.app';
 
 require("dotenv").config({ path: PATH + '/.env' });
-const { readFileSync, writeFileSync } = require('fs');
+const { readFileSync, writeFileSync, existsSync } = require('fs');
 const { promisify } = require('util');
 const { createConnection } = require('mysql');
 const { strictEqual } = require('assert');
@@ -32,16 +32,19 @@ const { IgApiClient } = require('instagram-private-api');
 	const ig = new IgApiClient();
 	ig.state.generateDevice(process.env.IG_USERNAME);
 
+	const sessionFile = '/temp/' + process.env.MYSQL_USERNAME + '-ig.session';
 	ig.request.end$.subscribe(async () => {
 		const serialized = await ig.state.serialize();
 		delete serialized.constants;
 		const json = JSON.stringify(serialized);
-		writeFileSync('/temp/' + process.env.MYSQL_USERNAME + '-ig.session', json);
+		writeFileSync(sessionFile, json);
 	});
 
-	const session = readFileSync('/temp/' + process.env.MYSQL_USERNAME + '-ig.session');
-	const state = JSON.parse(session);
-	await ig.state.deserialize(state);
+	if (existsSync(sessionFile)) {
+		const session = readFileSync(sessionFile);
+		const state = JSON.parse(session);
+		await ig.state.deserialize(state);
+	}
 
 	await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
 
