@@ -606,10 +606,10 @@ class MyDB {
 			':sub' => $user['sub'],
 			':email' => $user['email'],
 			':name' => $user['name'],
-			':picture' => $user['picture'],
-			':given_name' => $user['given_name'],
-			':family_name' => $user['family_name'],
-			':locale' => $user['locale'],
+			':picture' => $user['picture'] ?? '',
+			':given_name' => $user['given_name'] ?? '',
+			':family_name' => $user['family_name'] ?? '',
+			':locale' => $user['locale'] ?? '',
 		]);
 	}
 
