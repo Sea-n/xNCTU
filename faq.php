@@ -69,12 +69,13 @@ include('includes/header.php');
 			<p>另外，對於境外投稿者將會揭露完整 IP 位址，供審核者們自行判斷意圖。</p>
 
 			<div class="faq-anchor" id="rate-limit"></div><h2 class="ts header">Q：發文速率有限制嗎</h2>
-			<p>由於遭到部分校外人士濫用，目前針對匿名發文有限制發文速率</p>
+			<p><?= SITENAME ?> 應該是所有人共有的，為避免淪為少數人的個板，目前針對匿名發文有限制發文速率。</p>
 			<ul>
 				<li>校內 IP 位址：每 10 分鐘最多 5 篇</li>
-				<li>台灣 IP 位址：<b>每 3 小時最多 5 篇</b></li>
-				<li>境外 IP 位址：每天最多 1 篇</li>
+				<li>台灣 IP 位址：<b>每 3 小時最多 3 篇</b></li>
+				<li>境外 IP 位址：每 12 小時最多 1 篇</li>
 			</ul>
+			<p>為減輕遭受濫用時的危害，匿名發文時全系統每 3 分鐘最多接受 5 篇投稿，如遇特殊事件無法發文時，請先點擊右上角 Login 後具名投稿。</p>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>
