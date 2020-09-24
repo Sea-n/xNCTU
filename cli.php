@@ -152,7 +152,7 @@ case 'update_likes':
 	$begin = $argv[2] ?? ($last - 100);
 
 	for ($id=$last; $id>=$begin; $id--) {
-		if (in_array($id, [581, 1597, 2211, 3849, 3870, 3975, 4275]))
+		if (in_array($id, [581, 1597, 2211, 3849, 3870, 3975, 4275, 4575]))
 			continue; // API error but post exists
 
 		$post = $db->getPostById($id);

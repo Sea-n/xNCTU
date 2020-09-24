@@ -76,7 +76,7 @@ $IMG = "https://$DOMAIN/assets/img/og.png";
 				<h4>(D) 境外 IP 位址</h4>
 				<p>保留境外發文是為了提供更安心的靠北管道，並不鼓勵發日常廢文使用。因此設下較為嚴格的審核標準，除非通過群眾一致認同有其必要，否則一概不予發出。</p>
 				<ul>
-					<li>10 分鐘至 1 小時：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個</li>
+					<li>1 小時以內：<button class="ts vote positive button">通過</button>&nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個</li>
 					<li>1 小時以後：投稿掰掰</li>
 				</ul>
 
