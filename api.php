@@ -173,38 +173,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		/* Check rate limit */
 		if (empty($author_id)) {
-			$last = strtotime($posts[$max]['created_at']);
-			$dt = time() - $last;
+			$rules = [
+				'A' => [
+					'msg' => '具名發文不受限制',
+				],
+				'B' => [
+					'period' => 10*60,
+					'limit' => 5,
+					'msg' => '校內匿名發文限制 10 分鐘內僅能發 5 篇文',
+				],
+				'C' => [
+					'period' => 3*60*60,
+					'limit' => 3,
+					'msg' => '校外 IP 限制 3 小時內僅能發 3 篇文',
+				],
+				'D' => [
+					'period' => 12*60*60,
+					'limit' => 1,
+					'msg' => '境外 IP 限制 12 小時內僅能發 1 篇文',
+				],
+			];
 
-			if ($author_name == '匿名, 交大') {
-				$max = 5;
-				$posts = $db->getPostsByIp($ip_addr, $max+1);
-				if (count($posts) == $max+1) {
-					$cd = 10*60 - $dt;
-					if ($cd > 0) {
-						$db->updatePostStatus($uid, -12);
-						err("Please retry afetr $cd seconds. 校內匿名發文限制 10 分鐘內僅能發 $max 篇文");
-					}
-				}
-			} else if (strpos($author_name, '境外') === false) {
-				$max = 3;
-				$posts = $db->getPostsByIp($ip_addr, $max+1);
-				if (count($posts) == $max+1) {
-					$cd = 3*60*60 - $dt;
-					if ($cd > 0) {
-						$db->updatePostStatus($uid, -12);
-						err("Please retry afetr $cd seconds. 校外 IP 限制 3 小時內僅能發 $max 篇文");
-					}
-				}
-			} else {
-				$max = 1;
-				$posts = $db->getPostsByIp($ip_addr, $max+1);
-				if (count($posts) == $max+1) {
-					$cd = 12*60*60 - $dt;
-					if ($cd > 0) {
-						$db->updatePostStatus($uid, -12);
-						err("Please retry afetr 12 hours. 境外 IP 限制 12 小時內僅能發 $max 篇文");
-					}
+			if ($author_name == '匿名, 交大')
+				$rule = $rules['B'];
+			else if (strpos($author_name, '境外') === false)
+				$rule = $rules['C'];
+			else
+				$rule = $rules['D'];
+
+			$posts = $db->getPostsByIp($ip_addr, $rule['limit']+1);
+			if (count($posts) == $rule['limit']+1) {
+				$last = strtotime($posts[ $rule['limit'] ]['created_at']);
+				$cd = $rule['period'] - (time() - $last);
+				if ($cd > 0) {
+					$db->deleteSubmission($uid, -12, $rule['msg']);
+					err("Please retry afetr $cd seconds. {$rule['msg']}");
 				}
 			}
 
@@ -215,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$last = strtotime($posts[$max]['created_at']);
 				$cd = 3*60 - (time() - $last);
 				if ($cd > 0) {
-					$db->updatePostStatus($uid, -12, 'Global rate limit');
+					$db->deleteSubmission($uid, -12, 'Global rate limit');
 					err("Please retry afetr $cd seconds. 系統全域限制未登入者 3 分鐘內僅能發 $max 篇文");
 				}
 			}
