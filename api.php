@@ -394,7 +394,7 @@ function checkSubmitData(string $body, bool $has_img): string {
 	if (mb_strlen($body) < 1)
 		return 'Body is empty. 請輸入文章內容';
 
-	if ($has_img && mb_strlen($body) > 1000)
+	if ($has_img && mb_strlen($body) > 960)
 		return 'Body too long (' . mb_strlen($body) . ' chars). 文章過長';
 
 	if (mb_strlen($body) > 4000)
