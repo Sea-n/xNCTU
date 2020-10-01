@@ -210,7 +210,7 @@ function send_telegram(array $post): int {
 			'parse_mode' => 'HTML',
 		]);
 
-	$tg_id = $result['result']['message_id'];
+	$tg_id = $result['result']['message_id'] ?? 1;
 
 	return $tg_id;
 }
