@@ -562,10 +562,7 @@ function update_facebook(array $post) {
 	$msg .= "$link\n\n";
 
 	$msg .= "---\n\n";
-	$vote2 = $post['approvals'] - $post['rejects']*2;
-	if ($dt <= 10 || $vote2 >= 6)
-		$msg .= "💡 $tips\n\n";
-
+	$msg .= "💡 $tips\n\n";
 	$msg .= "👉 {$go}： https://x.nctu.app/submit";
 
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . "_{$post['facebook_id']}/comments";
