@@ -32,28 +32,29 @@ $timeS = humanTime($post['created_at']);
 $timeP = humanTime($post['posted_at']);
 $tsS = strtotime($post['created_at']);
 
-$author_name = toHTML($post['author_name']);
-$ip_masked = ip_mask($post['ip_addr']);
-if (strpos($author_name, '境外') !== false)
-	$ip_masked = $post['ip_addr'];
-
+$ip_masked = $post['ip_addr'];
+if (strpos($author_name, '境外') === false)
+	$ip_masked = ip_mask($ip_masked);
 if (!isset($USER))
 	$ip_masked = ip_mask_anon($ip_masked);
-
 if (!empty($post['author_id']))
 	$ip_masked = false;
 
+$author_name = toHTML($post['author_name']);
+
 if (!empty($post['author_id'])) {
 	$author = $db->getUserByStuid($post['author_id']);
+
 	$dep = idToDep($post['author_id']);
 	$author_name = toHTML($dep . ' ' . $author['name']);
+}
+
+$author_photo = genPic($ip_masked);
+if (!empty($post['author_id'])) {
+	$author_photo = genPic($post['author_id']);
 	if (!empty($author['tg_photo'] ?? ''))
 		$author_photo = "/img/tg/{$author['tg_id']}-x64.jpg";
-	else
-		$author_photo = genPic($post['author_id']);
-} else
-	$author_photo = genPic($ip_masked);
-
+}
 
 $hashtag = "#靠交{$id}";
 

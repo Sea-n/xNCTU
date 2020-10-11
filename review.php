@@ -173,27 +173,37 @@ if ($deleted) {
 
 <?php
 function renderPost(array $post, $single = false) {
-	global $USER;
+	global $db, $USER;
 
 	$uid = $post['uid'];
-	$author_name = toHTML($post['author_name']);
+	$body = toHTML($post['body']);
+	$time = humanTime($post['created_at']);
+	$ts = strtotime($post['created_at']);
 
+	$ip_masked = $post['ip_addr'];
+	if (strpos($author_name, '境外') === false)
+		$ip_masked = ip_mask($ip_masked);
+	if (!isset($USER))
+		$ip_masked = ip_mask_anon($ip_masked);
 	if (!empty($post['author_id']))
 		$ip_masked = false;
-	else if (!isset($USER))
-		$ip_masked = ip_mask_anon($post['ip_addr']);
-	else if (strpos($author_name, '境外') === false)
-		$ip_masked = ip_mask($post['ip_addr']);
-	else
-		$ip_masked = $post['ip_addr'];
 
-	$author_photo = $post['author_photo'] ?? '';
-	if (empty($author_photo))
-		$author_photo = genPic($ip_masked);
+	$author_name = toHTML($post['author_name']);
 
-	$body = toHTML($post['body']);
-	$ts = strtotime($post['created_at']);
-	$time = humanTime($post['created_at']);
+	if (!empty($post['author_id'])) {
+		$author = $db->getUserByStuid($post['author_id']);
+
+		$dep = idToDep($post['author_id']);
+		$author_name = toHTML($dep . ' ' . $author['name']);
+	}
+
+	$author_photo = genPic($ip_masked);
+	if (!empty($post['author_id'])) {
+		$author_photo = genPic($post['author_id']);
+		if (!empty($author['tg_photo'] ?? ''))
+			$author_photo = "/img/tg/{$author['tg_id']}-x64.jpg";
+	}
+
 
 	if (isset($post['deleted_at'])) { ?>
 		<div class="ts negative message">
