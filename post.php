@@ -32,14 +32,6 @@ $timeS = humanTime($post['created_at']);
 $timeP = humanTime($post['posted_at']);
 $tsS = strtotime($post['created_at']);
 
-$ip_masked = $post['ip_addr'];
-if (strpos($author_name, '境外') === false)
-	$ip_masked = ip_mask($ip_masked);
-if (!isset($USER))
-	$ip_masked = ip_mask_anon($ip_masked);
-if (!empty($post['author_id']))
-	$ip_masked = false;
-
 $author_name = toHTML($post['author_name']);
 
 if (!empty($post['author_id'])) {
@@ -48,6 +40,14 @@ if (!empty($post['author_id'])) {
 	$dep = idToDep($post['author_id']);
 	$author_name = toHTML($dep . ' ' . $author['name']);
 }
+
+$ip_masked = $post['ip_addr'];
+if (strpos($author_name, '境外') === false)
+	$ip_masked = ip_mask($ip_masked);
+if (!isset($USER))
+	$ip_masked = ip_mask_anon($ip_masked);
+if (!empty($post['author_id']))
+	$ip_masked = false;
 
 $author_photo = genPic($ip_masked);
 if (!empty($post['author_id'])) {
