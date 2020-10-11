@@ -56,6 +56,7 @@ function ip_from(string $ip_addr): string {
 		$name = str_replace("台灣之星電信", "台灣之星", $name);
 		$name = str_replace("台灣寬頻通訊顧問", "台灣寬頻通訊", $name);
 		$name = str_replace("台灣碩網網路娛樂", "台灣碩網", $name);
+		$name = str_replace("大新店民主有線電視", "大新店寬頻", $name);
 		$name = str_replace("國家發展委員會", "國發會", $name);
 		$name = str_replace("中央研究院資訊服務處", "中研院", $name);
 		return $name;
@@ -89,7 +90,9 @@ function ip_from(string $ip_addr): string {
 		$ptr = explode('.', $ptr);
 		$ptr = array_slice($ptr, -3, 3);
 		$ptr = join('.', $ptr);
+		$ptr = str_replace("emome-ip6.hinet.net", "中華電信", $ptr);
 		$ptr = str_replace("dynamic.kbtelecom.net", "中嘉和網", $ptr);
+		$ptr = str_replace("static.kbtelecom.net", "中嘉和網", $ptr);
 		return $ptr;
 	}
 
