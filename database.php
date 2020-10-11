@@ -471,6 +471,15 @@ class MyDB {
 		]);
 	}
 
+	public function updateUserNameStuid(string $stuid, string $name) {
+		$sql = "UPDATE users SET name = :name WHERE stuid = :stuid";
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([
+			':stuid' => $stuid,
+			':name' => $name,
+		]);
+	}
+
 	public function updateUserLogin(string $stuid) {
 		$sql = "UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE stuid = :stuid";
 		$stmt = $this->pdo->prepare($sql);

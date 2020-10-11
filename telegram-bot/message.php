@@ -145,6 +145,16 @@ if (substr($text, 0, 1) == '/') {
 
 			[$column, $new] = explode(' ', $arg, 2);
 
+			if ($column == 'name') {
+				[$stuid, $name] = explode(' ', $new, 2);
+				$db->updateUserNameStuid($stuid, $name);
+
+				$TG->sendMsg([
+					'text' => "Done."
+				]);
+				break;
+			}
+
 			if (!preg_match('/^#投稿(\w{4})/um', $TG->data['message']['reply_to_message']['text'] ?? $TG->data['message']['reply_to_message']['caption'] ?? '', $matches)) {
 					$TG->sendMsg([
 						'text' => 'Please reply to submission message.'
