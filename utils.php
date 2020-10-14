@@ -210,7 +210,7 @@ function toHTML(string $text = ''): string {
 
 function enHTML(string $str = ''): string {
 	$search =  array('&', '"', '<', '>');
-	$replace = array('&amp;', '&quot;', '&lt;', '&gt');
+	$replace = array('&amp;', '&quot;', '&lt;', '&gt;');
 	$str = str_replace($search, $replace, $str);
 	return $str;
 }
