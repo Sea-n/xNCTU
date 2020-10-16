@@ -91,6 +91,8 @@ function ip_from(string $ip_addr): string {
 		$ptr = array_slice($ptr, -3, 3);
 		$ptr = join('.', $ptr);
 		$ptr = str_replace("emome-ip6.hinet.net", "中華電信", $ptr);
+		$ptr = str_replace("dynamic-ip.hinet.net", "中華電信", $ptr);
+		$ptr = str_replace("dynamic-ip6.hinet.net", "中華電信", $ptr);
 		$ptr = str_replace("dynamic.kbtelecom.net", "中嘉和網", $ptr);
 		$ptr = str_replace("static.kbtelecom.net", "中嘉和網", $ptr);
 		return $ptr;
