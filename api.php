@@ -303,8 +303,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 			if ($post['status'] != 0)
 				err("Submission $uid status {$post['status']} is not eligible to be confirmed. 此投稿狀態不允許確認");
 
-			if ($_SESSION['uid'] !== $uid)
-				err('無法驗證身份：IP 位址不相符');
+			if (($_SESSION['uid'] ?? '') !== $uid)
+				err('無法驗證身份：請使用同個瀏覽器');
 			unset($_SESSION['uid']);
 
 			$db->updatePostStatus($uid, 1);
