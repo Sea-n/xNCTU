@@ -35,7 +35,7 @@ function ip_from(string $ip_addr): string {
 
 
 	/* Query TWNIC whois */
-	$curl = curl_init('https://rms.twnic.net.tw/query_whois1.php');
+	$curl = curl_init('https://rms.twnic.tw/query_whois1.php');
 	curl_setopt($curl, CURLOPT_POSTFIELDS, "q=$ip_addr");
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 	$resp = curl_exec($curl);
