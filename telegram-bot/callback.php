@@ -73,15 +73,7 @@ switch ($args[0]) {
 
 	case 'confirm':
 	case 'delete':
-		if (!in_array($TG->data['callback_query']['from']['id'], TG_ADMINS)) {
-			$TG->getTelegram('answerCallbackQuery', [
-				'callback_query_id' => $TG->data['callback_query']['id'],
-				'text' => '401 Unauthorized.',
-				'show_alert' => true,
-			]);
-			exit;
-		}
-
+		/* Only sent to admin group */
 		$TG->editMarkup([
 			'chat_id' => $TG->data['callback_query']['message']['chat']['id'],
 			'message_id' => $TG->data['callback_query']['message']['message_id'],

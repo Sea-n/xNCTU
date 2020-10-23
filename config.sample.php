@@ -32,7 +32,3 @@ define('BOT_TOKEN', '');
 define('LOG_GROUP', -1001489855993);
 
 define('MYSQL_PASSWORD', '');
-
-define('TG_ADMINS', [
-	109780439,  # Sean
-]);

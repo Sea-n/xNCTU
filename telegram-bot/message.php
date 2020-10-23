@@ -136,9 +136,9 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'update':
-			if (!in_array($TG->FromID, TG_ADMINS)) {
+			if ($TG->ChatID !== LOG_GROUP) {
 				$TG->sendMsg([
-					'text' => "此功能僅限管理員使用",
+					'text' => "此功能僅限核心維護群組使用"
 				]);
 				exit;
 			}
@@ -187,9 +187,9 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'delete':
-			if (!in_array($TG->FromID, TG_ADMINS)) {
+			if ($TG->ChatID !== LOG_GROUP) {
 				$TG->sendMsg([
-					'text' => "此功能僅限管理員使用\n\n" .
+					'text' => "此功能僅限核心維護群組使用\n\n" .
 						"如果您有興趣為$SITENAME 盡一份心力的話，歡迎聯絡開發團隊 🙃"
 				]);
 				exit;
@@ -221,9 +221,9 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'adduser':
-			if (!in_array($TG->FromID, TG_ADMINS)) {
+			if ($TG->ChatID !== LOG_GROUP) {
 				$TG->sendMsg([
-					'text' => "此功能僅限管理員使用",
+					'text' => "此功能僅限核心維護群組使用"
 				]);
 				exit;
 			}
@@ -269,9 +269,9 @@ if (substr($text, 0, 1) == '/') {
 			break;
 
 		case 'migrate':
-			if (!in_array($TG->FromID, TG_ADMINS)) {
+			if ($TG->ChatID !== LOG_GROUP) {
 				$TG->sendMsg([
-					'text' => "此功能僅限管理員使用",
+					'text' => "此功能僅限核心維護群組使用"
 				]);
 				exit;
 			}
