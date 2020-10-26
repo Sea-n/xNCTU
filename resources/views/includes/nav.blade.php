@@ -1,25 +1,9 @@
-<?php
-$items = [
-	'/' => '首頁',
-	'/submit' => '投稿',
-	'/review' => '審核',
-	'/posts' => '文章',
-];
-?>
 <nav class="ts basic fluid borderless menu horizontally scrollable">
-	<div class="ts container">
-<?php
-foreach ($items as $href => $name) {
-	$uri = $_SERVER['REQUEST_URI'];
-	$uri = explode('?', $uri)[0];
-	if ($uri == $href)
-		$class = 'active item';
-	else
-		$class = 'item';
-
-	echo "<a class='$class' href='$href'>$name</a>\n";
-}
-?>
+    <div class="ts container">
+        <a class="@if (Request::is('/')) active @endif item" href="/">首頁</a>
+        <a class="@if (Request::is('/submit')) active @endif item" href="/submit">投稿</a>
+        <a class="@if (Request::is('/review')) active @endif item" href="/review">審核</a>
+        <a class="@if (Request::is('/posts')) active @endif item" href="/posts">文章</a>
 		<div class="right fitted item" id="nav-right">
 <?php
 if (isset($USER)) {
