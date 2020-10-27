@@ -156,7 +156,7 @@ case 'update_likes':
 			continue; // API error but post exists
 
 		$post = $db->getPostById($id);
-		if ($post['status'] != 5)
+		if (!$posts || $post['status'] != 5)
 			continue;
 
 		if ($post['facebook_id'] < 10)

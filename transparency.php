@@ -80,7 +80,7 @@ include('includes/header.php');
 				<tbody>
 					<tr>
 						<td>2020 Oct 26</td>
-						<td>草屯警兒田勝傑強姦女學生</td>
+						<td>草屯警兒田勝傑強姦女學生（共 26 篇）</td>
 						<td>
 							<a href="https://x.nctu.app/post/4993" target="_blank">#靠交4993</a>、
 							<a href="https://x.nctu.app/post/5356" target="_blank">#靠交5356</a>、
@@ -94,6 +94,7 @@ include('includes/header.php');
 							<a href="https://x.nctu.app/post/5393" target="_blank">#靠交5393</a>、
 							<a href="https://x.nctu.app/post/5404" target="_blank">#靠交5404</a>、
 							<a href="https://x.nctu.app/post/5407" target="_blank">#靠交5407</a>、
+							<a href="https://x.nctu.app/post/5409" target="_blank">#靠交5409</a>、
 							<a href="https://x.nctu.app/post/5410" target="_blank">#靠交5410</a>、
 							<a href="https://x.nctu.app/post/5412" target="_blank">#靠交5412</a>、
 							<a href="https://x.nctu.app/post/5413" target="_blank">#靠交5413</a>、

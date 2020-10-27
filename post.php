@@ -110,12 +110,12 @@ $VOTES = $db->getVotesByUid($post['uid']);
 					<div itemprop="headline" class="header">#靠交<?= $id ?></div>
 					<p itemprop="articleBody"><?= $body ?></p>
 				</div>
-				<div class="extra content">
+				<div class="extra content" id="links">
 <?php if ($post['telegram_id'] > 10) { ?>
 					<p><span><i class="telegram icon"></i> Telegram: <a target="_blank" href="https://t.me/s/xNCTU/<?= $post['telegram_id'] ?>">@xNCTU/<?= $post['telegram_id'] ?></a></span><br>
 <?php }
 if ($post['facebook_id'] > 10) { ?>
-					<span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU/posts/<?= $post['facebook_id'] ?>">@xNCTU/<?= $post['facebook_id'] ?></a></span><br>
+					<span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU/posts/<?= $post['facebook_id'] ?>">@xNCTU/<?= $post['facebook_id'] ?></a> <small>(<?= $post['fb_likes'] ?> likes)</small></span><br>
 <?php }
 if (strlen($post['instagram_id']) > 1) { ?>
 					<span><i class="instagram icon"></i> Instagram: <a target="_blank" href="https://www.instagram.com/p/<?= $post['instagram_id'] ?>">@x_nctu/<?= $post['instagram_id'] ?></a></span><br>
