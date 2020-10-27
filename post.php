@@ -160,6 +160,8 @@ include('includes/table-vote.php');
 $posts = $db->getPosts(500);
 $posts = array_filter($posts, function($post) {
 	global $id;
+	if ($post['facebook_id'] < 10)
+		return false;
 	return $post['id'] != $id;
 });
 
