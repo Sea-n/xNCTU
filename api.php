@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		$likes = (int) ($_GET['likes'] ?? 0);
 		if ($limit < 1)
 			$limit = 50;
-		if ($limit > 5000)
-			$limit = 5000;
+		if ($limit > 50000)
+			$limit = 50000;
 
 		$posts = $db->getPostsByLikes($likes, $limit, $offset);
 		$result = [];
