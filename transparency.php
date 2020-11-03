@@ -79,8 +79,13 @@ include('includes/header.php');
 				</thead>
 				<tbody>
 					<tr>
+						<td>2020 Nov 03</td>
+						<td>支那賤畜</td>
+						<td><a href="https://x.nctu.app/post/5663" target="_blank">#靠交5663</a></td>
+					</tr>
+					<tr>
 						<td>2020 Oct 26</td>
-						<td>草屯警兒田勝傑強姦女學生（共 26 篇）</td>
+						<td>草屯警兒田勝傑強姦女學生（共 27 篇）</td>
 						<td>
 							<a href="https://x.nctu.app/post/4993" target="_blank">#靠交4993</a>、
 							<a href="https://x.nctu.app/post/5356" target="_blank">#靠交5356</a>、
@@ -107,7 +112,8 @@ include('includes/header.php');
 							<a href="https://x.nctu.app/post/5463" target="_blank">#靠交5463</a>、
 							<a href="https://x.nctu.app/post/5479" target="_blank">#靠交5479</a>、
 							<a href="https://x.nctu.app/post/5485" target="_blank">#靠交5485</a>、
-							<a href="https://x.nctu.app/post/5487" target="_blank">#靠交5487</a>
+							<a href="https://x.nctu.app/post/5487" target="_blank">#靠交5487</a>、
+							<a href="https://x.nctu.app/post/5511" target="_blank">#靠交5511</a>
 						</td>
 					</tr>
 					<tr>
@@ -156,6 +162,7 @@ include('includes/header.php');
 					</tr>
 				</thead>
 				<tbody>
+					<tr><td>2020 Nov</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
 					<tr><td>2020 Oct</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
 					<tr class="negative indicated"><td>2020 Sep</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
 					<tr class="negative indicated"><td>2020 Aug</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
@@ -170,7 +177,7 @@ include('includes/header.php');
 
 			<br>
 			<p>收到任何刪除通知將人工更新至此頁面，在不造成二次傷害的前提下，本站會盡可能提供最多資訊，原則上收到請求後會在 7 天內公開揭露。</p>
-			<p style="text-align: right;"><i>最後更新日期：2020 Oct 26</i></p>
+			<p style="text-align: right;"><i>最後更新日期：2020 Nov 03</i></p>
 		</div>
 <?php include('includes/footer.php'); ?>
 	</body>
