@@ -19,6 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => ['session']], function () {
-    Route::apiResource('posts', PostController::class);
-});
+Route::apiResource('posts', PostController::class);
