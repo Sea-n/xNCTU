@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
 Route::get('/submit', function () {
     if (Session()->has('uid')) {
@@ -24,4 +25,10 @@ Route::get('/submit', function () {
     }
 
     return view('submit');
-});
+})->name('submit');
+
+Route::get('login', function () {
+    return redirect('login/google');
+})->name('login');
+Route::get('login/google', [LoginController::class, 'redirectToProvider']);
+Route::get('login/google/callback', [LoginController::class, 'handleProviderCallback']);

@@ -19,7 +19,7 @@ class CreateGoogleAccountsTable extends Migration
             $table->string('email')->unique();
             $table->string('name');
             $table->string('avatar')->default('');
-            $table->string('stuid')->nullable();
+            $table->string('stuid')->references('stuid')->on('users')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
