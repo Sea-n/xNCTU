@@ -16,3 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/submit', function () {
+    if (Session()->has('uid')) {
+        $uid = Session()->get('uid');
+        return redirect("review/$uid");
+    }
+
+    return view('submit');
+});
