@@ -17,8 +17,9 @@ class CreatePostsTable extends Migration
             $table->char('uid', 4)->primary();  // Case-insensitive
             $table->integer('id')->unique()->nullable();
             $table->string('body', 8700);
-            $table->integer('media');
+            $table->integer('media')->default(0);
             $table->string('author')->references('stuid')->on('users')->nullable();
+            $table->ipAddress('ip_addr');
 
             $table->integer('status')->default(0);
             $table->integer('approvals')->default(0);
