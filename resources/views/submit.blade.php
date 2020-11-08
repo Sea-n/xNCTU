@@ -18,6 +18,7 @@ if (Auth::check() || $ip_from == '交大')
 
 @section('head')
     <script src="/assets/js/submit.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @stop
 
 @section('content')

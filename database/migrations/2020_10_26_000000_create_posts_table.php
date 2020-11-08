@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->integer('media')->default(0);
             $table->string('author')->references('stuid')->on('users')->nullable();
             $table->ipAddress('ip_addr');
+            $table->string('ip_from');
 
             $table->integer('status')->default(0);
             $table->integer('approvals')->default(0);

@@ -153,7 +153,7 @@ function submitForm(e) {
     var body = document.getElementById('body-area');
     var captcha = document.getElementById('captcha-input');
     var anon = document.getElementById('anon');
-    var csrf = document.getElementById('csrf_token');
+    var csrf = document.querySelector('meta[name="csrf-token"]').content;
     var submit = document.getElementById('submit');
 
     if (!checkForm()) {
@@ -167,24 +167,20 @@ function submitForm(e) {
     if (img_data)
         formData.append('img', img_data);
     formData.append('captcha', captcha.value);
-    formData.append('csrf_token', csrf.value);
+    formData.append('csrf_token', csrf);
     if (anon.checked)
         formData.append('anon', 1);
 
-    fetch('/api/submission', {
+    fetch('/api/posts', {
         method: 'POST',
         body: formData,
     }).then(resp => resp.json())
         .then((resp) => {
-            console.log(resp);
             if (!resp.ok) {
                 alert(resp.msg);
-                return;
-            }
 
-            if (img_data && !resp.has_img) {
-                alert('圖片上傳失敗！');
-                return;
+                if (resp.uid)
+                    location.href = '/review/' + resp.uid;
             }
 
             localStorage.setItem('draft', '');

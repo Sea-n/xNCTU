@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -21,16 +22,6 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,7 +29,159 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        /* Check CSRF Token */
+        $csrf = $request->input('csrf_token', '');
+        if (csrf_token() !== $csrf)
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Invalid CSRF Token. 請重新操作',
+            ]);
+
+        if ($request->session()->has('uid'))
+            return response()->json([
+                'ok' => false,
+                'msg' => 'You have unconfirmed submission. 您有個投稿尚未確認',
+                'uid' => $request->session()->get('uid'),
+            ]);
+
+        /* Prepare post content */
+        $body = $request->input('body', '');
+        $body = str_replace("\r", "", $body);
+        $body = preg_replace("#\n\s+\n#", "\n\n", $body);
+        $body = preg_replace("#[&?](fbclid|igshid|utm_[a-z]+)=[a-zA-Z0-9_-]+#", "", $body);
+        $body = trim($body);
+
+        $has_img = $request->hasFile('img');
+        $media = $has_img ? 1 : 0;
+
+        /* Check POST data */
+        $error = $this->checkSubmitData($body, $has_img);
+        if (!empty($error))
+            return response()->json([
+                'ok' => false,
+                'msg' => $error,
+            ]);
+
+        /*
+         * Generate UID in base58 space
+         *
+         * If the uid is already in use, it will pick another one.
+         */
+        do {
+            $uid = rand58(4);
+        } while (Post::where('uid', '=', $uid)->first());
+
+        /* Upload Image */
+        if ($has_img) {
+            $error = $this->uploadImage($uid);
+            if (!empty($error))
+                return response()->json([
+                    'ok' => false,
+                    'msg' => $error,
+                ]);
+        }
+
+        $ip_addr = $request->ip();
+        $ip_from = ip_from($ip_addr);
+
+        /* Get Author Name */
+        if (Auth::check() && !$request->input('anon', 0)) {
+            $author_id = Auth::user()->stuid;
+        } else {
+            $author_id = null;
+        }
+
+        /* Insert record */
+        $post = Post::create([
+            'uid' => $uid,
+            'body' => $body,
+            'media' => $media,
+            'author' => $author_id,
+            'ip_addr' => $ip_addr,
+            'ip_from' => $ip_from,
+        ]);
+
+        /* Check rate limit */
+        if (empty($author_id)) {
+            $rules = [
+                'A' => [
+                    'msg' => '具名發文不受限制',
+                ],
+                'B' => [
+                    'period' => 10*60,
+                    'limit' => 5,
+                    'msg' => '校內匿名發文限制 10 分鐘內僅能發 5 篇文',
+                ],
+                'C' => [
+                    'period' => 3*60*60,
+                    'limit' => 3,
+                    'msg' => '校外 IP 限制 3 小時內僅能發 3 篇文',
+                ],
+                'D' => [
+                    'period' => 12*60*60,
+                    'limit' => 1,
+                    'msg' => '境外 IP 限制 12 小時內僅能發 1 篇文',
+                ],
+            ];
+
+            if ($ip_from == '交大')
+                $rule = $rules['B'];
+            else if (strpos($ip_from, '境外') === false)
+                $rule = $rules['C'];
+            else
+                $rule = $rules['D'];
+
+            $posts = Post::where('ip_addr', '=', $rule['limit']+1)
+                ->orderBy('created_at', 'desc')
+                ->get()->take($rule['limit']+1);
+            if (count($posts) == $rule['limit']+1) {
+                $last = strtotime($posts[ $rule['limit'] ]['created_at']);
+                $cd = $rule['period'] - (time() - $last);
+                if ($cd > 0) {
+                    Post::where('uid', '=', $uid)->update([
+                        'status' => -12,
+                        'deleted_at' => date('Y-m-d H:i:s'),
+                        'delete_note' => $rule['msg'],
+                    ]);
+                    return response()->json([
+                        'ok' => false,
+                        'msg' =>"Please retry afetr $cd seconds. {$rule['msg']}",
+                    ]);
+                }
+            }
+
+            /* Global rate limit for un-loggined users */
+            $max = 5;
+            $posts = Post::orderBy('created_at', 'desc')->get()->take($max+1);
+            if (count($posts) == $max+1) {
+                $last = strtotime($posts[$max]['created_at']);
+                $cd = 3*60 - (time() - $last);
+                if ($cd > 0) {
+                    Post::where('uid', '=', $uid)->update([
+                        'status' => -12,
+                        'deleted_at' => date('Y-m-d H:i:s'),
+                        'delete_note' => 'Global rate limit',
+                    ]);
+                    return response()->json([
+                        'ok' => false,
+                        'msg' =>"Please retry afetr $cd seconds. 系統全域限制未登入者 3 分鐘內僅能發 $max 篇文",
+                    ]);
+                }
+            }
+        }
+
+
+        /* Success, return post data */
+        $ip_masked = ip_mask($ip_addr);
+        if (strpos($ip_from, '境外') !== false)
+            $ip_masked = $ip_addr;
+
+        $request->session()->put('uid', $uid);
+
+        return response()->json([
+            'ok' => true,
+            'uid' => $uid,
+        ]);
     }
 
     /**
@@ -84,5 +227,124 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     *  Return error string or empty on success
+     *
+     * @param  string  $body
+     * @param  boolean  $has_img
+     * @return string  $error
+     */
+    private function checkSubmitData(string $body, bool $has_img): string {
+        /* Check CAPTCHA */
+        $captcha = trim(request()->input('captcha', 'X'));
+        if (!in_array($captcha, ['交大竹湖', '交大竹狐'])) {
+            if (mb_strlen($captcha) > 1 && mb_strlen($captcha) < 20)
+                error_log("Captcha failed: $captcha.");
+            return 'Are you human? 驗證碼錯誤';
+        }
+
+        /* Check Body */
+        if (mb_strlen($body) < 1)
+            return 'Body is empty. 請輸入文章內容';
+
+        if ($has_img && mb_strlen($body) > 960)
+            return 'Body too long (' . mb_strlen($body) . ' chars). 文章過長';
+
+        if (mb_strlen($body) > 4000)
+            return 'Body too long (' . mb_strlen($body) . ' chars). 文章過長';
+
+        $lines = explode("\n", $body);
+        if (preg_match('#https?://#', $lines[0]))
+            return 'First line cannot be URL. 第一行不能有網址';
+
+        return '';
+    }
+
+    /**
+     * Return error message or empty
+     *
+     * @param  string  $uid
+     * @return string  $error
+     */
+    function uploadImage(string $uid): string {
+        $path = request()->img->path();
+
+        var_dump($path);
+
+        /* Check file type */
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        if (!($ext = array_search($finfo->file($path), [
+                'jpg' => 'image/jpeg',
+                'png' => 'image/png',
+            ], true)))
+            return 'Extension not recognized. 圖片副檔名錯誤';
+
+        $img = request()->img->storeAs('img', "$uid");
+        var_dump($img);
+
+        /* Check image size */
+        $size = getimagesize($img);
+        $width = $size[0];
+        $height = $size[1];
+
+        if ($width * $height < 160*160)
+            $err = 'Image must be at least 160x160.';
+
+        if ($width/8 > $height)
+            $err = 'Image must be at least 8:1.';
+
+        if ($width < $height/4)
+            $err = 'Image must be at least 1:4.';
+
+        if (isset($err)) {
+            unlink($img);
+            return $err;
+        }
+
+        /* Fix orientation */
+        $orien = shell_exec("exiftool -Orientation -S -n $img |cut -c14- |tr -d '\\n'");
+        switch ($orien) {
+        case '1':  # Horizontal (normal)
+            $transpose = "";
+            break;
+        case '2':  # Mirror horizontal
+            $transpose = "-vf transpose=0,transpose=1";
+            break;
+        case '3':  # Rotate 180
+            $transpose = "-vf transpose=1,transpose=1";
+            break;
+        case '4':  # Mirror vertical
+            $transpose = "-vf transpose=3,transpose=1";
+            break;
+        case '5':  # Mirror horizontal and rotate 270 CW
+            $transpose = "-vf transpose=0";
+            break;
+        case '6':  # Rotate 90 CW
+            $transpose = "-vf transpose=1";
+            break;
+        case '7':  # Mirror horizontal and rotate 90 CW
+            $transpose = "-vf transpose=3";
+            break;
+        case '8':  # Rotate 270 CW
+            $transpose = "-vf transpose=2";
+            break;
+        default:
+            $transpose = "";
+            break;
+        }
+
+        /* Convert all file type to jpg */
+        shell_exec("ffmpeg -i $img -q:v 1 $transpose $img.jpg 2>&1");
+        unlink($img);
+
+        while (filesize("$img.jpg") > 1*1000*1000) {
+            rename("$img.jpg", "$img.ori.jpg");
+            shell_exec("ffmpeg -i $img.ori.jpg -q:v 1 -vf scale='(iw/2):(ih/2)' $img.jpg 2>&1");
+            unlink("$img.ori.jpg");
+        }
+
+        return '';
     }
 }
