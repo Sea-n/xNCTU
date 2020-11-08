@@ -42,6 +42,9 @@ class Post extends Model
         'author',
         'ip_addr',
         'ip_from',
+        'status',
+        'deleted_at',
+        'delete_note',
     ];
 
     /**

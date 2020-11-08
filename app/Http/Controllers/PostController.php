@@ -210,23 +210,93 @@ class PostController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        if ($request->input('status', '') != 'confirmed')
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Unknown status.',
+            ]);
+
+        if ($post->status > 0)
+            return response()->json([
+                'ok' => true,
+                'msg' => 'Already confirmed. 投稿已送出',
+            ]);
+
+        if ($post->status < 0)
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Already deleted. 投稿已刪除：' . $post->delete_note,
+            ]);
+
+        if ($request->session()->get('uid', '') != $post->uid)
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Session mismatched. 無法驗證身份，請使用同個瀏覽器確認',
+            ]);
+
+
+        $request->session()->forget('uid');
+
+        $post->increment('status');
+
+        return response()->json([
+            'ok' => true,
+            'msg' => 'Confirmed. 投稿已送出',
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, Post $post)
     {
-        //
+        if ($post->status > 0)
+            return response()->json([
+                'ok' => false,
+                'msg' => '刪除失敗：已進入審核程序',
+            ]);
+
+        if ($post->status < 0)
+            return response()->json([
+                'ok' => true,
+                'msg' => 'Already deleted. 投稿已刪除：' . $post->delete_note,
+            ]);
+
+        if ($request->session()->get('uid', '') != $post->uid)
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Session mismatched. 無法驗證身份，請使用同個瀏覽器刪除',
+            ]);
+
+        $reason = $request->input('reason');
+        $reason = trim($reason);
+        if (mb_strlen($reason) < 1 || mb_strlen($reason) > 100)
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Please input 1-100 chars. 請輸入 1-100 字刪除附註',
+            ]);
+
+        $request->session()->forget('uid');
+
+        $post->update([
+            'status' => -3,
+            'deleted_at' => date('Y-m-d H:i:s'),
+            'delete_note' => "自刪 $reason",
+        ]);
+
+        return response()->json([
+            'ok' => true,
+            'msg' => 'Deleted. 刪除成功',
+        ]);
     }
 
     /**

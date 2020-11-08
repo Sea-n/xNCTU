@@ -143,11 +143,10 @@ function confirmSubmission(uid) {
     document.getElementById('delete-button').classList.add('disabled');
 
     var data = {
-        uid: uid,
         status: 'confirmed',
     };
 
-    fetch('/api/submission', {
+    fetch('/api/posts/' + uid, {
         method: 'PATCH',
         body: JSON.stringify(data),
         headers: {'content-type': 'application/json'}
@@ -177,11 +176,10 @@ function deleteSubmission(uid) {
     document.getElementById('delete-button').classList.add('disabled');
 
     var data = {
-        uid: uid,
         reason: reason
     };
 
-    fetch('/api/submission', {
+    fetch('/api/posts/' + uid, {
         method: 'DELETE',
         body: JSON.stringify(data),
         headers: {'content-type': 'application/json'}
@@ -189,5 +187,6 @@ function deleteSubmission(uid) {
         .then((resp) => {
             alert(resp.msg);
             submitted = true;
+            location.href = '/review/' + uid;
         });
 }
