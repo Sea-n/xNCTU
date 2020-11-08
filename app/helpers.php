@@ -335,7 +335,55 @@ function idToDepNYCU(string $id): string {
 function genPic(string $seed) {
     $seed = preg_replace('/[^A-Za-z0-9]/', '_', $seed);
     $seed = preg_replace('/____+/', '___', $seed);
-    return "/avatar?seed=$seed";
+    $seed = preg_replace('/[^A-Za-z0-9]/', '_', $seed);
+    $seed = preg_replace('/___+/', '__', $seed);
+    $seed = substr($seed, 0, 42) . '';
+    $seed = substr(md5($seed), 0, 6);
+    $file = storage_path() . "/app/avatar/{$seed}.jpg";
+
+    $dir = dirname($file);
+    if (!file_exists($dir))
+        mkdir($dir);
+
+    // render the picture:
+    if (!file_exists($file)) {
+        srand(hexdec($seed));
+
+        // throw the dice for body parts
+        $parts = [
+            'body'  => rand(1, 15),
+            'fur'   => rand(1, 10),
+            'eyes'  => rand(1, 15),
+            'mouth' => rand(1, 10),
+            'accessorie' => rand(1, 20),
+        ];
+
+        // restore random seed
+        if ($seed) srand();
+
+
+        // create backgound
+        $cat = @imagecreatetruecolor(70, 70)
+            or die("GD image create failed");
+        $white = imagecolorallocate($cat, 255, 255, 255);
+        imagefill($cat, 0, 0, $white);
+
+        // add parts
+        foreach ($parts as $part => $num) {
+            $comp = resource_path() . "/avatars/{$part}_{$num}.png";
+
+            $im = @imagecreatefrompng($comp);
+            if (!$im) die("Failed to load $comp.");
+            imageSaveAlpha($im, true);
+            imagecopy($cat, $im, 0, 0, 0, 0, 70, 70);
+            imagedestroy($im);
+        }
+
+        imagejpeg($cat, $file, 87);
+        imagedestroy($cat);
+    }
+
+    return "/avatar/$seed.jpg";
 }
 
 /**
