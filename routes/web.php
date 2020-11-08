@@ -38,11 +38,16 @@ Route::get('/review/{post}', function (Post $post) {
     return view('review', ['post' => $post]);
 })->name('review');
 
-Route::get('login', function () {
+Route::get('/login', function () {
     return redirect('login/nctu');
 })->name('login');
 
-Route::get('login/google', [LoginController::class, 'redirectToGoogle']);
-Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
-Route::get('login/nctu', [LoginController::class, 'redirectToNCTU']);
-Route::get('login/nctu/callback', [LoginController::class, 'handleNCTUCallback']);
+Route::get('/login/google', [LoginController::class, 'redirectToGoogle']);
+Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallback']);
+Route::get('/login/nctu', [LoginController::class, 'redirectToNCTU']);
+Route::get('/login/nctu/callback', [LoginController::class, 'handleNCTUCallback']);
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+});
