@@ -1,4 +1,6 @@
 <?php
+use App\Models\Post;
+
 function ip_from(string $ip_addr): string {
     /* Only convert Taiwan IP addresses */
     if (($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx') != 'TW')
@@ -332,4 +334,34 @@ function genPic(string $seed) {
     $seed = preg_replace('/[^A-Za-z0-9]/', '_', $seed);
     $seed = preg_replace('/____+/', '___', $seed);
     return "/avatar?seed=$seed";
+}
+
+/**
+ *  Check can user vote for certain submission or not
+ *
+ *  @param  string  $uid
+ *  @param  string  $stuid
+ *  @return array   ok and error msg
+ */
+function canVote(string $uid, string $stuid): array {
+    $post = Post::findOrFail($uid);
+    if ($post->status < 0)
+        return [
+            'ok' => false,
+            'msg' => '投稿已刪除，理由：' . $post->delete_note
+        ];
+
+    if ($post->status == 0)
+        return ['ok' => false, 'msg' => 'Submission not confirmed. 請先確認投稿'];
+
+    if ($post->status > 3 && $post->status != 10)
+        return ['ok' => false, 'msg' => 'Already posted. 太晚囉，貼文已發出'];
+
+    /*
+    $vote = Vote::where([['uid', '=', $uid], ['stuid', '=', $stuid]])->count();
+    if ($vote)
+        return ['ok' => false, 'msg' => 'Already voted. 您已投過票'];
+     */
+
+    return ['ok' => true];
 }

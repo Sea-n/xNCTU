@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,16 @@ Route::get('/submit', function () {
 
     return view('submit');
 })->name('submit');
+
+Route::get('/review/{post}', function (Post $post) {
+    if (session()->has('uid')) {
+        $uid = session()->get('uid');
+        if (Post::find($uid)->status != 0)
+            session()->forget('uid');
+    }
+
+    return view('review', ['post' => $post]);
+})->name('review');
 
 Route::get('login', function () {
     return redirect('login/nctu');
