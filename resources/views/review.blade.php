@@ -1,4 +1,6 @@
 <?php
+use App\Models\Vote;
+
 $IMG = env('APP_URL') . '/assets/img/og.png';
 
 $hashtag = "#投稿{$post->uid}";
@@ -20,11 +22,9 @@ if (Auth::check())
 
 $single = 1;
 
-/*
 if ($post['status'] != 0) {
-    $votes = Vote::where('uid', '=', $uid);
+    $votes = Vote::where('uid', '=', $post->uid)->get();
 }
- */
 
 ?>
 
@@ -57,7 +57,7 @@ if ($post['status'] != 0) {
 
 @isset ($votes)
 
-@include('includes.votes');
+@include('includes.votes')
 
 @if (Auth::check() && in_array($post->status, [1, 2, 3, 10]))
     <button id="refresh" class="ts primary button" onclick="updateVotes('{{ $post->uid }}');">重新整理</button>

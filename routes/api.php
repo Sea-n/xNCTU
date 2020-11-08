@@ -15,8 +15,20 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::apiResource('posts', PostController::class);
+
+Route::post('/vote', function (Request $request) {
+    if (!Auth::check())
+        return Response::json([
+            'ok' => false,
+            'msg' => 'Please login first. 請先登入',
+        ]);
+
+    $uid = $request->input('uid', '');
+    $stuid = Auth::id();
+    $vote = $request->input('vote', 0);
+    $reason = $request->input('reason', '');
+
+    $result = voteSubmission($uid, $stuid, $vote, $reason);
+    return Response::json($result);
+});

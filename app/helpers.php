@@ -1,5 +1,7 @@
 <?php
 use App\Models\Post;
+use App\Models\User;
+use App\Models\Vote;
 
 function ip_from(string $ip_addr): string {
     /* Only convert Taiwan IP addresses */
@@ -357,11 +359,64 @@ function canVote(string $uid, string $stuid): array {
     if ($post->status > 3 && $post->status != 10)
         return ['ok' => false, 'msg' => 'Already posted. 太晚囉，貼文已發出'];
 
-    /*
     $vote = Vote::where([['uid', '=', $uid], ['stuid', '=', $stuid]])->count();
     if ($vote)
         return ['ok' => false, 'msg' => 'Already voted. 您已投過票'];
-     */
 
     return ['ok' => true];
+}
+
+function voteSubmission(string $uid, string $stuid, int $vote, string $reason) {
+    if ($vote == 1)
+        $type = 'approvals';
+    else if ($vote == -1)
+        $type = 'rejects';
+    else
+        return ['ok' => false, 'msg' => 'Unknown vote. 未知的投票類型'];
+
+    if (mb_strlen($reason) > 100)
+        return ['ok' => false, 'msg' => 'Reason too long. 附註文字過長'];
+
+    $check = canVote($uid, $stuid);
+    if (!$check['ok'])
+        return $check;
+
+    Vote::create([
+        'uid'    => $uid,
+        'stuid'  => $stuid,
+        'vote'   => $vote,
+        'reason' => $reason,
+    ]);
+
+    /* Caution: use string combine in SQL query */
+    Post::find($uid  )->increment($type);
+
+    /* Calculate vote streak, the users table record is independent from votes table */
+    $user = User::find($stuid);
+    $user->increment($type);
+
+    $lv = date('Ymd', strtotime($user->last_vote));
+    $user->last_vote = date('Y-m-d H:i:s');
+
+    if ($lv == date('Ymd')) {  // Already voted today
+        // DUNNO
+    } else if ($lv == date('Ymd', time() - 24*60*60)) {  // Streak from yesterday
+        if ($user->current_vote_streak == $user->highest_vote_streak)
+            $user->highest_vote_streak++;
+        $user->current_vote_streak++;
+    } else {  // New day
+        $user->current_vote_streak = 1;
+        if ($user->highest_vote_streak == 0)
+            $user->highest_vote_streak = 1;
+    }
+    $user->save();
+
+    /* Return votes for submission */
+    $post = Post::find($uid);
+
+    return [
+        'ok' => true,
+        'approvals' => $post->approvals,
+        'rejects'   => $post->rejects,
+    ];
 }
