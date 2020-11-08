@@ -28,6 +28,10 @@ Route::get('/submit', function () {
     return view('submit');
 })->name('submit');
 
+Route::get('/review', function () {
+    return view('review-all');
+})->name('review.all');
+
 Route::get('/review/{post}', function (Post $post) {
     if (session()->has('uid')) {
         $uid = session()->get('uid');
@@ -35,8 +39,8 @@ Route::get('/review/{post}', function (Post $post) {
             session()->forget('uid');
     }
 
-    return view('review', ['post' => $post]);
-})->name('review');
+    return view('review-one', ['post' => $post]);
+})->name('review.one');
 
 Route::get('/login', function () {
     return redirect('login/nctu');

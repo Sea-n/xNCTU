@@ -17,6 +17,8 @@
 
 <div class="ts container" name="main">
 @yield('content')
+
+@include('includes.imgbox')
 </div>
 
 @include('includes.footer')

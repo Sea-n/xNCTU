@@ -74,7 +74,7 @@ if (isset($post->author)) {
         <button id="confirm-button" class="ts positive button" onclick="confirmSubmission('{{ $post->uid }}');">確認貼文</button>
         <button id="delete-button" class="ts negative button" onclick="deleteSubmission('{{ $post->uid }}');">刪除投稿</button>
     </div>
-@elseif ($canVote ?? false)
+@elseif (Auth::check() && canVote($post->uid, Auth::id())['ok'])
     <div class="ts fluid bottom attached large buttons">
         <button class="ts positive button" onclick="approve('{{ $post->uid }}');">通過貼文</button>
         <button class="ts negative button" onclick="reject('{{ $post->uid }}');">駁回投稿</button>
