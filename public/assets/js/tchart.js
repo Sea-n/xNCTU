@@ -43,12 +43,12 @@ window.Graph = {
     TAnimator.prototype = {
         add: function(params) {
             var i = 0;
-//          var j = 0;
+            // var j = 0;
             var cur = +new Date();
             var item, param, delta;
             var queue = this.queue;
 
-             while (i < params.length) {
+            while (i < params.length) {
                 param = params[i];
                 item = queue[param.prop];
 
@@ -205,12 +205,12 @@ window.Graph = {
             var ctx = mini ? this.ctx : this.opts.ctx;
             var prevY = [];
             var totalPerX = [];
-//          var totalPerY = [];
+            // var totalPerY = [];
             var overlap = mini ? 0 : 0;
             var dims = mini ? state.dims.mini : state.dims.graph;
             var zoomMorph = state.zoomMorph == undefined ? 0 : state.zoomMorph;
             var morph = zoomMorph;
-//          var zoom = state.zoomMode;
+            // var zoom = state.zoomMode;
             var ysLen = ys.length;
 
             //cache rendered version
@@ -267,8 +267,8 @@ window.Graph = {
             var colsLen = visibleCols.length;
             textToCenter = fullyVisibleCount == 1 ? textToCenter : 1;
 
-//          y1 = mini ? state['y1m'] : state['y1'];
-//          y2 = mini ? state['y2m'] : state['y2'];
+            // y1 = mini ? state['y1m'] : state['y1'];
+            // y2 = mini ? state['y2m'] : state['y2'];
             var optData = units.TUtils.simplifyData('line', x, ys, xScale, xShift, visibleCols, xInd1, xInd2, dims.w - pRight - pLeft);
 
             xInd1 = optData.xInd1;
@@ -755,7 +755,7 @@ window.Graph = {
             var pRight = opts.settings.PADD[1];
             var pLeft = opts.settings.PADD[3];
             var animator = opts.animator;
-//          var xLen = x.length;
+            // var xLen = x.length;
             var dims = this.opts.state.dims.axisX;
             var dimsDates = this.opts.state.dims.dates;
             var zoomMode = state.zoomMode;
@@ -1002,7 +1002,7 @@ window.Graph = {
             var state = this.opts.state;
             var pTop = this.opts.settings.PADD[0];
             var pBottom = this.opts.settings.PADD[2];
-//          var linesCount = Math.floor(this.opts.settings.Y_AXIS_RANGE);
+            // var linesCount = Math.floor(this.opts.settings.Y_AXIS_RANGE);
             var withAnimation = false;
 
             var y1AnimItem = this.opts.animator.get(y1Name);
@@ -1042,13 +1042,13 @@ window.Graph = {
 
         updateAxisState: function(y1Name, y2Name, numName, baseData, leftData, rightData) {
             var opts = this.opts;
-//          var settings = opts.settings;
-//          var dpi = opts.settings.dpi;
+            // var settings = opts.settings;
+            // var dpi = opts.settings.dpi;
             var state = opts.state;
- //         var pTop = opts.settings.PADD[0];
+            // var pTop = opts.settings.PADD[0];
             var pBottom = opts.settings.PADD[2];
- //         var pLeft = opts.settings.PADD[3];
- //         var pRight = opts.settings.PADD[1];
+            // var pLeft = opts.settings.PADD[3];
+            // var pRight = opts.settings.PADD[1];
             var animator = opts.animator;
             var item;
             var linesCount = Math.floor(opts.settings.Y_AXIS_RANGE);
@@ -1312,8 +1312,8 @@ window.Graph = {
             var x1 = mini ? state.xg1 : state.x1;
             var x2 = mini ? state.xg2 : state.x2;
             var settings = opts.settings;
-//          var w = this.w;
-//          var h = this.h;
+            // var w = this.w;
+            // var h = this.h;
             var pTop = settings['PADD' + (mini ? '_MINI_BAR' : '')][0];
             var pRight = settings['PADD' + (mini ? '_MINI_BAR' : '')][1];
             var pBottom = settings['PADD' + (mini ? '_MINI_BAR' : '')][2];
@@ -1852,9 +1852,9 @@ window.Graph = {
             var periods = (this.state.deviceSpeed * points / 16.66 << 0);
             var k = Math.max(1 - 0.25 * periods, 0);
             k = Math.pow(k, 0.85);
-//          if (this.state.deviceSpeed == undefined) {
-//              speed = 1;
-//          }
+            // if (this.state.deviceSpeed == undefined) {
+            // speed = 1;
+            // }
             speed = 1;
             this.state.speed = speed; // speed == undefined ? k : speed;
             return this.state.speed;
@@ -3879,7 +3879,7 @@ window.Graph = {
                 if (state.x2 == state.xg2) {
                     xr1 = xr2 + 1;
                 }
-                 if (state.x1 == state.xg1) {
+                if (state.x1 == state.xg1) {
                     xl2 = xl1 - 1;
                 }
             }
@@ -3945,7 +3945,7 @@ window.Graph = {
             var minRange = 32 / xScale; //45 min handle width
             var x1 = this.opts.state.x1;
             var x2 = this.opts.state.x2;
-//          var xg1 = this.opts.state.xg1;
+            // var xg1 = this.opts.state.xg1;
             var xg2 = this.opts.state.xg2;
 
             this.minRange = minRange;
@@ -4946,7 +4946,7 @@ window.Graph = {
         render: function(params) {
             if (!this.shown) return;
 
-//          var i = 0;
+            // var i = 0;
             var opts = this.opts;
             var state = opts.state;
             var settings = this.opts.settings;
@@ -5252,8 +5252,8 @@ window.Graph = {
         return Math.log(x) * Math.LOG10E;
     };
 
-//  var cache = {};
-//  var timeout;
+    // var cache = {};
+    // var timeout;
 
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -5318,8 +5318,8 @@ window.Graph = {
                     xPrev = tmpX;
                 }
 
-//              xInd1 = 0;
-//              xInd2 = xInd - 1;
+                // xInd1 = 0;
+                // xInd2 = xInd - 1;
 
                 return {
                     isOptimized: pointsPerPixel > 1,
@@ -5508,9 +5508,9 @@ window.Graph = {
             // var endingZeroesReg = new RegExp('\\.0+$', 'g');
             // var numValue = item.y[xInd];
             // if (typeof numValue === 'number') {
-            //     numValue = numValue.toFixed(2).toString(10);
+            // numValue = numValue.toFixed(2).toString(10);
             // } else {
-            //     numValue = numValue + '';
+            // numValue = numValue + '';
             // }
             // this.labels[ind].$valueText.nodeValue = numValue.replace(endingZeroesReg, '').replace(thSepReg, ' ');
             return TUtils.statsFormatKMBT(val);

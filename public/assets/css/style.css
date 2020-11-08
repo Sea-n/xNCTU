@@ -1,76 +1,76 @@
 html {
-	height: 100%;
-	min-height: 100%;
+    height: 100%;
+    min-height: 100%;
 }
 
 body {
-	min-height: 100%;
+    min-height: 100%;
 }
 
 header.ts.fluid.vertically.padded.heading.slate {
-	font-size: 1.7em !important;
-	color: #646464 !important;
-	padding: 1.8em 2em 3em !important;
+    font-size: 1.7em !important;
+    color: #646464 !important;
+    padding: 1.8em 2em 3em !important;
 }
 
 header.ts.fluid.vertically.padded.heading.slate+.ts.container {
-	margin-top: 2em !important;
+    margin-top: 2em !important;
 }
 
 header .description {
-	line-height: 1.2em;
+    line-height: 1.2em;
 }
 
 nav.ts.menu > div {
-	display: flex;
-	flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 nav.fixed {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 30 !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 30 !important;
 }
 
 nav .item {
-	border-radius: 0 0 3px 3px !important;
+    border-radius: 0 0 3px 3px !important;
 }
 
 .ts.container[name=main] {
-	padding-bottom: 80px;
+    padding-bottom: 80px;
 }
 
 .icon-row {
-	display: inline-flex;
-	max-width: 100%;
+    display: inline-flex;
+    max-width: 100%;
 }
 
 .icon-row .ts.rounded.image {
-	margin-right: 4px;
+    margin-right: 4px;
 }
 
 #telegram-icon {
-	background-color: #039be5;
+    background-color: #039be5;
 }
 
 #instagram-icon {
-	border-radius: 20%;
+    border-radius: 20%;
 }
 
 footer {
-	padding: 10px 0;
-	background-color: #f5f5f5;
-	border-top: 1px solid #ddd;
-	position: absolute !important;
-	width: 100%;
-	bottom: 0;
+    padding: 10px 0;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    position: absolute !important;
+    width: 100%;
+    bottom: 0;
 }
 
 button.vote {
-	font-size: 0.9em !important;
-	padding: 0.05em 0.3em !important;
+    font-size: 0.9em !important;
+    padding: 0.05em 0.3em !important;
 }
 
 /* Vote Table */
@@ -81,67 +81,67 @@ table.votes thead tr th:nth-child(4) { width: 160px; }
 table.votes thead tr th:nth-child(5) { width: 320px; }
 
 p {
-	word-wrap: break-word;
-	word-break: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 /* Hide Box */
 #hide-box {
-	position: relative;
-	margin-top: -200px;
-	padding-top: 180px;
-	text-align: center;
-	z-index: 1;
-	background-image: linear-gradient(-180deg, #FFF0 0%, #FFFF 100%);
+    position: relative;
+    margin-top: -200px;
+    padding-top: 180px;
+    text-align: center;
+    z-index: 1;
+    background-image: linear-gradient(-180deg, #FFF0 0%, #FFFF 100%);
 }
 
 .faq-anchor {
-	top: -40px;
-	visibility: hidden;
+    top: -40px;
+    visibility: hidden;
 }
 
 /* Login Pop-up */
 .login-wrapper {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	z-index: 40;
-	overflow: auto;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 40;
+    overflow: auto;
 }
 
 .login-background {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	background: #000a none repeat scroll 0% 0%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: #000a none repeat scroll 0% 0%;
 }
 
 .login-inner {
-	position: absolute;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	top: 50%;
-	width: 520px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    width: 520px;
 }
 
 @media screen and (max-width: 768px) {
-	.login-inner {
-		width: 400px;
-	}
-	.logo {
-		width: 96px;
-	}
+    .login-inner {
+        width: 400px;
+    }
+    .logo {
+        width: 96px;
+    }
 }
 
 @media screen and (max-width: 536px) {
-	.login-inner {
-		width: 280px;
-	}
-	.logo {
-		width: 64px;
-	}
+    .login-inner {
+        width: 280px;
+    }
+    .logo {
+        width: 64px;
+    }
 }
