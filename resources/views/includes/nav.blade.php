@@ -4,21 +4,20 @@
         <a class="@if (Request::is('/submit')) active @endif item" href="/submit">投稿</a>
         <a class="@if (Request::is('/review')) active @endif item" href="/review">審核</a>
         <a class="@if (Request::is('/posts')) active @endif item" href="/posts">文章</a>
-		<div class="right fitted item" id="nav-right">
-<?php
-if (isset($USER)) {
-	if (!empty($USER['tg_photo']))
-		$photo = "/img/tg/{$USER['tg_id']}-x64.jpg";
-	else
-		$photo = genPic($USER['stuid']);
-?>
-			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
-			&nbsp;<b id="nav-name" style="overflow: hidden;"><?= toHTML($USER['name']) ?></b>&nbsp;
+        <div class="right fitted item" id="nav-right">
+@if (Auth::check())
+@empty(Auth::user()->tg_photo)
+            <img class="ts circular related avatar image" src="{{ genPic(Auth::user()->stuid) }}" onerror="this.src='/assets/img/avatar.jpg';">
+@else
+            <img class="ts circular related avatar image" src="/img/tg/{{ Auth::user()->tg_id }}-x64.jpg" onerror="this.src='/assets/img/avatar.jpg';">
+@endisset
+			&nbsp;<b id="nav-name" style="overflow: hidden;">{{ Auth::user()->name }}</b>&nbsp;
 			<a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
 				<i class="log out icon"></i>
 				<span class="tablet or large device only">Logout</span>
-			</a>
-<?php } else if (isset($GOOGLE)) {
+            </a>
+@elseif (isset($GOOGLE))
+<?php
 	if (!empty($GOOGLE['picture']))
 		$photo = $GOOGLE['picture'];
 	else
@@ -27,9 +26,9 @@ if (isset($USER)) {
 			<img class="ts circular related avatar image" src="<?= $photo ?>" onerror="this.src='/assets/img/avatar.jpg';">
 			&nbsp;<b id="nav-name" style="overflow: hidden;">Guest</b>&nbsp;
 			<a class="item" href="/verify" data-type="login">Verify</a>
-<?php } else { ?>
+@else
 			<a class="item" href="/login" data-type="login" onclick="document.getElementById('login-wrapper').style.display = ''; return false;">Login</a>
-<?php } ?>
+@endif
 		</div>
 	</div>
 </nav>

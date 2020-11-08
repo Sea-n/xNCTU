@@ -9,6 +9,27 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /*
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'stuid';
+
+    /*
+     * The "type" of the primary key ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    /*
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
     use HasFactory, Notifiable;
 
     /**

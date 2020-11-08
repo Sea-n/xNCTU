@@ -81,7 +81,7 @@ class LoginController extends Controller
         );
 
         $user = User::where('stuid', '=', $auth->getId())->first();
-        Auth::login($user);
+        Auth::login($user, true);
 
         return redirect('/');
     }

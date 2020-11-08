@@ -9,7 +9,7 @@ if (strpos($ip_from, '境外') === false)
 $captcha_q = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 $captcha_a = "";
 if (Auth::check() || $ip_from == '交大')
-	$captcha_a = "交大竹湖";
+    $captcha_a = "交大竹湖";
 ?>
 
 @extends('layouts.master')
@@ -37,7 +37,7 @@ if (Auth::check() || $ip_from == '交大')
 @if (Auth::check())
         <div id="warning-name" class="ts warning message">
             <div class="header">注意：您目前為登入狀態</div>
-            <p>一但送出投稿後，所有人都能看到您（{{ $USER['name'] }}）具名投稿，如想匿名投稿請於下方勾選「匿名投稿」。</p>
+            <p>一但送出投稿後，所有人都能看到您（{{ Auth::user()->name }}）具名投稿，如想匿名投稿請於下方勾選「匿名投稿」。</p>
         </div>
 @endif
         <div id="warning-ip" class="ts info message" style="{{ Auth::check() ? 'display: none;' : '' }}">

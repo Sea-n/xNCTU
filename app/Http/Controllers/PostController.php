@@ -15,10 +15,6 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        var_dump($request->session()->all());
-        echo $request->session()->get('uid');
-        $request->session()->put('uid', 'test');
-        $request->session()->save();
         $page = $request->input('page', 1);
 
         return Post::all();

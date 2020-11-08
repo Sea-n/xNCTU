@@ -80,5 +80,4 @@ class NCTUOAuthProvider extends AbstractProvider implements ProviderInterface
             'email' => $user['email'],
         ]);
     }
-
 }
