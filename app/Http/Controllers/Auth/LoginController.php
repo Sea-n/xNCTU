@@ -15,9 +15,19 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function redirectToProvider()
+    public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Redirect the user to the NCTU OAuth authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToNCTU()
+    {
+        return Socialite::driver('nctu')->redirect();
     }
 
     /**
@@ -25,7 +35,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback()
+    public function handleGoogleCallback()
     {
         $auth = Socialite::driver('google')->user();
 
@@ -48,6 +58,30 @@ class LoginController extends Controller
             var_dump($google);
             exit;
         }
+
+        return redirect('/');
+    }
+
+    /**
+     * Obtain the user information from NCTU OAuth.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function handleNCTUCallback()
+    {
+        $auth = Socialite::driver('nctu')->user();
+
+        User::updateOrCreate(
+            ['stuid' => $auth->getId()],
+            [
+                'stuid' => $auth->getId(),
+                'name'  => $auth->getId(),
+                'email' => $auth->getEmail(),
+            ],
+        );
+
+        $user = User::where('stuid', '=', $auth->getId())->first();
+        Auth::login($user);
 
         return redirect('/');
     }

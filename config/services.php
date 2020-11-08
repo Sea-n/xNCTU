@@ -26,6 +26,12 @@ return [
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
     ],
 
+    'nctu' => [
+        'client_id' => env('NCTU_CLIENT_ID'),
+        'client_secret' => env('NCTU_CLIENT_SECRET'),
+        'redirect' => env('APP_URL') . '/login/nctu/callback',
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

@@ -28,7 +28,10 @@ Route::get('/submit', function () {
 })->name('submit');
 
 Route::get('login', function () {
-    return redirect('login/google');
+    return redirect('login/nctu');
 })->name('login');
-Route::get('login/google', [LoginController::class, 'redirectToProvider']);
-Route::get('login/google/callback', [LoginController::class, 'handleProviderCallback']);
+
+Route::get('login/google', [LoginController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
+Route::get('login/nctu', [LoginController::class, 'redirectToNCTU']);
+Route::get('login/nctu/callback', [LoginController::class, 'handleNCTUCallback']);

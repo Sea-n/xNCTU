@@ -28,7 +28,7 @@ if (isset($USER)) {
 			&nbsp;<b id="nav-name" style="overflow: hidden;">Guest</b>&nbsp;
 			<a class="item" href="/verify" data-type="login">Verify</a>
 <?php } else { ?>
-			<a class="item" href="/login-nctu" data-type="login" onclick="document.getElementById('login-wrapper').style.display = ''; return false;">Login</a>
+			<a class="item" href="/login" data-type="login" onclick="document.getElementById('login-wrapper').style.display = ''; return false;">Login</a>
 <?php } ?>
 		</div>
 	</div>
@@ -43,10 +43,10 @@ if (isset($USER)) {
 			</div>
 			<div class="content">
 				<div style="display: inline-flex; width: 100%; justify-content: space-around;">
-					<a href="/login-nctu" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
+					<a href="/login/nctu">
 						<img class="logo" src="/assets/img/login-nctu.png">
 					</a>
-					<a href="/login-google" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
+					<a href="/login/google">
 						<img class="logo" src="/assets/img/login-google.png">
 					</a>
 					<a href="https://t.me/xNCTUbot?start=login" onclick="this.href+='?start=login_'+encodeURIComponent(location.pathname+location.search);">

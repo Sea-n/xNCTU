@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration
             $table->string('stuid')->primary();
             $table->string('name');
             $table->string('email');
-            $table->integer('tg_id')->unique();
-            $table->string('tg_name');
-            $table->string('tg_username');
-            $table->string('tg_photo');
+            $table->integer('tg_id')->unique()->nullable();
+            $table->string('tg_name')->nullable();
+            $table->string('tg_username')->nullable();
+            $table->string('tg_photo')->nullable();
             $table->integer('approvals')->default(0);
             $table->integer('rejects')->default(0);
             $table->integer('current_vote_streak')->default(0);
