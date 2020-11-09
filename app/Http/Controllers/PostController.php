@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -16,9 +17,54 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $page = $request->input('page', 1);
+        $likes  = $request->input('likes',   0);
+        $offset = $request->input('offset',  0);
+        $limit  = $request->input('limit',  50);
 
-        return Post::all();
+        $posts = Post::where('status', '=', 5)
+            ->where('fb_likes', '>=', $likes)
+            ->orderBy('posted_at')->skip($offset)->take($limit)->get();
+
+        $results = [];
+        foreach ($posts as $post) {
+            $author_name = $post->ip_from;
+            if (isset($post->author)) {
+                $author = User::find($post->author);
+
+                $dep = idToDep($post->author);
+                $author_name = $dep . ' ' . $author->name;
+            }
+
+            $ip_masked = $post->ip_addr;
+            if (strpos($author_name, '境外') === false)
+                $ip_masked = ip_mask($ip_masked);
+            if (!Auth::check())
+                $ip_masked = ip_mask_anon($ip_masked);
+            if (isset($post->author))
+                $ip_masked = false;
+
+            $author_photo = genPic($ip_masked);
+            if (isset($post->author)) {
+                $author_photo = genPic($post->author);
+                if (isset($author->tg_photo))
+                    $author_photo = "/img/tg/{$author->tg_id}-x64.jpg";
+            }
+
+            $results[] = [
+                'id' => $post->id,
+                'uid' => $post->uid,
+                'body' => $post->body,
+                'media' => $post->media,
+                'ip_masked' => $ip_masked,
+                'author_name' => $author_name,
+                'author_photo' => $author_photo,
+                'approvals' => $post->approvals,
+                'rejects' => $post->rejects,
+                'time' => strtotime($post->submitted_at),
+            ];
+        }
+
+        return response()->json($results);
     }
 
     /**
@@ -349,10 +395,10 @@ class PostController extends Controller
         /* Check file type */
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         if (!($ext = array_search($finfo->file($path), [
-                'jpg' => 'image/jpeg',
-                'png' => 'image/png',
-            ], true)))
-            return 'Extension not recognized. 圖片副檔名錯誤';
+            'jpg' => 'image/jpeg',
+            'png' => 'image/png',
+        ], true)))
+        return 'Extension not recognized. 圖片副檔名錯誤';
 
         $img = request()->img->storeAs('img', "$uid");
         var_dump($img);
