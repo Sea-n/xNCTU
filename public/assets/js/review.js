@@ -72,7 +72,8 @@ function vote(uid, type, reason_prompt) {
 
 function updateVotes() {
     var button = document.getElementById('refresh');
-    button.classList.add('disabled');
+    if (button)
+        button.classList.add('disabled');
 
     var uid = document.body.dataset.uid;
     if (!uid)
@@ -93,9 +94,11 @@ function updateVotes() {
                 card.querySelector('#rejects').innerText = resp.rejects;
 
                 updateVotesTable(resp.votes);
-                setTimeout(() => {
-                    button.classList.remove('disabled');
-                }, 800);
+                if (button) {
+                    setTimeout(() => {
+                        button.classList.remove('disabled');
+                    }, 800);
+                }
             } else
                 alert(resp.msg);
         });

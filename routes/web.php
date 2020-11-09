@@ -19,6 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+
 Route::get('/submit', function () {
     if (Session()->has('uid')) {
         $uid = Session()->get('uid');
@@ -27,6 +28,7 @@ Route::get('/submit', function () {
 
     return view('submit');
 })->name('submit');
+
 
 Route::get('/review', function () {
     return view('review-all');
@@ -45,6 +47,17 @@ Route::get('/review/{post}', function (Post $post) {
 
     return view('review-one', ['post' => $post]);
 })->name('submission');
+
+
+Route::get('/posts', function () {
+    return view('posts');
+})->name('posts');
+
+Route::get('/post/{id}', function (int $id) {
+    $post = Post::where('id', '=', $id)->first();
+    return view('post', ['post' => $post]);
+})->name('post');
+
 
 Route::get('/login', function () {
     return redirect('login/nctu');

@@ -32,6 +32,7 @@ if ($post['status'] != 0) {
 
 @section('title', $TITLE)
 @section('desc', $DESC)
+@section('img', $IMG)
 @section('header', '貼文審核')
 
 @section('head')

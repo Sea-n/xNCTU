@@ -242,7 +242,10 @@ class PostController extends Controller
 
         $request->session()->forget('uid');
 
-        $post->increment('status');
+        $post->update([
+            'status' => 1,
+            'submitted_at' => date('Y-m-d H:i:s'),
+        ]);
 
         return response()->json([
             'ok' => true,

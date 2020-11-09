@@ -57,6 +57,10 @@ function updateTime() {
 function timeFormat(ts = 0) {
     if (ts < 1e10)
         ts *= 1000;
+
+    if (ts == 0)
+        ts = + new Date();
+
     var date = new Date(ts);
     var min = ('0' + date.getMinutes()).substr(-2);
     var hour = ('0' + date.getHours()).substr(-2);

@@ -43,6 +43,8 @@ class Post extends Model
         'ip_addr',
         'ip_from',
         'status',
+        'submitted_at',
+        'updated_at',
         'deleted_at',
         'delete_note',
     ];

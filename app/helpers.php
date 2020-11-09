@@ -190,7 +190,7 @@ function rand58(int $len = 1): string {
  * 1. Newline to <br>
  * 2. Signle line URL to <a>
  */
-function toHTML(string $text = ''): string {
+function x(string $text = ''): string {
     $text = htmlentities($text);
     $text = explode("\n", $text);
     foreach ($text as $k1 => $v1) {
@@ -199,7 +199,9 @@ function toHTML(string $text = ''): string {
             if (filter_var($v2, FILTER_VALIDATE_URL))
                 $text[$k1][$k2] = "<a target='_blank' href='$v2'>$v2</a>";
             else if (preg_match('/^#靠交(\d+)$/', $v2, $matches))
-                $text[$k1][$k2] = "<a target='_blank' href='/post/{$matches[1]}'>$v2</a>";
+                $text[$k1][$k2] = "<a target='_blank' href='https://x.nthu.io/post/{$matches[1]}'>$v2</a>";
+            else if (preg_match('/^#靠清(\d+)$/', $v2, $matches))
+                $text[$k1][$k2] = "<a target='_blank' href='https://x.nthu.io/post/{$matches[1]}'>$v2</a>";
             else if (preg_match('/^#告白交大(\d+)$/', $v2, $matches))
                 $text[$k1][$k2] = "<a target='_blank' href='https://crush.nctu.app/post/{$matches[1]}'>$v2</a>";
             else if (preg_match('/^#投稿(\w+)$/', $v2, $matches))
