@@ -28,12 +28,11 @@ if ($post['status'] != 0) {
 
 ?>
 
-@extends('layouts.turkey')
+@extends('layouts.rabbit')
 
 @section('title', $TITLE)
 @section('desc', $DESC)
 @section('img', $IMG)
-@section('header', '貼文審核')
 
 @section('head')
     <script src="/assets/js/review.js"></script>

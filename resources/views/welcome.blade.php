@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.rabbit')
 
 @section('title', '首頁')
 

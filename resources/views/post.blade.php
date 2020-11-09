@@ -48,12 +48,11 @@ for ($i=1; $i<=8; $i++) {
 
 ?>
 
-@extends('layouts.turkey')
+@extends('layouts.rabbit')
 
 @section('title', $TITLE)
 @section('desc', $DESC)
 @section('img', $IMG)
-@section('header', '文章')
 
 @section('head')
     <script src="/assets/js/review.js"></script>
