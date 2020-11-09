@@ -30,7 +30,11 @@ Route::get('/submit', function () {
 
 Route::get('/review', function () {
     return view('review-all');
-})->name('review.all');
+})->name('review');
+
+Route::get('/deleted', function () {
+    return view('review-deleted');
+})->name('deleted');
 
 Route::get('/review/{post}', function (Post $post) {
     if (session()->has('uid')) {
@@ -40,7 +44,7 @@ Route::get('/review/{post}', function (Post $post) {
     }
 
     return view('review-one', ['post' => $post]);
-})->name('review.one');
+})->name('submission');
 
 Route::get('/login', function () {
     return redirect('login/nctu');

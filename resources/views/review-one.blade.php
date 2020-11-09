@@ -41,18 +41,6 @@ if ($post['status'] != 0) {
 
 @section('content')
 
-@isset ($post->deleted_at)
-        <div class="ts negative message">
-            <div class="header">此文已刪除</div>
-            <p>刪除原因：{{ $post->delete_note }}</p>
-        </div>
-@elseif (isset($post->id))
-        <div class="ts positive message">
-            <div class="header">文章已發出</div>
-            <p>您可以在 <a href="/post/{{ $post->id }}">#靠交{{ $post->id }}</a> 找到這篇文章</p>
-        </div>
-@endisset
-
 @include('includes.post')
 
 @isset ($votes)
