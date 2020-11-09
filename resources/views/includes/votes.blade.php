@@ -19,7 +19,7 @@ use App\Models\User;
             <td>{{ $vote->vote == 1 ? '✅ 通過' : '❌ 駁回' }}</td>
             <td>{{ idToDep($vote->stuid) }}</td>
             <td>{{ User::find($vote->stuid)->name }}</td>
-            <td>{! x($vote->reason) !}</td>
+            <td>{!! x($vote->reason) !!}</td>
         </tr>
 @endforeach
 @else

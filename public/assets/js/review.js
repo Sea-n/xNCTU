@@ -75,11 +75,13 @@ function updateVotes() {
     if (button)
         button.classList.add('disabled');
 
-    var uid = document.body.dataset.uid;
-    if (!uid)
+    var uid = document.querySelector('meta[name="uid"]').content;
+    if (!uid) {
+        console.error('uid not found.');
         return;
+    }
 
-    fetch('/api/votes?uid=' + uid)
+    fetch('/api/votes/' + uid)
         .then(resp => resp.json())
         .then((resp) => {
             if (resp.ok) {
