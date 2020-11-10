@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        // \App\Console\Commands\SendPostCommand::class,
+        // \App\Console\Commands\RejectCommand::class,
+        // \App\Console\Commands\UpdateLikesCommand::class,
     ];
 
     /**
@@ -24,7 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // $schedule->command('post:send')->everyFiveMinutes();
+        // $schedule->command('post:reject')->everyMinute();
+        // $schedule->command('post:update')->hourly();
+        // $schedule->command('post:update --all')->dailyAt('06:42');
     }
 
     /**
