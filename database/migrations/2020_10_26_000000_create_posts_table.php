@@ -26,6 +26,8 @@ class CreatePostsTable extends Migration
             $table->integer('approvals')->default(0);
             $table->integer('rejects')->default(0);
             $table->integer('fb_likes')->default(0);
+            $table->integer('old_likes')->default(0);
+            $table->integer('max_likes')->default(0);
 
             $table->integer('telegram_id')->default(0);
             $table->integer('plurk_id')->default(0);
