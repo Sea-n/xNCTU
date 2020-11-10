@@ -5,7 +5,8 @@ use App\Models\Vote;
 
 function ip_from(string $ip_addr): string {
     /* Only convert Taiwan IP addresses */
-    if (($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx') != 'TW')
+    if (($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx') != 'TW'
+        && strpos(php_sapi_name(), 'cli') === false)
         return '境外, ' . ccToZh($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx');
 
     /* Known IP address prefix for TANet */

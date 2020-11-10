@@ -22,8 +22,8 @@ class PostController extends Controller
         $limit  = $request->input('limit',  50);
 
         $posts = Post::where('status', '=', 5)
-            ->where('fb_likes', '>=', $likes)
-            ->orderBy('posted_at')->skip($offset)->take($limit)->get();
+            ->where('max_likes', '>=', $likes)
+            ->orderBy('id', 'desc')->skip($offset)->take($limit)->get();
 
         $results = [];
         foreach ($posts as $post) {

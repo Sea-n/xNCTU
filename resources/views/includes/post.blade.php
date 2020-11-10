@@ -4,7 +4,7 @@ use App\Models\User;
 $time = humanTime($post->submitted_at ?? now());
 $ts = strtotime($post->submitted_at ?? now());
 
-$author_name = $post->ip_from;
+$author_name = "匿名, {$post->ip_from}";
 if (isset($post->author)) {
     $author = User::find($post->author);
 
@@ -82,15 +82,15 @@ if (isset($post->author)) {
             @endif
 
             @if ($post->facebook_id > 87)
-                <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU/{{ $post->facebook_id }}">@xNCTU/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span><br>
+                <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU2.0/posts/{{ $post->facebook_id }}">@xNCTU2.0/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span><br>
             @endif
 
             @if (strlen($post->instagram_id) > 1)
                 <span><i class="instagram icon"></i> Instagram: <a target="_blank" href="https://www.instagram.com/p/{{ $post->instagram_id }}">@x_nctu/{{ $post->instagram_id }}</a></span><br>
             @endif
 
-            @if ($post->plurk > 69)
-                <span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/{{ $post->plurk }}">@xNCTU/{{ $post->plurk }}</a></span><br>
+            @if ($post->plurk_id > 69)
+                <span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/{{ base_convert($post->plurk_id, 10, 36) }}">@xNCTU/{{ base_convert($post->plurk_id, 10, 36) }}</a></span><br>
             @endif
 
             @if ($post->twitter_id > 42)

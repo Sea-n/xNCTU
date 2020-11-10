@@ -14,13 +14,13 @@ class CreateGoogleAccountsTable extends Migration
     public function up()
     {
         Schema::create('google_accounts', function (Blueprint $table) {
-            $table->id();
-            $table->string('sub')->unique();
+            $table->string('sub')->primary();
             $table->string('email')->unique();
             $table->string('name');
             $table->string('avatar')->default('');
             $table->string('stuid')->references('stuid')->on('users')->nullable();
             $table->timestamps();
+            $table->dateTime('last_login')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
         });
     }

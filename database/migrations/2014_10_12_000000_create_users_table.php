@@ -16,16 +16,18 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->string('stuid')->primary();
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->integer('tg_id')->unique()->nullable();
             $table->string('tg_name')->nullable();
             $table->string('tg_username')->nullable();
             $table->string('tg_photo')->nullable();
+
             $table->integer('approvals')->default(0);
             $table->integer('rejects')->default(0);
             $table->integer('current_vote_streak')->default(0);
             $table->integer('highest_vote_streak')->default(0);
             $table->dateTime('last_vote')->default(DB::raw('"2020-01-01 00:00:00"'));
+
             $table->dateTime('last_login')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->rememberToken();
             $table->timestamps();

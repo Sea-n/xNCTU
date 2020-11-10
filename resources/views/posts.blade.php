@@ -1,7 +1,11 @@
 <?php
 use App\Models\Post;
 
-$posts = Post::where('status', '=', 5)->orderBy('posted_at', 'desc')->take(50)->get();
+$likes = request()->input('likes', 0);
+
+$posts = Post::where('status', '=', 5)
+    ->where('max_likes', '>=', $likes)
+    ->orderBy('id', 'desc')->take(50)->get();
 ?>
 
 @extends('layouts.master')
@@ -19,7 +23,7 @@ $posts = Post::where('status', '=', 5)->orderBy('posted_at', 'desc')->take(50)->
         @endforeach
     </div>
 
-    <button id="more" class="ts primary button" onclick="more();" data-offset="0">顯示更多文章</button>
+    <button id="more" class="ts primary button" onclick="more();" data-offset="50">顯示更多文章</button>
 
     <div class="ts modals dimmer" id="img-container-wrapper" style="margin-top: 40px;">
         <dialog id="modal" class="ts basic fullscreen closable modal" open>

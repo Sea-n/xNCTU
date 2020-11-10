@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Post;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,98 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $db = \DB::connection('legacy');
+
+        echo "Migrating users...\n";
+        $users = $db->table('users')->get();
+        foreach ($users as $item) {
+            if (\DB::table('users')->where('stuid', '=', $item->stuid)->count() > 0)
+                continue;
+
+            \DB::table('users')->where('stuid', '=', $item->stuid)->delete();
+            \DB::table('users')->insert([
+                'stuid'       => $item->stuid,
+                'name'        => $item->name,
+                'email'       => $item->mail,
+                'tg_id'       => $item->tg_id,
+                'tg_name'     => $item->tg_name,
+                'tg_username' => $item->tg_name,
+                'tg_photo'    => $item->tg_photo,
+
+                'approvals'  => $item->approvals,
+                'rejects'    => $item->rejects,
+                'current_vote_streak' => $item->current_vote_streak,
+                'highest_vote_streak' => $item->highest_vote_streak,
+                'last_vote'  => $item->last_vote,
+                'last_login' => $item->last_login,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->created_at,
+            ]);
+        }
+
+        echo "Migrating posts...\n";
+        $posts = $db->table('posts')->get();
+        foreach ($posts as $item) {
+            if (\DB::table('posts')->where('uid', '=', $item->uid)->count() > 0)
+                continue;
+
+            if (strpos($item->author_name, '匿名, ') !== false)
+                $ip_from = mb_substr($item->author_name, 4);
+            else
+                $ip_from = ip_from($item->ip_addr);
+
+            \DB::table('posts')->where('uid', '=', $item->uid)->delete();
+            \DB::table('posts')->insert([
+                'uid'     => $item->uid,
+                'id'      => $item->id,
+                'body'    => $item->body,
+                'orig'    => null,
+                'media'   => $item->has_img ? 1 : 0,
+                'author'  => empty($item->author_id) ? null : $item->author_id,
+                'ip_addr' => $item->ip_addr,
+                'ip_from' => $ip_from,
+
+                'status'    => $item->status,
+                'approvals' => $item->approvals,
+                'rejects'   => $item->rejects,
+                'fb_likes'  => $item->fb_likes,
+                'old_likes' => $item->fb_likes_old,
+                'max_likes' => max($item->fb_likes, $item->fb_likes_old),
+
+                'telegram_id'  => $item->telegram_id,
+                'plurk_id'     => $item->plurk_id,
+                'twitter_id'   => $item->twitter_id,
+                'facebook_id'  => $item->facebook_id,
+                'instagram_id' => $item->instagram_id,
+
+                'created_at'   => $item->created_at,
+                'updated_at'   => $item->created_at,
+                'submitted_at' => in_array($item->status, [-3, -12, -13]) ? null : $item->created_at,
+                'posted_at'    => $item->posted_at,
+                'deleted_at'   => $item->deleted_at,
+                'delete_note'  => $item->delete_note,
+            ]);
+        }
+
+        echo "Migrating votes...\n";
+        $posts = $db->table('votes')->get();
+        foreach ($posts as $item) {
+            \DB::table('votes')->insert(get_object_vars($item));
+        }
+
+        echo "Migrating google_accounts...\n";
+        $posts = $db->table('google_accounts')->get();
+        foreach ($posts as $item) {
+            \DB::table('google_accounts')->insert([
+                'sub'        => $item->sub,
+                'email'      => $item->email,
+                'name'       => $item->name,
+                'avatar'     => $item->picture,
+                'stuid'      => empty($item->stuid) ? null : $item->stuid,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->created_at,
+                'last_login' => $item->created_at,
+            ]);
+        }
     }
 }

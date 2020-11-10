@@ -16,7 +16,8 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->char('uid', 4)->primary();  // Case-insensitive
             $table->integer('id')->unique()->nullable();
-            $table->string('body', 8700);
+            $table->string('body', 4200);
+            $table->string('orig', 4200)->nullable();
             $table->integer('media')->default(0);
             $table->string('author')->references('stuid')->on('users')->nullable();
             $table->ipAddress('ip_addr');
