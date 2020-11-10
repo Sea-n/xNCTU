@@ -96,6 +96,7 @@ Route::get('/ranking', function () {
     return view('ranking-all');
 })->name('ranking');
 
+
 Route::get('/faq', function () {
     return view('faq');
 })->name('faq');

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RankingController;
 use App\Models\Vote;
 use App\Models\User;
 
@@ -52,3 +53,5 @@ Route::get('/votes/{uid}', function (string $uid) {
         'votes' => $results,
     ]);
 });
+
+Route::get('/ranking/{tg_id}', [RankingController::class, 'show']);

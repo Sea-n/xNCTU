@@ -88,15 +88,16 @@ class DatabaseSeeder extends Seeder
         }
 
         echo "Migrating votes...\n";
-        $posts = $db->table('votes')->delete();
-        $posts = $db->table('votes')->get();
-        foreach ($posts as $item) {
+        \DB::table('votes')->delete();
+        $votes = $db->table('votes')->get();
+        foreach ($votes as $item) {
             \DB::table('votes')->insert(get_object_vars($item));
         }
 
         echo "Migrating google_accounts...\n";
-        $posts = $db->table('google_accounts')->get();
-        foreach ($posts as $item) {
+        \DB::table('google_accounts')->delete();
+        $accounts = $db->table('google_accounts')->get();
+        foreach ($accounts as $item) {
             \DB::table('google_accounts')->insert([
                 'sub'        => $item->sub,
                 'email'      => $item->email,
