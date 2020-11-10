@@ -5,8 +5,6 @@
 @section('head')
 
 @section('content')
-    <div class="ts container" name="main">
-        <h2 class="ts header">請先綁定 NCTU OAuth 帳號</h2>
-        <p><a href="/login/nctu">點我登入 NCTU OAuth</a></p>
-    </div>
+    <h2 class="ts header">請先綁定 NCTU OAuth 帳號</h2>
+    <p><a href="/login/nctu">點我登入 NCTU OAuth</a></p>
 @stop

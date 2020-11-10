@@ -90,3 +90,20 @@ Route::get('/verify', function () {
 
     return view('verify');
 })->name('verify');
+
+
+Route::get('/ranking', function () {
+    return view('ranking-all');
+})->name('ranking');
+
+Route::get('/faq', function () {
+    return view('faq');
+})->name('faq');
+
+Route::get('/policies', function () {
+    return view('policies');
+})->name('policies');
+
+Route::get('/transparency', function () {
+    return view('transparency');
+})->name('transparency');

@@ -88,6 +88,7 @@ class DatabaseSeeder extends Seeder
         }
 
         echo "Migrating votes...\n";
+        $posts = $db->table('votes')->delete();
         $posts = $db->table('votes')->get();
         foreach ($posts as $item) {
             \DB::table('votes')->insert(get_object_vars($item));
