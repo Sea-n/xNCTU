@@ -11,11 +11,11 @@ $TG = new Telegram();
 
 
 /* Check unfinished post */
-$posts = $db->getPosts(100);
+$posts = $db->getPosts(6500);
 $posts = array_reverse($posts);
 
 foreach ($posts as $item)
-	if ($item['facebook_id'] < 5) {
+	if ($item['facebook_id'] < 87 && $item['id'] > 5791) {
 		$post = $item;
 		break;
 	}
@@ -38,7 +38,7 @@ $link = "https://$DOMAIN/post/{$post['id']}";
 try {
 	$pid = send_facebook($post);
 	if ($pid <= 0)
-		$pid = $post['facebook_id'] + 1;
+		$pid = 1;
 
 	$db->updatePostSns($post['id'], 'facebook', $pid);
 } catch (Exception $e) {
@@ -117,7 +117,7 @@ function update_telegram(array $post) {
 	if ($post['facebook_id'] > 10)
 		$buttons[] = [
 			'text' => 'Facebook',
-			'url' => "https://www.facebook.com/xNCTU/posts/{$post['facebook_id']}"
+			'url' => "https://www.facebook.com/xNCTU2.0/posts/{$post['facebook_id']}"
 		];
 
 	$plurk = base_convert($post['plurk_id'], 10, 36);
@@ -203,10 +203,8 @@ function update_facebook(array $post) {
 	$msg .= "$link\n\n";
 
 	$msg .= "---\n\n";
-	$vote2 = $post['approvals'] - $post['rejects']*2;
-	if ($dt <= 10 || $vote2 >= 6)
-		$msg .= "💡 $tips\n\n";
 
+	$msg .= "💡 $tips\n\n";
 	$msg .= "👉 {$go}： https://x.nctu.app/submit";
 
 	$URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . "_{$post['facebook_id']}/comments";

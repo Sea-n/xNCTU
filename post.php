@@ -115,7 +115,7 @@ $VOTES = $db->getVotesByUid($post['uid']);
 					<p><span><i class="telegram icon"></i> Telegram: <a target="_blank" href="https://t.me/s/xNCTU/<?= $post['telegram_id'] ?>">@xNCTU/<?= $post['telegram_id'] ?></a></span><br>
 <?php }
 if ($post['facebook_id'] > 10) { ?>
-					<span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU/posts/<?= $post['facebook_id'] ?>">@xNCTU/<?= $post['facebook_id'] ?></a> <small>(<?= $post['fb_likes'] ?> likes)</small></span><br>
+					<span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU2.0/posts/<?= $post['facebook_id'] ?>">@xNCTU2.0/<?= $post['facebook_id'] ?></a> <small>(<?= $post['fb_likes'] ?> likes)</small></span><br>
 <?php }
 if (strlen($post['instagram_id']) > 1) { ?>
 					<span><i class="instagram icon"></i> Instagram: <a target="_blank" href="https://www.instagram.com/p/<?= $post['instagram_id'] ?>">@x_nctu/<?= $post['instagram_id'] ?></a></span><br>
@@ -160,20 +160,21 @@ include('includes/table-vote.php');
 $posts = $db->getPosts(500);
 $posts = array_filter($posts, function($post) {
 	global $id;
-	if ($post['facebook_id'] < 10)
+	if ($post['fb_likes_old'] < 10)
 		return false;
 	return $post['id'] != $id;
 });
 
 usort($posts, function (array $a, array $b) {
-	return $b['fb_likes'] <=> $a['fb_likes'];
+	return $b['fb_likes_old'] <=> $a['fb_likes_old'];
 });
 $posts = array_slice($posts, 0, 50);
 
 $posts2 = [];
 for ($i=1; $i<=8; $i++) {
 	$pos = $id % ($i*3);
-	$posts2[] = array_splice($posts, $pos, 1)[0];
+	if (count($posts) > $pos)
+		$posts2[] = array_splice($posts, $pos, 1)[0];
 }
 
 foreach ($posts2 as $post) {
