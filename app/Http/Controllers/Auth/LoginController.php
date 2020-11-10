@@ -42,24 +42,23 @@ class LoginController extends Controller
         GoogleAccount::updateOrCreate(
             ['sub' => $auth->getId()],
             [
-                'sub' => $auth->getId(),
-                'email' => $auth->getEmail(),
-                'name' => $auth->getName(),
-                'avatar' => $auth->getAvatar(),
+                'sub'        => $auth->getId(),
+                'email'      => $auth->getEmail(),
+                'name'       => $auth->getName(),
+                'avatar'     => $auth->getAvatar(),
+                'last_login' => date('Y-m-d H:i:s'),
             ]
         );
 
-        $google = GoogleAccount::where('sub', '=', $auth->getId())->first();
+        $google = GoogleAccount::find($auth->getId());
 
         if (isset($google['stuid'])) {
-            $user = User::where('stuid', '=', $google['stuid'])->first();
-            Auth::login($user);
+            Auth::login(User::find($google['stuid']));
+            return redirect('/');
         } else {
-            var_dump($google);
-            exit;
+            session()->put('google_sub', $google->sub);
+            return redirect('/verify');
         }
-
-        return redirect('/');
     }
 
     /**
@@ -74,13 +73,14 @@ class LoginController extends Controller
         User::updateOrCreate(
             ['stuid' => $auth->getId()],
             [
-                'stuid' => $auth->getId(),
-                'name'  => $auth->getId(),
-                'email' => $auth->getEmail(),
+                'stuid'      => $auth->getId(),
+                'name'       => $auth->getId(),
+                'email'      => $auth->getEmail(),
+                'last_login' => date('Y-m-d H:i:s'),
             ],
         );
 
-        $user = User::where('stuid', '=', $auth->getId())->first();
+        $user = User::find($auth->getId());
         Auth::login($user, true);
 
         return redirect('/');

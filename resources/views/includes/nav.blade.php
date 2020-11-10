@@ -1,3 +1,6 @@
+<?php
+use App\Models\GoogleAccount;
+?>
 <nav class="ts basic fluid borderless menu horizontally scrollable">
     <div class="ts container">
         <a class="@if (Request::is('/')) active @endif item" href="/">首頁</a>
@@ -18,14 +21,9 @@
                     <i class="log out icon"></i>
                     <span class="tablet or large device only">Logout</span>
                 </a>
-            @elseif (isset($GOOGLE))
-<?php
-if (!empty($GOOGLE['picture']))
-    $photo = $GOOGLE['picture'];
-else
-    $photo = genPic($GOOGLE['sub']);
-?>
-                <img class="ts circular related avatar image" src="{{ $photo }}" onerror="this.src='/assets/img/avatar.jpg';">
+            @elseif (session()->has('google_sub'))
+<?php $google = GoogleAccount::find(session()->get('google_sub')); ?>
+                <img class="ts circular related avatar image" src="{{ $google->avatar ?? genPic($google->sub) }}" onerror="this.src='/assets/img/avatar.jpg';">
                 &nbsp;<b id="nav-name" style="overflow: hidden;">Guest</b>&nbsp;
                 <a class="item" href="/verify" data-type="login">Verify</a>
             @else

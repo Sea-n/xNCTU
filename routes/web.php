@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Models\Post;
+use App\Models\User;
+use App\Models\GoogleAccount;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +62,7 @@ Route::get('/post/{id}', function (int $id) {
 
 
 Route::get('/login', function () {
-    return redirect('login/nctu');
+    return redirect('/login/nctu');
 })->name('login');
 
 Route::get('/login/google', [LoginController::class, 'redirectToGoogle']);
@@ -72,3 +74,19 @@ Route::get('/logout', function () {
     Auth::logout();
     return redirect('/');
 });
+
+Route::get('/verify', function () {
+    if (Auth::check())
+        return redirect('/');
+
+    if (!session()->has('google_sub'))
+        return redirect('/login/google');
+
+    $google = GoogleAccount::find(session()->get('google_sub'));
+    if (isset($google->stuid)) {
+        Auth::login(User::find($google->stuid), true);
+        session()->forget('google_sub');
+    }
+
+    return view('verify');
+})->name('verify');
