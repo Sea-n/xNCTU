@@ -78,11 +78,11 @@ if (isset($post->author)) {
     <div class="extra content" id="extra">
         @isset ($single)
             @if ($post->telegram_id > 1)
-                <p><span><i class="telegram icon"></i> Telegram: <a target="_blank" href="https://t.me/s/xNCTU/{{ $post->telegram_id }}">@xNCTU/{{ $post->telegram_id }}</a></span><br>
+                <p><span><i class="telegram icon"></i> Telegram: <a target="_blank" href="https://t.me/s/{{ env('APP_NAME') }}/{{ $post->telegram_id }}">@{{ env('APP_NAME') }}/{{ $post->telegram_id }}</a></span><br>
             @endif
 
             @if ($post->facebook_id > 87)
-                <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/xNCTU2.0/posts/{{ $post->facebook_id }}">@xNCTU2.0/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span><br>
+                <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/{{ env('APP_NAME') }}2.0/posts/{{ $post->facebook_id }}">@{{ env('APP_NAME') }}2.0/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span><br>
             @endif
 
             @if (strlen($post->instagram_id) > 1)
@@ -90,7 +90,7 @@ if (isset($post->author)) {
             @endif
 
             @if ($post->plurk_id > 69)
-                <span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/{{ base_convert($post->plurk_id, 10, 36) }}">@xNCTU/{{ base_convert($post->plurk_id, 10, 36) }}</a></span><br>
+                <span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/{{ base_convert($post->plurk_id, 10, 36) }}">@{{ env('APP_NAME') }}/{{ base_convert($post->plurk_id, 10, 36) }}</a></span><br>
             @endif
 
             @if ($post->twitter_id > 42)
@@ -121,7 +121,7 @@ if (isset($post->author)) {
             <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
                 <meta itemprop="url" content="/assets/img/logo.png">
             </div>
-            <span itemprop="name">靠北交大 2.0</span>
+            <span itemprop="name">{{ env('APP_CHINESE_NAME') }}</span>
         </div>
 
         <link itemprop="mainEntityOfPage" href="{{ url()->current() }}" />

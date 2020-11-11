@@ -33,7 +33,7 @@ if (Auth::check()) {
         @include('includes.post')
     @endforeach
 
-    <p>您目前審核 {{ $votes }} 篇文，可看見 {{ $count }} 篇已刪投稿。歡迎多參與審核工作，共同把持靠北交大貼文品質。</p>
+    <p>您目前審核 {{ $votes }} 篇文，可看見 {{ $count }} 篇已刪投稿。歡迎多參與審核工作，共同把持{{ env('APP_CHINESE_NAME') }} 貼文品質。</p>
 @endauth
 
 @stop

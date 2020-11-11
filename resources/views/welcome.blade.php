@@ -10,7 +10,7 @@
     <h2 class="ts header">成立契機</h2>
     <p>2014 年初，原版 <a target="_blank" href="https://www.facebook.com/CowBeiNCTU">@CowBeiNCTU</a> 成立，當時有公正的審文標準、系統性的 <a target="_blank" href="https://www.facebook.com/castnet.nctu/videos/2329809693899900/">交接傳承</a>，無奈於 2020 年 1 月中剛突破十萬篇時，遭不明人士檢舉下架。</p>
     <p>隨後有人開設了 <a target="_blank" href="https://www.facebook.com/grumbleNCTU">@grumbleNCTU</a> 頂替，但因更新不夠即時、審文標準不夠明確等問題遭到同學們詬病。</p>
-    <p>2020 年 2 月中，由資工系學生推出靠北交大 2.0，並做出了數項改變避免重蹈覆徹：</p>
+    <p>2020 年 2 月中，由資工系學生推出{{ env('APP_CHINESE_NAME') }}，並做出了數項改變避免重蹈覆徹：</p>
     <ul>
         <li>為了維持更新頻率，將審核工作下放至全體師生，任何師生只要登入 NCTU OAuth 帳號即可自助審文；除緊急刪除明顯違法文章外，所有師生與管理者票票等值。</li>
         <li>為了達到審文透明化，雖然所有審核者皆為自由心證，未經過訓練也不強制遵從統一標準；但透過保留所有審核紀錄、被駁回的投稿皆提供全校師生檢視，增加審核標準的透明度。</li>
@@ -20,18 +20,18 @@
     <p>此專案收錄於 <a target="_blank" href="https://awesome.nctu.app/">Awesome NCTU</a> 網站，也可參考 <a target="_blank" href="https://x.nthu.io/">靠北清大 2.0</a> 系統。</p>
 
     <h2 class="ts header">社群平台</h2>
-    <p>除了本站文章列表外，您可以在以下 5 個社群媒體平台追蹤{{ config('app.name') }} 帳號。</p>
+    <p>除了本站文章列表外，您可以在以下 5 個社群媒體平台追蹤{{ env('APP_CHINESE_NAME') }} 帳號。</p>
     <div class="icon-row">
-        <a id="telegram-icon"  class="ts link tiny rounded image" target="_blank" href="https://t.me/xNCTU"              ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg"   alt="Telegram" ></a>
+        <a id="telegram-icon"  class="ts link tiny rounded image" target="_blank" href="https://t.me/{{ env('APP_NAME') }}"              ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg"   alt="Telegram" ></a>
         <a id="twitter-icon"   class="ts link tiny rounded image" target="_blank" href="https://twitter.com/x_NCTU"      ><img src="https://image.flaticon.com/icons/svg/124/124021.svg"     alt="Twitter"  ></a>
-        <a id="plurk-icon"     class="ts link tiny rounded image" target="_blank" href="https://www.plurk.com/xNCTU"     ><img src="https://image.flaticon.com/icons/svg/124/124026.svg"     alt="Plurk"    ></a>
-        <a id="facebook-icon"  class="ts link tiny rounded image" target="_blank" href="https://www.facebook.com/xNCTU"  ><img src="https://image.flaticon.com/icons/svg/220/220200.svg"     alt="Facebook" ></a>
+        <a id="plurk-icon"     class="ts link tiny rounded image" target="_blank" href="https://www.plurk.com/{{ env('APP_NAME') }}"     ><img src="https://image.flaticon.com/icons/svg/124/124026.svg"     alt="Plurk"    ></a>
+        <a id="facebook-icon"  class="ts link tiny rounded image" target="_blank" href="https://www.facebook.com/{{ env('APP_NAME') }}2.0"  ><img src="https://image.flaticon.com/icons/svg/220/220200.svg"     alt="Facebook" ></a>
         <a id="instagram-icon" class="ts link tiny rounded image" target="_blank" href="https://www.instagram.com/x_nctu"><img src="https://image.flaticon.com/icons/svg/2111/2111463.svg"   alt="Instagram"></a>
     </div>
 
     <h2 class="ts header">審文機制</h2>
     <div id="review-content" style="height: 320px; overflow-y: hidden;">
-        <p>新版{{ config('app.name') }} 採自助式審文，所有交大師生皆可加入審核者的行列，以下是系統判斷標準</p>
+        <p>新版{{ env('APP_CHINESE_NAME') }} 採自助式審文，所有交大師生皆可加入審核者的行列，以下是系統判斷標準</p>
 
         <h4>(A) 具名投稿</h4>
         <p>點擊右上角使用 NCTU OAuth 登入後，可用師生身份具名投稿，即使無人審核也會在 10 分鐘內自動發出，詳細判斷條件如下：</p>
@@ -78,11 +78,11 @@
 <?php if (!isset($USER)) { ?>
     <h2 class="ts header">使用 Telegram 登入</h2>
     <p>只要您曾綁定 NCTU 帳號，點擊下面按鈕即可以 Telegram 登入服務。</p>
-    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="xNCTUbot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login-tg" data-request-access="write"></script>
+    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login-tg" data-request-access="write"></script>
 <?php } else if (!isset($USER['tg_id'])) { ?>
     <h2 class="ts header">使用 Telegram 快速審核</h2>
     <p>點擊下面按鈕即可綁定 Telegram 帳號，讓您收到最即時的投稿通知，並快速通過/駁回貼文。</p>
-    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="xNCTUbot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login-tg" data-request-access="write"></script>
+    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login-tg" data-request-access="write"></script>
 <?php } else if ($USER['name'] == $USER['stuid']) { ?>
     <h2 class="ts header">使用 Telegram 快速審核</h2>
     <div class="ts positive message">
@@ -96,7 +96,7 @@
     <p>您可以在 <a href="/ranking">這個頁面</a> 查看排行榜。</p>
 
     <h2 class="ts header">服務聲明</h2>
-    <p>感謝您使用「{{ config('app.name') }}」（以下簡稱本網站），本網站之所有文章皆為不特定使用者自行投稿、不特定師生進行審核，並不代表本網站立場。</p>
+    <p>感謝您使用「{{ env('APP_CHINESE_NAME') }}」（以下簡稱本網站），本網站之所有文章皆為不特定使用者自行投稿、不特定師生進行審核，並不代表本網站立場。</p>
     <p>如有侵害您權益之貼文，麻煩寄信至服務團隊，將在最短時間協助您撤下貼文或進行澄清。</p>
     <p>投稿者如散播不實訊息而遭司法單位追究，在司法機關提供調取票等充分條件下，本網站將依法提供 IP 位址配合偵辦，並公開於 <a href="/transparency">透明度報告</a> 頁面，切勿以身試法。</p>
 @stop

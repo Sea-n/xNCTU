@@ -4,7 +4,7 @@
         <a href="/faq">常見問答</a>
         | <a href="/policies">隱私權政策</a>
         | <a href="mailto:x@nctu.app">聯絡信箱</a>
-        | <a href="https://git.io/xNCTU">原始碼</a></p>
+        | <a href="https://git.io/{{ env('APP_NAME') }}">原始碼</a></p>
     </center>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.js"></script>

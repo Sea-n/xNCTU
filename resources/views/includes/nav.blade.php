@@ -39,7 +39,7 @@ use App\Models\GoogleAccount;
     <div class="login-inner">
         <dialog class="ts fullscreen modal" open>
             <div class="header">
-                靠北交大 2.0 登入
+                {{ env('APP_CHINESE_NAME') }} 登入
             </div>
             <div class="content">
                 <div style="display: inline-flex; width: 100%; justify-content: space-around;">
@@ -49,7 +49,7 @@ use App\Models\GoogleAccount;
                     <a href="/login/google">
                         <img class="logo" src="/assets/img/login-google.png">
                     </a>
-                    <a href="https://t.me/xNCTUbot?start=login">
+                    <a href="https://t.me/{{ env('APP_NAME') }}bot?start=login">
                         <img class="logo" src="/assets/img/login-telegram.png">
                     </a>
                 </div>

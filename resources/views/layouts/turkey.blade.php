@@ -11,7 +11,7 @@
 <header class="ts fluid vertically padded heading slate">
     <div class="ts narrow container">
         <h1 class="ts header">@yield('header')</h1>
-        <div class="description">靠北交大 2.0</div>
+        <div class="description">{{ env('APP_CHINESE_NAME') }}</div>
     </div>
 </header>
 
