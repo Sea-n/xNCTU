@@ -70,17 +70,22 @@ class LoginController extends Controller
     {
         $auth = Socialite::driver('nctu')->user();
 
-        User::updateOrCreate(
-            ['stuid' => $auth->getId()],
-            [
-                'stuid'      => $auth->getId(),
-                'name'       => $auth->getId(),
+        $user = User::find($auth->getId());
+
+        if ($user)
+            $user->update([
                 'email'      => $auth->getEmail(),
                 'last_login' => date('Y-m-d H:i:s'),
-            ],
-        );
+            ]);
+        else
+            $user = User::create([
+                    'stuid'      => $auth->getId(),
+                    'name'       => $auth->getId(),
+                    'email'      => $auth->getEmail(),
+                    'last_login' => date('Y-m-d H:i:s'),
+                ],
+            );
 
-        $user = User::find($auth->getId());
         Auth::login($user, true);
 
         return redirect('/');

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $db = \DB::connection('legacy');
 
         echo "Migrating users...\n";
+        \DB::table('users')->delete();
         $users = $db->table('users')->get();
         foreach ($users as $item) {
             if (\DB::table('users')->where('stuid', '=', $item->stuid)->count() > 0)
