@@ -2,18 +2,19 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\GeneratorCommand;
+use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use App\Models\Post;
 
-class SendPostCommand extends GeneratorCommand
+class SendPost extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'post:send';
+    protected $signature = 'post:send';
 
     /**
      * The console command description.
@@ -23,61 +24,60 @@ class SendPostCommand extends GeneratorCommand
     protected $description = 'Send eligible post to social media';
 
     /**
-     * The type of class being generated.
+     * Create a new command instance.
      *
-     * @var string
+     * @return void
      */
-    protected $type = 'Posts';
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
      *
-     * @return bool|null
+     *  @return int
      */
-    public function fire()
+    public function handle()
     {
         $cmd = $argv[1] ?? '';
         if ($cmd == 'update') {
             if (!isset($argv[2]))
-                exit('No ID.');
+                return 0;
 
-            $post = $db->getPostById($argv[2]);
+            $post = Post::where('id', '=', $argv[2])->firstOrFail();
 
             update_telegram($post);
-            exit;
+            return 0;
         }
 
 
         /* Check unfinished post */
-        $posts = $db->getPosts(1);
-        if (isset($posts[0]) && $posts[0]['status'] == 4)
-            $post = $posts[0];
+        $post = Post::where('status', '=', 4)->first();
 
         /* Get all pending submissions, oldest first */
         if (!isset($post)) {
-            $submissions = $db->getSubmissions(0, false);
+            $submissions = Post::where('status', '=', 3)->orderBy('submitted_at')->get();
 
-            foreach ($submissions as $item) {
-                if (checkEligible($item)) {
-                    $post = $db->setPostId($item['uid']);
+            foreach ($submissions as $post) {
+                if ($this->checkEligible($post)) {
+                    $id = Post::orderBy('id', 'desc')->first()->id ?? 0;
+                    $post->update(['id', $id + 1]);
                     break;
                 }
             }
         }
 
-        if (!isset($post))
-            exit;
 
+        if (!isset($post))
+            return 0;
 
         /* Prepare post content */
-        assert(isset($post['id']));
-        $uid = $post['uid'];
-
-        $created = strtotime($post['created_at']);
+        $created = strtotime($post->created_at);
         $time = date("Y 年 m 月 d 日 H:i", $created);
         $dt = floor(time() / 60) - floor($created / 60);  // Use what user see (without seconds)
 
-        $link = "https://$DOMAIN/post/{$post['id']}";
+        $link = env('APP_URL') . "/post/{$post->id}";
 
         /* Send post to every SNS */
         $sns = [
@@ -137,6 +137,8 @@ class SendPostCommand extends GeneratorCommand
             $TG->deleteMsg($item['chat_id'], $item['msg_id']);
             $db->deleteTgMsg($uid, $item['chat_id']);
         }
+
+        return 0;
     }
 
     /**
@@ -151,10 +153,10 @@ class SendPostCommand extends GeneratorCommand
     }
 
 
-    private function checkEligible(array $post): bool {
+    private function checkEligible(Post $post): bool {
         /* Prevent publish demo post */
-        if ($post['status'] != 3)
-            return false;
+         if ($post['status'] != 3)
+             return false;
 
         $dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
         $vote = $post['approvals'] - $post['rejects'];

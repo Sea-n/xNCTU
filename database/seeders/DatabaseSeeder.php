@@ -47,7 +47,9 @@ class DatabaseSeeder extends Seeder
         echo "Migrating posts...\n";
         $posts = $db->table('posts')->get();
         foreach ($posts as $item) {
-            if (\DB::table('posts')->where('uid', '=', $item->uid)->count() > 0)
+            $post = \DB::table('posts')->where('uid', '=', $item->uid)->first();
+
+            if (strtotime($post->created_at) < strtotime('7 days ago'))
                 continue;
 
             if (strpos($item->author_name, '匿名, ') !== false)

@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // \App\Console\Commands\SendPostCommand::class,
+        \App\Console\Commands\SendPost::class,
         // \App\Console\Commands\RejectCommand::class,
         // \App\Console\Commands\UpdateLikesCommand::class,
     ];
