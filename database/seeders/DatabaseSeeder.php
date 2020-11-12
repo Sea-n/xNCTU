@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Post;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,17 +14,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $db = \DB::connection('legacy');
+        $db = DB::connection('legacy');
 
         echo "Migrating users...\n";
-        \DB::table('users')->delete();
+        DB::table('users')->delete();
         $users = $db->table('users')->get();
         foreach ($users as $item) {
-            if (\DB::table('users')->where('stuid', '=', $item->stuid)->count() > 0)
+            if (DB::table('users')->where('stuid', '=', $item->stuid)->count() > 0)
                 continue;
 
-            \DB::table('users')->where('stuid', '=', $item->stuid)->delete();
-            \DB::table('users')->insert([
+            DB::table('users')->where('stuid', '=', $item->stuid)->delete();
+            DB::table('users')->insert([
                 'stuid'       => $item->stuid,
                 'name'        => $item->name,
                 'email'       => $item->mail,
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         echo "Migrating posts...\n";
         $posts = $db->table('posts')->get();
         foreach ($posts as $item) {
-            $post = \DB::table('posts')->where('uid', '=', $item->uid)->first();
+            $post = DB::table('posts')->where('uid', '=', $item->uid)->first();
 
             if (strtotime($post->created_at) < strtotime('7 days ago'))
                 continue;
@@ -57,8 +57,8 @@ class DatabaseSeeder extends Seeder
             else
                 $ip_from = ip_from($item->ip_addr);
 
-            \DB::table('posts')->where('uid', '=', $item->uid)->delete();
-            \DB::table('posts')->insert([
+            DB::table('posts')->where('uid', '=', $item->uid)->delete();
+            DB::table('posts')->insert([
                 'uid'     => $item->uid,
                 'id'      => $item->id,
                 'body'    => $item->body,
@@ -91,17 +91,17 @@ class DatabaseSeeder extends Seeder
         }
 
         echo "Migrating votes...\n";
-        \DB::table('votes')->delete();
+        DB::table('votes')->delete();
         $votes = $db->table('votes')->get();
         foreach ($votes as $item) {
-            \DB::table('votes')->insert(get_object_vars($item));
+            DB::table('votes')->insert(get_object_vars($item));
         }
 
         echo "Migrating google_accounts...\n";
-        \DB::table('google_accounts')->delete();
+        DB::table('google_accounts')->delete();
         $accounts = $db->table('google_accounts')->get();
         foreach ($accounts as $item) {
-            \DB::table('google_accounts')->insert([
+            DB::table('google_accounts')->insert([
                 'sub'        => $item->sub,
                 'email'      => $item->email,
                 'name'       => $item->name,

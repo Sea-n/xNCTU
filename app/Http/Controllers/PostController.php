@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
@@ -12,8 +13,8 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function index(Request $request)
     {
@@ -70,8 +71,8 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -191,12 +192,12 @@ class PostController extends Controller
                     ]);
                     return response()->json([
                         'ok' => false,
-                        'msg' =>"Please retry afetr $cd seconds. {$rule['msg']}",
+                        'msg' =>"Please retry after $cd seconds. {$rule['msg']}",
                     ]);
                 }
             }
 
-            /* Global rate limit for un-loggined users */
+            /* Global rate limit for guest users */
             $max = 5;
             $posts = Post::orderBy('created_at', 'desc')->get()->take($max+1);
             if (count($posts) == $max+1) {
@@ -210,7 +211,7 @@ class PostController extends Controller
                     ]);
                     return response()->json([
                         'ok' => false,
-                        'msg' =>"Please retry afetr $cd seconds. 系統全域限制未登入者 3 分鐘內僅能發 $max 篇文",
+                        'msg' =>"Please retry after $cd seconds. 系統全域限制未登入者 3 分鐘內僅能發 $max 篇文",
                     ]);
                 }
             }
@@ -234,7 +235,7 @@ class PostController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -242,22 +243,11 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  Post  $post
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, Post $post)
     {
@@ -302,9 +292,9 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  Post  $post
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function destroy(Request $request, Post $post)
     {

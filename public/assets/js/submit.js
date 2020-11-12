@@ -1,38 +1,37 @@
-var submitted = false;
-var img_data = false;
+let submitted = false;
+let img_data = false;
 
 function init() {
     if (document.getElementById('submit-post')) {
-        var img = document.getElementById('img');
+        const img = document.getElementById('img');
         document.getElementById('submit-post').onsubmit = submitForm;
         document.getElementById('body-area').oninput = formUpdate;
         img.oninput = formUpdate;
         img.onchange = updateImg;
         document.getElementById('captcha-input').oninput = formUpdate;
 
-        window.addEventListener("beforeunload", function (e) {
-            var bodyArea = document.getElementById('body-area');
-            var len = bodyArea.value.length;
-            if (len == 0 || submitted)
+        window.addEventListener('beforeunload', function (e) {
+            const bodyArea = document.getElementById('body-area');
+            const len = bodyArea.value.length;
+            if (len === 0 || submitted)
                 return undefined;
 
-            var confirmationMessage = '您確定要離開嗎？';
+            const confirmationMessage = '您確定要離開嗎？';
             (e || window.event).returnValue = confirmationMessage; //Gecko + IE
             return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
         });
 
 
         window.addEventListener('paste', (e) => {
-            var items = e.clipboardData.items;
-            if(items == undefined)
+            const items = e.clipboardData.items;
+            if(items === undefined)
                 return;
 
-            for (var i=0; i<items.length; i++) {
-                if (items[i].type.indexOf('image') == -1)
+            for (let i=0; i<items.length; i++) {
+                if (items[i].type.indexOf('image') === -1)
                     continue;
 
-                var blob = items[i].getAsFile();
-                img_data = blob;
+                img_data = items[i].getAsFile();
 
                 updateImgPreview();
             }
@@ -44,8 +43,8 @@ function init() {
 }
 
 function updateImg() {
-    var img = document.getElementById('img');
-    var files = img.files;
+    const img = document.getElementById('img');
+    const files = img.files;
 
     if (!files || !files[0])
         return;
@@ -55,7 +54,7 @@ function updateImg() {
 }
 
 function updateImgPreview() {
-    var preview = document.getElementById('img-preview');
+    const preview = document.getElementById('img-preview');
 
     if (!img_data) {
         preview.src = '';
@@ -70,8 +69,8 @@ function updateImgPreview() {
         return;
     }
 
-    var reader = new FileReader();
-    reader.onload = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
         preview.src = reader.result;
         preview.parentElement.style.display = '';
     };
@@ -79,8 +78,8 @@ function updateImgPreview() {
 }
 
 function restoreForm() {
-    var bodyArea = document.getElementById('body-area');
-    var captchaInput = document.getElementById('captcha-input');
+    const bodyArea = document.getElementById('body-area');
+    const captchaInput = document.getElementById('captcha-input');
 
     if (localStorage.getItem('draft'))
         bodyArea.value = localStorage.getItem('draft');
@@ -92,20 +91,20 @@ function restoreForm() {
 }
 
 function formUpdate() {
-    var bodyArea = document.getElementById('body-area');
-    var bodyField = document.getElementById('body-field');
-    var bodyWc = document.getElementById('body-wc');
-    var captchaInput = document.getElementById('captcha-input');
-    var captchaField = document.getElementById('captcha-field');
-    var submit = document.getElementById('submit');
-    var preview = document.getElementById('warning-preview');
+    const bodyArea = document.getElementById('body-area');
+    const bodyField = document.getElementById('body-field');
+    const bodyWc = document.getElementById('body-wc');
+    const captchaInput = document.getElementById('captcha-input');
+    const captchaField = document.getElementById('captcha-field');
+    const submit = document.getElementById('submit');
+    const preview = document.getElementById('warning-preview');
 
     bodyField.classList.remove('error', 'warning');
     captchaField.classList.remove('error');
     submit.classList.remove('disabled', 'negative', 'basic');
 
-    var body = bodyArea.value;
-    var len = body.length;
+    const body = bodyArea.value;
+    const len = body.length;
     bodyWc.innerText = len;
 
     if (img_data) {
@@ -122,16 +121,16 @@ function formUpdate() {
 
     preview.style.display = 'none';
     if (body.includes('http')) {
-        var lines = body.split('\n');
+        const lines = body.split('\n');
 
-        var last = lines[lines.length - 1];
+        const last = lines[lines.length - 1];
         if (!last.match(/^https?:\/\/[^\s]*$/)) {
             preview.style.display = '';
             submit.classList.add('negative');
         }
 
         /* Even if last line is URL, first line cannot be URL. */
-        var first = lines[0];
+        const first = lines[0];
         if (first.match(/https?:\/\//)) {
             preview.style.display = '';
             submit.classList.add('negative');
@@ -139,9 +138,9 @@ function formUpdate() {
         }
     }
 
-    var captcha = captchaInput.value;
+    const captcha = captchaInput.value;
     if (captcha.length > 0 &&
-        captcha.length != captchaInput.dataset.len)
+        captcha.length !== captchaInput.dataset.len)
         captchaField.classList.add('error');
 
     localStorage.setItem('draft', body);
@@ -150,11 +149,11 @@ function formUpdate() {
 
 function submitForm(e) {
     e.preventDefault();
-    var body = document.getElementById('body-area');
-    var captcha = document.getElementById('captcha-input');
-    var anon = document.getElementById('anon');
-    var csrf = document.querySelector('meta[name="csrf-token"]').content;
-    var submit = document.getElementById('submit');
+    const body = document.getElementById('body-area');
+    const captcha = document.getElementById('captcha-input');
+    const anon = document.getElementById('anon');
+    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+    const submit = document.getElementById('submit');
 
     if (!checkForm()) {
         return;
@@ -169,7 +168,7 @@ function submitForm(e) {
     formData.append('captcha', captcha.value);
     formData.append('csrf_token', csrf);
     if (anon.checked)
-        formData.append('anon', 1);
+        formData.append('anon', '1');
 
     fetch('/api/posts', {
         method: 'POST',
@@ -190,17 +189,17 @@ function submitForm(e) {
 }
 
 function checkForm() {
-    var bodyArea = document.getElementById('body-area');
-    var bodyField = document.getElementById('body-field');
-    var img = document.getElementById('img');
-    var captchaInput = document.getElementById('captcha-input');
-    var captchaField = document.getElementById('captcha-field');
-    var isValid = true;
+    const bodyArea = document.getElementById('body-area');
+    const bodyField = document.getElementById('body-field');
+    const img = document.getElementById('img');
+    const captchaInput = document.getElementById('captcha-input');
+    const captchaField = document.getElementById('captcha-field');
+    let isValid = true;
 
     formUpdate();  // For clean & update warnings
 
-    var len = bodyArea.value.length;
-    if (len == 0) {
+    const len = bodyArea.value.length;
+    if (len === 0) {
         bodyField.classList.add('error');
         isValid = false;
     }
@@ -209,7 +208,7 @@ function checkForm() {
         isValid = false;
     }
 
-    if (captchaInput.value.length != captchaInput.dataset.len) {
+    if (captchaInput.value.length !== captchaInput.dataset.len) {
         captchaField.classList.add('error');
         isValid = false;
     }
@@ -218,9 +217,9 @@ function checkForm() {
 }
 
 function changeAnon() {
-    var anon = document.getElementById('anon');
-    var wName = document.getElementById('warning-name');
-    var wIp = document.getElementById('warning-ip');
+    const anon = document.getElementById('anon');
+    const wName = document.getElementById('warning-name');
+    const wIp = document.getElementById('warning-ip');
 
     wName.style.display = 'none';
     wIp.style.display = 'none';
@@ -230,4 +229,4 @@ function changeAnon() {
         wName.style.display = '';
 }
 
-window.addEventListener("load", init);
+window.addEventListener('load', init);

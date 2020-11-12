@@ -2,72 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\User;
 use App\Models\Vote;
 
 class RankingController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $data = [
-            'columns' => [
-                ['x'],
-                ['y0'],
-                ['y1'],
-            ],
-            'subchart' => [
-                'show' => true,
-                'defaultZoom' => [
-                    strtotime("28 days ago") * 1000,
-                    strtotime(" 0 days ago") * 1000
-                ]
-            ],
-            'types' => ['y0' => 'bar', 'y1' => 'bar', 'x' => 'x'],
-            'names' => ['y0' => '通過', 'y1' => '駁回'],
-            'colors' => ['y0' => '#7FA45F', 'y1' => '#B85052'],
-            'hidden' => [],
-            'strokeWidth' => 2,
-            'xTickFormatter' => 'statsFormat("hour")',
-            'xTooltipFormatter' => 'statsFormat("hour")',
-            'xRangeFormatter' => 'null',
-            'yTooltipFormatter' => 'statsFormatTooltipValue',
-            'stacked' => true,
-            'sideLegend' => 'statsNeedSideLegend()',
-            'tooltipOnHover' => true,
-        ];
-
-        $data['title'] = '所有人';
-        $begin = strtotime("2020-02-21 00:00");
-        $end = strtotime("today 24:00");
-
-        for ($i=$begin; $i<=$end; $i+=$step) {
-            $data['columns'][0][] = $i*1000;
-            $data['columns'][1][] = 0;
-            $data['columns'][2][] = 0;
-        }
-
-        $VOTES = Vote::all();
-        foreach ($VOTES as $vote) {
-            $ts = strtotime($vote['created_at']);
-            $y = $vote['vote'] == 1 ? 1 : 2;
-            $time = 1 + floor(($ts-$begin)/$step);
-            $data['columns'][$y][$time]++;
-        }
-
-        return response()->json($data);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $tg_id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function show(int $tg_id)
     {

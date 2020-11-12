@@ -49,7 +49,7 @@ function updateTime() {
         .forEach((elem) => {
             var ts = parseInt(elem.dataset.ts);
             var time = timeFormat(ts);
-            if (elem.innerText != time)
+            if (elem.innerText !== time)
                 elem.innerText = time;
         });
 }
@@ -58,7 +58,7 @@ function timeFormat(ts = 0) {
     if (ts < 1e10)
         ts *= 1000;
 
-    if (ts == 0)
+    if (ts === 0)
         ts = + new Date();
 
     var date = new Date(ts);
@@ -108,44 +108,39 @@ function toHTML(str) {
             for (var k=0; k<words.length; k++) {
                 var word = words[k];
 
+                const a = document.createElement('a');
                 if (/^https?:\/\/.+\..+/.test(word)) {
-                    var a = document.createElement('a');
-                    var linkText = document.createTextNode(word);
+                    const linkText = document.createTextNode(word);
                     a.appendChild(linkText);
                     a.href = word;
                     a.target = '_blank';
                     word = a.outerHTML;
                 } else if (/^#靠交\d+$/.test(word)) {
-                    var a = document.createElement('a');
                     a.appendChild(document.createTextNode(word));
                     a.href = 'https://x.nctu.app/post/' + word.substr(3);
                     a.target = '_blank';
                     word = a.outerHTML;
                 } else if (/^#靠清\d+$/.test(word)) {
-                    var a = document.createElement('a');
                     a.appendChild(document.createTextNode(word));
                     a.href = 'https://x.nthu.io/post/' + word.substr(3);
                     a.target = '_blank';
                     word = a.outerHTML;
                 } else if (/^#告白交大\d+$/.test(word)) {
-                    var a = document.createElement('a');
                     a.appendChild(document.createTextNode(word));
                     a.href = 'https://crush.nctu.app/post/' + word.substr(5);
                     a.target = '_blank';
                     word = a.outerHTML;
                 } else if (/^#投稿\w+$/.test(word)) {
-                    var a = document.createElement('a');
                     a.appendChild(document.createTextNode(word));
                     a.href = '/review/' + word.substr(3);
                     a.target = '_blank';
                     word = a.outerHTML;
                 } else if (/^#[^\s]+$/.test(word)) {
-                    var a = document.createElement('a');
                     a.appendChild(document.createTextNode(word));
                     a.href = 'javascript:;';
                     word = a.outerHTML;
                 } else {
-                    var div = document.createElement('div');
+                    let div = document.createElement('div');
                     div.appendChild(document.createTextNode(word));
                     word = div.innerHTML;
                 }

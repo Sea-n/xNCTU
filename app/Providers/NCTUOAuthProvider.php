@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
@@ -42,22 +43,11 @@ class NCTUOAuthProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Get the access token response for the given code.
+     * Get the raw user for the given access token.
      *
-     * @param  string  $code
-     * @return array
-     */
-    public function getAcessTokenResponse($code)
-    {
-        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            'form_params' => $this->getTokenFields($code),
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-    }
-
-    /**
-     * {@inheritdoc}
+     * @param $token
+     * @return mixed
+     * @throws GuzzleException
      */
     protected function getUserByToken($token)
     {

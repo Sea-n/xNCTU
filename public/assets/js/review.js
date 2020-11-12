@@ -2,7 +2,7 @@ window.addEventListener("load", init);
 
 
 function init() {
-    var button = document.getElementById('refresh');
+    const button = document.getElementById('refresh');
     if (button)
         setInterval(updateVotes, 10*1000);
 }
@@ -22,14 +22,14 @@ function reject(uid) {
 }
 
 function vote(uid, type, reason_prompt) {
-    var login = document.querySelector('nav .right a[data-type="login"]');
+    const login = document.querySelector('nav .right a[data-type="login"]');
     if (login) {
         alert('請先登入');
         login.click();
         return;
     }
 
-    var reason = prompt('請輸入' + reason_prompt + ' (1 - 100 字)');
+    const reason = prompt('請輸入' + reason_prompt + ' (1 - 100 字)');
     if (reason === null)
         return;
 
@@ -44,7 +44,7 @@ function vote(uid, type, reason_prompt) {
     }
 
 
-    var data = {
+    const data = {
         uid: uid,
         vote: type,
         reason: reason
@@ -56,7 +56,7 @@ function vote(uid, type, reason_prompt) {
         headers: {'content-type': 'application/json'}
     }).then(resp => resp.json())
         .then((resp) => {
-            var card = document.getElementById('post-' + uid);
+            const card = document.getElementById('post-' + uid);
             if (resp.ok) {
                 card.querySelector('#approvals').innerText = resp.approvals;
                 card.querySelector('#rejects').innerText = resp.rejects;
@@ -71,11 +71,11 @@ function vote(uid, type, reason_prompt) {
 }
 
 function updateVotes() {
-    var button = document.getElementById('refresh');
+    const button = document.getElementById('refresh');
     if (button)
         button.classList.add('disabled');
 
-    var uid = document.querySelector('meta[name="uid"]').content;
+    const uid = document.querySelector('meta[name="uid"]').content;
     if (!uid) {
         console.error('uid not found.');
         return;
@@ -91,7 +91,7 @@ function updateVotes() {
                 if (resp.id)
                     location.href = '/post/' + resp.id;
 
-                var card = document.getElementById('post-' + uid);
+                const card = document.getElementById('post-' + uid);
                 card.querySelector('#approvals').innerText = resp.approvals;
                 card.querySelector('#rejects').innerText = resp.rejects;
 
@@ -107,13 +107,13 @@ function updateVotes() {
 }
 
 function updateVotesTable(votes) {
-    var table = document.getElementById('votes');
-    var tbody = table.tBodies[0];
+    const table = document.getElementById('votes');
+    const tbody = table.tBodies[0];
 
-    var newBody = document.createElement('tbody');
-    for (var i=0; i<votes.length; i++) {
-        var vote = votes[i];
-        var tr = voteRow(i+1, vote.vote, vote.dep, vote.name, vote.reason);
+    const newBody = document.createElement('tbody');
+    for (let i=0; i<votes.length; i++) {
+        const vote = votes[i];
+        const tr = voteRow(i + 1, vote.vote, vote.dep, vote.name, vote.reason);
         newBody.appendChild(tr);
     }
 
@@ -121,14 +121,14 @@ function updateVotesTable(votes) {
 }
 
 function voteRow(no, vote, dep, name, reason) {
-    var type = '❓ 未知';
-    if (vote == 1)
+    let type = '❓ 未知';
+    if (vote === 1)
         type = '✅ 通過';
-    if (vote == -1)
+    if (vote === -1)
         type = '❌ 駁回';
 
-    var tr = document.createElement('tr');
-    for (var i = 0; i < 5; i++)
+    const tr = document.createElement('tr');
+    for (let i = 0; i < 5; i++)
         tr.appendChild(document.createElement('td'));
 
     tr.cells[0].appendChild(document.createTextNode(no));
@@ -147,7 +147,7 @@ function confirmSubmission(uid) {
     document.getElementById('confirm-button').classList.add('disabled');
     document.getElementById('delete-button').classList.add('disabled');
 
-    var data = {
+    const data = {
         status: 'confirmed',
     };
 
@@ -171,7 +171,7 @@ function deleteSubmission(uid) {
     if (!confirm('您確定要刪除此投稿嗎？'))
         return;
 
-    var reason = prompt('請輸入刪除附註');
+    const reason = prompt('請輸入刪除附註');
     if (reason.length < 1) {
         alert('刪除附註請勿留空');
         return;
@@ -180,7 +180,7 @@ function deleteSubmission(uid) {
     document.getElementById('confirm-button').classList.add('disabled');
     document.getElementById('delete-button').classList.add('disabled');
 
-    var data = {
+    const data = {
         reason: reason
     };
 

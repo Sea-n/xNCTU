@@ -1,5 +1,5 @@
 setInterval(() => {
-    var button = document.getElementById('more');
+    const button = document.getElementById('more');
     if (button.getBoundingClientRect().top > 2000)
         return;
 
@@ -10,27 +10,27 @@ setInterval(() => {
 }, 500);
 
 document.addEventListener('keyup', (e) => {
-    if (e.key == 'Escape') {
+    if (e.key === 'Escape') {
         ts('#modal').modal('hide');
     }
 });
 
 function more() {
-    var button = document.getElementById('more');
-    var offset = parseInt(button.dataset.offset);
+    const button = document.getElementById('more');
+    const offset = parseInt(button.dataset.offset);
 
     if (offset < 0)
         return;
 
-    var urlParams = new URLSearchParams(window.location.search);
-    var likes = urlParams.get('likes');
+    const urlParams = new URLSearchParams(window.location.search);
+    let likes = urlParams.get('likes');
     if (!likes) likes = 0;
 
     if (button.classList.contains('disabled'))
         return;
     button.classList.add('disabled');
 
-    var limit = 50;
+    let limit = 50;
     if (offset >= 200)
         limit = offset;
 
@@ -47,25 +47,25 @@ function getPosts(likes, limit, offset) {
         .then(resp => resp.json())
         .then((resp) => {
             if (resp.length < limit) {
-                var button = document.getElementById('more');
+                const button = document.getElementById('more');
                 button.classList.add('disabled');
                 button.innerText = '已無更多文章';
-                button.dataset.offset = -87;
+                button.dataset.offset = "-87";
             }
             resp.forEach((item) => {
-                var urlParams = new URLSearchParams(window.location.search);
-                var filter_img = urlParams.get('img');
-                if (!filter_img || filter_img == item.has_img)
+                const urlParams = new URLSearchParams(window.location.search);
+                const filter_img = urlParams.get('img');
+                if (!filter_img || filter_img === item.has_img)
                     appendPost(item);
             })
         });
 }
 
 function appendPost(item) {
-    var read_more = false;
-    var posts = document.getElementById('posts');
-    var template = document.getElementById('post-template');
-    var post = document.createElement('div');
+    let read_more = false;
+    const posts = document.getElementById('posts');
+    const template = document.getElementById('post-template');
+    const post = document.createElement('div');
     post.append(template.content.cloneNode(true));
 
     post.id = 'post-' + item.id;
@@ -77,8 +77,8 @@ function appendPost(item) {
         post.querySelector('#img').src = '/img/' + item.uid + '.jpg';
     }
 
-    var body = item.body;
-    var block = body.split('\n.\n.\n.\n.\n.\n.\n.\n.\n.\n.\n');
+    let body = item.body;
+    const block = body.split('\n.\n.\n.\n.\n.\n.\n.\n.\n.\n.\n');
     if (block.length > 1) {
         body = block[0];
         read_more = true;
@@ -94,7 +94,7 @@ function appendPost(item) {
     if (item.ip_masked)
         post.querySelector('#ip-inner').innerText = item.ip_masked;
     else
-        post.querySelector('#ip-outter').innerHTML = '';
+        post.querySelector('#ip-outer').innerHTML = '';
 
     post.querySelector('#approvals').innerText = item.approvals;
     post.querySelector('#rejects').innerText = item.rejects;

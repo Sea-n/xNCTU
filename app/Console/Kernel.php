@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\SendPost;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\SendPost::class,
+        SendPost::class,
         // \App\Console\Commands\RejectCommand::class,
         // \App\Console\Commands\UpdateLikesCommand::class,
     ];
@@ -21,7 +22,7 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)

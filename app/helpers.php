@@ -189,7 +189,7 @@ function rand58(int $len = 1): string {
  *
  * Supported:
  * 1. Newline to <br>
- * 2. Signle line URL to <a>
+ * 2. Single line URL to <a>
  */
 function x(string $text = ''): string {
     $text = htmlentities($text);
@@ -365,7 +365,7 @@ function genPic(string $seed) {
         if ($seed) srand();
 
 
-        // create backgound
+        // create background
         $cat = @imagecreatetruecolor(70, 70)
             or die("GD image create failed");
         $white = imagecolorallocate($cat, 255, 255, 255);

@@ -7,13 +7,14 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\GoogleAccount;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class LoginController extends Controller
 {
     /**
      * Redirect the user to the Google authentication page.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function redirectToGoogle()
     {
@@ -23,7 +24,7 @@ class LoginController extends Controller
     /**
      * Redirect the user to the NCTU OAuth authentication page.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function redirectToNCTU()
     {
@@ -33,7 +34,7 @@ class LoginController extends Controller
     /**
      * Obtain the user information from Google.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function handleGoogleCallback()
     {
@@ -64,7 +65,7 @@ class LoginController extends Controller
     /**
      * Obtain the user information from NCTU OAuth.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function handleNCTUCallback()
     {
