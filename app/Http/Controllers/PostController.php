@@ -211,7 +211,7 @@ class PostController extends Controller
                     ]);
                     return response()->json([
                         'ok' => false,
-                        'msg' =>"Please retry after $cd seconds. 系統全域限制未登入者 3 分鐘內僅能發 $max 篇文",
+                        'msg' => "Please retry after $cd seconds. 系統全域限制未登入者 3 分鐘內僅能發 $max 篇文",
                     ]);
                 }
             }
@@ -341,11 +341,12 @@ class PostController extends Controller
     /**
      *  Return error string or empty on success
      *
-     * @param  string  $body
-     * @param  boolean  $has_img
+     * @param string $body
+     * @param boolean $has_img
      * @return string  $error
      */
-    private function checkSubmitData(string $body, bool $has_img): string {
+    private function checkSubmitData(string $body, bool $has_img): string
+    {
         /* Check CAPTCHA */
         $captcha = trim(request()->input('captcha', 'X'));
         if (!in_array($captcha, ['交大竹湖', '交大竹狐'])) {
@@ -377,7 +378,8 @@ class PostController extends Controller
      * @param  string  $uid
      * @return string  $error
      */
-    function uploadImage(string $uid): string {
+    function uploadImage(string $uid): string
+    {
         $path = request()->img->path();
 
         var_dump($path);
@@ -388,7 +390,7 @@ class PostController extends Controller
             'jpg' => 'image/jpeg',
             'png' => 'image/png',
         ], true)))
-        return 'Extension not recognized. 圖片副檔名錯誤';
+            return 'Extension not recognized. 圖片副檔名錯誤';
 
         $img = request()->img->storeAs('img', "$uid");
         var_dump($img);

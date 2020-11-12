@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @mixin Eloquent
  */
+
+/**
+ * @method static where(string $string, string $string1, array|string|null $argument)
+ */
 class Post extends Model
 {
     /*

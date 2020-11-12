@@ -1,9 +1,11 @@
 <?php
+
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Vote;
 
-function ip_from(string $ip_addr): string {
+function ip_from(string $ip_addr): string
+{
     /* Only convert Taiwan IP addresses */
     if (($_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'xx') != 'TW'
         && strpos(php_sapi_name(), 'cli') === false)
@@ -108,7 +110,8 @@ function ip_from(string $ip_addr): string {
     return "台灣";
 }
 
-function ccToZh(string $cc) {
+function ccToZh(string $cc)
+{
     $TABLE = [
         'AD'=>'安道爾', 'AE'=>'阿拉伯聯合大公國', 'AF'=>'阿富汗', 'AG'=>'安地卡及巴布達', 'AI'=>'英屬安圭拉', 'AL'=>'阿爾巴尼亞', 'AM'=>'亞美尼亞', 'AN'=>'荷屬安地列斯', 'AO'=>'安哥拉', 'AQ'=>'南極洲', 'AR'=>'阿根廷', 'AS'=>'美屬薩摩亞', 'AT'=>'奧地利', 'AU'=>'澳大利亞', 'AW'=>'阿魯巴', 'AZ'=>'亞塞拜然', 'BA'=>'波士尼亞', 'BB'=>'巴貝多', 'BD'=>'孟加拉', 'BE'=>'比利時', 'BF'=>'布吉納法索', 'BG'=>'保加利亞', 'BH'=>'巴林', 'BI'=>'蒲隆地', 'BJ'=>'貝南', 'BM'=>'百慕達', 'BN'=>'汶萊', 'BO'=>'玻利維亞', 'BR'=>'巴西', 'BS'=>'巴哈馬', 'BT'=>'不丹', 'BV'=>'波維特島', 'BW'=>'波扎那', 'BY'=>'白俄羅斯', 'BZ'=>'貝里斯',
         'CA'=>'加拿大', 'CC'=>'可可斯群島', 'CD'=>'薩伊', 'CF'=>'中非共和國', 'CG'=>'剛果', 'CH'=>'瑞士', 'CI'=>'象牙海岸', 'CK'=>'科克群島', 'CL'=>'智利', 'CM'=>'喀麥隆', 'CN'=>'中國', 'CO'=>'哥倫比亞', 'CR'=>'哥斯大黎加', 'CS'=>'塞爾維亞與蒙特尼哥羅', 'CU'=>'古巴', 'CV'=>'佛德角', 'CX'=>'聖誕島', 'CY'=>'塞普路斯', 'CZ'=>'捷克', 'DE'=>'德國', 'DJ'=>'吉布地', 'DK'=>'丹麥', 'DM'=>'多米尼克', 'DO'=>'多明尼加', 'DZ'=>'阿爾及利亞', 'EC'=>'厄瓜多爾', 'EE'=>'愛沙尼亞', 'EG'=>'埃及', 'EH'=>'西撒哈拉', 'ER'=>'厄利垂亞', 'ES'=>'西班牙', 'ET'=>'衣索比亞', 'FI'=>'芬蘭', 'FJ'=>'斐濟', 'FK'=>'福克蘭群島', 'FM'=>'密克羅尼西亞', 'FO'=>'法羅群島', 'FR'=>'法國',
@@ -123,7 +126,8 @@ function ccToZh(string $cc) {
     return $TABLE[$cc] ?? "{$cc} (未知)";
 }
 
-function ip_mask(string $ip_addr): string {
+function ip_mask(string $ip_addr): string
+{
     if (strpos($ip_addr, '.') !== false) { // IPv4
         if (preg_match('/^140\.113\.136\.2(09|1[0-9]|2[01])$/', $ip_addr))
             return $ip_addr;  // NCTU Wireless NAT
@@ -161,7 +165,8 @@ function ip_mask(string $ip_addr): string {
     return $ip6;
 }
 
-function ip_mask_anon(string $ip_addr): string {
+function ip_mask_anon(string $ip_addr): string
+{
     if (strpos($ip_addr, '.') !== false) { // IPv4
         $ip4 = explode('.', $ip_addr);
         $ip4 = $ip4[0] . '.***.***.***';
@@ -174,7 +179,8 @@ function ip_mask_anon(string $ip_addr): string {
     return $ip6;
 }
 
-function rand58(int $len = 1): string {
+function rand58(int $len = 1): string
+{
     $base58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
     $rand = '';
@@ -191,7 +197,8 @@ function rand58(int $len = 1): string {
  * 1. Newline to <br>
  * 2. Single line URL to <a>
  */
-function x(string $text = ''): string {
+function x(string $text = ''): string
+{
     $text = htmlentities($text);
     $text = explode("\n", $text);
     foreach ($text as $k1 => $v1) {
@@ -218,14 +225,16 @@ function x(string $text = ''): string {
     return $text;
 }
 
-function enHTML(string $str = ''): string {
-    $search =  array('&', '"', '<', '>');
+function enHTML(string $str = ''): string
+{
+    $search = array('&', '"', '<', '>');
     $replace = array('&amp;', '&quot;', '&lt;', '&gt;');
     $str = str_replace($search, $replace, $str);
     return $str;
 }
 
-function humanTime(string $date): string {
+function humanTime(string $date): string
+{
     $ts = strtotime($date);
     $now = time();
     $dt = $now - $ts;
@@ -253,7 +262,8 @@ function humanTime(string $date): string {
     return "$time ($dt 個月前)";
 }
 
-function idToDep(string $id): string {
+function idToDep(string $id): string
+{
     if (preg_match('#^[A-Z][A-Z0-9][0-9]{3}$#', $id))
         return '教職員';
 
@@ -298,7 +308,8 @@ function idToDepNCTU(string $id): string {
     return "$dep $deg 級";
 }
 
-function idToDepNYCU(string $id): string {
+function idToDepNYCU(string $id): string
+{
     $idA = $id[0];  // Degree(1): Bachelor, X, Master, Doctor, Part-time
     $idB = $id[1] . $id[2];  // Year(2)
     $idC = $id[3] . $id[4] . $id[5];  // College(1) and Department(2)
@@ -335,7 +346,8 @@ function idToDepNYCU(string $id): string {
     return "$dep $deg 級";
 }
 
-function genPic(string $seed) {
+function genPic(string $seed)
+{
     $seed = preg_replace('/[^A-Za-z0-9]/', '_', $seed);
     $seed = preg_replace('/____+/', '___', $seed);
     $seed = preg_replace('/[^A-Za-z0-9]/', '_', $seed);
@@ -392,11 +404,12 @@ function genPic(string $seed) {
 /**
  *  Check can user vote for certain submission or not
  *
- *  @param  string  $uid
- *  @param  string  $stuid
- *  @return array   ok and error msg
+ * @param string $uid
+ * @param string $stuid
+ * @return array   ok and error msg
  */
-function canVote(string $uid, string $stuid): array {
+function canVote(string $uid, string $stuid): array
+{
     $post = Post::findOrFail($uid);
     if ($post->status < 0)
         return [
@@ -417,7 +430,8 @@ function canVote(string $uid, string $stuid): array {
     return ['ok' => true];
 }
 
-function voteSubmission(string $uid, string $stuid, int $vote, string $reason) {
+function voteSubmission(string $uid, string $stuid, int $vote, string $reason)
+{
     if ($vote == 1)
         $type = 'approvals';
     else if ($vote == -1)
@@ -440,7 +454,7 @@ function voteSubmission(string $uid, string $stuid, int $vote, string $reason) {
     ]);
 
     /* Caution: use string combine in SQL query */
-    Post::find($uid  )->increment($type);
+    Post::find($uid)->increment($type);
 
     /* Calculate vote streak, the users table record is independent from votes table */
     $user = User::find($stuid);

@@ -15,8 +15,8 @@ function init() {
 }
 
 function adjustNav() {
-    var nav = document.getElementsByTagName("nav")[0];
-    var body = document.getElementsByTagName("body")[0];
+    const nav = document.getElementsByTagName("nav")[0];
+    const body = document.getElementsByTagName("body")[0];
     if (window.scrollY > 200) {
         nav.classList.add("fixed");
         body.style.top = "40px";
@@ -28,16 +28,16 @@ function adjustNav() {
 }
 
 function resizeNav() {
-    var right = document.getElementById('nav-right');
-    var navName = document.getElementById('nav-name');
+    const right = document.getElementById('nav-right');
+    const navName = document.getElementById('nav-name');
 
     if (!navName)
         return;
 
-    var prev = right.previousElementSibling;
-    var rect = prev.getBoundingClientRect();
+    const prev = right.previousElementSibling;
+    const rect = prev.getBoundingClientRect();
 
-    var width = window.innerWidth - rect.right - 94;
+    let width = window.innerWidth - rect.right - 94;
     if (width < 0)
         width = 0;
 
@@ -47,8 +47,8 @@ function resizeNav() {
 function updateTime() {
     document.querySelectorAll('time[data-ts]')
         .forEach((elem) => {
-            var ts = parseInt(elem.dataset.ts);
-            var time = timeFormat(ts);
+            const ts = parseInt(elem.dataset.ts);
+            const time = timeFormat(ts);
             if (elem.innerText !== time)
                 elem.innerText = time;
         });
@@ -61,17 +61,17 @@ function timeFormat(ts = 0) {
     if (ts === 0)
         ts = + new Date();
 
-    var date = new Date(ts);
-    var min = ('0' + date.getMinutes()).substr(-2);
-    var hour = ('0' + date.getHours()).substr(-2);
-    var day = ('0' + (date.getDate())).substr(-2);
-    var mon = ('0' + (date.getMonth()+1)).substr(-2);
-    var year = date.getFullYear();
+    const date = new Date(ts);
+    const min = ('0' + date.getMinutes()).substr(-2);
+    const hour = ('0' + date.getHours()).substr(-2);
+    const day = ('0' + (date.getDate())).substr(-2);
+    const mon = ('0' + (date.getMonth() + 1)).substr(-2);
+    const year = date.getFullYear();
 
-    var now = (new Date()).getTime();
-    var dt = Math.floor(now / 1000) - Math.floor(ts / 1000);
+    const now = (new Date()).getTime();
+    let dt = Math.floor(now / 1000) - Math.floor(ts / 1000);
 
-    var time = `${hour}:${min}`;
+    let time = `${hour}:${min}`;
 
     if (dt < 0)
         return `${time} (${-dt} 秒後)`;
@@ -100,13 +100,13 @@ function timeFormat(ts = 0) {
 }
 
 function toHTML(str) {
-    var paras = str.split('\n\n');
-    for (var i=0; i<paras.length; i++) {
-        var lines = paras[i].split('\n');
-        for (var j=0; j<lines.length; j++) {
-            var words = lines[j].split(' ');
-            for (var k=0; k<words.length; k++) {
-                var word = words[k];
+    const paras = str.split('\n\n');
+    for (let i=0; i<paras.length; i++) {
+        const lines = paras[i].split('\n');
+        for (let j=0; j<lines.length; j++) {
+            const words = lines[j].split(' ');
+            for (let k=0; k<words.length; k++) {
+                let word = words[k];
 
                 const a = document.createElement('a');
                 if (/^https?:\/\/.+\..+/.test(word)) {
@@ -140,7 +140,7 @@ function toHTML(str) {
                     a.href = 'javascript:;';
                     word = a.outerHTML;
                 } else {
-                    let div = document.createElement('div');
+                    const div = document.createElement('div');
                     div.appendChild(document.createTextNode(word));
                     word = div.innerHTML;
                 }
@@ -158,7 +158,6 @@ function toHTML(str) {
 
 function showImg(e) {
     console.log(e);
-    var src = e.src || e.target.src;
-    document.getElementById('img-container-inner').src = src;
+    document.getElementById('img-container-inner').src = e.src || e.target.src;
     ts('#modal').modal('show');
 }

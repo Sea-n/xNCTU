@@ -18,7 +18,8 @@
         "ext-curl": "*",
         "ext-gd": "*",
         "ext-fileinfo": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-oauth": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",

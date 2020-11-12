@@ -6,19 +6,19 @@
 
 @section('content')
 
-<?php
-use App\Models\Post;
-use App\Models\User;
-use App\Models\Vote;
+    <?php
+    use App\Models\Post;
+    use App\Models\User;
+    use App\Models\Vote;
 
-$time_start = microtime(true);
+    $time_start = microtime(true);
 
-$CACHE = storage_path() . '/app/cache/ranking-all.html';
-$dir = dirname($CACHE);
-if (!file_exists($dir))
-    mkdir($dir);
+    $CACHE = storage_path() . '/app/cache/ranking-all.html';
+    $dir = dirname($CACHE);
+    if (!file_exists($dir))
+        mkdir($dir);
 
-if (time() - filemtime($CACHE) > 60 * 60) {
+    if (time() - filemtime($CACHE) > 60 * 60) {
     ob_start();
 
     $DEL = Post::where('status', '<', 0)->pluck('uid')->toArray();
@@ -26,24 +26,24 @@ if (time() - filemtime($CACHE) > 60 * 60) {
     $VOTES = Vote::all();
 
     $user_count = [];
-    $vote_sum = [1=>0, -1=>0];
+    $vote_sum = [1 => 0, -1 => 0];
     foreach ($VOTES as $item) {
-        if (!isset($user_count[ $item->stuid ])) {
-            $user_count[ $item->stuid ] = [
+        if (!isset($user_count[$item->stuid])) {
+            $user_count[$item->stuid] = [
                 1 => 0, -1 => 0,
                 'pt' => 0,
                 'id' => $item->stuid,
             ];
         }
 
-        $user_count[ $item->stuid ][ $item->vote ]++;
-        $vote_sum[ $item->vote ]++;
+        $user_count[$item->stuid][$item->vote]++;
+        $vote_sum[$item->vote]++;
 
         /* After 1 day, half the score every week */
         $dt = time() - strtotime($item->created_at);
         $dt = $dt / 24 / 60 / 60;
-        $dt = max($dt-1, 0);
-        $pt = pow(0.5, $dt/7);
+        $dt = max($dt - 1, 0);
+        $pt = pow(0.5, $dt / 7);
 
         if (in_array($item->uid, $DEL)) {
             if ($item->vote == 1)
@@ -52,10 +52,10 @@ if (time() - filemtime($CACHE) > 60 * 60) {
                 $pt *= 10;
         }
 
-        $user_count[ $item->stuid ]['pt'] += $pt;
+        $user_count[$item->stuid]['pt'] += $pt;
     }
 
-    foreach($user_count as $k => $v) {
+    foreach ($user_count as $k => $v) {
         $user = User::find($v['id']);
 
         if (!isset($user->tg_name))
@@ -70,13 +70,13 @@ if (time() - filemtime($CACHE) > 60 * 60) {
         $user_count[$k]['user'] = $user;
     }
 
-    usort($user_count, function($A, $B) {
+    usort($user_count, function ($A, $B) {
         return $A['pt'] < $B['pt'];
     });
 
     $pt_max = $user_count[0]['pt'];
-    foreach($user_count as $k => $v) {
-        if ($k > 0 && $k%5 == 0 && $user_count[$k]['pt'] < 5) {
+    foreach ($user_count as $k => $v) {
+        if ($k > 0 && $k % 5 == 0 && $user_count[$k]['pt'] < 5) {
             $end = $k;
             break;
         }
@@ -86,7 +86,7 @@ if (time() - filemtime($CACHE) > 60 * 60) {
     $user_count = array_slice($user_count, 0, $end);
     $emoji = ['🥇', '🥈', '🥉'];
     $smx = 0;
-?>
+    ?>
     <div id="rules">
         <p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半，正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</a>
         <p>連續投票天數以台灣時間 24:00 為計算基準，如當日已投票、仍未中斷將標記 ⚡️ 符號。</p>
@@ -95,43 +95,44 @@ if (time() - filemtime($CACHE) > 60 * 60) {
 
     <table class="ts table">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>系級</th>
-                <th></th>
-                <th>暱稱</th>
-                <th>✅ 通過</th>
-                <th>❌ 駁回</th>
-                <th>🚀 連續投票</th>
-            </tr>
+        <tr>
+            <th>#</th>
+            <th>系級</th>
+            <th></th>
+            <th>暱稱</th>
+            <th>✅ 通過</th>
+            <th>❌ 駁回</th>
+            <th>🚀 連續投票</th>
+        </tr>
         </thead>
         <tbody>
-@foreach ($user_count as $i => $item)
-<?php
-    if (isset($item['user']->tg_photo))
-        $photo = "/img/tg/{$item['user']->tg_id}-x64.jpg";
-    else
-        $photo = genPic($item['id']);
+        @foreach ($user_count as $i => $item)
+            <?php
+            if (isset($item['user']->tg_photo))
+                $photo = "/img/tg/{$item['user']->tg_id}-x64.jpg";
+            else
+                $photo = genPic($item['id']);
 
-    $lv = strtotime($item['user']->last_vote);
-    $sc = $item['user']->current_vote_streak;
-    $sh = $item['user']->highest_vote_streak;
-    $smx = max($smx, $sh);
+            $lv = strtotime($item['user']->last_vote);
+            $sc = $item['user']->current_vote_streak;
+            $sh = $item['user']->highest_vote_streak;
+            $smx = max($smx, $sh);
 
-    if (date('Ymd') == date('Ymd', $lv))
-        $streak = "$sc 天 ⚡️";  // Currently streak
-    else if (date('Ymd') == date('Ymd', $lv + 24*60*60))
-        $streak = "$sc 天";  // Not voted today
-    else
-        $streak = "<sub>最高 $sh 天</sub>";
+            if (date('Ymd') == date('Ymd', $lv))
+                $streak = "$sc 天 ⚡️";  // Currently streak
+            else if (date('Ymd') == date('Ymd', $lv + 24 * 60 * 60))
+                $streak = "$sc 天";  // Not voted today
+            else
+                $streak = "<sub>最高 $sh 天</sub>";
 
-    if ($streak[-1] != ">" && $sc != $sh)
-        $streak .= "<sub> / 最高 $sh 天</sub>";
-?>
+            if ($streak[-1] != ">" && $sc != $sh)
+                $streak .= "<sub> / 最高 $sh 天</sub>";
+            ?>
             <tr title="{{ round($item['pt'], 1) }} pt ({{ $item['pt_pc'] }}%)">
                 <td>{{ $emoji[$i] ?? ($i+1) }}</td>
                 <td>{{ idToDep($item['id']) }}</td>
-                <td><img class="ts circular avatar image" src="{{ $photo }}" onerror="this.src='/assets/img/avatar.jpg';"></td>
+                <td><img class="ts circular avatar image" src="{{ $photo }}"
+                         onerror="this.src='/assets/img/avatar.jpg';"></td>
                 @isset ($item['user']->tg_id)
                     <td><a onclick="changeChart('{{ $item['user']->tg_id }}')">{{ $item['user']->name }}</a></td>
                 @else
@@ -141,81 +142,82 @@ if (time() - filemtime($CACHE) > 60 * 60) {
                 <td>{{ $item[-1] }}</td>
                 <td>{!! $streak !!}</td>
             </tr>
-@endforeach
-            <tr>
-                <td>*</td>
-                <td>ALL</td>
-                <td><img class="ts circular avatar image" src="/assets/img/logo-64.png"></td>
-                <td><a onclick="changeChart('ALL')">沒有人</a></td>
-                <td>{{ $vote_sum[1] }}</td>
-                <td>{{ $vote_sum[-1] }}</td>
-                <td><sub>總共 {{ $smx }} 天</sub></td>
-            </tr>
+        @endforeach
+        <tr>
+            <td>*</td>
+            <td>ALL</td>
+            <td><img class="ts circular avatar image" src="/assets/img/logo-64.png"></td>
+            <td><a onclick="changeChart('ALL')">沒有人</a></td>
+            <td>{{ $vote_sum[1] }}</td>
+            <td>{{ $vote_sum[-1] }}</td>
+            <td><sub>總共 {{ $smx }} 天</sub></td>
+        </tr>
         </tbody>
     </table>
 
     <div id="chart_wrap" class="unstyled" style="min-height: 300px;"></div>
 
     <div class="ts snackbar">
-            <div class="content"></div>
-            <a class="action"></a>
+        <div class="content"></div>
+        <a class="action"></a>
     </div>
 
     <script src="/assets/js/tchart.min.js"></script>
     <script src="/assets/js/health.js"></script>
     <link href="/assets/css/tchart.css" rel="stylesheet">
     <script>
-    var data = {'ALL': @json(genData())};
-    var d = JSON.parse(JSON.stringify(data['ALL']));  // Deep copy
-    renderGraph('chart_wrap', d, true);
-
-    function changeChart(id) {
-        if (!data[id]) {
-            fetch('/api/ranking/' + id, {})
-                .then((resp) => resp.json())
-                .then((resp) => {
-                data[id] = resp;
-                changeChart(id);
-        });
-            return;
-        }
-
-        document.getElementById('chart_wrap').innerHTML = '';
-        var d = JSON.parse(JSON.stringify(data[id]));  // Deep copy
+        const data = {'ALL': @json(genData())};
+        const d = JSON.parse(JSON.stringify(data['ALL']));  // Deep copy
         renderGraph('chart_wrap', d, true);
 
-        ts('.snackbar').snackbar({
-        content: '已載入 ' + d['title'] + ' 的統計資料',
-            action: '點我查看',
-            actionEmphasis: 'info',
-            onAction: () => {
-            location.href = '#chart_wrap';
-            setTimeout(() => {
-            history.pushState(null, null, location.pathname);
-            }, 1000);
+        function changeChart(id) {
+            if (!data[id]) {
+                fetch('/api/ranking/' + id, {})
+                    .then((resp) => resp.json())
+                    .then((resp) => {
+                        data[id] = resp;
+                        changeChart(id);
+                    });
+                return;
+            }
+
+            document.getElementById('chart_wrap').innerHTML = '';
+            const d = JSON.parse(JSON.stringify(data[id]));  // Deep copy
+            renderGraph('chart_wrap', d, true);
+
+            ts('.snackbar').snackbar({
+                content: '已載入 ' + d['title'] + ' 的統計資料',
+                action: '點我查看',
+                actionEmphasis: 'info',
+                onAction: () => {
+                    location.href = '#chart_wrap';
+                    setTimeout(() => {
+                        history.pushState(null, null, location.pathname);
+                    }, 1000);
+                }
+            });
         }
-        });
-    }
     </script>
 
-<?php
+    <?php
     $time_end = microtime(true);
     $dt = ($time_end - $time_start) * 1000.0;
     $dt = number_format($dt, 2, '.', '');
-?>
-<!-- Page generated in {{ $dt }}ms  ({{ date('Y-m-d H:i:s') }}) -->
+    ?>
+    <!-- Page generated in {{ $dt }}ms  ({{ date('Y-m-d H:i:s') }}) -->
 
-<?php
+    <?php
     $htmlStr = ob_get_contents();
     ob_end_clean();
     file_put_contents($CACHE, $htmlStr);
-}
-include($CACHE);
-?>
+    }
+    include($CACHE);
+    ?>
 @stop
 
 <?php
-function genData() {
+function genData()
+{
     $data = [
         'columns' => [
             ['x'],
@@ -246,10 +248,10 @@ function genData() {
     $data['title'] = '所有人';
     $begin = strtotime("2020-02-21 00:00");
     $end = strtotime("today 24:00");
-    $step = 2*60*60;
+    $step = 2 * 60 * 60;
 
-    for ($i=$begin; $i<=$end; $i+=$step) {
-        $data['columns'][0][] = $i*1000;
+    for ($i = $begin; $i <= $end; $i += $step) {
+        $data['columns'][0][] = $i * 1000;
         $data['columns'][1][] = 0;
         $data['columns'][2][] = 0;
     }
@@ -258,7 +260,7 @@ function genData() {
     foreach ($VOTES as $vote) {
         $ts = strtotime($vote['created_at']);
         $y = $vote['vote'] == 1 ? 1 : 2;
-        $time = 1 + floor(($ts-$begin)/$step);
+        $time = 1 + floor(($ts - $begin) / $step);
         $data['columns'][$y][$time]++;
     }
 

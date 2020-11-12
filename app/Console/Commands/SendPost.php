@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
+use OAuth;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use App\Models\Post;
@@ -23,6 +25,10 @@ class SendPost extends Command
      */
     protected $description = 'Send eligible post to social media';
 
+    private $time;
+    private $dt;
+    private $link;
+
     /**
      * Create a new command instance.
      *
@@ -36,18 +42,15 @@ class SendPost extends Command
     /**
      * Execute the console command.
      *
-     *  @return int
+     * @return int
      */
     public function handle()
     {
         $cmd = $argv[1] ?? '';
-        if ($cmd == 'update') {
-            if (!isset($argv[2]))
-                return 0;
+        if ($this->hasArgument('id')) {
+            $post = Post::where('id', '=', $this->argument('id'))->firstOrFail();
 
-            $post = Post::where('id', '=', $argv[2])->firstOrFail();
-
-            update_telegram($post);
+            $this->update_telegram($post);
             return 0;
         }
 
@@ -74,10 +77,10 @@ class SendPost extends Command
 
         /* Prepare post content */
         $created = strtotime($post->created_at);
-        $time = date("Y 年 m 月 d 日 H:i", $created);
-        $dt = floor(time() / 60) - floor($created / 60);  // Use what user see (without seconds)
+        $this->time = date("Y 年 m 月 d 日 H:i", $created);
+        $this->dt = floor(time() / 60) - floor($created / 60);  // Use what user see (without seconds)
 
-        $link = env('APP_URL') . "/post/{$post->id}";
+        $this->link = env('APP_URL') . "/post/{$post->id}";
 
         /* Send post to every SNS */
         $sns = [
@@ -96,21 +99,21 @@ class SendPost extends Command
                 $pid = $func($post);
 
                 if ($pid <= 0) { // Retry limit exceed
-                    $dtP = floor(time()/60) - floor(strtotime($post['posted_at'])/60);
-                    if ($dtP > 3*5) // Total 3 times
+                    $dtP = floor(time() / 60) - floor(strtotime($post->posted_at) / 60);
+                    if ($dtP > 3 * 5) // Total 3 times
                         $pid = 1;
                 }
 
                 if ($pid > 0)
-                    $db->updatePostSns($post['id'], $key, $pid);
+                    $this->updatePostSns($post, $key, $pid);
             } catch (Exception $e) {
-                echo "Send $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
+                echo "Send $name Error " . $e->getCode() . ': ' . $e->getMessage() . "\n";
                 echo $e->lastResponse . "\n\n";
             }
         }
 
         /* Update SNS ID (mainly for Instagram) */
-        $post = $db->getPostById($post['id']);
+        $post = Post::find($post->id);
 
         /* Update with link to other SNS */
         $sns = [
@@ -126,16 +129,16 @@ class SendPost extends Command
 
                 $func($post);
             } catch (Exception $e) {
-                echo "Edit $name Error " . $e->getCode() . ': ' .$e->getMessage() . "\n";
+                echo "Edit $name Error " . $e->getCode() . ': ' . $e->getMessage() . "\n";
                 echo $e->lastResponse . "\n\n";
             }
         }
 
         /* Remove vote keyboard in Telegram */
-        $msgs = $db->getTgMsgsByUid($uid);
+        $msgs = $db->getTgMsgsByUid($post->uid);
         foreach ($msgs as $item) {
             $TG->deleteMsg($item['chat_id'], $item['msg_id']);
-            $db->deleteTgMsg($uid, $item['chat_id']);
+            $db->deleteTgMsg($post->uid, $item['chat_id']);
         }
 
         return 0;
@@ -149,18 +152,19 @@ class SendPost extends Command
      */
     protected function getStub()
     {
-        return  base_path('stubs/posts.stub');
+        return base_path('stubs/posts.stub');
     }
 
 
-    private function checkEligible(Post $post): bool {
+    private function checkEligible(Post $post): bool
+    {
         /* Prevent publish demo post */
-         if ($post['status'] != 3)
-             return false;
+        if ($post['status'] != 3)
+            return false;
 
         $dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
         $vote = $post['approvals'] - $post['rejects'];
-        $vote2 = $post['approvals'] - $post['rejects']*2;
+        $vote2 = $post['approvals'] - $post['rejects'] * 2;
 
         /* Rule for Logged-in users */
         if (!empty($post['author_id'])) {
@@ -220,17 +224,33 @@ class SendPost extends Command
         }
     }
 
-    private function send_telegram(array $post): int {
-        global $TG, $link;
 
+    private function updatePostSns(Post $post, string $type, int $pid): void
+    {
+        if (!in_array($type, ['telegram', 'plurk', 'twitter', 'facebook']))
+            return false;
+
+        /* Caution: use string combine in SQL query */
+        $post->update(["{$type}_id" => $pid]);
+
+        if ($post->telegram_id > 0
+            && $post->plurk_id > 0
+            && $post->facebook_id > 0
+            && $post->twitter_id > 0)
+            $post->update(['status' => 5]);
+    }
+
+
+    private function send_telegram(Post $post): int
+    {
         /* Check latest line */
         $lines = explode("\n", $post['body']);
         $end = end($lines);
         $is_url = filter_var($end, FILTER_VALIDATE_URL);
         if (!$post['has_img'] && $is_url)
-            $msg = "<a href='$end'>#</a><a href='$link'>靠交{$post['id']}</a>";
+            $msg = "<a href='$end'>#</a><a href='{$this->link}'>靠交{$post['id']}</a>";
         else
-            $msg = "<a href='$link'>#靠交{$post['id']}</a>";
+            $msg = "<a href='{$this->link}'>#靠交{$post['id']}</a>";
 
         $msg .= "\n\n" . enHTML($post['body']);
 
@@ -246,7 +266,7 @@ class SendPost extends Command
         else
             $result = $TG->sendPhoto([
                 'chat_id' => '@xNCTU',
-                'photo' => 'https://' . DOMAIN . "/img/{$post['uid']}.jpg",
+                'photo' => env('APP_URL') . "/img/{$post['uid']}.jpg",
                 'caption' => $msg,
                 'parse_mode' => 'HTML',
             ]);
@@ -256,104 +276,29 @@ class SendPost extends Command
         return $tg_id;
     }
 
-    private function send_twitter(array $post): int {
-        global $link;
-
+    private function send_twitter(Post $post): int
+    {
         $msg = "#靠交{$post['id']}\n\n{$post['body']}";
         if (strlen($msg) > 250)
             $msg = mb_substr($msg, 0, 120) . '...';
-        $msg .= "\n\n✅ $link .";
+        $msg .= "\n\n✅ {$this->link} .";
 
         if ($post['has_img']) {
-            $nonce     = md5(time());
-            $timestamp = time();
-
-            $URL = 'https://upload.twitter.com/1.1/media/upload.json?media_category=tweet_image';
-
-            $oauth = new OAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
-            $oauth->enableDebug();
-            $oauth->setToken(TWITTER_TOKEN, TWITTER_TOKEN_SECRET);
-            $oauth->setNonce($nonce);
-            $oauth->setTimestamp($timestamp);
-            $signature = $oauth->generateSignature('POST', $URL);
-
-            $auth = [
-                'oauth_consumer_key' => TWITTER_CONSUMER_KEY,
-                'oauth_nonce' => $nonce,
-                'oauth_signature' => $signature,
-                'oauth_signature_method' => 'HMAC-SHA1',
-                'oauth_timestamp' => $timestamp,
-                'oauth_token' => TWITTER_TOKEN
-            ];
-
-            $authStr = 'OAuth ';
-            foreach ($auth as $key => $val)
-                $authStr .= $key . '="' . urlencode($val) . '", ';
-            $authStr .= 'oauth_version="1.0"';
-
             $file = ['media' => curl_file_create(__DIR__ . "/img/{$post['uid']}.jpg")];
 
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_URL => $URL,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => $file,
-                CURLOPT_HTTPHEADER => [
-                    "Authorization: $authStr"
-                ]
-            ]);
-            $result = curl_exec($curl);
-            curl_close($curl);
-            $result = json_decode($result, true);
+            $result = $this->send_twitter_api('https://upload.twitter.com/1.1/media/upload.json?media_category=tweet_image', $file);
             if (isset($result['media_id_string']))
                 $img_id = $result['media_id_string'];
             else
                 echo "Twitter upload error: " . json_encode($result) . "\n";
         }
 
-        $nonce     = md5(time());
-        $timestamp = time();
-
         $query = ['status' => $msg];
         if (!empty($img_id))
             $query['media_ids'] = $img_id;
         $URL = 'https://api.twitter.com/1.1/statuses/update.json?' . http_build_query($query);
 
-        $oauth = new OAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
-        $oauth->enableDebug();
-        $oauth->setToken(TWITTER_TOKEN, TWITTER_TOKEN_SECRET);
-        $oauth->setNonce($nonce);
-        $oauth->setTimestamp($timestamp);
-        $signature = $oauth->generateSignature('POST', $URL);
-
-        $auth = [
-            'oauth_consumer_key' => TWITTER_CONSUMER_KEY,
-            'oauth_nonce' => $nonce,
-            'oauth_signature' => $signature,
-            'oauth_signature_method' => 'HMAC-SHA1',
-            'oauth_timestamp' => $timestamp,
-            'oauth_token' => TWITTER_TOKEN
-        ];
-
-        $authStr = 'OAuth ';
-        foreach ($auth as $key => $val)
-            $authStr .= $key . '="' . urlencode($val) . '", ';
-        $authStr .= 'oauth_version="1.0"';
-
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_URL => $URL,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: $authStr"
-            ]
-        ]);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        $result = json_decode($result, true);
+        $result = $this->send_twitter_api($URL);
         if (!isset($result['id_str'])) {
             echo "Twitter error: ";
             var_dump($result);
@@ -367,30 +312,72 @@ class SendPost extends Command
         return $result['id_str'];
     }
 
-    private function send_plurk(array $post): int {
-        global $link;
+    private function send_twitter_api(string $url, Post $post = null): array
+    {
+        $nonce = md5(time());
+        $timestamp = time();
 
-        $msg = $post['has_img'] ? ('https://' . DOMAIN . "/img/{$post['uid']}.jpg\n") : '';
+        $oauth = new OAuth(env('TWITTER_CONSUMER_KEY'), env('TWITTER_CONSUMER_SECRET'), env('OAUTH_SIG_METHOD_HMACSHA1'));
+        $oauth->enableDebug();
+        $oauth->setToken(env('TWITTER_TOKEN'), env('TWITTER_TOKEN_SECRET'));
+        $oauth->setNonce($nonce);
+        $oauth->setTimestamp($timestamp);
+        $signature = $oauth->generateSignature('POST', $url);
+
+        $auth = [
+            'oauth_consumer_key' => env('TWITTER_CONSUMER_KEY'),
+            'oauth_nonce' => $nonce,
+            'oauth_signature' => $signature,
+            'oauth_signature_method' => 'HMAC-SHA1',
+            'oauth_timestamp' => $timestamp,
+            'oauth_token' => env('TWITTER_TOKEN')
+        ];
+
+        $authStr = 'OAuth ';
+        foreach ($auth as $key => $val)
+            $authStr .= $key . '="' . urlencode($val) . '", ';
+        $authStr .= 'oauth_version="1.0"';
+
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $post,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: $authStr"
+            ]
+        ]);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        $result = json_decode($result, true);
+        return $result;
+    }
+
+    private function send_plurk(Post $post): int
+    {
+        $msg = $post['has_img'] ? (env('APP_URL') . "/img/{$post['uid']}.jpg\n") : '';
         $msg .= "#靠交{$post['id']}\n{$post['body']}";
 
         if (mb_strlen($msg) > 290)
             $msg = mb_substr($msg, 0, 290) . '...';
 
-        $msg .= "\n\n✅ $link ($link)";
+        $msg .= "\n\n✅ {$this->link} ({$this->link})";
 
-        $nonce     = md5(time());
+        $nonce = md5(time());
         $timestamp = time();
 
         /* Add Plurk */
         $URL = 'https://www.plurk.com/APP/Timeline/plurkAdd?' . http_build_query([
-            'content' => $msg,
-            'qualifier' => 'says',
-            'lang' => 'tr_ch',
-        ]);
+                'content' => $msg,
+                'qualifier' => 'says',
+                'lang' => 'tr_ch',
+            ]);
 
-        $oauth = new OAuth(PLURK_CONSUMER_KEY, PLURK_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
+        $oauth = new OAuth(env('PLURK_CONSUMER_KEY'), env('PLURK_CONSUMER_SECRET'), env('OAUTH_SIG_METHOD_HMACSHA1'));
         $oauth->enableDebug();
-        $oauth->setToken(PLURK_TOKEN, PLURK_TOKEN_SECRET);
+        $oauth->setToken(env('PLURK_TOKEN'), env('PLURK_TOKEN_SECRET'));
         $oauth->setNonce($nonce);
         $oauth->setTimestamp($timestamp);
         $signature = $oauth->generateSignature('POST', $URL);
@@ -402,19 +389,20 @@ class SendPost extends Command
             return $result['plurk_id'];
         } catch (Exception $e) {
             echo "Plurk Message: $msg\n\n";
-            echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
+            echo 'Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n";
             echo $e->lastResponse . "\n";
             return 0;
         }
     }
 
-    private function send_facebook(array $post): int {
+    private function send_facebook(Post $post): int
+    {
         $msg = "#靠交{$post['id']}\n\n";
         $msg .= "{$post['body']}";
 
-        $URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . ($post['has_img'] ? '/photos' : '/feed');
+        $URL = 'https://graph.facebook.com/v6.0/' . env('FB_PAGES_ID') . ($post['has_img'] ? '/photos' : '/feed');
 
-        $data = ['access_token' => FB_ACCESS_TOKEN];
+        $data = ['access_token' => env('FB_ACCESS_TOKEN')];
         if (!$post['has_img']) {
             $data['message'] = $msg;
 
@@ -423,7 +411,7 @@ class SendPost extends Command
             if (filter_var($end, FILTER_VALIDATE_URL) && strpos($end, 'facebook') === false)
                 $data['link'] = $end;
         } else {
-            $data['url'] = 'https://' . DOMAIN . "/img/{$post['uid']}.jpg";
+            $data['url'] = env('APP_URL') . "/img/{$post['uid']}.jpg";
             $data['caption'] = $msg;
         }
 
@@ -439,7 +427,7 @@ class SendPost extends Command
         $result = json_decode($result, true);
 
         $fb_id = $result['post_id'] ?? $result['id'] ?? '0_0';
-        $post_id = (int) explode('_', $fb_id)[1];
+        $post_id = (int)explode('_', $fb_id)[1];
 
         if ($post_id == 0) {
             echo "Facebook result error:";
@@ -449,7 +437,8 @@ class SendPost extends Command
         return $post_id;
     }
 
-    private function send_instagram(array $post): int {
+    private function send_instagram(Post $post): int
+    {
         if (!$post['has_img'])
             return -1;
 
@@ -460,7 +449,8 @@ class SendPost extends Command
     }
 
 
-    private function update_telegram(array $post) {
+    private function update_telegram(Post $post)
+    {
         global $TG;
 
         $buttons = [];
@@ -502,13 +492,12 @@ class SendPost extends Command
     }
 
 
-    private function update_plurk(array $post) {
-        global $time, $dt;
-
-        if ($dt <= 60)
-            $msg = "🕓 投稿時間：$time ($dt 分鐘前)\n\n";
+    private function update_plurk(Post $post)
+    {
+        if ($this->dt <= 60)
+            $msg = "🕓 投稿時間：{$this->time} ({$this->dt} 分鐘前)\n\n";
         else
-            $msg = "🕓 投稿時間：$time\n\n";
+            $msg = "🕓 投稿時間：{$this->time}\n\n";
 
         if ($post['rejects'])
             $msg .= "審核結果：✅ 通過 {$post['approvals']} 票 / ❌ 駁回 {$post['rejects']} 票\n\n";
@@ -523,20 +512,20 @@ class SendPost extends Command
 
         $msg .= "👉 立即投稿：https://x.nctu.app/submit (https://x.nctu.app/submit)";
 
-        $nonce     = md5(time());
+        $nonce = md5(time());
         $timestamp = time();
 
         /* Add Plurk */
         $URL = 'https://www.plurk.com/APP/Responses/responseAdd?' . http_build_query([
-            'plurk_id' => $post['plurk_id'],
-            'content' => $msg,
-            'qualifier' => 'freestyle',
-            'lang' => 'tr_ch',
-        ]);
+                'plurk_id' => $post['plurk_id'],
+                'content' => $msg,
+                'qualifier' => 'freestyle',
+                'lang' => 'tr_ch',
+            ]);
 
-        $oauth = new OAuth(PLURK_CONSUMER_KEY, PLURK_CONSUMER_SECRET, OAUTH_SIG_METHOD_HMACSHA1);
+        $oauth = new OAuth(env('PLURK_CONSUMER_KEY'), env('PLURK_CONSUMER_SECRET'), env('OAUTH_SIG_METHOD_HMACSHA1'));
         $oauth->enableDebug();
-        $oauth->setToken(PLURK_TOKEN, PLURK_TOKEN_SECRET);
+        $oauth->setToken(env('PLURK_TOKEN'), env('PLURK_TOKEN_SECRET'));
         $oauth->setNonce($nonce);
         $oauth->setTimestamp($timestamp);
         $signature = $oauth->generateSignature('POST', $URL);
@@ -546,15 +535,14 @@ class SendPost extends Command
             $oauth->getLastResponse();
         } catch (Exception $e) {
             echo "Plurk Message: $msg\n\n";
-            echo 'Error ' . $e->getCode() . ': ' .$e->getMessage() . "\n";
+            echo 'Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n";
             echo $e->lastResponse . "\n";
         }
     }
 
 
-    private function update_facebook(array $post) {
-        global $time, $dt, $link;
-
+    private function update_facebook(Post $post)
+    {
         $tips_all = [
             "投稿時將網址放在最後一行，發文會自動顯示頁面預覽",
             "電腦版投稿可以使用 Ctrl-V 上傳圖片",
@@ -581,7 +569,7 @@ class SendPost extends Command
             "靠交 2.0 是交大資工學生自行開發的系統，程式原始碼公開於 GitHub 平台\nhttps://github.com/Sea-n/xNCTU",
         ];
         assert(count($tips_all) % 7 != 0);  // current count = 20
-        $tips = $tips_all[ ($post['id'] * 7) % count($tips_all) ];
+        $tips = $tips_all[($post['id'] * 7) % count($tips_all)];
 
         $go_all = [
             "立即投稿",
@@ -590,28 +578,28 @@ class SendPost extends Command
             "投稿點我",
             "我要投稿",
         ];
-        $go = $go_all[ mt_rand(0, count($go_all)-1) ];
+        $go = $go_all[mt_rand(0, count($go_all) - 1)];
 
         $msg = "\n";  // First line is empty
-        if ($dt <= 60)
-            $msg .= "🕓 投稿時間：$time ($dt 分鐘前)\n\n";
+        if ($this->dt <= 60)
+            $msg .= "🕓 投稿時間：{$this->time} ({$this->dt} 分鐘前)\n\n";
         else
-            $msg .= "🕓 投稿時間：$time\n\n";
+            $msg .= "🕓 投稿時間：{$this->time}\n\n";
 
         if ($post['rejects'])
             $msg .= "🗳 審核結果：✅ 通過 {$post['approvals']} 票 / ❌ 駁回 {$post['rejects']} 票\n";
         else
             $msg .= "🗳 審核結果：✅ 通過 {$post['approvals']} 票\n";
-        $msg .= "$link\n\n";
+        $msg .= "{$this->link}\n\n";
 
         $msg .= "---\n\n";
         $msg .= "💡 $tips\n\n";
         $msg .= "👉 {$go}： https://x.nctu.app/submit";
 
-        $URL = 'https://graph.facebook.com/v6.0/' . FB_PAGES_ID . "_{$post['facebook_id']}/comments";
+        $URL = 'https://graph.facebook.com/v6.0/' . env('FB_PAGES_ID') . "_{$post['facebook_id']}/comments";
 
         $data = [
-            'access_token' => FB_ACCESS_TOKEN,
+            'access_token' => env('FB_ACCESS_TOKEN'),
             'message' => $msg,
         ];
 
@@ -630,7 +618,7 @@ class SendPost extends Command
             return;  // Success, id = Comment ID
 
         $fb_id = $result['post_id'] ?? $result['id'] ?? '0_0';
-        $post_id = (int) explode('_', $fb_id)[0];
+        $post_id = (int)explode('_', $fb_id)[0];
 
         if ($post_id != $post['facebook_id']) {
             echo "Facebook comment error:";
