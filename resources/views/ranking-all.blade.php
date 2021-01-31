@@ -21,13 +21,13 @@
     if (time() - filemtime($CACHE) > 60 * 60) {
     ob_start();
 
-    $DEL = Post::where('status', '<', 0)->pluck('uid')->toArray();
+    $del = Post::where('status', '<', 0)->pluck('uid')->toArray();
 
-    $VOTES = Vote::all();
+    $votes = Vote::all();
 
     $user_count = [];
     $vote_sum = [1 => 0, -1 => 0];
-    foreach ($VOTES as $item) {
+    foreach ($votes as $item) {
         if (!isset($user_count[$item->stuid])) {
             $user_count[$item->stuid] = [
                 1 => 0, -1 => 0,
@@ -45,7 +45,7 @@
         $dt = max($dt - 1, 0);
         $pt = pow(0.5, $dt / 7);
 
-        if (in_array($item->uid, $DEL)) {
+        if (in_array($item->uid, $del)) {
             if ($item->vote == 1)
                 $pt = 0;
             else

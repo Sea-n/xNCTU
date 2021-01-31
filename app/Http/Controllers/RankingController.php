@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Models\User;
 use App\Models\Vote;
+use Illuminate\Http\JsonResponse;
 
 class RankingController extends Controller
 {
     /**
      * Display the specified resource.
      *
-     * @param  int  $tg_id
+     * @param int $tg_id
      * @return JsonResponse
      */
     public function show(int $tg_id)
@@ -47,14 +47,14 @@ class RankingController extends Controller
 
         $dep = idToDep($user->stuid);
         $name = "{$dep} {$user->name}";
-        $step = 6*60*60;
+        $step = 6 * 60 * 60;
 
         $data['title'] = $name;
         $begin = strtotime(explode(' ', $user->created_at, 2)[0] . " 00:00");
         $end = strtotime("today 24:00");
 
-        for ($i=$begin; $i<=$end; $i+=$step) {
-            $data['columns'][0][] = $i*1000;
+        for ($i = $begin; $i <= $end; $i += $step) {
+            $data['columns'][0][] = $i * 1000;
             $data['columns'][1][] = 0;
             $data['columns'][2][] = 0;
         }
@@ -63,7 +63,7 @@ class RankingController extends Controller
         foreach ($VOTES as $vote) {
             $ts = strtotime($vote['created_at']);
             $y = $vote['vote'] == 1 ? 1 : 2;
-            $time = 1 + floor(($ts-$begin)/$step);
+            $time = 1 + floor(($ts - $begin) / $step);
             $data['columns'][$y][$time]++;
         }
 

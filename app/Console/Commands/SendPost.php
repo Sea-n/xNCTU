@@ -228,7 +228,7 @@ class SendPost extends Command
     private function updatePostSns(Post $post, string $type, int $pid): void
     {
         if (!in_array($type, ['telegram', 'plurk', 'twitter', 'facebook']))
-            return false;
+            return;
 
         /* Caution: use string combine in SQL query */
         $post->update(["{$type}_id" => $pid]);
@@ -312,7 +312,7 @@ class SendPost extends Command
         return $result['id_str'];
     }
 
-    private function send_twitter_api(string $url, Post $post = null): array
+    private function send_twitter_api(string $url, array $post = null): array
     {
         $nonce = md5(time());
         $timestamp = time();

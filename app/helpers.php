@@ -190,12 +190,15 @@ function rand58(int $len = 1): string
     return $rand;
 }
 
-/*
+/**
  * Convert plain text to HTML
  *
  * Supported:
  * 1. Newline to <br>
  * 2. Single line URL to <a>
+ *
+ * @param string $text
+ * @return string
  */
 function x(string $text = ''): string
 {

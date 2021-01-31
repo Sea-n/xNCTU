@@ -139,7 +139,7 @@ class PostController extends Controller
         }
 
         /* Insert record */
-        $post = Post::create([
+        Post::create([
             'uid' => $uid,
             'body' => $body,
             'media' => $media,
@@ -217,29 +217,12 @@ class PostController extends Controller
             }
         }
 
-
-        /* Success, return post data */
-        $ip_masked = ip_mask($ip_addr);
-        if (strpos($ip_from, '境外') !== false)
-            $ip_masked = $ip_addr;
-
         $request->session()->put('uid', $uid);
 
         return response()->json([
             'ok' => true,
             'uid' => $uid,
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return JsonResponse
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -380,20 +363,15 @@ class PostController extends Controller
      */
     function uploadImage(string $uid): string
     {
-        $path = request()->img->path();
-
-        var_dump($path);
-
         /* Check file type */
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        if (!($ext = array_search($finfo->file($path), [
-            'jpg' => 'image/jpeg',
-            'png' => 'image/png',
-        ], true)))
+        $mime = request()->file('img')->getMimeType();
+        if (!in_array($mime, [
+            'image/jpeg',
+            'image/png',
+        ]))
             return 'Extension not recognized. 圖片副檔名錯誤';
 
-        $img = request()->img->storeAs('img', "$uid");
-        var_dump($img);
+        $img = request()->file('img')->storeAs('img', "$uid");
 
         /* Check image size */
         $size = getimagesize($img);
