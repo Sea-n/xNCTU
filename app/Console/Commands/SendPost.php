@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\PublishTelegram;
+use App\Jobs\UpdateTelegram;
+use App\Models\Post;
 use Exception;
 use Illuminate\Console\Command;
 use OAuth;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
-use App\Models\Post;
 
 class SendPost extends Command
 {
@@ -82,57 +82,14 @@ class SendPost extends Command
 
         $this->link = env('APP_URL') . "/post/{$post->id}";
 
-        /* Send post to every SNS */
-        $sns = [
-            'Telegram' => 'telegram',
-            'Twitter' => 'twitter',
-            'Instagram' => 'instagram',
-            'Plurk' => 'plurk',
-            'Facebook' => 'facebook',
-        ];
-        foreach ($sns as $name => $key) {
-            try {
-                $func = "send_$key";
-                if (isset($post["{$key}_id"]) && ($post["{$key}_id"] > 0 || strlen($post["{$key}_id"]) > 1))
-                    continue;
+        if (env('TELEGRAM_ENABLE', false) && $post->telegram_id == 0)
+            PublishTelegram::dispatch($post);
 
-                $pid = $func($post);
 
-                if ($pid <= 0) { // Retry limit exceed
-                    $dtP = floor(time() / 60) - floor(strtotime($post->posted_at) / 60);
-                    if ($dtP > 3 * 5) // Total 3 times
-                        $pid = 1;
-                }
+        if (env('TELEGRAM_ENABLE', false) && $post->telegram_id > 0)
+            UpdateTelegram::dispatch($post);
 
-                if ($pid > 0)
-                    $this->updatePostSns($post, $key, $pid);
-            } catch (Exception $e) {
-                echo "Send $name Error " . $e->getCode() . ': ' . $e->getMessage() . "\n";
-                echo $e->lastResponse . "\n\n";
-            }
-        }
-
-        /* Update SNS ID (mainly for Instagram) */
-        $post = Post::find($post->id);
-
-        /* Update with link to other SNS */
-        $sns = [
-            'Facebook' => 'facebook',
-            'Plurk' => 'plurk',
-            'Telegram' => 'telegram',
-        ];
-        foreach ($sns as $name => $key) {
-            try {
-                $func = "update_$key";
-                if (!isset($post["{$key}_id"]) || $post["{$key}_id"] < 10)
-                    continue;  // not posted, could be be edit
-
-                $func($post);
-            } catch (Exception $e) {
-                echo "Edit $name Error " . $e->getCode() . ': ' . $e->getMessage() . "\n";
-                echo $e->lastResponse . "\n\n";
-            }
-        }
+        return 0;
 
         /* Remove vote keyboard in Telegram */
         $msgs = $db->getTgMsgsByUid($post->uid);
@@ -240,41 +197,6 @@ class SendPost extends Command
             $post->update(['status' => 5]);
     }
 
-
-    private function send_telegram(Post $post): int
-    {
-        /* Check latest line */
-        $lines = explode("\n", $post['body']);
-        $end = end($lines);
-        $is_url = filter_var($end, FILTER_VALIDATE_URL);
-        if (!$post['has_img'] && $is_url)
-            $msg = "<a href='$end'>#</a><a href='{$this->link}'>靠交{$post['id']}</a>";
-        else
-            $msg = "<a href='{$this->link}'>#靠交{$post['id']}</a>";
-
-        $msg .= "\n\n" . enHTML($post['body']);
-
-
-        /* Send to @xNCTU */
-        if (!$post['has_img'])
-            $result = $TG->sendMsg([
-                'chat_id' => '@xNCTU',
-                'text' => $msg,
-                'parse_mode' => 'HTML',
-                'disable_web_page_preview' => !$is_url
-            ]);
-        else
-            $result = $TG->sendPhoto([
-                'chat_id' => '@xNCTU',
-                'photo' => env('APP_URL') . "/img/{$post['uid']}.jpg",
-                'caption' => $msg,
-                'parse_mode' => 'HTML',
-            ]);
-
-        $tg_id = $result['result']['message_id'] ?? 1;
-
-        return $tg_id;
-    }
 
     private function send_twitter(Post $post): int
     {
@@ -446,49 +368,6 @@ class SendPost extends Command
             . ">> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err");
 
         return 0;
-    }
-
-
-    private function update_telegram(Post $post)
-    {
-        global $TG;
-
-        $buttons = [];
-
-        if ($post['facebook_id'] > 10)
-            $buttons[] = [
-                'text' => 'Facebook',
-                'url' => "https://www.facebook.com/xNCTU/posts/{$post['facebook_id']}"
-            ];
-
-        $plurk = base_convert($post['plurk_id'], 10, 36);
-        if (strlen($plurk) > 1)
-            $buttons[] = [
-                'text' => 'Plurk',
-                'url' => "https://www.plurk.com/p/$plurk"
-            ];
-
-        if ($post['twitter_id'] > 10)
-            $buttons[] = [
-                'text' => 'Twitter',
-                'url' => "https://twitter.com/x_NCTU/status/{$post['twitter_id']}"
-            ];
-
-        if (strlen($post['instagram_id']) > 1)
-            $buttons[] = [
-                'text' => 'Instagram',
-                'url' => "https://www.instagram.com/p/{$post['instagram_id']}"
-            ];
-
-        $TG->editMarkup([
-            'chat_id' => '@xNCTU',
-            'message_id' => $post['telegram_id'],
-            'reply_markup' => [
-                'inline_keyboard' => [
-                    $buttons
-                ]
-            ]
-        ]);
     }
 
 

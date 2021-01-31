@@ -9,17 +9,18 @@
     "license": "MIT",
     "require": {
         "php": "^7.3",
+        "ext-curl": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-json": "*",
+        "ext-oauth": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "irazasyed/telegram-bot-sdk": "^3.4",
         "laravel/framework": "^8.0",
         "laravel/socialite": "^5.1",
-        "laravel/tinker": "^2.0",
-        "ext-curl": "*",
-        "ext-gd": "*",
-        "ext-fileinfo": "*",
-        "ext-json": "*",
-        "ext-oauth": "*"
+        "laravel/tinker": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
