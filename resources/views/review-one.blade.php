@@ -1,11 +1,17 @@
 <?php
+
+use App\Models\Post;
 use App\Models\Vote;
+
+/**
+ * @var Post $post
+ */
 
 $IMG = env('APP_URL') . '/assets/img/og.png';
 
 $hashtag = "#投稿{$post->uid}";
 
-$DESC = $post['body'];
+$DESC = $post->body;
 $TITLE = "$hashtag $DESC";
 
 if (mb_strlen($TITLE) > 40)
@@ -14,7 +20,7 @@ if (mb_strlen($TITLE) > 40)
 if (mb_strlen($DESC) > 150)
     $DESC = mb_substr($DESC, 0, 150) . '...';
 
-if ($post['has_img'])
+if ($post->media == 1)
     $IMG = env('APP_URL') . "img/{$post->uid}.jpg";
 
 if (Auth::check())
@@ -22,7 +28,7 @@ if (Auth::check())
 
 $single = 1;
 
-if ($post['status'] != 0) {
+if ($post->status != 0) {
     $votes = Vote::where('uid', '=', $post->uid)->get();
 }
 

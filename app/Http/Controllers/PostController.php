@@ -141,7 +141,7 @@ class PostController extends Controller
             'uid' => $uid,
             'body' => $body,
             'media' => $media,
-            'author' => $author_id,
+            'author_id' => $author_id,
             'ip_addr' => $ip_addr,
             'ip_from' => $ip_from,
         ]);

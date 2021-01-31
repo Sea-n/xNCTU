@@ -25,19 +25,19 @@ class DatabaseSeeder extends Seeder
 
             DB::table('users')->where('stuid', '=', $item->stuid)->delete();
             DB::table('users')->insert([
-                'stuid'       => $item->stuid,
-                'name'        => $item->name,
-                'email'       => $item->mail,
-                'tg_id'       => $item->tg_id,
-                'tg_name'     => $item->tg_name,
-                'tg_username' => $item->tg_name,
-                'tg_photo'    => $item->tg_photo,
+                'stuid' => $item->stuid,
+                'name' => $item->name,
+                'email' => $item->mail,
+                'tg_id' => $item->tg_id,
+                'tg_name' => null, // prevent sending review
+                'tg_username' => $item->tg_username,
+                'tg_photo' => $item->tg_photo,
 
-                'approvals'  => $item->approvals,
-                'rejects'    => $item->rejects,
+                'approvals' => $item->approvals,
+                'rejects' => $item->rejects,
                 'current_vote_streak' => $item->current_vote_streak,
                 'highest_vote_streak' => $item->highest_vote_streak,
-                'last_vote'  => $item->last_vote,
+                'last_vote' => $item->last_vote,
                 'last_login' => $item->last_login,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->created_at,
@@ -55,38 +55,39 @@ class DatabaseSeeder extends Seeder
             if (strpos($item->author_name, '匿名, ') !== false)
                 $ip_from = mb_substr($item->author_name, 4);
             else
-                $ip_from = ip_from($item->ip_addr);
+                $ip_from = "Authored user";
+//                $ip_from = ip_from($item->ip_addr);
 
             DB::table('posts')->where('uid', '=', $item->uid)->delete();
             DB::table('posts')->insert([
-                'uid'     => $item->uid,
-                'id'      => $item->id,
-                'body'    => $item->body,
-                'orig'    => null,
-                'media'   => $item->has_img ? 1 : 0,
-                'author'  => empty($item->author_id) ? null : $item->author_id,
+                'uid' => $item->uid,
+                'id' => $item->id,
+                'body' => $item->body,
+                'orig' => null,
+                'media' => $item->has_img ? 1 : 0,
+                'author_id' => empty($item->author_id) ? null : $item->author_id,
                 'ip_addr' => $item->ip_addr,
                 'ip_from' => $ip_from,
 
-                'status'    => $item->status,
+                'status' => $item->status,
                 'approvals' => $item->approvals,
-                'rejects'   => $item->rejects,
-                'fb_likes'  => $item->fb_likes,
+                'rejects' => $item->rejects,
+                'fb_likes' => $item->fb_likes,
                 'old_likes' => $item->fb_likes_old,
                 'max_likes' => max($item->fb_likes, $item->fb_likes_old),
 
-                'telegram_id'  => $item->telegram_id,
-                'plurk_id'     => $item->plurk_id,
-                'twitter_id'   => $item->twitter_id,
-                'facebook_id'  => $item->facebook_id,
+                'telegram_id' => $item->telegram_id,
+                'plurk_id' => $item->plurk_id,
+                'twitter_id' => $item->twitter_id,
+                'facebook_id' => $item->facebook_id,
                 'instagram_id' => $item->instagram_id,
 
-                'created_at'   => $item->created_at,
-                'updated_at'   => $item->created_at,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->created_at,
                 'submitted_at' => in_array($item->status, [-3, -12, -13]) ? null : $item->created_at,
-                'posted_at'    => $item->posted_at,
-                'deleted_at'   => $item->deleted_at,
-                'delete_note'  => $item->delete_note,
+                'posted_at' => $item->posted_at,
+                'deleted_at' => $item->deleted_at,
+                'delete_note' => $item->delete_note,
             ]);
         }
 
@@ -102,11 +103,11 @@ class DatabaseSeeder extends Seeder
         $accounts = $db->table('google_accounts')->get();
         foreach ($accounts as $item) {
             DB::table('google_accounts')->insert([
-                'sub'        => $item->sub,
-                'email'      => $item->email,
-                'name'       => $item->name,
-                'avatar'     => $item->picture,
-                'stuid'      => empty($item->stuid) ? null : $item->stuid,
+                'sub' => $item->sub,
+                'email' => $item->email,
+                'name' => $item->name,
+                'avatar' => $item->picture,
+                'stuid' => empty($item->stuid) ? null : $item->stuid,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->created_at,
                 'last_login' => $item->created_at,

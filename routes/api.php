@@ -46,7 +46,7 @@ Route::get('/votes/{uid}', function (string $uid) {
             'vote' => $item->vote,
             'stuid' => $item->stuid,
             'dep' => idToDep($item->stuid),
-            'name' => User::find($item->stuid)->name,
+            'name' => $item->user->name,
             'reason' => $item->reason,
         ];
 

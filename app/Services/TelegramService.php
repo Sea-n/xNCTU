@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Post;
 use Exception;
 use Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 
 class TelegramService extends BaseService implements PostContract
 {
@@ -21,19 +22,19 @@ class TelegramService extends BaseService implements PostContract
     {
         $link = env('APP_URL') . "/post/{$post->id}";
         /* Check latest line */
-        $lines = explode("\n", $post['body']);
+        $lines = explode("\n", $post->body);
         $end = end($lines);
         $is_url = filter_var($end, FILTER_VALIDATE_URL);
-        if (!$post['has_img'] && $is_url)
-            $msg = "<a href='$end'>#</a><a href='{$link}'>靠交{$post['id']}</a>";
+        if ($post->media == 0 && $is_url)
+            $msg = "<a href='$end'>#</a><a href='{$link}'>靠交{$post->id}</a>";
         else
-            $msg = "<a href='{$link}'>#靠交{$post['id']}</a>";
+            $msg = "<a href='{$link}'>#靠交{$post->id}</a>";
 
-        $msg .= "\n\n" . enHTML($post['body']);
+        $msg .= "\n\n" . enHTML($post->body);
 
 
         /* Send to @xNCTU */
-        if (!$post['has_img'])
+        if ($post->media == 0)
             $result = Telegram::sendMessage([
                 'chat_id' => '@' . env('TELEGRAM_USERNAME'),
                 'text' => $msg,
@@ -43,7 +44,7 @@ class TelegramService extends BaseService implements PostContract
         else
             $result = Telegram::sendPhoto([
                 'chat_id' => '@' . env('TELEGRAM_USERNAME'),
-                'photo' => env('APP_URL') . "/img/{$post['uid']}.jpg",
+                'photo' => new InputFile(public_path("img/{$post->uid}.jpg")),
                 'caption' => $msg,
                 'parse_mode' => 'HTML',
             ]);

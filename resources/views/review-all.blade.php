@@ -32,7 +32,7 @@ foreach ($posts as $key => $item)
 
     <?php $header = false; ?>
     @foreach ($posts as $post)
-        @if (!$post['canVote'])
+        @if (!$post->canVote)
             @continue
         @endif
 
@@ -46,7 +46,7 @@ foreach ($posts as $key => $item)
 
     <?php $header = false; ?>
     @foreach ($posts as $post)
-        @if ($post['canVote'])
+        @if ($post->canVote)
             @continue
         @endif
 

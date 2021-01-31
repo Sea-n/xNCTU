@@ -56,18 +56,16 @@
     }
 
     foreach ($user_count as $k => $v) {
-        $user = User::find($v['id']);
-
-        if (!isset($user->tg_name))
+        if (!isset($v->user->tg_name))
             $user_count[$k]['pt'] *= 0.8;
 
-        if (!isset($user->tg_photo))
+        if (!isset($v->user->tg_photo))
             $user_count[$k]['pt'] *= 0.8;
 
-        if ($user->name == $user->stuid)
+        if ($v->user->name == $v->user->stuid)
             $user_count[$k]['pt'] *= 0.8;
 
-        $user_count[$k]['user'] = $user;
+        $user_count[$k]['user'] = $v->user;
     }
 
     usort($user_count, function ($A, $B) {

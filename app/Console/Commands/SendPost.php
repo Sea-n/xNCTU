@@ -274,8 +274,8 @@ class SendPost extends Command
 
     private function send_plurk(Post $post): int
     {
-        $msg = $post['has_img'] ? (env('APP_URL') . "/img/{$post['uid']}.jpg\n") : '';
-        $msg .= "#靠交{$post['id']}\n{$post['body']}";
+        $msg = $post->media == 1 ? (env('APP_URL') . "/img/{$post->uid}.jpg\n") : '';
+        $msg .= "#靠交{$post->id}\n{$post->body}";
 
         if (mb_strlen($msg) > 290)
             $msg = mb_substr($msg, 0, 290) . '...';

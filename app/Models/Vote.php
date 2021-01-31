@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $stuid
  * @property integer $vote
  * @property string $reason
+ * @property Post $post
+ * @property User $user
+ *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -34,4 +37,20 @@ class Vote extends Model
         'vote',
         'reason',
     ];
+
+    /**
+     * @return Post
+     */
+    public function post()
+    {
+        return $this->hasOne(Post::class, 'uid', 'uid');
+    }
+
+    /**
+     * @return User
+     */
+    public function user()
+    {
+        return $this->hasOne(User::class, 'stuid', 'stuid');
+    }
 }

@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Telegram;
 use Telegram\Bot\Exceptions\TelegramResponseException;
+use Telegram\Bot\FileUpload\InputFile;
 
 class ReviewService extends BaseService
 {
@@ -102,7 +103,7 @@ class ReviewService extends BaseService
             else
                 Telegram::sendPhoto([
                     'chat_id' => env('TELEGRAM_LOG_GROUP'),
-                    'photo' => env('APP_URL') . "/img/{$post->uid}.jpg",
+                    'photo' => new InputFile(public_path("img/{$post->uid}.jpg")),
                     'caption' => $msg,
                     'reply_markup' => $keyboard,
                 ]);
@@ -152,7 +153,7 @@ class ReviewService extends BaseService
             else
                 $result = Telegram::sendPhoto([
                     'chat_id' => $user->tg_id,
-                    'photo' => env('APP_URL') . "/img/{$post->uid}.jpg",
+                    'photo' => new InputFile(public_path("img/{$post->uid}.jpg")),
                     'caption' => $msg,
                     'reply_markup' => $keyboard,
                 ]);
