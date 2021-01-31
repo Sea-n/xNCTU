@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $body
  * @property string|null $orig
  * @property integer $media
- * @property string|null $author
+ * @property string|null $author_id
+ * @property User|null $author
  * @property string $ip_addr
  * @property string $ip_from
  *
@@ -32,11 +33,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $facebook_id
  * @property string $instagram_id
  *
- * @property Carbon $created_at;
- * @property Carbon $updated_at;
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property Carbon|null $submitted_at
  * @property Carbon|null $posted_at
- * @property Carbon|null $deleted_at;
+ * @property Carbon|null $deleted_at
  * @property string|null $delete_note
  *
  * @mixin Eloquent
@@ -82,9 +83,12 @@ class Post extends Model
     protected $hidden = [
     ];
 
+    /**
+     * @return User
+     */
     public function author()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'stuid', 'author_id');
     }
 
     public function getUrl(string $platform)

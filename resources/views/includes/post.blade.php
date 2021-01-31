@@ -1,15 +1,19 @@
 <?php
+
+use App\Models\Post;
 use App\Models\User;
+
+/**
+ * @var Post $post
+ */
 
 $time = humanTime($post->submitted_at ?? now());
 $ts = strtotime($post->submitted_at ?? now());
 
 $author_name = "匿名, {$post->ip_from}";
-if (isset($post->author)) {
-    $author = User::find($post->author);
-
-    $dep = idToDep($post->author);
-    $author_name = $dep . ' ' . $author->name;
+if ($post->author) {
+    $dep = idToDep($post->author_id);
+    $author_name = $dep . ' ' . $post->author->name;
 }
 
 $ip_masked = $post->ip_addr;
@@ -17,14 +21,14 @@ if (strpos($author_name, '境外') === false)
     $ip_masked = ip_mask($ip_masked);
 if (!Auth::check())
     $ip_masked = ip_mask_anon($ip_masked);
-if (isset($post->author))
+if ($post->author)
     $ip_masked = false;
 
 $author_photo = genPic($ip_masked);
-if (isset($post->author)) {
-    $author_photo = genPic($post->author);
-    if (isset($author->tg_photo))
-        $author_photo = "/img/tg/{$author->tg_id}-x64.jpg";
+if ($post->author) {
+    $author_photo = genPic($post->author_id);
+    if ($post->author->tg_photo)
+        $author_photo = "/img/tg/{$post->author->tg_id}-x64.jpg";
 }
 ?>
 

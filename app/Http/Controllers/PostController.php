@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ReviewSend;
+use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Post;
-use App\Models\User;
 
 class PostController extends Controller
 {
@@ -18,9 +18,9 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $likes  = $request->input('likes',   0);
-        $offset = $request->input('offset',  0);
-        $limit  = $request->input('limit',  50);
+        $likes = $request->input('likes', 0);
+        $offset = $request->input('offset', 0);
+        $limit = $request->input('limit', 50);
 
         $posts = Post::where('status', '=', 5)
             ->where('max_likes', '>=', $likes)
@@ -30,10 +30,8 @@ class PostController extends Controller
         foreach ($posts as $post) {
             $author_name = $post->ip_from;
             if (isset($post->author)) {
-                $author = User::find($post->author);
-
-                $dep = idToDep($post->author);
-                $author_name = $dep . ' ' . $author->name;
+                $dep = idToDep($post->author_id);
+                $author_name = $dep . ' ' . $post->author->name;
             }
 
             $ip_masked = $post->ip_addr;
@@ -46,7 +44,7 @@ class PostController extends Controller
 
             $author_photo = genPic($ip_masked);
             if (isset($post->author)) {
-                $author_photo = genPic($post->author);
+                $author_photo = genPic($post->author_id);
                 if (isset($author->tg_photo))
                     $author_photo = "/img/tg/{$author->tg_id}-x64.jpg";
             }
@@ -155,17 +153,17 @@ class PostController extends Controller
                     'msg' => '具名發文不受限制',
                 ],
                 'B' => [
-                    'period' => 10*60,
+                    'period' => 10 * 60,
                     'limit' => 5,
                     'msg' => '校內匿名發文限制 10 分鐘內僅能發 5 篇文',
                 ],
                 'C' => [
-                    'period' => 3*60*60,
+                    'period' => 3 * 60 * 60,
                     'limit' => 3,
                     'msg' => '校外 IP 限制 3 小時內僅能發 3 篇文',
                 ],
                 'D' => [
-                    'period' => 12*60*60,
+                    'period' => 12 * 60 * 60,
                     'limit' => 1,
                     'msg' => '境外 IP 限制 12 小時內僅能發 1 篇文',
                 ],
@@ -178,11 +176,11 @@ class PostController extends Controller
             else
                 $rule = $rules['D'];
 
-            $posts = Post::where('ip_addr', '=', $rule['limit']+1)
+            $posts = Post::where('ip_addr', '=', $rule['limit'] + 1)
                 ->orderBy('created_at', 'desc')
-                ->get()->take($rule['limit']+1);
-            if (count($posts) == $rule['limit']+1) {
-                $last = strtotime($posts[ $rule['limit'] ]['created_at']);
+                ->get()->take($rule['limit'] + 1);
+            if (count($posts) == $rule['limit'] + 1) {
+                $last = strtotime($posts[$rule['limit']]['created_at']);
                 $cd = $rule['period'] - (time() - $last);
                 if ($cd > 0) {
                     Post::where('uid', '=', $uid)->update([
@@ -192,17 +190,17 @@ class PostController extends Controller
                     ]);
                     return response()->json([
                         'ok' => false,
-                        'msg' =>"Please retry after $cd seconds. {$rule['msg']}",
+                        'msg' => "Please retry after $cd seconds. {$rule['msg']}",
                     ]);
                 }
             }
 
             /* Global rate limit for guest users */
             $max = 5;
-            $posts = Post::orderBy('created_at', 'desc')->get()->take($max+1);
-            if (count($posts) == $max+1) {
+            $posts = Post::orderBy('created_at', 'desc')->get()->take($max + 1);
+            if (count($posts) == $max + 1) {
                 $last = strtotime($posts[$max]['created_at']);
-                $cd = 3*60 - (time() - $last);
+                $cd = 3 * 60 - (time() - $last);
                 if ($cd > 0) {
                     Post::where('uid', '=', $uid)->update([
                         'status' => -12,
@@ -229,7 +227,7 @@ class PostController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  Post  $post
+     * @param Post $post
      * @return JsonResponse
      */
     public function update(Request $request, Post $post)
@@ -266,6 +264,8 @@ class PostController extends Controller
             'submitted_at' => date('Y-m-d H:i:s'),
         ]);
 
+        ReviewSend::dispatchAfterResponse($post);
+
         return response()->json([
             'ok' => true,
             'msg' => 'Confirmed. 投稿已送出',
@@ -276,7 +276,7 @@ class PostController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Request $request
-     * @param  Post  $post
+     * @param Post $post
      * @return JsonResponse
      */
     public function destroy(Request $request, Post $post)
@@ -358,7 +358,7 @@ class PostController extends Controller
     /**
      * Return error message or empty
      *
-     * @param  string  $uid
+     * @param string $uid
      * @return string  $error
      */
     function uploadImage(string $uid): string
@@ -378,13 +378,13 @@ class PostController extends Controller
         $width = $size[0];
         $height = $size[1];
 
-        if ($width * $height < 160*160)
+        if ($width * $height < 160 * 160)
             $err = 'Image must be at least 160x160.';
 
-        if ($width/8 > $height)
+        if ($width / 8 > $height)
             $err = 'Image must be at least 8:1.';
 
-        if ($width < $height/4)
+        if ($width < $height / 4)
             $err = 'Image must be at least 1:4.';
 
         if (isset($err)) {
@@ -395,40 +395,40 @@ class PostController extends Controller
         /* Fix orientation */
         $orien = shell_exec("exiftool -Orientation -S -n $img |cut -c14- |tr -d '\\n'");
         switch ($orien) {
-        case '1':  # Horizontal (normal)
-            $transpose = "";
-            break;
-        case '2':  # Mirror horizontal
-            $transpose = "-vf transpose=0,transpose=1";
-            break;
-        case '3':  # Rotate 180
-            $transpose = "-vf transpose=1,transpose=1";
-            break;
-        case '4':  # Mirror vertical
-            $transpose = "-vf transpose=3,transpose=1";
-            break;
-        case '5':  # Mirror horizontal and rotate 270 CW
-            $transpose = "-vf transpose=0";
-            break;
-        case '6':  # Rotate 90 CW
-            $transpose = "-vf transpose=1";
-            break;
-        case '7':  # Mirror horizontal and rotate 90 CW
-            $transpose = "-vf transpose=3";
-            break;
-        case '8':  # Rotate 270 CW
-            $transpose = "-vf transpose=2";
-            break;
-        default:
-            $transpose = "";
-            break;
+            case '1':  # Horizontal (normal)
+                $transpose = "";
+                break;
+            case '2':  # Mirror horizontal
+                $transpose = "-vf transpose=0,transpose=1";
+                break;
+            case '3':  # Rotate 180
+                $transpose = "-vf transpose=1,transpose=1";
+                break;
+            case '4':  # Mirror vertical
+                $transpose = "-vf transpose=3,transpose=1";
+                break;
+            case '5':  # Mirror horizontal and rotate 270 CW
+                $transpose = "-vf transpose=0";
+                break;
+            case '6':  # Rotate 90 CW
+                $transpose = "-vf transpose=1";
+                break;
+            case '7':  # Mirror horizontal and rotate 90 CW
+                $transpose = "-vf transpose=3";
+                break;
+            case '8':  # Rotate 270 CW
+                $transpose = "-vf transpose=2";
+                break;
+            default:
+                $transpose = "";
+                break;
         }
 
         /* Convert all file type to jpg */
         shell_exec("ffmpeg -i $img -q:v 1 $transpose $img.jpg 2>&1");
         unlink($img);
 
-        while (filesize("$img.jpg") > 1*1000*1000) {
+        while (filesize("$img.jpg") > 1 * 1000 * 1000) {
             rename("$img.jpg", "$img.ori.jpg");
             shell_exec("ffmpeg -i $img.ori.jpg -q:v 1 -vf scale='(iw/2):(ih/2)' $img.jpg 2>&1");
             unlink("$img.ori.jpg");

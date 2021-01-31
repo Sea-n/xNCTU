@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\PublishTelegram;
+use App\Jobs\ReviewDelete;
 use App\Jobs\UpdateTelegram;
 use App\Models\Post;
 use Exception;
@@ -16,7 +17,7 @@ class SendPost extends Command
      *
      * @var string
      */
-    protected $signature = 'post:send';
+    protected $signature = 'post:send {id?}';
 
     /**
      * The console command description.
@@ -46,11 +47,10 @@ class SendPost extends Command
      */
     public function handle()
     {
-        $cmd = $argv[1] ?? '';
-        if ($this->hasArgument('id')) {
+        if ($this->argument('id')) {
             $post = Post::where('id', '=', $this->argument('id'))->firstOrFail();
 
-            $this->update_telegram($post);
+            UpdateTelegram::dispatch($post);
             return 0;
         }
 
@@ -89,14 +89,9 @@ class SendPost extends Command
         if (env('TELEGRAM_ENABLE', false) && $post->telegram_id > 0)
             UpdateTelegram::dispatch($post);
 
-        return 0;
 
-        /* Remove vote keyboard in Telegram */
-        $msgs = $db->getTgMsgsByUid($post->uid);
-        foreach ($msgs as $item) {
-            $TG->deleteMsg($item['chat_id'], $item['msg_id']);
-            $db->deleteTgMsg($post->uid, $item['chat_id']);
-        }
+        /* Remove un-voted messages in Telegram */
+        ReviewDelete::dispatch($post);
 
         return 0;
     }

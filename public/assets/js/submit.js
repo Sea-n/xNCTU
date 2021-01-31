@@ -208,7 +208,7 @@ function checkForm() {
         isValid = false;
     }
 
-    if (captchaInput.value.length !== captchaInput.dataset.len) {
+    if (captchaInput.value.length !== parseInt(captchaInput.dataset.len)) {
         captchaField.classList.add('error');
         isValid = false;
     }

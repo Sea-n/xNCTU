@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Post;
-use App\Services\TelegramService;
+use App\Services\ReviewService;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
-class UpdateTelegram implements ShouldQueue
+class ReviewDelete implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,13 +31,13 @@ class UpdateTelegram implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param TelegramService $service
+     * @param ReviewService $service
      * @throws Exception
      */
-    public function handle(TelegramService $service)
+    public function handle(ReviewService $service)
     {
         try {
-            $service->comment($this->post);
+            $service->delete($this->post);
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }

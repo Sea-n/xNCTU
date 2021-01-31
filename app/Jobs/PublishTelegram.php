@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class PublishTelegram implements ShouldQueue
 {
@@ -35,6 +36,10 @@ class PublishTelegram implements ShouldQueue
      */
     public function handle(TelegramService $service)
     {
-        $service->publish($this->post);
+        try {
+            $service->publish($this->post);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }
