@@ -140,7 +140,7 @@ function formUpdate() {
 
     const captcha = captchaInput.value;
     if (captcha.length > 0 &&
-        captcha.length !== captchaInput.dataset.len)
+        captcha.length !== parseInt(captchaInput.dataset.len))
         captchaField.classList.add('error');
 
     localStorage.setItem('draft', body);

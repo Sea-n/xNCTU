@@ -65,7 +65,7 @@ class SendPost extends Command
             foreach ($submissions as $post) {
                 if ($this->checkEligible($post)) {
                     $id = Post::orderBy('id', 'desc')->first()->id ?? 0;
-                    $post->update(['id', $id + 1]);
+                    $post->update(['id' => $id + 1]);
                     break;
                 }
             }
