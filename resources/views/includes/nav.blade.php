@@ -13,7 +13,7 @@ use App\Models\GoogleAccount;
                 @empty(Auth::user()->tg_photo)
                     <img class="ts circular related avatar image" src="{{ genPic(Auth::user()->stuid) }}" onerror="this.src='/assets/img/avatar.jpg';">
                 @else
-                    <img class="ts circular related avatar image" src="/img/tg/{{ Auth::user()->tg_id }}-x64.jpg" onerror="this.src='/assets/img/avatar.jpg';">
+                    <img class="ts circular related avatar image" src="/avatar/tg/{{ Auth::user()->tg_id }}-x64.jpg" onerror="this.src='/assets/img/avatar.jpg';">
                 @endisset
 
                 &nbsp;<b id="nav-name" style="overflow: hidden;">{{ Auth::user()->name }}</b>&nbsp;

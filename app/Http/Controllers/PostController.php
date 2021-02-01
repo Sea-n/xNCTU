@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ReviewSend;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,7 @@ class PostController extends Controller
             if (isset($post->author)) {
                 $author_photo = genPic($post->author_id);
                 if (isset($author->tg_photo))
-                    $author_photo = "/img/tg/{$author->tg_id}-x64.jpg";
+                    $author_photo = "/avatar/tg/{$author->tg_id}-x64.jpg";
             }
 
             $results[] = [
@@ -185,7 +186,7 @@ class PostController extends Controller
                 if ($cd > 0) {
                     Post::where('uid', '=', $uid)->update([
                         'status' => -12,
-                        'deleted_at' => date('Y-m-d H:i:s'),
+                        'deleted_at' => Carbon::now(),
                         'delete_note' => $rule['msg'],
                     ]);
                     return response()->json([
@@ -204,7 +205,7 @@ class PostController extends Controller
                 if ($cd > 0) {
                     Post::where('uid', '=', $uid)->update([
                         'status' => -12,
-                        'deleted_at' => date('Y-m-d H:i:s'),
+                        'deleted_at' => Carbon::now(),
                         'delete_note' => 'Global rate limit',
                     ]);
                     return response()->json([
@@ -311,7 +312,7 @@ class PostController extends Controller
 
         $post->update([
             'status' => -3,
-            'deleted_at' => date('Y-m-d H:i:s'),
+            'deleted_at' => Carbon::now(),
             'delete_note' => "自刪 $reason",
         ]);
 
@@ -425,12 +426,12 @@ class PostController extends Controller
         }
 
         /* Convert all file type to jpg */
-        shell_exec("ffmpeg -i $img -q:v 1 $transpose $img.jpg 2>&1");
+        exec("ffmpeg -i $img -q:v 1 $transpose $img.jpg 2>&1");
         unlink($img);
 
         while (filesize("$img.jpg") > 1 * 1000 * 1000) {
             rename("$img.jpg", "$img.ori.jpg");
-            shell_exec("ffmpeg -i $img.ori.jpg -q:v 1 -vf scale='(iw/2):(ih/2)' $img.jpg 2>&1");
+            exec("ffmpeg -i $img.ori.jpg -q:v 1 -vf scale='(iw/2):(ih/2)' $img.jpg 2>&1");
             unlink("$img.ori.jpg");
         }
 

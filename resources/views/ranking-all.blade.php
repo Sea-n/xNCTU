@@ -8,7 +8,6 @@
 
     <?php
     use App\Models\Post;
-    use App\Models\User;
     use App\Models\Vote;
 
     $time_start = microtime(true);
@@ -107,7 +106,7 @@
         @foreach ($user_count as $i => $item)
             <?php
             if (isset($item['user']->tg_photo))
-                $photo = "/img/tg/{$item['user']->tg_id}-x64.jpg";
+                $photo = "/avatar/tg/{$item['user']->tg_id}-x64.jpg";
             else
                 $photo = genPic($item['id']);
 
@@ -202,7 +201,7 @@
     $dt = ($time_end - $time_start) * 1000.0;
     $dt = number_format($dt, 2, '.', '');
     ?>
-    <!-- Page generated in {{ $dt }}ms  ({{ date('Y-m-d H:i:s') }}) -->
+    <!-- Page generated in {{ $dt }}ms  ({{ Carbon::now() }}) -->
 
     <?php
     $htmlStr = ob_get_contents();

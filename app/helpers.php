@@ -3,6 +3,7 @@
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Vote;
+use Carbon\Carbon;
 
 function ip_from(string $ip_addr): string
 {
@@ -357,7 +358,7 @@ function genPic(string $seed)
     $seed = preg_replace('/___+/', '__', $seed);
     $seed = substr($seed, 0, 42) . '';
     $seed = substr(md5($seed), 0, 6);
-    $file = storage_path() . "/app/avatar/{$seed}.jpg";
+    $file = storage_path("app/avatar/{$seed}.jpg");
 
     $dir = dirname($file);
     if (!file_exists($dir))
@@ -388,7 +389,7 @@ function genPic(string $seed)
 
         // add parts
         foreach ($parts as $part => $num) {
-            $comp = resource_path() . "/avatars/{$part}_{$num}.png";
+            $comp = resource_path("avatars/{$part}_{$num}.png");
 
             $im = @imagecreatefrompng($comp);
             if (!$im) die("Failed to load $comp.");
@@ -464,7 +465,7 @@ function voteSubmission(string $uid, string $stuid, int $vote, string $reason)
     $user->increment($type);
 
     $lv = date('Ymd', strtotime($user->last_vote));
-    $user->last_vote = date('Y-m-d H:i:s');
+    $user->last_vote = Carbon::now();
 
     if ($lv == date('Ymd')) {  // Already voted today
         // DUNNO

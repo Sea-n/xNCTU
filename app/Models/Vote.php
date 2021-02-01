@@ -27,15 +27,11 @@ class Vote extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
-     * @var array
+     * @var string[]|bool
      */
-    protected $fillable = [
-        'uid',
-        'stuid',
-        'vote',
-        'reason',
+    protected $guarded = [
     ];
 
     /**

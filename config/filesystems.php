@@ -80,7 +80,6 @@ return [
 
     'links' => [
         public_path('img') => storage_path('app/img'),
-        public_path('img/tg') => storage_path('app/tg'),
         public_path('avatar') => storage_path('app/avatar'),
     ],
 

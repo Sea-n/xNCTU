@@ -48,15 +48,10 @@ class GoogleAccount extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
-     * @var array
+     * @var string[]|bool
      */
-    protected $fillable = [
-        'sub',
-        'email',
-        'name',
-        'avatar',
-        'last_login',
+    protected $guarded = [
     ];
 }

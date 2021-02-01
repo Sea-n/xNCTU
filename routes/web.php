@@ -84,12 +84,6 @@ Route::get('/verify', function () {
     if (!session()->has('google_sub'))
         return redirect('/login/google');
 
-    $google = GoogleAccount::find(session()->get('google_sub'));
-    if (isset($google->stuid)) {
-        Auth::login(User::find($google->stuid), true);
-        session()->forget('google_sub');
-    }
-
     return view('verify');
 })->name('verify');
 

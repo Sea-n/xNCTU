@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
                 'current_vote_streak' => $item->current_vote_streak,
                 'highest_vote_streak' => $item->highest_vote_streak,
                 'last_vote' => $item->last_vote,
-                'last_login' => $item->last_login,
+                'last_login_nctu' => $item->last_login,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->created_at,
             ]);

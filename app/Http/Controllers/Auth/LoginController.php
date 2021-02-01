@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\AvaterTelegram;
 use App\Models\GoogleAccount;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -51,14 +52,16 @@ class LoginController extends Controller
                 'email' => $auth->getEmail(),
                 'name' => $auth->getName(),
                 'avatar' => $auth->getAvatar(),
-                'last_login' => date('Y-m-d H:i:s'),
+                'last_login' => Carbon::now(),
             ]
         );
 
         $google = GoogleAccount::find($auth->getId());
 
-        if (isset($google['stuid'])) {
-            Auth::login(User::find($google['stuid']));
+        if (isset($google->stuid)) {
+            $user = User::find($google->stuid);
+            $user->update(['last_login_google' => Carbon::now()]);
+            Auth::login($user, true);
             return redirect('/');
         } else {
             session()->put('google_sub', $google->sub);
@@ -73,7 +76,6 @@ class LoginController extends Controller
      */
     public function handleNCTUCallback()
     {
-        dd(Socialite::driver('nctu')->user());
         try {
             $auth = Socialite::driver('nctu')->user();
         } catch (Exception $e) {
@@ -85,18 +87,19 @@ class LoginController extends Controller
         if ($user)
             $user->update([
                 'email' => $auth->getEmail(),
-                'last_login' => date('Y-m-d H:i:s'),
+                'last_login_nctu' => Carbon::now(),
             ]);
         else
             $user = User::create([
                 'stuid' => $auth->getId(),
                 'name' => $auth->getId(),
                 'email' => $auth->getEmail(),
-                'last_login' => date('Y-m-d H:i:s'),
+                'last_login_nctu' => Carbon::now(),
             ],
             );
 
         Auth::login($user, true);
+        $this->postLogin();
 
         return redirect('/');
     }
@@ -127,6 +130,21 @@ class LoginController extends Controller
         $user = User::where('tg_id', '=', $auth_data['id'])->first();
 
         if ($user) {
+            if (Auth::check() && Auth::id() != $user->stuid) {
+                $msg = "⚠️ 您已連結過此帳號\n\n" .
+                    "目前無法將不同的 NCTU OAuth 帳號連結至同一個 Telegram 帳號\n\n" .
+                    'NCTU ID from session: ' . Auth::id() . "\n" .
+                    "NCTU ID from database: {$user->stuid}\n" .
+                    "Telegram UID: {$auth_data['id']}";
+
+                Telegram::sendMessage([
+                    'chat_id' => $auth_data['id'],
+                    'text' => $msg,
+                ]);
+
+                return redirect($redirect);
+            }
+
             $old_photo = $user->tg_photo ?? '';
 
             $user->update([
@@ -143,25 +161,9 @@ class LoginController extends Controller
                 AvaterTelegram::dispatchAfterResponse($user);
             }
 
-            if (Auth::guest()) {
-                Auth::login($user);
-                return redirect($redirect);
-            }
+            Auth::login($user, true);
+            $this->postLogin();
 
-            if (Auth::id() == $user->stuid) {
-                return redirect($redirect);
-            }
-
-            $msg = "⚠️ 您已連結過此帳號\n\n" .
-                "目前無法將不同的 NCTU OAuth 帳號連結至同一個 Telegram 帳號\n\n" .
-                'NCTU ID from session: ' . Auth::id() . "\n" .
-                "NCTU ID from database: {$user->stuid}\n" .
-                "Telegram UID: {$auth_data['id']}";
-
-            Telegram::sendMessage([
-                'chat_id' => $auth_data['id'],
-                'text' => $msg,
-            ]);
             return redirect($redirect);
         }
 
@@ -173,7 +175,7 @@ class LoginController extends Controller
             'tg_name' => $auth_data['name'],
             'tg_username' => $auth_data['username'] ?? '',
             'tg_photo' => $auth_data['photo_url'] ?? '',
-            'last_login_tg' => date('Y-m-d H:i:s'),
+            'last_login_tg' => Carbon::now(),
         ]);
 
         if (isset($auth_data['photo_url']))
@@ -229,5 +231,23 @@ class LoginController extends Controller
 
         $auth_data['hash'] = $check_hash;
         return $auth_data;
+    }
+
+    public function postLogin()
+    {
+        if (session()->has('google_sub')) {
+            $google = GoogleAccount::find(session()->get('google_sub'));
+
+            if (Auth::check()) {
+                if ($google->stuid != Auth::id())
+                    $google->update([
+                        'stuid' => Auth::id(),
+                        'last_login' => Carbon::now(),
+                    ]);
+
+                session()->forget('google_sub');
+                Auth::user()->update(['last_login_google' => Carbon::now()]);
+            }
+        }
     }
 }

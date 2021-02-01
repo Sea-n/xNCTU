@@ -28,7 +28,7 @@ $author_photo = genPic($ip_masked);
 if ($post->author) {
     $author_photo = genPic($post->author_id);
     if ($post->author->tg_photo)
-        $author_photo = "/img/tg/{$post->author->tg_id}-x64.jpg";
+        $author_photo = "/avatar/tg/{$post->author->tg_id}-x64.jpg";
 }
 ?>
 

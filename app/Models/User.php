@@ -71,7 +71,9 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'last_vote',
-        'last_login',
+        'last_login_tg',
+        'last_login_nctu',
+        'last_login_google',
     ];
 
     /**
