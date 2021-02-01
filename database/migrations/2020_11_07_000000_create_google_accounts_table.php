@@ -19,7 +19,8 @@ class CreateGoogleAccountsTable extends Migration
             $table->string('email')->unique();
             $table->string('name');
             $table->string('avatar')->default('');
-            $table->string('stuid')->references('stuid')->on('users')->nullable();
+            $table->string('stuid')->nullable();
+            $table->foreign('stuid')->references('stuid')->on('users');
             $table->timestamps();
             $table->dateTime('last_login')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();

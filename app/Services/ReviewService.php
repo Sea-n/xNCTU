@@ -86,7 +86,7 @@ class ReviewService extends BaseService
                     [
                         'text' => '開啟審核頁面',
                         'login_url' => [
-                            'url' => env('APP_URL') . "/login-tg?r=%2Freview%2F{$post->uid}",
+                            'url' => env('APP_URL') . "/login/tg?r=%2Freview%2F{$post->uid}",
                         ],
                     ],
                 ],
@@ -136,7 +136,7 @@ class ReviewService extends BaseService
                     [
                         'text' => '開啟審核頁面',
                         'login_url' => [
-                            'url' => env('APP_URL') . "/login-tg?r=%2Freview%2F{$post->uid}",
+                            'url' => env('APP_URL') . "/login/tg?r=%2Freview%2F{$post->uid}",
                         ],
                     ],
                 ],

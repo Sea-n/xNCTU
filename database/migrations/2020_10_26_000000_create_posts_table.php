@@ -19,7 +19,8 @@ class CreatePostsTable extends Migration
             $table->string('body', 4200);
             $table->string('orig', 4200)->nullable();
             $table->integer('media')->default(0);
-            $table->string('author_id')->references('stuid')->on('users')->nullable();
+            $table->string('author_id')->nullable();
+            $table->foreign('author_id')->references('stuid')->on('users');
             $table->ipAddress('ip_addr');
             $table->string('ip_from');
 

@@ -29,7 +29,9 @@ class CreateUsersTable extends Migration
             $table->integer('highest_vote_streak')->default(0);
             $table->dateTime('last_vote')->default(DB::raw('"2020-01-01 00:00:00"'));
 
-            $table->dateTime('last_login')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('last_login_tg');
+            $table->dateTime('last_login_nctu');
+            $table->dateTime('last_login_google');
             $table->rememberToken();
             $table->timestamps();
         });

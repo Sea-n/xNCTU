@@ -78,11 +78,11 @@
 <?php if (!isset($USER)) { ?>
     <h2 class="ts header">使用 Telegram 登入</h2>
     <p>只要您曾綁定 NCTU 帳號，點擊下面按鈕即可以 Telegram 登入服務。</p>
-    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login-tg" data-request-access="write"></script>
+    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login/tg" data-request-access="write"></script>
 <?php } else if (!isset($USER['tg_id'])) { ?>
     <h2 class="ts header">使用 Telegram 快速審核</h2>
     <p>點擊下面按鈕即可綁定 Telegram 帳號，讓您收到最即時的投稿通知，並快速通過/駁回貼文。</p>
-    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login-tg" data-request-access="write"></script>
+    <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot" data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login/tg" data-request-access="write"></script>
 <?php } else if ($USER['name'] == $USER['stuid']) { ?>
     <h2 class="ts header">使用 Telegram 快速審核</h2>
     <div class="ts positive message">
