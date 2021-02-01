@@ -83,4 +83,8 @@ class User extends Authenticatable
      */
     protected $casts = [
     ];
+
+    function dep() {
+        return idToDep($this->stuid);
+    }
 }

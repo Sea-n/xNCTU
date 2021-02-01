@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Post;
 use App\Models\TgMsg;
 use App\Models\User;
+use App\Models\Vote;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Telegram;
@@ -173,11 +174,86 @@ class ReviewService extends BaseService
     }
 
     /**
+     * After inserted vote to database, call this function to
+     * remove inline keyboard and send notification to log group.
+     *
+     * @param Post $post
+     * @param User $user
+     */
+    public function voted(Post $post, User $user)
+    {
+        $vote = Vote::where([
+            ['uid', '=', $post->uid],
+            ['stuid', '=', $user->stuid],
+        ])->firstOrFail();
+
+        /* Remove vote keyboard in Telegram */
+        $msg = TgMsg::where([
+            ['uid', '=', $post->uid],
+            ['chat_id', '=', $user->tg_id ?? 42],
+        ])->firstOrFail();
+
+        if ($msg) {
+            try {
+                Telegram::editMessageReplyMarkup([
+                    'chat_id' => $user->tg_id,
+                    'message_id' => $msg->msg_id,
+                    'reply_markup' => [
+                        'inline_keyboard' => [
+                            [
+                                [
+                                    'text' => '開啟審核頁面',
+                                    'login_url' => [
+                                        'url' => env('APP_URL') . "/login/tg?r=%2Freview%2F{$post->uid}",
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
+                $msg = TgMsg::where([
+                    ['uid', '=', $post->uid],
+                    ['stuid', '=', $user->stuid],
+                ])->delete();
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+        }
+
+        /* Send vote log to group */
+        $hashtag = "#投稿{$post->uid}";
+        $body = preg_replace('/\s+/', '', $post->body);
+        $body = mb_substr($body, 0, 10) . '..';
+
+        $dep = $user->dep();
+        $name = $user->name;
+        if (is_numeric($name))
+            $name = "N$name";
+        $name = preg_replace('/[ -\/:-@[-`{-~]/iu', '_', $name);
+
+        $type = ($vote->vote == 1 ? '✅' : '❌');
+        $reason = $vote->reason;
+
+        $msg = "$hashtag $body\n" .
+            "$dep #$name\n\n" .
+            "$type $reason";
+
+        try {
+            Telegram::sendMessage([
+                'chat_id' => env('TELEGRAM_LOG_GROUP'),
+                'text' => $msg,
+                'disable_web_page_preview' => true,
+            ]);
+        } catch (TelegramResponseException $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
+    /**
      * @param Post $post
      * @throws Exception
      */
-    public
-    function delete(Post $post)
+    public function delete(Post $post)
     {
         $msgs = TgMsg::where('uid', '=', $post->uid)->get();
 

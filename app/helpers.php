@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\ReviewVoted;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Vote;
@@ -96,9 +97,9 @@ function ip_from(string $ip_addr): string
     /* Use PTR record then mapping by human */
     $ptr = gethostbyaddr($ip_addr);
     if ($ptr != $ip_addr) {
-        $ptr = explode('.', $ptr);
-        $ptr = array_slice($ptr, -3, 3);
-        $ptr = join('.', $ptr);
+        $ptr_array = explode('.', $ptr);
+        $ptr_array = array_slice($ptr_array, -3, 3);
+        $ptr = join('.', $ptr_array);
         $ptr = str_replace("emome-ip6.hinet.net", "中華電信", $ptr);
         $ptr = str_replace("dynamic-ip.hinet.net", "中華電信", $ptr);
         $ptr = str_replace("dynamic-ip6.hinet.net", "中華電信", $ptr);
@@ -292,6 +293,7 @@ function idToDepNCTU(string $id): string {
         "99999"=>"END"];
 
     $idB = substr($id, 2);
+    $dep = "未知";
     foreach ($TABLE as $s => $n) {
         if ($idB >= $s)
             $dep = $n;
@@ -317,7 +319,7 @@ function idToDepNYCU(string $id): string
     $idA = $id[0];  // Degree(1): Bachelor, X, Master, Doctor, Part-time
     $idB = $id[1] . $id[2];  // Year(2)
     $idC = $id[3] . $id[4] . $id[5];  // College(1) and Department(2)
-    $idD = $id[6] . $id[7] . $id[8];  // Serial number(3)
+//    $idD = $id[6] . $id[7] . $id[8];  // Serial number(3)
 
     $TABLE = [
         "1-101"=>"電機系",
@@ -446,6 +448,9 @@ function voteSubmission(string $uid, string $stuid, int $vote, string $reason)
     if (mb_strlen($reason) > 100)
         return ['ok' => false, 'msg' => 'Reason too long. 附註文字過長'];
 
+    $post = Post::find($uid);
+    $user = User::find($stuid);
+
     $check = canVote($uid, $stuid);
     if (!$check['ok'])
         return $check;
@@ -458,17 +463,16 @@ function voteSubmission(string $uid, string $stuid, int $vote, string $reason)
     ]);
 
     /* Caution: use string combine in SQL query */
-    Post::find($uid)->increment($type);
+    $post->increment($type);
 
     /* Calculate vote streak, the users table record is independent from votes table */
-    $user = User::find($stuid);
-    $user->increment($type);
+    $user->increment($type, 1);
 
     $lv = date('Ymd', strtotime($user->last_vote));
     $user->last_vote = Carbon::now();
 
     if ($lv == date('Ymd')) {  // Already voted today
-        // DUNNO
+        echo '';
     } else if ($lv == date('Ymd', time() - 24*60*60)) {  // Streak from yesterday
         if ($user->current_vote_streak == $user->highest_vote_streak)
             $user->highest_vote_streak++;
@@ -480,9 +484,10 @@ function voteSubmission(string $uid, string $stuid, int $vote, string $reason)
     }
     $user->save();
 
-    /* Return votes for submission */
-    $post = Post::find($uid);
+    /* Send vote to log group */
+    ReviewVoted::dispatchAfterResponse($post, $user);
 
+    /* Return votes for submission */
     return [
         'ok' => true,
         'approvals' => $post->approvals,
