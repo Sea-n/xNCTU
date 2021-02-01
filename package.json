@@ -10,10 +10,15 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.19",
-        "cross-env": "^7.0",
-        "laravel-mix": "^5.0.1",
+        "axios": "^0.21.1",
+        "cross-env": "^7.0.3",
+        "laravel-mix": "^5.0.9",
         "lodash": "^4.17.19",
         "resolve-url-loader": "^3.1.0"
+    },
+    "dependencies": {
+        "dotenv": "^6.2.0",
+        "instagram-private-api": "^1.43.3",
+        "mysql": "^2.18.1"
     }
 }

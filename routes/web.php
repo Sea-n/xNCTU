@@ -48,6 +48,9 @@ Route::get('/review/{post}', function (Post $post) {
             session()->forget('uid');
     }
 
+    if ($post->id)
+        return redirect("/post/{$post->id}");
+
     return view('review-one', ['post' => $post]);
 })->name('submission');
 

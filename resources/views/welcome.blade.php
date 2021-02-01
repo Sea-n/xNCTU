@@ -22,11 +22,16 @@
     <h2 class="ts header">社群平台</h2>
     <p>除了本站文章列表外，您可以在以下 5 個社群媒體平台追蹤{{ env('APP_CHINESE_NAME') }} 帳號。</p>
     <div class="icon-row">
-        <a id="telegram-icon"  class="ts link tiny rounded image" target="_blank" href="https://t.me/{{ env('APP_NAME') }}"              ><img src="https://image.flaticon.com/icons/svg/2111/2111646.svg"   alt="Telegram" ></a>
-        <a id="twitter-icon"   class="ts link tiny rounded image" target="_blank" href="https://twitter.com/x_NCTU"      ><img src="https://image.flaticon.com/icons/svg/124/124021.svg"     alt="Twitter"  ></a>
-        <a id="plurk-icon"     class="ts link tiny rounded image" target="_blank" href="https://www.plurk.com/{{ env('APP_NAME') }}"     ><img src="https://image.flaticon.com/icons/svg/124/124026.svg"     alt="Plurk"    ></a>
-        <a id="facebook-icon"  class="ts link tiny rounded image" target="_blank" href="https://www.facebook.com/{{ env('APP_NAME') }}2.0"  ><img src="https://image.flaticon.com/icons/svg/220/220200.svg"     alt="Facebook" ></a>
-        <a id="instagram-icon" class="ts link tiny rounded image" target="_blank" href="https://www.instagram.com/x_nctu"><img src="https://image.flaticon.com/icons/svg/2111/2111463.svg"   alt="Instagram"></a>
+        <a id="telegram-icon"  class="ts link tiny rounded image" target="_blank" href="https://t.me/{{ env('TELEGRAM_USERNAME') }}">
+            <img src="https://image.flaticon.com/icons/svg/2111/2111646.svg" alt="Telegram" ></a>
+        <a id="twitter-icon"   class="ts link tiny rounded image" target="_blank" href="https://twitter.com/{{ env('TWITTER_USERNAME') }}">
+            <img src="https://image.flaticon.com/icons/svg/124/124021.svg"   alt="Twitter"  ></a>
+        <a id="plurk-icon"     class="ts link tiny rounded image" target="_blank" href="https://www.plurk.com/{{ env('PLURK_USERNAME') }}">
+            <img src="https://image.flaticon.com/icons/svg/124/124026.svg"   alt="Plurk"    ></a>
+        <a id="facebook-icon"  class="ts link tiny rounded image" target="_blank" href="https://www.facebook.com/{{ env('FACEBOOK_USERNAME') }}">
+            <img src="https://image.flaticon.com/icons/svg/220/220200.svg"   alt="Facebook" ></a>
+        <a id="instagram-icon" class="ts link tiny rounded image" target="_blank" href="https://www.instagram.com/{{ env('INSTAGRAM_USERNAME') }}">
+            <img src="https://image.flaticon.com/icons/svg/2111/2111463.svg" alt="Instagram"></a>
     </div>
 
     <h2 class="ts header">審文機制</h2>

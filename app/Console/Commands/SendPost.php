@@ -62,8 +62,9 @@ class SendPost extends Command
         if (!isset($post)) {
             $submissions = Post::where('status', '=', 3)->orderBy('submitted_at')->get();
 
-            foreach ($submissions as $post) {
-                if ($this->checkEligible($post)) {
+            foreach ($submissions as $item) {
+                if ($this->checkEligible($item)) {
+                    $post = $item;
                     $id = Post::orderBy('id', 'desc')->first()->id ?? 0;
                     $post->update(['id' => $id + 1]);
                     break;
@@ -111,7 +112,7 @@ class SendPost extends Command
     private function checkEligible(Post $post): bool
     {
         /* Prevent publish demo post */
-        if ($post['status'] != 3)
+        if ($post->id || $post->status != 3)
             return false;
 
         $dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);

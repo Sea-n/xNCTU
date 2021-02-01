@@ -98,12 +98,12 @@ class Post extends Model
                 return env('APP_URL') . $this->id > 0 ? "/post/{$this->id}" : "/review/{$this->uid}";
             case 'telegram':
                 return $this->telegram_id > 0 ? 'https://t.me/' . env('TELEGRAM_USERNAME') . "/{$this->telegram_id}" : null;
-            case 'facebook':
-                return $this->facebook_id > 10 ? 'https://www.facebook.com/' . env('FACEBOOK_USERNAME') . "/posts/{$this->facebook_id}" : null;
             case 'plurk':
                 return $this->plurk_id > 10 ? 'https://www.plurk.com/p/' . base_convert($this->plurk_id, 10, 36) : null;
             case 'twitter':
                 return $this->twitter_id > 10 ? 'https://twitter.com/' . env('TWITTER_USERNAME') . "/status/{$this->twitter_id}" : null;
+            case 'facebook':
+                return $this->facebook_id > 10 ? 'https://www.facebook.com/' . env('FACEBOOK_USERNAME') . "/posts/{$this->facebook_id}" : null;
             case 'instagram':
                 return strlen($this->instagram_id) > 1 ? 'https://www.instagram.com/p/' . $this->instagram_id : null;
             default:

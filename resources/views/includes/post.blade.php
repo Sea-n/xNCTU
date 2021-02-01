@@ -37,11 +37,6 @@ if ($post->author) {
         <div class="header">此文已刪除</div>
         <p>刪除原因：{{ $post->delete_note }}</p>
     </div>
-@elseif (isset($post->id) && strpos(url()->current(), '/post') === false)
-    <div class="ts positive message">
-        <div class="header">文章已發出</div>
-        <p>您可以在 <a href="/post/{{ $post->id }}">#靠交{{ $post->id }}</a> 找到這篇文章</p>
-    </div>
 @endisset
 
 <article itemscope itemtype="http://schema.org/Article" class="ts card" id="post-{{ $post->uid }}" style="margin-bottom: 42px;">
@@ -82,23 +77,23 @@ if ($post->author) {
     <div class="extra content" id="extra">
         @isset ($single)
             @if ($post->telegram_id > 1)
-                <p><span><i class="telegram icon"></i> Telegram: <a target="_blank" href="https://t.me/s/{{ env('APP_NAME') }}/{{ $post->telegram_id }}">@{{ env('APP_NAME') }}/{{ $post->telegram_id }}</a></span><br>
+                <span><i class="telegram icon"></i> Telegram: <a target="_blank" href="{{ $post->getUrl('telegram') }}">@<span>{{ env('TELEGRAM_USERNAME') }}</span>/{{ $post->telegram_id }}</a></span><br>
             @endif
 
             @if ($post->facebook_id > 87)
-                <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="https://www.facebook.com/{{ env('APP_NAME') }}2.0/posts/{{ $post->facebook_id }}">@{{ env('APP_NAME') }}2.0/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span><br>
+                <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="{{ $post->getUrl('facebook') }}">@<span>{{ env('FACEBOOK_USERNAME') }}</span>/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span><br>
             @endif
 
             @if (strlen($post->instagram_id) > 1)
-                <span><i class="instagram icon"></i> Instagram: <a target="_blank" href="https://www.instagram.com/p/{{ $post->instagram_id }}">@x_nctu/{{ $post->instagram_id }}</a></span><br>
+                <span><i class="instagram icon"></i> Instagram: <a target="_blank" href="{{ $post->getUrl('instagram') }}">@<span>{{ env('INSTAGRAM_USERNAME') }}</span>/{{ $post->instagram_id }}</a></span><br>
             @endif
 
             @if ($post->plurk_id > 69)
-                <span><i class="talk icon"></i> Plurk: <a target="_blank" href="https://www.plurk.com/p/{{ base_convert($post->plurk_id, 10, 36) }}">@{{ env('APP_NAME') }}/{{ base_convert($post->plurk_id, 10, 36) }}</a></span><br>
+                <span><i class="talk icon"></i> Plurk: <a target="_blank" href="{{ $post->getUrl('plurk') }}">@<span>{{ env('PLURK_USERNAME') }}</span>/{{ base_convert($post->plurk_id, 10, 36) }}</a></span><br>
             @endif
 
             @if ($post->twitter_id > 42)
-                <span><i class="twitter icon"></i> Twitter: <a target="_blank" href="https://twitter.com/x_NCTU/status/{{ $post->twitter_id }}">@x_NCTU/{{ $post->twitter_id }}</a></span></p>
+                <span><i class="twitter icon"></i> Twitter: <a target="_blank" href="{{ $post->getUrl('twitter') }}">@<span>{{ env('TWITTER_USERNAME') }}</span>/{{ $post->twitter_id }}</a></span>
             @endif
         @endisset
 
