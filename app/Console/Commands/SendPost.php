@@ -144,12 +144,12 @@ class SendPost extends Command
         if ($post->id || $post->status != 3)
             return false;
 
-        $dt = floor(time() / 60) - floor(strtotime($post['created_at']) / 60);
-        $vote = $post['approvals'] - $post['rejects'];
-        $vote2 = $post['approvals'] - $post['rejects'] * 2;
+        $dt = floor(time() / 60) - floor(strtotime($post->created_at) / 60);
+        $vote = $post->approvals - $post->rejects;
+        $vote2 = $post->approvals - $post->rejects * 2;
 
         /* Rule for Logged-in users */
-        if (!empty($post['author_id'])) {
+        if ($post->author_id) {
             /* No reject: 3 votes */
             if ($dt < 10)
                 return ($vote2 >= 3);
@@ -159,20 +159,8 @@ class SendPost extends Command
         }
 
         /* Rule for NCTU IP address */
-        if ($post['author_name'] == '匿名, 交大'
-            && $post['ip_addr'] != ip_mask($post['ip_addr'])) {
-            /* Night mode */
-            if (strtotime("03:00") <= time() && time() <= strtotime("09:00"))
-                if ($vote < 3)
-                    return false;
-
-            if (strtotime("02:30") <= time() && time() <= strtotime("09:30"))
-                if ($vote < 2)
-                    return false;
-
-            if (strtotime("02:00") <= time() && time() <= strtotime("10:00"))
-                if ($vote < 1)
-                    return false;
+        if ($post->ip_from == '匿名, 交大'
+            && $post->ip_addr != ip_mask($post->ip_addr)) {
 
             /* No reject: 5 votes */
             if ($dt < 10)
@@ -182,12 +170,22 @@ class SendPost extends Command
             if ($dt < 60)
                 return ($vote >= 3);
 
-            /* More than 1 hour */
+            /* More than 1 hour, during night */
+            if (strtotime("03:00") <= time() && time() <= strtotime("09:00"))
+                return ($vote >= 3);
+
+            if (strtotime("02:30") <= time() && time() <= strtotime("09:30"))
+                return ($vote >= 2);
+
+            if (strtotime("02:00") <= time() && time() <= strtotime("10:00"))
+                return ($vote >= 1);
+
+            /* More than 1 hour, daytime */
             return ($vote >= 0);
         }
 
         /* Rule for Taiwan IP address */
-        if (strpos($post['author_name'], '境外') === false) {
+        if (strpos($post->ip_from, '境外') === false) {
             /* No reject: 7 votes */
             if ($dt < 10)
                 return ($vote2 >= 7);

@@ -11,10 +11,8 @@ $time = humanTime($post->submitted_at ?? now());
 $ts = strtotime($post->submitted_at ?? now());
 
 $author_name = "匿名, {$post->ip_from}";
-if ($post->author) {
-    $dep = idToDep($post->author_id);
-    $author_name = $dep . ' ' . $post->author->name;
-}
+if ($post->author)
+    $author_name = $post->author->dep() . ' ' . $post->author->name;
 
 $ip_masked = $post->ip_addr;
 if (strpos($author_name, '境外') === false)

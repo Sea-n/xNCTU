@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RankingController;
-use App\Models\Post;
-use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TelegramController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
+
+Route::post('/telegram/webhook/{token}', [TelegramController::class, 'webhook']);
 
 Route::apiResource('/posts', PostController::class);
 
@@ -36,26 +37,6 @@ Route::post('/vote', function (Request $request) {
 
     $result = voteSubmission($uid, $stuid, $vote, $reason);
     return Response::json($result);
-});
-
-Route::get('/votes/{post}', function (Post $post) {
-    $votes = Vote::where('uid', '=', $post->uid)->get();
-    $results = [];
-    foreach ($votes as $item)
-        $results[] = [
-            'vote' => $item->vote,
-            'stuid' => $item->stuid,
-            'dep' => $item->user->dep(),
-            'name' => $item->user->name,
-            'reason' => $item->reason,
-        ];
-
-    return Response::json([
-        'ok' => true,
-        'approvals' => $post->approvals,
-        'rejects' => $post->rejects,
-        'votes' => $results,
-    ]);
 });
 
 Route::get('/ranking/{tg_id}', [RankingController::class, 'show']);

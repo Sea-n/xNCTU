@@ -81,7 +81,7 @@ function updateVotes() {
         return;
     }
 
-    fetch('/api/votes/' + uid)
+    fetch('/api/posts/' + uid)
         .then(resp => resp.json())
         .then((resp) => {
             if (resp.ok) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ReviewSend;
 use App\Models\Post;
+use App\Models\Vote;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,11 +30,9 @@ class PostController extends Controller
 
         $results = [];
         foreach ($posts as $post) {
-            $author_name = $post->ip_from;
-            if (isset($post->author)) {
-                $dep = idToDep($post->author_id);
-                $author_name = $dep . ' ' . $post->author->name;
-            }
+            $author_name = "匿名, {$post->ip_from}";
+            if ($post->author_id)
+                $author_name = $post->author->dep() . ' ' . $post->author->name;
 
             $ip_masked = $post->ip_addr;
             if (strpos($author_name, '境外') === false)
@@ -65,6 +64,43 @@ class PostController extends Controller
         }
 
         return response()->json($results);
+    }
+
+    /**
+     * @param Post $post
+     * @return JsonResponse
+     */
+    public function show(Post $post)
+    {
+        if ($post->status < 0)
+            return response()->json([
+                'ok' => true,
+                'reload' => true,
+            ]);
+
+        if ($post->id)
+            return response()->json([
+                'ok' => true,
+                'id' => $post->id,
+            ]);
+
+        $votes = Vote::where('uid', '=', $post->uid)->get();
+        $results = [];
+        foreach ($votes as $item)
+            $results[] = [
+                'vote' => $item->vote,
+                'stuid' => $item->stuid,
+                'dep' => $item->user->dep(),
+                'name' => $item->user->name,
+                'reason' => $item->reason,
+            ];
+
+        return response()->json([
+            'ok' => true,
+            'approvals' => $post->approvals,
+            'rejects' => $post->rejects,
+            'votes' => $results,
+        ]);
     }
 
     /**
@@ -362,7 +398,7 @@ class PostController extends Controller
      * @param string $uid
      * @return string  $error
      */
-    function uploadImage(string $uid): string
+    private function uploadImage(string $uid): string
     {
         /* Check file type */
         $mime = request()->file('img')->getMimeType();

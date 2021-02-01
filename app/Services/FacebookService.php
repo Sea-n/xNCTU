@@ -97,7 +97,7 @@ class FacebookService extends BaseService implements PostContract
     public function comment(Post $post)
     {
         assert(count($this->tips_all) % 7 != 0);  // current count = 20
-        $tips = $this->tips_all[($post['id'] * 7) % count($this->tips_all)];
+        $tips = $this->tips_all[($post->id * 7) % count($this->tips_all)];
         $go = $this->go_all[mt_rand(0, count($this->go_all) - 1)];
 
         $msg = "\n";  // First line is empty
