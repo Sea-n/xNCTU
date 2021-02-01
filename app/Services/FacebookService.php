@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Post;
 use Exception;
 
-class InstagramService extends BaseService implements PostContract
+class FacebookService extends BaseService implements PostContract
 {
     public function __construct()
     {
@@ -14,7 +14,7 @@ class InstagramService extends BaseService implements PostContract
 
     public function publish(Post $post)
     {
-        exec('node ' . __DIR__ . "/InstagramService.js {$post->id}");
+        // TODO
     }
 
     /**
@@ -23,7 +23,7 @@ class InstagramService extends BaseService implements PostContract
      */
     public function comment(Post $post)
     {
-        throw new Exception('Not implemented.');
+        // TODO
     }
 }
 

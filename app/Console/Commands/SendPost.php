@@ -2,10 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\PublishFacebook;
+use App\Jobs\PublishInstagram;
+use App\Jobs\PublishPlurk;
 use App\Jobs\PublishTelegram;
+use App\Jobs\PublishTwitter;
 use App\Jobs\ReviewDelete;
+use App\Jobs\UpdateFacebook;
+use App\Jobs\UpdatePlurk;
 use App\Jobs\UpdateTelegram;
 use App\Models\Post;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use OAuth;
@@ -66,7 +73,11 @@ class SendPost extends Command
                 if ($this->checkEligible($item)) {
                     $post = $item;
                     $id = Post::orderBy('id', 'desc')->first()->id ?? 0;
-                    $post->update(['id' => $id + 1]);
+                    $post->update([
+                        'id' => $id + 1,
+                        'status' => 4,
+                        'posted_at' => Carbon::now(),
+                    ]);
                     break;
                 }
             }
@@ -83,9 +94,29 @@ class SendPost extends Command
 
         $this->link = env('APP_URL') . "/post/{$post->id}";
 
+        /* Send post to each platforms */
         if (env('TELEGRAM_ENABLE', false) && $post->telegram_id == 0)
             PublishTelegram::dispatch($post);
 
+        if (env('TWITTER_ENABLE', false) && $post->twitter_id == 0)
+            PublishTwitter::dispatch($post);
+
+        if (env('INSTAGRAM_ENABLE', false) && $post->instagram_id == '')
+            PublishInstagram::dispatch($post);
+
+        if (env('PLURK_ENABLE', false) && $post->plurk_id == 0)
+            PublishPlurk::dispatch($post);
+
+        if (env('FACEBOOK_ENABLE', false) && $post->facebook_id == 0)
+            PublishFacebook::dispatch($post);
+
+
+        /* Comment on some platforms */
+        if (env('FACEBOOK_ENABLE', false) && $post->facebook_id > 0)
+            UpdateFacebook::dispatch($post);
+
+        if (env('PLURK_ENABLE', false) && $post->plurk_id > 0)
+            UpdatePlurk::dispatch($post);
 
         if (env('TELEGRAM_ENABLE', false) && $post->telegram_id > 0)
             UpdateTelegram::dispatch($post);
@@ -193,85 +224,6 @@ class SendPost extends Command
             $post->update(['status' => 5]);
     }
 
-
-    private function send_twitter(Post $post): int
-    {
-        $msg = "#靠交{$post['id']}\n\n{$post['body']}";
-        if (strlen($msg) > 250)
-            $msg = mb_substr($msg, 0, 120) . '...';
-        $msg .= "\n\n✅ {$this->link} .";
-
-        if ($post['has_img']) {
-            $file = ['media' => curl_file_create(__DIR__ . "/img/{$post['uid']}.jpg")];
-
-            $result = $this->send_twitter_api('https://upload.twitter.com/1.1/media/upload.json?media_category=tweet_image', $file);
-            if (isset($result['media_id_string']))
-                $img_id = $result['media_id_string'];
-            else
-                echo "Twitter upload error: " . json_encode($result) . "\n";
-        }
-
-        $query = ['status' => $msg];
-        if (!empty($img_id))
-            $query['media_ids'] = $img_id;
-        $URL = 'https://api.twitter.com/1.1/statuses/update.json?' . http_build_query($query);
-
-        $result = $this->send_twitter_api($URL);
-        if (!isset($result['id_str'])) {
-            echo "Twitter error: ";
-            var_dump($result);
-
-            if ($result['errors']['message'] == "We can't complete this request because this link has been identified by Twitter or our partners as being potentially harmful. Visit our Help Center to learn more.")
-                return 1;
-
-            return 0;
-        }
-
-        return $result['id_str'];
-    }
-
-    private function send_twitter_api(string $url, array $post = null): array
-    {
-        $nonce = md5(time());
-        $timestamp = time();
-
-        $oauth = new OAuth(env('TWITTER_CONSUMER_KEY'), env('TWITTER_CONSUMER_SECRET'), env('OAUTH_SIG_METHOD_HMACSHA1'));
-        $oauth->enableDebug();
-        $oauth->setToken(env('TWITTER_TOKEN'), env('TWITTER_TOKEN_SECRET'));
-        $oauth->setNonce($nonce);
-        $oauth->setTimestamp($timestamp);
-        $signature = $oauth->generateSignature('POST', $url);
-
-        $auth = [
-            'oauth_consumer_key' => env('TWITTER_CONSUMER_KEY'),
-            'oauth_nonce' => $nonce,
-            'oauth_signature' => $signature,
-            'oauth_signature_method' => 'HMAC-SHA1',
-            'oauth_timestamp' => $timestamp,
-            'oauth_token' => env('TWITTER_TOKEN')
-        ];
-
-        $authStr = 'OAuth ';
-        foreach ($auth as $key => $val)
-            $authStr .= $key . '="' . urlencode($val) . '", ';
-        $authStr .= 'oauth_version="1.0"';
-
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_URL => $url,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $post,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: $authStr"
-            ]
-        ]);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        $result = json_decode($result, true);
-        return $result;
-    }
 
     private function send_plurk(Post $post): int
     {

@@ -20,7 +20,6 @@ class TelegramService extends BaseService implements PostContract
      */
     public function publish(Post $post)
     {
-        $link = env('APP_URL') . "/post/{$post->id}";
         /* Check latest line */
         $lines = explode("\n", $post->body);
         $end = end($lines);
@@ -28,7 +27,7 @@ class TelegramService extends BaseService implements PostContract
         if ($post->media == 0 && $is_url)
             $msg = "<a href='$end'>#</a><a href='{$link}'>靠交{$post->id}</a>";
         else
-            $msg = "<a href='{$link}'>#靠交{$post->id}</a>";
+            $msg = "<a href='{$post->getUrl('website')}'>#靠交{$post->id}</a>";
 
         $msg .= "\n\n" . enHTML($post->body);
 

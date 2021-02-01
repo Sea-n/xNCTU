@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\RankingController;
+use App\Models\Post;
+use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\RankingController;
-use App\Models\Vote;
-use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,20 +38,22 @@ Route::post('/vote', function (Request $request) {
     return Response::json($result);
 });
 
-Route::get('/votes/{uid}', function (string $uid) {
-    $votes = Vote::where('uid', '=', $uid)->get();
+Route::get('/votes/{post}', function (Post $post) {
+    $votes = Vote::where('uid', '=', $post->uid)->get();
     $results = [];
     foreach ($votes as $item)
         $results[] = [
             'vote' => $item->vote,
             'stuid' => $item->stuid,
-            'dep' => idToDep($item->stuid),
+            'dep' => $item->user->dep(),
             'name' => $item->user->name,
             'reason' => $item->reason,
         ];
 
     return Response::json([
         'ok' => true,
+        'approvals' => $post->approvals,
+        'rejects' => $post->rejects,
         'votes' => $results,
     ]);
 });
