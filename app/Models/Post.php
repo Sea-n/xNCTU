@@ -96,6 +96,8 @@ class Post extends Model
         switch (strtolower($platform)) {
             case 'website':
                 return env('APP_URL') . ($this->id > 0 ? "/post/{$this->id}" : "/review/{$this->uid}");
+            case 'image':
+                return $this->media == 0 ? '' : env('APP_URL') . "/img/{$this->uid}.jpg";
             case 'telegram':
                 return $this->telegram_id > 0 ? 'https://t.me/' . env('TELEGRAM_USERNAME') . "/{$this->telegram_id}" : null;
             case 'plurk':

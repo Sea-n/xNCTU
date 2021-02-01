@@ -13,9 +13,7 @@ use App\Jobs\UpdatePlurk;
 use App\Jobs\UpdateTelegram;
 use App\Models\Post;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Console\Command;
-use OAuth;
 
 class SendPost extends Command
 {
@@ -225,46 +223,6 @@ class SendPost extends Command
     }
 
 
-    private function send_plurk(Post $post): int
-    {
-        $msg = $post->media == 1 ? (env('APP_URL') . "/img/{$post->uid}.jpg\n") : '';
-        $msg .= "#靠交{$post->id}\n{$post->body}";
-
-        if (mb_strlen($msg) > 290)
-            $msg = mb_substr($msg, 0, 290) . '...';
-
-        $msg .= "\n\n✅ {$this->link} ({$this->link})";
-
-        $nonce = md5(time());
-        $timestamp = time();
-
-        /* Add Plurk */
-        $URL = 'https://www.plurk.com/APP/Timeline/plurkAdd?' . http_build_query([
-                'content' => $msg,
-                'qualifier' => 'says',
-                'lang' => 'tr_ch',
-            ]);
-
-        $oauth = new OAuth(env('PLURK_CONSUMER_KEY'), env('PLURK_CONSUMER_SECRET'), env('OAUTH_SIG_METHOD_HMACSHA1'));
-        $oauth->enableDebug();
-        $oauth->setToken(env('PLURK_TOKEN'), env('PLURK_TOKEN_SECRET'));
-        $oauth->setNonce($nonce);
-        $oauth->setTimestamp($timestamp);
-        $signature = $oauth->generateSignature('POST', $URL);
-
-        try {
-            $oauth->fetch($URL);
-            $result = $oauth->getLastResponse();
-            $result = json_decode($result, true);
-            return $result['plurk_id'];
-        } catch (Exception $e) {
-            echo "Plurk Message: $msg\n\n";
-            echo 'Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n";
-            echo $e->lastResponse . "\n";
-            return 0;
-        }
-    }
-
     private function send_facebook(Post $post): int
     {
         $msg = "#靠交{$post['id']}\n\n";
@@ -305,66 +263,6 @@ class SendPost extends Command
         }
 
         return $post_id;
-    }
-
-    private function send_instagram(Post $post): int
-    {
-        if (!$post['has_img'])
-            return -1;
-
-        system("node " . __DIR__ . "/send-ig.js {$post['id']} "
-            . ">> /temp/xnctu-ig.log 2>> /temp/xnctu-ig.err");
-
-        return 0;
-    }
-
-
-    private function update_plurk(Post $post)
-    {
-        if ($this->dt <= 60)
-            $msg = "🕓 投稿時間：{$this->time} ({$this->dt} 分鐘前)\n\n";
-        else
-            $msg = "🕓 投稿時間：{$this->time}\n\n";
-
-        if ($post['rejects'])
-            $msg .= "審核結果：✅ 通過 {$post['approvals']} 票 / ❌ 駁回 {$post['rejects']} 票\n\n";
-        else
-            $msg .= "審核結果：✅ 通過 {$post['approvals']} 票\n\n";
-
-        $msg .= "🥙 其他平台：https://www.facebook.com/xNCTU/posts/{$post['facebook_id']} (Facebook)"
-            . "、https://twitter.com/x_NCTU/status/{$post['twitter_id']} (Twitter)";
-        if (strlen($post['instagram_id']) > 1)
-            $msg .= "、https://www.instagram.com/p/{$post['instagram_id']} (Instagram)";
-        $msg .= "、https://t.me/xNCTU/{$post['telegram_id']} (Telegram)\n\n";
-
-        $msg .= "👉 立即投稿：https://x.nctu.app/submit (https://x.nctu.app/submit)";
-
-        $nonce = md5(time());
-        $timestamp = time();
-
-        /* Add Plurk */
-        $URL = 'https://www.plurk.com/APP/Responses/responseAdd?' . http_build_query([
-                'plurk_id' => $post['plurk_id'],
-                'content' => $msg,
-                'qualifier' => 'freestyle',
-                'lang' => 'tr_ch',
-            ]);
-
-        $oauth = new OAuth(env('PLURK_CONSUMER_KEY'), env('PLURK_CONSUMER_SECRET'), env('OAUTH_SIG_METHOD_HMACSHA1'));
-        $oauth->enableDebug();
-        $oauth->setToken(env('PLURK_TOKEN'), env('PLURK_TOKEN_SECRET'));
-        $oauth->setNonce($nonce);
-        $oauth->setTimestamp($timestamp);
-        $signature = $oauth->generateSignature('POST', $URL);
-
-        try {
-            $oauth->fetch($URL);
-            $oauth->getLastResponse();
-        } catch (Exception $e) {
-            echo "Plurk Message: $msg\n\n";
-            echo 'Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n";
-            echo $e->lastResponse . "\n";
-        }
     }
 
 
