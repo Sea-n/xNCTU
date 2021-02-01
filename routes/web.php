@@ -1,11 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Models\Post;
-use App\Models\User;
-use App\Models\GoogleAccount;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,8 +57,8 @@ Route::get('/posts', function () {
     return view('posts');
 })->name('posts');
 
-Route::get('/post/{id}', function (int $id) {
-    $post = Post::where('id', '=', $id)->first();
+Route::get('/post/{id}', function (string $id) {
+    $post = Post::where('id', '=', (int)$id)->firstOrFail();
     return view('post', ['post' => $post]);
 })->name('post');
 
