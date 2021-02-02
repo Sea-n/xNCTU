@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Post;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,12 +19,9 @@ class DatabaseSeeder extends Seeder
         $db = DB::connection('legacy');
 
         echo "Migrating users...\n";
-        DB::table('users')->delete();
         $users = $db->table('users')->get();
         foreach ($users as $item) {
-            if (DB::table('users')->where('stuid', '=', $item->stuid)->count() > 0)
-                continue;
-
+            Schema::disableForeignKeyConstraints();
             DB::table('users')->where('stuid', '=', $item->stuid)->delete();
             DB::table('users')->insert([
                 'stuid' => $item->stuid,
@@ -42,24 +41,19 @@ class DatabaseSeeder extends Seeder
                 'created_at' => $item->created_at,
                 'updated_at' => $item->created_at,
             ]);
+            Schema::enableForeignKeyConstraints();
         }
 
         echo "Migrating posts...\n";
         $posts = $db->table('posts')->get();
         foreach ($posts as $item) {
-            $post = DB::table('posts')->where('uid', '=', $item->uid)->first();
-
-            if ($post && strtotime($post->created_at) < strtotime('7 days ago'))
-                continue;
-
             if (strpos($item->author_name, '匿名, ') !== false)
                 $ip_from = mb_substr($item->author_name, 4);
             else
                 $ip_from = "Authored user";
 //                $ip_from = ip_from($item->ip_addr);
 
-            DB::table('posts')->where('uid', '=', $item->uid)->delete();
-            DB::table('posts')->insert([
+            DB::table('posts')->insertOrIgnore([
                 'uid' => $item->uid,
                 'id' => $item->id,
                 'body' => $item->body,

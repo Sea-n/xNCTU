@@ -72,6 +72,7 @@ Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallb
 Route::get('/login/nctu', [LoginController::class, 'redirectToNCTU']);
 Route::get('/login/nctu/callback', [LoginController::class, 'handleNCTUCallback']);
 Route::get('/login/tg', [LoginController::class, 'handleTGCallback']);
+Route::get('/login-tg', [LoginController::class, 'handleTGCallback']);
 
 Route::get('/logout', function () {
     Auth::logout();

@@ -12,6 +12,7 @@ use DB;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Response;
+use Schema;
 use Telegram;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 use Telegram\Bot\Objects\CallbackQuery;
@@ -409,11 +410,11 @@ class TelegramController extends Controller
                         break;
                     }
 
-                    DB::beginTransaction();
+                    Schema::disableForeignKeyConstraints();
                     Post::where('author_id', '=', $stuid_old)->update(['author_id' => $stuid_new]);
                     Vote::where('stuid', '=', $stuid_old)->update(['stuid' => $stuid_new]);
                     User::where('stuid', '=', $stuid_old)->update(['stuid' => $stuid_new]);
-                    DB::commit();
+                    Schema::enableForeignKeyConstraints();
 
                     Telegram::sendMessage([
                         'chat_id' => $message->chat->id,
