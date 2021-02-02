@@ -108,10 +108,10 @@
         <tbody>
         @foreach ($user_count as $i => $item)
             <?php
-            if (isset($item['user']->tg_photo))
+            if (file_exists(public_path("/avatar/tg/{$item['user']->tg_id}-x64.jpg")))
                 $photo = "/avatar/tg/{$item['user']->tg_id}-x64.jpg";
             else
-                $photo = genPic($item['id']);
+                $photo = genPic($item['user']->stuid);
 
             $lv = strtotime($item['user']->last_vote);
             $sc = $item['user']->current_vote_streak;

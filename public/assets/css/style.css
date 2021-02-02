@@ -193,14 +193,6 @@ p {
     white-space: normal;
 }
 
-.diff-wrapper.diff.diff-html .change .old {
-    background: #fbe1e1;
-}
-
-.diff-wrapper.diff.diff-html .change .new {
-    background: #e1fbe1;
-}
-
 .diff-wrapper.diff.diff-html .change .old.none,
 .diff-wrapper.diff.diff-html .change .new.none,
 .diff-wrapper.diff.diff-html .change .rep.none {

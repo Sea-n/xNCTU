@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
         foreach ($posts as $item) {
             $post = DB::table('posts')->where('uid', '=', $item->uid)->first();
 
-            if (strtotime($post->created_at) < strtotime('7 days ago'))
+            if ($post && strtotime($post->created_at) < strtotime('7 days ago'))
                 continue;
 
             if (strpos($item->author_name, '匿名, ') !== false)

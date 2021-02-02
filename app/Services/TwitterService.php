@@ -25,11 +25,6 @@ class TwitterService extends BaseService implements PostContract
             $msg = mb_substr($msg, 0, 120) . '...';
         $msg .= "\n\n✅ {$post->getUrl('website')} .";
 
-        if ($post->media == 0) {
-            $tweet = Twitter::postTweet(['status' => 'Laravel is beautiful']);
-            dd($tweet);
-        }
-
         $query = ['status' => $msg];
 
         if ($post->media == 1) {
