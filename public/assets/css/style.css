@@ -13,7 +13,7 @@ header.ts.fluid.vertically.padded.heading.slate {
     padding: 1.8em 2em 3em !important;
 }
 
-header.ts.fluid.vertically.padded.heading.slate+.ts.container {
+header.ts.fluid.vertically.padded.heading.slate + .ts.container {
     margin-top: 2em !important;
 }
 
@@ -74,11 +74,25 @@ button.vote {
 }
 
 /* Vote Table */
-table.votes thead tr th:nth-child(1) { width: 32px;  }
-table.votes thead tr th:nth-child(2) { width: 72px;  }
-table.votes thead tr th:nth-child(3) { width: 140px; }
-table.votes thead tr th:nth-child(4) { width: 160px; }
-table.votes thead tr th:nth-child(5) { width: 320px; }
+table.votes thead tr th:nth-child(1) {
+    width: 32px;
+}
+
+table.votes thead tr th:nth-child(2) {
+    width: 72px;
+}
+
+table.votes thead tr th:nth-child(3) {
+    width: 140px;
+}
+
+table.votes thead tr th:nth-child(4) {
+    width: 160px;
+}
+
+table.votes thead tr th:nth-child(5) {
+    width: 320px;
+}
 
 p {
     word-wrap: break-word;
@@ -132,6 +146,7 @@ p {
     .login-inner {
         width: 400px;
     }
+
     .logo {
         width: 96px;
     }
@@ -141,7 +156,70 @@ p {
     .login-inner {
         width: 280px;
     }
+
     .logo {
         width: 64px;
     }
+}
+
+
+/* Simplified from jfcherng/php-diff */
+
+.diff-wrapper.diff {
+    color: black;
+    empty-cells: show;
+    font-family: monospace;
+    width: 100%;
+    word-break: break-all;
+}
+
+.diff-wrapper.diff td {
+    vertical-align: baseline;
+    border-collapse: separate;
+    border: none;
+    padding: 1px 2px;
+}
+
+.diff-wrapper.diff td:empty:after {
+    content: " ";
+    visibility: hidden;
+}
+
+.diff-wrapper.diff.diff-html {
+    white-space: pre-wrap;
+}
+
+.diff-wrapper.diff.diff-html.diff-combined .change.change-rep .rep {
+    white-space: normal;
+}
+
+.diff-wrapper.diff.diff-html .change .old {
+    background: #fbe1e1;
+}
+
+.diff-wrapper.diff.diff-html .change .new {
+    background: #e1fbe1;
+}
+
+.diff-wrapper.diff.diff-html .change .old.none,
+.diff-wrapper.diff.diff-html .change .new.none,
+.diff-wrapper.diff.diff-html .change .rep.none {
+    background: transparent;
+    cursor: not-allowed;
+}
+
+.diff-wrapper.diff.diff-html .change ins,
+.diff-wrapper.diff.diff-html .change del {
+    font-weight: bold;
+    text-decoration: none;
+    opacity: 1;
+    border-bottom: 0;
+}
+
+.diff-wrapper.diff.diff-html .change ins {
+    background: #94f094;
+}
+
+.diff-wrapper.diff.diff-html .change del {
+    background: #f09494;
 }

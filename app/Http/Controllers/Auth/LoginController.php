@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\AvaterTelegram;
+use App\Jobs\AvatarTelegram;
 use App\Models\GoogleAccount;
 use App\Models\User;
 use Carbon\Carbon;
@@ -158,7 +158,7 @@ class LoginController extends Controller
                 $user->update(['name' => $user->tg_name]);
 
             if (isset($auth_data['photo_url']) && $old_photo != $auth_data['photo_url']) {
-                AvaterTelegram::dispatchAfterResponse($user);
+                AvatarTelegram::dispatchAfterResponse($user);
             }
 
             Auth::login($user, true);
@@ -179,7 +179,7 @@ class LoginController extends Controller
         ]);
 
         if (isset($auth_data['photo_url']))
-            AvaterTelegram::dispatchAfterResponse($user);
+            AvatarTelegram::dispatchAfterResponse($user);
 
         $msg = "🎉 連結成功！\n\n將來有新投稿時，您將會收到推播，並可用 Telegram 內的按鈕審核貼文。";
         Telegram::sendMessage([

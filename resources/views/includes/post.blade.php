@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Post;
-use App\Models\User;
+use Jfcherng\Diff\DiffHelper;
 
 /**
  * @var Post $post
@@ -28,6 +28,18 @@ if ($post->author) {
     if ($post->author->tg_photo)
         $author_photo = "/avatar/tg/{$post->author->tg_id}-x64.jpg";
 }
+
+if ($post->orig) {
+    $rendererOptions = [
+        'detailLevel' => 'char',
+        'lineNumbers' => false,
+        'showHeader' => false,
+        'spacesToNbsp' => true,
+    ];
+
+    $diff = DiffHelper::calculate($post->orig, $post->body, 'Combined', [], $rendererOptions);
+}
+
 ?>
 
 @isset ($post->deleted_at)
@@ -70,6 +82,16 @@ if ($post->author) {
         @endisset
 
         <div itemprop="articleBody">{!! x($post->body) !!}</div>
+        @isset ($diff)
+                <details class="ts accordion" id="diff">
+                    <summary>
+                        <i class="dropdown icon"></i> 原貼文內容
+                    </summary>
+                    <div class="ts secondary segment">
+                        {!! $diff !!}
+                    </div>
+                </details>
+        @endisset
     </div>
 
     <div class="extra content" id="extra">

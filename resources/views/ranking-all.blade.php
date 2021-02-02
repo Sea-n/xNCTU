@@ -3,12 +3,14 @@
 @section('title', '排行榜')
 
 @section('head')
+@endsection
 
 @section('content')
 
     <?php
     use App\Models\Post;
     use App\Models\Vote;
+    use Carbon\Carbon;
 
     $time_start = microtime(true);
 
@@ -17,7 +19,7 @@
     if (!file_exists($dir))
         mkdir($dir);
 
-    if (time() - filemtime($CACHE) > 60 * 60) {
+    if (!file_exists($CACHE) || time() - filemtime($CACHE) > 60 * 60) {
     ob_start();
 
     $del = Post::where('status', '<', 0)->pluck('uid')->toArray();
@@ -31,7 +33,7 @@
             $user_count[$item->stuid] = [
                 1 => 0, -1 => 0,
                 'pt' => 0,
-                'id' => $item->stuid,
+                'user' => $item->user,
             ];
         }
 
@@ -55,16 +57,16 @@
     }
 
     foreach ($user_count as $k => $v) {
-        if (!isset($v->user->tg_name))
+        if (!$v['user']->tg_name)
             $user_count[$k]['pt'] *= 0.8;
 
-        if (!isset($v->user->tg_photo))
+        if (!$v['user']->tg_photo)
             $user_count[$k]['pt'] *= 0.8;
 
-        if ($v->user->name == $v->user->stuid)
+        if ($v['user']->name == $v['user']->stuid)
             $user_count[$k]['pt'] *= 0.8;
 
-        $user_count[$k]['user'] = $v->user;
+        $user_count[$k]['user'] = $v['user'];
     }
 
     usort($user_count, function ($A, $B) {
@@ -72,6 +74,7 @@
     });
 
     $pt_max = $user_count[0]['pt'];
+    $end = 5;
     foreach ($user_count as $k => $v) {
         if ($k > 0 && $k % 5 == 0 && $user_count[$k]['pt'] < 5) {
             $end = $k;
@@ -85,7 +88,7 @@
     $smx = 0;
     ?>
     <div id="rules">
-        <p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半，正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</a>
+        <p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半，正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</p>
         <p>連續投票天數以台灣時間 24:00 為計算基準，如當日已投票、仍未中斷將標記 ⚡️ 符號。</p>
         <p>游標移至每列將顯示各別積分，點擊名字可將頁尾圖表切換為個人投票記錄。</p>
     </div>
@@ -127,7 +130,7 @@
             ?>
             <tr title="{{ round($item['pt'], 1) }} pt ({{ $item['pt_pc'] }}%)">
                 <td>{{ $emoji[$i] ?? ($i+1) }}</td>
-                <td>{{ idToDep($item['id']) }}</td>
+                <td>{{ $item['user']->dep() }}</td>
                 <td><img class="ts circular avatar image" src="{{ $photo }}"
                          onerror="this.src='/assets/img/avatar.jpg';"></td>
                 @isset ($item['user']->tg_id)

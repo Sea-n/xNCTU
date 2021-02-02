@@ -202,10 +202,10 @@ class TelegramController extends Controller
                     break;
 
                 case 'update':
-                    if ($message->chat->id !== env('TELEGRAM_LOG_GROUP')) {
+                    if ($message->chat->id != env('TELEGRAM_LOG_GROUP')) {
                         Telegram::sendMessage([
                             'chat_id' => $message->chat->id,
-                            'text' => "此功能僅限核心維護群組使用"
+                            'text' => "此功能僅限核心維護群組使用",
                         ]);
                         return;
                     }
@@ -259,7 +259,7 @@ class TelegramController extends Controller
                     break;
 
                 case 'delete':
-                    if ($message->chat->id !== env('TELEGRAM_LOG_GROUP')) {
+                    if ($message->chat->id != env('TELEGRAM_LOG_GROUP')) {
                         Telegram::sendMessage([
                             'chat_id' => $message->chat->id,
                             'text' => "此功能僅限核心維護群組使用\n\n" .
@@ -297,7 +297,7 @@ class TelegramController extends Controller
                     break;
 
                 case 'adduser':
-                    if ($message->chat->id !== env('TELEGRAM_LOG_GROUP')) {
+                    if ($message->chat->id != env('TELEGRAM_LOG_GROUP')) {
                         Telegram::sendMessage([
                             'chat_id' => $message->chat->id,
                             'text' => "此功能僅限核心維護群組使用"
@@ -362,7 +362,7 @@ class TelegramController extends Controller
                     break;
 
                 case 'migrate':
-                    if ($message->chat->id !== env('TELEGRAM_LOG_GROUP')) {
+                    if ($message->chat->id != env('TELEGRAM_LOG_GROUP')) {
                         Telegram::sendMessage([
                             'chat_id' => $message->chat->id,
                             'text' => "此功能僅限核心維護群組使用"

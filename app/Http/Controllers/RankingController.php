@@ -45,8 +45,7 @@ class RankingController extends Controller
             'tooltipOnHover' => true,
         ];
 
-        $dep = idToDep($user->stuid);
-        $name = "{$dep} {$user->name}";
+        $name = "{$user->dep()} {$user->name}";
         $step = 6 * 60 * 60;
 
         $data['title'] = $name;
