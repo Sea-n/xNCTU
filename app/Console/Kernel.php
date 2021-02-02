@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Console\Commands\SendPost;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,9 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        SendPost::class,
-        // \App\Console\Commands\RejectCommand::class,
-        // \App\Console\Commands\UpdateLikesCommand::class,
+        //
     ];
 
     /**
@@ -27,10 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('post:send')->everyFiveMinutes();
-        // $schedule->command('post:reject')->everyMinute();
-        // $schedule->command('post:update')->hourly();
-        // $schedule->command('post:update --all')->dailyAt('06:42');
+        $schedule->command('post:send')->everyFiveMinutes();
+        $schedule->command('post:reject')->everyMinute();
+        $schedule->command('post:update 42')->hourlyAt(12);
+        $schedule->command('post:update 1000')->dailyAt('06:42');
     }
 
     /**
@@ -40,7 +37,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

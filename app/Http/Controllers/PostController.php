@@ -217,7 +217,7 @@ class PostController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get()->take($rule['limit'] + 1);
             if (count($posts) == $rule['limit'] + 1) {
-                $last = strtotime($posts[$rule['limit']]['created_at']);
+                $last = strtotime($posts[$rule['limit']]->created_at);
                 $cd = $rule['period'] - (time() - $last);
                 if ($cd > 0) {
                     Post::where('uid', '=', $uid)->update([

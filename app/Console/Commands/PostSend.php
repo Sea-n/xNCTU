@@ -15,7 +15,7 @@ use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class SendPost extends Command
+class PostSend extends Command
 {
     /**
      * The name and signature of the console command.
@@ -113,7 +113,7 @@ class SendPost extends Command
         /* Remove un-voted messages in Telegram */
         ReviewDelete::dispatch($post2);
 
-        $dt = floor(strtotime(now()) / 60) - floor(strtotime($post2->posted_at) / 60);
+        $dt = floor(time() / 60) - floor(strtotime($post2->posted_at) / 60);
         if ($dt > 18) $post2->update(['status' => 5]);
 
         /* return if any enabled platform did not posted successfully */
