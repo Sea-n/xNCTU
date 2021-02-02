@@ -84,7 +84,7 @@ class PostController extends Controller
                 'id' => $post->id,
             ]);
 
-        $votes = Vote::where('uid', '=', $post->uid)->get();
+        $votes = Vote::where('uid', '=', $post->uid)->orderBy('created_at')->get();
         $results = [];
         foreach ($votes as $item)
             $results[] = [

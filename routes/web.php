@@ -74,9 +74,9 @@ Route::get('/login/nctu/callback', [LoginController::class, 'handleNCTUCallback'
 Route::get('/login/tg', [LoginController::class, 'handleTGCallback']);
 Route::get('/login-tg', [LoginController::class, 'handleTGCallback']);
 
-Route::get('/logout', function () {
+Route::post('/logout', function () {
     Auth::logout();
-    return redirect('/');
+    return redirect(url()->previous());
 });
 
 Route::get('/verify', function () {

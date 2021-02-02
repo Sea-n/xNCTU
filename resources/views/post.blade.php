@@ -24,7 +24,7 @@ if ($post->media == 1)
 
 $single = 1;
 
-$votes = Vote::where('uid', '=', $post->uid)->get();
+$votes = Vote::where('uid', '=', $post->uid)->orderBy('created_at')->get();
 
 /* Recommended posts */
 $posts = Post::where('status', '=', 5)->orderBy('created_at')->take(500)->get();

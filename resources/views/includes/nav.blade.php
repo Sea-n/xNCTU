@@ -11,25 +11,32 @@ use App\Models\GoogleAccount;
         <div class="right fitted item" id="nav-right">
             @if (Auth::check())
                 @empty(Auth::user()->tg_photo)
-                    <img class="ts circular related avatar image" src="{{ genPic(Auth::user()->stuid) }}" onerror="this.src='/assets/img/avatar.jpg';">
+                    <img class="ts circular related avatar image" src="{{ genPic(Auth::user()->stuid) }}"
+                         onerror="this.src='/assets/img/avatar.jpg';">
                 @else
-                    <img class="ts circular related avatar image" src="/avatar/tg/{{ Auth::user()->tg_id }}-x64.jpg" onerror="this.src='/assets/img/avatar.jpg';">
+                    <img class="ts circular related avatar image" src="/avatar/tg/{{ Auth::user()->tg_id }}-x64.jpg"
+                         onerror="this.src='/assets/img/avatar.jpg';">
                 @endisset
 
                 &nbsp;<b id="nav-name" style="overflow: hidden;">{{ Auth::user()->name }}</b>&nbsp;
-                <a class="item" href="/logout" data-type="logout" onclick="this.href+='?r='+encodeURIComponent(location.pathname+location.search);">
-                    <i class="log out icon"></i>
-                    <span class="tablet or large device only">Logout</span>
-                </a>
+                <form method="POST" action="/logout">
+                    @csrf
+                    <a class="item" href="#" data-type="logout" type="submit" onclick="this.parentNode.submit(); return false;">
+                        <i class="log out icon"></i>
+                        <span class="tablet or large device only">Logout</span>
+                    </a>
+                </form>
             @elseif (session()->has('google_sub'))
-<?php $google = GoogleAccount::find(session()->get('google_sub')); ?>
-                <img class="ts circular related avatar image" src="{{ $google->avatar ?? genPic($google->sub) }}" onerror="this.src='/assets/img/avatar.jpg';">
+                <?php $google = GoogleAccount::find(session()->get('google_sub')); ?>
+                <img class="ts circular related avatar image" src="{{ $google->avatar ?? genPic($google->sub) }}"
+                     onerror="this.src='/assets/img/avatar.jpg';">
                 &nbsp;<b id="nav-name" style="overflow: hidden;">Guest</b>&nbsp;
                 <a class="item" href="/verify" data-type="login">Verify</a>
             @else
 
-            <a class="item" href="/login" data-type="login" onclick="document.getElementById('login-wrapper').style.display = ''; return false;">Login</a>
-@endif
+                <a class="item" href="/login" data-type="login"
+                   onclick="document.getElementById('login-wrapper').style.display = ''; return false;">Login</a>
+            @endif
         </div>
     </div>
 </nav>

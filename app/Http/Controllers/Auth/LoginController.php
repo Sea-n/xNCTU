@@ -23,6 +23,7 @@ class LoginController extends Controller
      */
     public function redirectToGoogle()
     {
+        session(['redirect' => url()->previous()]);
         return Socialite::driver('google')->redirect();
     }
 
@@ -33,6 +34,7 @@ class LoginController extends Controller
      */
     public function redirectToNCTU()
     {
+        session(['redirect' => url()->previous()]);
         return Socialite::driver('nctu')->redirect();
     }
 
@@ -62,7 +64,9 @@ class LoginController extends Controller
             $user = User::find($google->stuid);
             $user->update(['last_login_google' => Carbon::now()]);
             Auth::login($user, true);
-            return redirect('/');
+            $redirect = session('redirect', '/');
+            session()->forget('redirect');
+            return redirect($redirect);
         } else {
             session()->put('google_sub', $google->sub);
             return redirect('/verify');
@@ -101,7 +105,9 @@ class LoginController extends Controller
         Auth::login($user, true);
         $this->postLogin();
 
-        return redirect('/');
+        $redirect = session('redirect', '/');
+        session()->forget('redirect');
+        return redirect($redirect);
     }
 
     /**
