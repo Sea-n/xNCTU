@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CrawlerController;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -50,34 +51,38 @@ Route::get('/review/{post}', function (Post $post) {
         return redirect("/post/{$post->id}");
 
     return view('review-one', ['post' => $post]);
-})->name('submission');
+})->whereAlphaNumeric('post')->name('submission');
 
 
 Route::get('/posts', function () {
+    if (preg_match("/BingBot|FacebookExternalHit|GoogleBot|SlackBot|TelegramBot|TwitterBot|Yandex/i", request()->userAgent()))
+        return view('posts-static');
     return view('posts');
 })->name('posts');
 
-Route::get('/post/{id}', function (string $id) {
-    $post = Post::where('id', '=', (int)$id)->firstOrFail();
+Route::get('/post/{post:id}', function (Post $post) {
     return view('post', ['post' => $post]);
-})->name('post');
+})->whereNumber('id')->name('post');
 
 
-Route::get('/login', function () {
-    return redirect('/login/nctu');
-})->name('login');
+Route::name('login.')->group(function () {
+    Route::get('/login', function () {
+        return redirect('/login/nctu');
+    })->name('index');
 
-Route::get('/login/google', [LoginController::class, 'redirectToGoogle']);
-Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallback']);
-Route::get('/login/nctu', [LoginController::class, 'redirectToNCTU']);
-Route::get('/login/nctu/callback', [LoginController::class, 'handleNCTUCallback']);
-Route::get('/login/tg', [LoginController::class, 'handleTGCallback']);
-Route::get('/login-tg', [LoginController::class, 'handleTGCallback']);
+    Route::get('/login/google', [LoginController::class, 'redirectToGoogle'])->name('google');
+    Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallback'])->name('google.callback');
+    Route::get('/login/nctu', [LoginController::class, 'redirectToNCTU'])->name('nctu');
+    Route::get('/login/nctu/callback', [LoginController::class, 'handleNCTUCallback'])->name('nctu.callback');
+    Route::get('/login/tg', [LoginController::class, 'handleTGCallback'])->name('tg');
+    Route::get('/login-tg', [LoginController::class, 'handleTGCallback'])->name('tg.legacy');  // Backward compatibility for before Feb 2021
+});
 
 Route::post('/logout', function () {
     Auth::logout();
     return redirect(url()->previous());
 });
+
 
 Route::get('/verify', function () {
     if (Auth::check())
@@ -88,6 +93,9 @@ Route::get('/verify', function () {
 
     return view('verify');
 })->name('verify');
+
+
+Route::get('/sitemap.xml', [CrawlerController::class, 'sitemap']);
 
 
 Route::get('/ranking', function () {

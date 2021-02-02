@@ -2,11 +2,7 @@
 
 use App\Models\Post;
 
-$likes = request()->input('likes', 0);
-
-$posts = Post::where('status', '=', 5)
-    ->where('max_likes', '>=', $likes)
-    ->orderBy('id', 'desc')->take(50)->get();
+$posts = Post::where('status', '=', 5)->orderBy('id', 'desc')->get();
 ?>
 
 @extends('layouts.master')
@@ -19,8 +15,12 @@ $posts = Post::where('status', '=', 5)
 
 @section('content')
     <div id="posts">
-        @foreach ($posts as $post)
-            @include('includes.post')
+        @foreach ($posts as $i => $post)
+            @if ($i < 10)
+                @include('includes.post')
+            @else
+                @include('includes.post-static')
+            @endif
         @endforeach
     </div>
 
