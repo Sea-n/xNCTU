@@ -467,7 +467,7 @@ function voteSubmission(string $uid, string $stuid, int $vote, string $reason)
     $post->increment($type);
 
     /* Calculate vote streak, the users table record is independent from votes table */
-    $user->increment($type, 1);
+    $user->increment($type);
 
     $lv = date('Ymd', strtotime($user->last_vote));
     $user->last_vote = Carbon::now();

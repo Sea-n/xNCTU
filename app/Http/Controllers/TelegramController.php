@@ -469,11 +469,6 @@ class TelegramController extends Controller
                 'text' => $msg,
             ]);
 
-            Telegram::deleteMessage([
-                'chat_id' => $message->chat->id,
-                'message_id' => $message->replyToMessage->messageId,
-            ]);
-
             return;
         }
     }

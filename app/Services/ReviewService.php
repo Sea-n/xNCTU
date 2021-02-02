@@ -66,8 +66,11 @@ class ReviewService extends BaseService
         $this->send_group($post, $msg);
 
         /* Send to Users */
-        $USERS = User::whereNotNull('tg_name')->orderByRaw('approvals + rejects')->get();
+        $USERS = User::whereNotNull('tg_name')->orderByRaw('approvals + rejects DESC')->get();
         foreach ($USERS as $user) {
+            if (!canVote($post->uid, $user->stuid)['ok'])
+                continue;
+
             try {
                 $this->send_each($post, $user, $msg);
             } catch (Exception $e) {
@@ -191,14 +194,14 @@ class ReviewService extends BaseService
         $msg = TgMsg::where([
             ['uid', '=', $post->uid],
             ['chat_id', '=', $user->tg_id ?? 42],
-        ])->firstOrFail();
+        ])->first();
 
         if ($msg) {
             try {
                 Telegram::editMessageReplyMarkup([
                     'chat_id' => $user->tg_id,
                     'message_id' => $msg->msg_id,
-                    'reply_markup' => [
+                    'reply_markup' => json_encode([
                         'inline_keyboard' => [
                             [
                                 [
@@ -209,14 +212,14 @@ class ReviewService extends BaseService
                                 ]
                             ]
                         ]
-                    ]
+                    ])
                 ]);
-                $msg = TgMsg::where([
+                TgMsg::where([
                     ['uid', '=', $post->uid],
                     ['stuid', '=', $user->stuid],
                 ])->delete();
             } catch (Exception $e) {
-                Log::error($e->getMessage());
+                Log::error('Review service, ' . $e->getMessage());
             }
         }
 
