@@ -76,6 +76,7 @@ class PostUpdate extends Command
 
             $post->update([
                 'fb_likes' => $likes,
+                'max_likes' => $likes,
             ]);
         }
     }

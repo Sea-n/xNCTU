@@ -27,7 +27,7 @@ $single = 1;
 $votes = Vote::where('uid', '=', $post->uid)->orderBy('created_at')->get();
 
 /* Recommended posts */
-$posts = Post::where('status', '=', 5)->orderBy('created_at')->take(500)->get();
+$posts = Post::where('status', '=', 5)->orderByDesc('id')->take(500)->get();
 $posts = $posts->getIterator()->getArrayCopy();
 
 $id = $post->id;
@@ -39,7 +39,7 @@ $posts = array_filter($posts, function($item) {
 });
 
 usort($posts, function (Post $a, Post $b) {
-    return $b['fb_likes'] <=> $a['fb_likes'];
+    return $b['max_likes'] <=> $a['max_likes'];
 });
 $posts = array_slice($posts, 0, 50);
 

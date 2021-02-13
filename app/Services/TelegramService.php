@@ -25,7 +25,7 @@ class TelegramService extends BaseService implements PostContract
         $end = end($lines);
         $is_url = filter_var($end, FILTER_VALIDATE_URL);
         if ($post->media == 0 && $is_url)
-            $msg = "<a href='$end'>#</a><a href='{$link}'>靠交{$post->id}</a>";
+            $msg = "<a href='$end'>#</a><a href='{$post->getUrl('website')}'>靠交{$post->id}</a>";
         else
             $msg = "<a href='{$post->getUrl('website')}'>#靠交{$post->id}</a>";
 

@@ -45,7 +45,7 @@ class PostReject extends Command
             if ($submitted % 5 == 0)
                 $dt += 1;
 
-            if (strpos($post->author_name, '境外') === false) {
+            if (strpos($post->ip_from, '境外') === false) {
                 /* Before 1 hour */
                 if ($dt < 1 * 60 && $post->rejects < 5)
                     continue;

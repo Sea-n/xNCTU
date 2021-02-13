@@ -12,7 +12,7 @@
 <meta name="description" content="@yield('desc', '不要問為何沒有人審文，先承認你就是沒有人。新版' . env('APP_CHINESE_NAME') . ' (' . env('APP_NAME') . ') 讓全校師生都有了審核的權限，每天穩定發出投稿文章。並支援 Telegram、Plurk、Twitter、Facebook、Instagram 五大社群媒體平台。')" />
 <link rel="canonical" href="{{ url()->current() }}" />
 
-<meta property="og:title" content="@yueld('title')" />
+<meta property="og:title" content="@yield('title')" />
 <meta property="og:url" content="{{ url()->current() }}" />
 <meta property="og:image" content="@yield('img', 'https://x.nctu.app/assets/img/og.png')" />
 <meta property="og:image:secure_url" content="@yield('img', 'https://x.nctu.app/assets/img/og.png')" />

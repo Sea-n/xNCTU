@@ -216,7 +216,7 @@ class ReviewService extends BaseService
                 ]);
                 TgMsg::where([
                     ['uid', '=', $post->uid],
-                    ['stuid', '=', $user->stuid],
+                    ['chat_id', '=', $user->tg_id],
                 ])->delete();
             } catch (Exception $e) {
                 Log::error('Review service, ' . $e->getMessage());
