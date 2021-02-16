@@ -20,8 +20,8 @@ if (mb_strlen($TITLE) > 40)
 if (mb_strlen($DESC) > 150)
     $DESC = mb_substr($DESC, 0, 150) . '...';
 
-if ($post->media == 1)
-    $IMG = env('APP_URL') . "img/{$post->uid}.jpg";
+if ($post->media)
+    $IMG = $post->getUrl('image');
 
 if (Auth::check())
     $canVote = canVote($post->uid, Auth::id())['ok'];

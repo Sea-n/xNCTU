@@ -43,7 +43,7 @@ class TelegramService extends BaseService implements PostContract
         else
             $result = Telegram::sendPhoto([
                 'chat_id' => '@' . env('TELEGRAM_USERNAME'),
-                'photo' => new InputFile(public_path("img/{$post->uid}.jpg")),
+                'photo' => new InputFile($post->getUrl('image')),
                 'caption' => $msg,
                 'parse_mode' => 'HTML',
             ]);

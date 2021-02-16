@@ -107,7 +107,7 @@ class ReviewService extends BaseService
             else
                 Telegram::sendPhoto([
                     'chat_id' => env('TELEGRAM_LOG_GROUP'),
-                    'photo' => new InputFile(public_path("img/{$post->uid}.jpg")),
+                    'photo' => new InputFile($post->getUrl('image')),
                     'caption' => $msg,
                     'reply_markup' => $keyboard,
                 ]);
@@ -157,7 +157,7 @@ class ReviewService extends BaseService
             else
                 $result = Telegram::sendPhoto([
                     'chat_id' => $user->tg_id,
-                    'photo' => new InputFile(public_path("img/{$post->uid}.jpg")),
+                    'photo' => new InputFile($post->getUrl('image')),
                     'caption' => $msg,
                     'reply_markup' => $keyboard,
                 ]);

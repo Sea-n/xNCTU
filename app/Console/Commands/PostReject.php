@@ -115,7 +115,7 @@ class PostReject extends Command
             else
                 Telegram::sendPhoto([
                     'chat_id' => env('TELEGRAM_LOG_GROUP'),
-                    'photo' => $post->getUrl('image'),
+                    'photo' => new InputFile($post->getUrl('image')),
                     'caption' => $msg,
                     'reply_markup' => $keyboard,
                 ]);
