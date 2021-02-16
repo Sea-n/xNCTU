@@ -118,25 +118,25 @@
     <div class="ts fluid stackable buttons"><a class="ts massive positive button" href="/submit">我要投稿</a>
         <a class="ts massive info button" href="/review">我想審核</a></div>
 
-    <?php if (!isset($USER)) { ?>
+    @if (Auth::guest())
     <h2 class="ts header">使用 Telegram 登入</h2>
     <p>只要您曾綁定 NCTU 帳號，點擊下面按鈕即可以 Telegram 登入服務。</p>
     <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot"
             data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login/tg"
             data-request-access="write"></script>
-    <?php } else if (!isset($USER['tg_id'])) { ?>
+    @elseif (!Auth::user()->tg_name)
     <h2 class="ts header">使用 Telegram 快速審核</h2>
     <p>點擊下面按鈕即可綁定 Telegram 帳號，讓您收到最即時的投稿通知，並快速通過/駁回貼文。</p>
     <script async src="https://telegram.org/js/telegram-widget.js?7" data-telegram-login="{{ env('APP_NAME') }}bot"
             data-size="large" data-auth-url="https://{{ $app['url']->to('/') }}/login/tg"
             data-request-access="write"></script>
-    <?php } else if ($USER['name'] == $USER['stuid']) { ?>
+    @elseif (Auth::user()->name == Auth::user()->stuid)
     <h2 class="ts header">使用 Telegram 快速審核</h2>
     <div class="ts positive message">
         <div class="header">您已連結成功！</div>
         <p>Tips: 使用 /name 指令即可修改您的暱稱</p>
     </div>
-    <?php } ?>
+    @endif
 
     <h2 class="ts header">排行榜</h2>
     <p>排名積分會依時間遠近調整權重，正確的駁回 <a href="/deleted">已刪投稿</a> 將大幅提升排名。</p>
