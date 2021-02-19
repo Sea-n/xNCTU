@@ -28,7 +28,7 @@ class TwitterService extends BaseService implements PostContract
         $query = ['status' => $msg];
 
         if ($post->media == 1) {
-            $uploaded_media = Twitter::uploadMedia(['media' => File::get($post->getUrl('image'))]);
+            $uploaded_media = Twitter::uploadMedia(['media' => File::get(public_path("img/{$post->uid}.jpg"))]);
             $query['media_ids'] = $uploaded_media->media_id_string;
         }
 
