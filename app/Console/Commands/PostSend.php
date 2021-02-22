@@ -119,9 +119,9 @@ class PostSend extends Command
         /* return if any enabled platform did not posted successfully */
         if (env('TELEGRAM_ENABLE', false) && $post2->telegram_id == 0) return;
         if (env('TWITTER_ENABLE', false) && $post2->twitter_id == 0) return;
-        if (env('INSTAGRAM_ENABLE', false) && $post2->instagram_id == '') return;
         if (env('PLURK_ENABLE', false) && $post2->plurk_id == 0) return;
         if (env('FACEBOOK_ENABLE', false) && $post2->facebook_id == 0) return;
+        // Intentionally not check Instagram post
 
         $post2->update(['status' => 5]);
     }

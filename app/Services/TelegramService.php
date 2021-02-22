@@ -75,15 +75,19 @@ class TelegramService extends BaseService implements PostContract
                     'url' => $post->getUrl($platform),
                 ];
 
-        Telegram::editMessageReplyMarkup([
-            'chat_id' => '@' . env('TELEGRAM_USERNAME'),
-            'message_id' => $post->telegram_id,
-            'reply_markup' => json_encode([
-                'inline_keyboard' => [
-                    $buttons,
-                ],
-            ]),
-        ]);
+        try {
+            Telegram::editMessageReplyMarkup([
+                'chat_id' => '@' . env('TELEGRAM_USERNAME'),
+                'message_id' => $post->telegram_id,
+                'reply_markup' => json_encode([
+                    'inline_keyboard' => [
+                        $buttons,
+                    ],
+                ]),
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getCode() . ': ' . $e->getMessage());
+        }
     }
 }
 
