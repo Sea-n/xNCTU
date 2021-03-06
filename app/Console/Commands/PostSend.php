@@ -159,7 +159,9 @@ class PostSend extends Command
         }
 
         /* Rule for NCTU IP address */
-        if ($post->ip_from == '匿名, 交大'
+        if (($post->ip_from == '交大'
+            || $post->ip_from == '陽明'
+            || $post->ip_from == '陽交大')
             && $post->ip_addr != ip_mask($post->ip_addr)) {
 
             /* No reject: 5 votes */

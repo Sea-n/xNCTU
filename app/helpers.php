@@ -15,6 +15,7 @@ function ip_from(string $ip_addr): string
 
     /* Known IP address prefix for TANet */
     $tanet = [
+        '120.126.102.' => '陽明',  # 120.126.64.0 - 120.126.111.255
         '140.109.' => '中研院',
         '140.110.' => '國網中心',
         '140.112.' => '台大',
@@ -59,6 +60,7 @@ function ip_from(string $ip_addr): string
             $resp = curl_exec($curl);
             if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立|私立)*([^<]+?)(大學|區網|中心)*</td></tr>#', $resp, $matches)) {
                 $name = $matches[2];
+                $name = str_replace("陽明交通", "陽交大", $name);
                 return $name;
             }
         }
