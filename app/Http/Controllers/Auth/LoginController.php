@@ -239,6 +239,69 @@ class LoginController extends Controller
         return $auth_data;
     }
 
+    /**
+     * Redirect the user to the Facebook OAuth page.
+     *
+     * @return RedirectResponse
+     */
+    public function redirectToFB()
+    {
+        $url = 'https://www.facebook.com/v8.0/dialog/oauth'
+            . '?client_id=' . env('FACEBOOK_APP_ID')
+            . '&redirect_uri=' . urlencode(env('APP_URL') . '/login/fb/callback')
+            . '&response_type=code'
+            . '&scope=pages_show_list,pages_read_engagement,pages_manage_metadata,pages_read_user_content,pages_manage_posts,pages_manage_engagement,public_profile';
+
+        return redirect($url);
+    }
+
+    /**
+     * Obtain access token from Facebook.
+     *
+     * @return RedirectResponse
+     */
+    public function handleFBCallback()
+    {
+        $url = 'https://graph.facebook.com/v8.0/oauth/access_token'
+            . '?client_id=' . env('FACEBOOK_APP_ID')
+            . '&redirect_uri=' . urlencode(env('APP_URL') . '/login/fb/callback')
+            . '&client_secret=' . env('FACEBOOK_APP_SECRET')
+            . '&code=' . urlencode(request()->input('code'));
+        $data = file_get_contents($url);
+        $data = json_decode($data);
+
+        if ($data->error->code ?? 0 == 100)
+            return redirect('/login/fb');
+
+        if (!$data->access_token)
+            return 'No access token';
+
+        $user_token = $data->access_token;
+
+        $me = file_get_contents("https://graph.facebook.com/v8.0/me?access_token=$user_token");
+        $me = json_decode($me);
+
+        $accounts = file_get_contents("https://graph.facebook.com/{$me->id}/accounts?access_token=$user_token");
+        $accounts = json_decode($accounts);
+
+        $page_tokens = [];
+        foreach ($accounts->data as $item)
+            $page_tokens[ $item->id  ] = $item->access_token;
+
+        $short_token = $page_tokens[env('FACEBOOK_PAGES_ID')];
+
+        $url = 'https://graph.facebook.com/v8.0/oauth/access_token'
+            . '?client_id=' . env('FACEBOOK_APP_ID')
+            . '&client_secret=' . env('FACEBOOK_APP_SECRET')
+            . '&fb_exchange_token=' . $short_token
+            . '&grant_type=fb_exchange_token';
+        $data = file_get_contents($url);
+        $data = json_decode($data);
+
+        $long_token = $data->access_token;
+        echo $long_token;
+    }
+
     public function postLogin()
     {
         if (session()->has('google_sub')) {

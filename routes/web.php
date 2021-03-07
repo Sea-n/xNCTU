@@ -76,6 +76,8 @@ Route::name('login.')->group(function () {
     Route::get('/login/nctu/callback', [LoginController::class, 'handleNCTUCallback'])->name('nctu.callback');
     Route::get('/login/tg', [LoginController::class, 'handleTGCallback'])->name('tg');
     Route::get('/login-tg', [LoginController::class, 'handleTGCallback'])->name('tg.legacy');  // Backward compatibility for before Feb 2021
+    Route::get('/login/fb', [LoginController::class, 'redirectToFB'])->name('fb');
+    Route::get('/login/fb/callback', [LoginController::class, 'handleFBCallback'])->name('fb.callback');
 });
 
 Route::post('/logout', function () {
