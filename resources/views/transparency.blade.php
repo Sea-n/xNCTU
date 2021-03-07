@@ -20,6 +20,14 @@
         </thead>
         <tbody>
         <tr>
+            <td>2021 Mar 06</td>
+            <td>
+                <a href="https://x.nctu.app/post/6757" target="_blank">#靠交6757</a>
+            </td>
+            <td>女人救市劍</td>
+            <td>仇恨言論</td>
+        </tr>
+        <tr>
             <td>2021 Jan 14</td>
             <td>
                 <a href="https://x.nctu.app/post/6451" target="_blank">#靠交6451</a>
@@ -189,6 +197,13 @@
         </thead>
         <tbody>
         <tr>
+            <td>2021 Mar</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
             <td>2021 Feb</td>
             <td>0</td>
             <td>0</td>
@@ -284,5 +299,5 @@
 
     <br>
     <p>收到任何刪除通知將人工更新至此頁面，在不造成二次傷害的前提下，本站會盡可能提供最多資訊，原則上收到請求後會在 7 天內公開揭露。</p>
-    <p style="text-align: right;"><i>最後更新日期：2021 Feb 16</i></p>
+    <p style="text-align: right;"><i>最後更新日期：2021 Mar 07</i></p>
 @stop
