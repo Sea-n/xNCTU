@@ -164,6 +164,8 @@ class ReviewService extends BaseService
         } catch (TelegramResponseException $e) {
             if ($e->getMessage() == 'Forbidden: bot was blocked by the user')
                 $user->update(['tg_name' => null]);
+            if ($e->getMessage() == 'Forbidden: user is deactivated')
+                $user->update(['tg_name' => null]);
             if ($e->getMessage() == 'Bad Request: chat not found')
                 $user->update(['tg_name' => null]);
             return;
