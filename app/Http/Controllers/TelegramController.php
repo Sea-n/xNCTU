@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Log;
 use Response;
 use Schema;
 use Telegram;
@@ -469,10 +470,14 @@ class TelegramController extends Controller
                 'text' => $msg,
             ]);
 
-            Telegram::deleteMessage([
-                'chat_id' => $message->chat->id,
-                'message_id' => $message->replyToMessage->messageId,
-            ]);
+            try {
+                Telegram::deleteMessage([
+                    'chat_id' => $message->chat->id,
+                    'message_id' => $message->replyToMessage->messageId,
+                ]);
+            } catch (Exception $e) {
+                Log::error('Error ' . $e->getCode() . ': ' . $e->getMessage() . "\n" . "chat_id={$message->chat->id}, message_id={$message->replyToMessage->messageId}");
+            }
 
             return;
         }
