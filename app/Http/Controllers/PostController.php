@@ -45,8 +45,8 @@ class PostController extends Controller
             $author_photo = genPic($ip_masked);
             if (isset($post->author)) {
                 $author_photo = genPic($post->author_id);
-                if (isset($author->tg_photo))
-                    $author_photo = "/avatar/tg/{$author->tg_id}-x64.jpg";
+                if (isset($post->author->tg_photo))
+                    $author_photo = "/avatar/tg/{$post->author->tg_id}-x64.jpg";
             }
 
             $results[] = [
