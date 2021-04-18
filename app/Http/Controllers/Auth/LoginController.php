@@ -176,7 +176,7 @@ class LoginController extends Controller
         if (Auth::guest())
             return $this->redirectToNCTU();
 
-        $user->update([
+        Auth()->user->update([
             'tg_id' => $auth_data['id'],
             'tg_name' => $auth_data['name'],
             'tg_username' => $auth_data['username'] ?? '',

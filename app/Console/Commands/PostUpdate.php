@@ -44,7 +44,7 @@ class PostUpdate extends Command
         ]);
 
         foreach ($posts as $post) {
-            if (in_array($post->id, [581, 1597, 2211, 3849, 3870, 3975, 4275, 4575]))
+            if (in_array($post->id, [581, 1597, 2211, 3849, 3870, 3975, 4275, 4575, 6894]))
                 continue; // API error but post exists
 
             if ($post->facebook_id < 10)
