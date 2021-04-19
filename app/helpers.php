@@ -60,7 +60,11 @@ function ip_from(string $ip_addr): string
             $resp = curl_exec($curl);
             if (preg_match('#.*<tr><td>Chinese Name</td><td>(國立|私立)*([^<]+?)(大學|區網|中心)*</td></tr>#', $resp, $matches)) {
                 $name = $matches[2];
+
+                $name = str_replace("交通", "交大", $name);
+                $name = str_replace("清華", "清大", $name);
                 $name = str_replace("陽明交通", "陽交大", $name);
+
                 return $name;
             }
         }
