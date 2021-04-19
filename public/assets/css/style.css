@@ -99,6 +99,10 @@ p {
     word-break: break-word;
 }
 
+div[itemprop="articleBody"] {
+    white-space: pre-wrap;
+}
+
 /* Hide Box */
 #hide-box {
     position: relative;

@@ -223,10 +223,8 @@ function x(string $text = ''): string
                 $text[$k1][$k2] = "<a target='_blank' href='/review/{$matches[1]}'>$v2</a>";
             else if (preg_match('/^#[^ ]+$/', $v2, $matches))
                 $text[$k1][$k2] = "<a href='javascript:;'>$v2</a>";
-            else
-                $text[$k1][$k2] = str_replace(' ', '&nbsp;', $v2);
         }
-        $text[$k1] = join("&nbsp;", $text[$k1]);
+        $text[$k1] = join(" ", $text[$k1]);
     }
     $text = join("\n<br>", $text);
     return $text;

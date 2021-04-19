@@ -147,7 +147,7 @@ function toHTML(str) {
 
                 words[k] = word;
             }
-            lines[j] = words.join('&nbsp;');
+            lines[j] = words.join(' ');
         }
         paras[i] = lines.join('<br>\n');
     }
