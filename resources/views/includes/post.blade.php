@@ -105,7 +105,7 @@ if ($post->orig) {
         @endisset
 
         <div itemprop="articleBody">{!! x($post->body) !!}</div>
-        @isset ($diff)
+        @isset ($diff, $single)
             <details class="ts accordion" id="diff" open>
                 <summary>
                     <i class="dropdown icon"></i> 原貼文內容
