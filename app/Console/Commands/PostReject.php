@@ -7,6 +7,7 @@ use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 
 class PostReject extends Command
 {
