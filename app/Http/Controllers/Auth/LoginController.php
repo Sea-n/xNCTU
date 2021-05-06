@@ -185,11 +185,11 @@ class LoginController extends Controller
         ]);
 
         if (isset($auth_data['photo_url']))
-            AvatarTelegram::dispatchAfterResponse($user);
+            AvatarTelegram::dispatchAfterResponse(Auth::user());
 
         $msg = "🎉 連結成功！\n\n將來有新投稿時，您將會收到推播，並可用 Telegram 內的按鈕審核貼文。";
         Telegram::sendMessage([
-            'chat_id' => $user->tg_id,
+            'chat_id' => Auth::user()->tg_id,
             'text' => $msg
         ]);
 
