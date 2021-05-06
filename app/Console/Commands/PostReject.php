@@ -100,7 +100,7 @@ class PostReject extends Command
                         [
                             'text' => '開啟審核頁面',
                             'login_url' => [
-                                'url' => env('APP_URL') . "/login/tg?r=%2Freview%2F{$post->uid}"
+                                'url' => url("/login/tg?r=%2Freview%2F{$post->uid}")
                             ]
                         ]
                     ]

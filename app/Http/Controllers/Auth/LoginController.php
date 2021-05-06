@@ -248,7 +248,7 @@ class LoginController extends Controller
     {
         $url = 'https://www.facebook.com/v8.0/dialog/oauth'
             . '?client_id=' . env('FACEBOOK_APP_ID')
-            . '&redirect_uri=' . urlencode(env('APP_URL') . '/login/fb/callback')
+            . '&redirect_uri=' . urlencode(url('/login/fb/callback'))
             . '&response_type=code'
             . '&scope=pages_show_list,pages_read_engagement,pages_manage_metadata,pages_read_user_content,pages_manage_posts,pages_manage_engagement,public_profile';
 
@@ -264,7 +264,7 @@ class LoginController extends Controller
     {
         $url = 'https://graph.facebook.com/v8.0/oauth/access_token'
             . '?client_id=' . env('FACEBOOK_APP_ID')
-            . '&redirect_uri=' . urlencode(env('APP_URL') . '/login/fb/callback')
+            . '&redirect_uri=' . urlencode(url('/login/fb/callback'))
             . '&client_secret=' . env('FACEBOOK_APP_SECRET')
             . '&code=' . urlencode(request()->input('code'));
         $data = file_get_contents($url);

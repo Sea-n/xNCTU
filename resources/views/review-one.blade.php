@@ -7,7 +7,7 @@ use App\Models\Vote;
  * @var Post $post
  */
 
-$IMG = env('APP_URL') . '/assets/img/og.png';
+$IMG = url('/assets/img/og.png');
 
 $hashtag = "#投稿{$post->uid}";
 

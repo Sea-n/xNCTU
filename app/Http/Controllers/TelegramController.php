@@ -89,7 +89,7 @@ class TelegramController extends Controller
                             [
                                 'text' => "綁定" . env('APP_CHINESE_NAME') . ' 帳號',
                                 'login_url' => [
-                                    'url' => env('APP_URL') . '/login/tg',
+                                    'url' => url('/login/tg'),
                                 ]
                             ]
                         ]
@@ -123,7 +123,7 @@ class TelegramController extends Controller
                                     [
                                         'text' => "登入" . env('APP_CHINESE_NAME'),
                                         'login_url' => [
-                                            'url' => env('APP_URL') . '/login/tg',
+                                            'url' => url('/login/tg'),
                                         ]
                                     ]
                                 ]
@@ -168,7 +168,7 @@ class TelegramController extends Controller
                                     [
                                         'text' => '開啟網站',
                                         'login_url' => [
-                                            'url' => env('APP_URL') . '/login/tg',
+                                            'url' => url('/login/tg'),
                                         ]
                                     ]
                                 ]
@@ -194,7 +194,7 @@ class TelegramController extends Controller
                                     [
                                         'text' => "綁定" . env('APP_CHINESE_NAME') . ' 網站',
                                         'login_url' => [
-                                            'url' => env('APP_URL') . '/login/tg',
+                                            'url' => url('/login/tg'),
                                         ]
                                     ]
                                 ]
@@ -343,7 +343,7 @@ class TelegramController extends Controller
                                     [
                                         'text' => '登入' . env('APP_CHINESE_NAME'),
                                         'login_url' => [
-                                            'url' => env('APP_URL') . '/login/tg?r=%2Freview',
+                                            'url' => url('/login/tg?r=%2Freview'),
                                         ]
                                     ]
                                 ]
@@ -532,7 +532,7 @@ class TelegramController extends Controller
                                     [
                                         'text' => '開啟審核頁面',
                                         'login_url' => [
-                                            'url' => env('APP_URL') . "/login/tg?r=%2Freview%2F$uid"
+                                            'url' => url("/login/tg?r=%2Freview%2F$uid")
                                         ]
                                     ]
                                 ]
