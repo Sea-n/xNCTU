@@ -25,7 +25,6 @@ class FacebookService extends BaseService implements PostContract
         "靠北交大 2.0 除了 Facebook 外，還支援 Plurk、Twitter 等平台\nhttps://www.plurk.com/xNCTU",
         "加入靠北交大 2.0 Telegram 頻道，第一時間看到所有貼文\nhttps://t.me/xNCTU",
         "你知道靠交也有 Instagram 帳號嗎？只要投稿圖片就會同步發佈至 IG 喔\nhttps://www.instagram.com/x_nctu/",
-        "告白交大 2.0 使用同套系統，在此為大家服務\nhttps://www.facebook.com/CrushNCTU/",
 
         "審核紀錄公開透明，你可以看到誰以什麼原因通過/駁回了投稿\nhttps://x.nctu.app/posts",
         "覺得審核太慢嗎？你也可以來投票\nhttps://x.nctu.app/review",
