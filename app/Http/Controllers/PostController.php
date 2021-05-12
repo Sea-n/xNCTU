@@ -408,7 +408,7 @@ class PostController extends Controller
         ]))
             return 'Extension not recognized. 圖片副檔名錯誤';
 
-        $img = request()->file('img')->storeAs('img', "$uid");
+        $img = request()->file('img')->storeAs('img', "$uid.jpg");
 
         /* Check image size */
         $size = getimagesize($img);
@@ -462,13 +462,12 @@ class PostController extends Controller
         }
 
         /* Convert all file type to jpg */
-        exec("ffmpeg -i $img -q:v 1 $transpose $img.jpg 2>&1");
-        unlink($img);
+        exec("ffmpeg -i $img -q:v 1 $transpose $img.jpg");
+        rename("$img.jpg", $img);
 
-        while (filesize("$img.jpg") > 1 * 1000 * 1000) {
-            rename("$img.jpg", "$img.ori.jpg");
-            exec("ffmpeg -i $img.ori.jpg -q:v 1 -vf scale='(iw/2):(ih/2)' $img.jpg 2>&1");
-            unlink("$img.ori.jpg");
+        while (filesize($img) > 1 * 1000 * 1000) {
+            exec("ffmpeg -i $img -q:v 1 -vf scale='(iw/2):(ih/2)' $img.jpg 2>&1");
+            rename("$img.jpg", $img);
         }
 
         return '';
