@@ -14,6 +14,7 @@
         "ext-gd": "*",
         "ext-json": "*",
         "ext-oauth": "*",
+        "atymic/twitter": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
@@ -21,8 +22,7 @@
         "jfcherng/php-diff": "^6.9",
         "laravel/framework": "^8.25",
         "laravel/socialite": "^5.1",
-        "laravel/tinker": "^2.6",
-        "thujohn/twitter": "^2.3"
+        "laravel/tinker": "^2.6"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.9",
