@@ -144,7 +144,7 @@ class PostSend extends Command
         if ($post->id || $post->status != 3)
             return false;
 
-        $dt = floor(time() / 60) - floor(strtotime($post->created_at) / 60);
+        $dt = floor(time() / 60) - floor(strtotime($post->submitted_at) / 60);
         $vote = $post->approvals - $post->rejects;
         $vote2 = $post->approvals - $post->rejects * 2;
 
