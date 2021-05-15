@@ -24,7 +24,7 @@
 
     $del = Post::where('status', '<', 0)->pluck('uid')->toArray();
 
-    $votes = Vote::all();
+    $votes = Vote::where('created_at', '>', Carbon::today()->subMonths(6))->get();
 
     $user_count = [];
     $vote_sum = [1 => 0, -1 => 0];
@@ -76,7 +76,7 @@
     $pt_max = $user_count[0]['pt'];
     $end = 5;
     foreach ($user_count as $k => $v) {
-        if ($k > 0 && $k % 5 == 0 && $user_count[$k]['pt'] < 5) {
+        if ($k > 0 && $k % 5 == 0 && $user_count[$k]['pt'] < 20) {
             $end = $k;
             break;
         }
@@ -88,9 +88,9 @@
     $smx = 0;
     ?>
     <div id="rules">
-        <p>排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半，正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</p>
+        <p>本頁面顯示近 6 個月的投票數量，排名積分會依時間遠近調整權重，24 小時內權重最高，而後每七天積分減半，正確的駁回 <a href="/deleted">已刪投稿</a> 將得到 10 倍分數。</p>
         <p>連續投票天數以台灣時間 24:00 為計算基準，如當日已投票、仍未中斷將標記 ⚡️ 符號。</p>
-        <p>游標移至每列將顯示各別積分，點擊名字可將頁尾圖表切換為個人投票記錄。</p>
+        <p>積分 20 以上的使用者會出現於排行榜上，游標移至每列將顯示各別積分，點擊名字可將頁尾圖表切換為個人投票記錄。</p>
     </div>
 
     <table class="ts table">
@@ -150,7 +150,7 @@
             <td><a onclick="changeChart('ALL')">沒有人</a></td>
             <td>{{ $vote_sum[1] }}</td>
             <td>{{ $vote_sum[-1] }}</td>
-            <td><sub>總共 {{ $smx }} 天</sub></td>
+            <td><sub>最高 {{ $smx }} 天</sub></td>
         </tr>
         </tbody>
     </table>
@@ -246,7 +246,7 @@ function genData()
     ];
 
     $data['title'] = '所有人';
-    $begin = strtotime("2020-02-21 00:00");
+    $begin = strtotime("6 months ago 00:00");
     $end = strtotime("today 24:00");
     $step = 2 * 60 * 60;
 
@@ -256,7 +256,7 @@ function genData()
         $data['columns'][2][] = 0;
     }
 
-    $VOTES = Vote::all();
+    $VOTES = Vote::where('created_at', '>', Carbon::today()->subMonths(6))->get();
     foreach ($VOTES as $vote) {
         $ts = strtotime($vote['created_at']);
         $y = $vote['vote'] == 1 ? 1 : 2;
