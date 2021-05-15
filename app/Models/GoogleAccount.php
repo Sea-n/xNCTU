@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $last_login
+ * @property Carbon $last_verify
  * @property Carbon $deleted_at
  *
  * @mixin Eloquent

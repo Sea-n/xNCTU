@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RankingController;
+use App\Http\Controllers\VerifyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -38,5 +39,8 @@ Route::post('/vote', function (Request $request) {
     $result = voteSubmission($uid, $stuid, $vote, $reason);
     return Response::json($result);
 });
+
+Route::post('/verify', [VerifyController::class, 'store'])->name('verify.store');
+Route::patch('/verify', [VerifyController::class, 'update'])->name('verify.update');
 
 Route::get('/ranking/{tg_id}', [RankingController::class, 'show']);

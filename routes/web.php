@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CrawlerController;
+use App\Http\Controllers\VerifyController;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -86,15 +87,8 @@ Route::post('/logout', function () {
 });
 
 
-Route::get('/verify', function () {
-    if (Auth::check())
-        return redirect('/');
-
-    if (!session()->has('google_sub'))
-        return redirect('/login/google');
-
-    return view('verify');
-})->name('verify');
+Route::get('/verify', [VerifyController::class, 'index'])->name('verify.index');
+Route::get('/verify/confirm', [VerifyController::class, 'show'])->name('verify.show');
 
 
 Route::get('/sitemap.xml', [CrawlerController::class, 'sitemap']);
