@@ -10,6 +10,14 @@ use OAuthException;
 
 class PlurkService extends BaseService implements PostContract
 {
+    protected $go_all = [
+        "立即投稿",
+        "匿名投稿",
+        "投稿連結",
+        "投稿點我",
+        "我要投稿",
+    ];
+
     public function __construct()
     {
         //
@@ -57,7 +65,8 @@ class PlurkService extends BaseService implements PostContract
             $msg .= "{$post->getUrl('instagram')} (Instagram)、";
         $msg .= "{$post->getUrl('telegram')} (Telegram)\n\n";
 
-        $msg .= "👉 立即投稿：https://x.nctu.app/submit (https://x.nctu.app/submit)";
+        $go = $this->go_all[mt_rand(0, count($this->go_all) - 1)];
+        $msg .= "👉 {$go}：" . url('/submit') . ' (' . url('/submit') . ')';
 
         /* Response to Plurk */
         $url = 'https://www.plurk.com/APP/Responses/responseAdd?' . http_build_query([

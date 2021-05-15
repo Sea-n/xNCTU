@@ -32,7 +32,7 @@ class TelegramService extends BaseService implements PostContract
         $msg .= "\n\n" . enHTML($post->body);
 
 
-        /* Send to @xNCTU */
+        /* Send to channel */
         if ($post->media == 0)
             $result = Telegram::sendMessage([
                 'chat_id' => '@' . env('TELEGRAM_USERNAME'),
