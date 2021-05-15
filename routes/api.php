@@ -40,7 +40,7 @@ Route::post('/vote', function (Request $request) {
     return Response::json($result);
 });
 
-Route::post('/verify', [VerifyController::class, 'store'])->name('verify.store');
-Route::patch('/verify', [VerifyController::class, 'update'])->name('verify.update');
+# Route::post('/verify', [VerifyController::class, 'store'])->name('verify.store');
+# Route::patch('/verify', [VerifyController::class, 'update'])->name('verify.update');
 
 Route::get('/ranking/{tg_id}', [RankingController::class, 'show']);

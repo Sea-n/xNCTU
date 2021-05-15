@@ -88,7 +88,7 @@ Route::post('/logout', function () {
 
 
 Route::get('/verify', [VerifyController::class, 'index'])->name('verify.index');
-Route::get('/verify/confirm', [VerifyController::class, 'show'])->name('verify.show');
+# Route::get('/verify/confirm', [VerifyController::class, 'show'])->name('verify.show');
 
 
 Route::get('/sitemap.xml', [CrawlerController::class, 'sitemap']);
