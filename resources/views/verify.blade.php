@@ -38,7 +38,10 @@ $gname = "{$google->name} ({$google->email})";
     <p>請先 <a href="/login/nctu">點我綁定 NCTU OAuth</a> 帳號</p>
 
     <h2 class="ts header">選錯帳號？</h2>
-    <p>請 <a href="/logout">點我登出</a> <u>{{ $gname }}</u> 帳號</p>
+    <form action="/logout" method="POST">
+        @csrf
+        <p>請 <a onclick="this.parentNode.parentNode.submit();">點我登出</a> <u>{{ $gname }}</u> 帳號</p>
+    </form>
 @else
     <h2 class="ts header">清大信箱驗證</h2>
     <p>請確認是否將 <u>{{ $gname }}</u> 綁定至學號 <u>{{ $stuid }}</u>？以後您可以用此 Google 帳號登入{{ env('APP_CHINESE_NAEM') }}。</p>
