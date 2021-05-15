@@ -20,13 +20,20 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $likes = $request->input('likes', 0);
+        $likes = $request->input('likes', '');
+        $media = $request->input('media', '');
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 50);
 
-        $posts = Post::where('status', '=', 5)
-            ->where('max_likes', '>=', $likes)
-            ->orderBy('id', 'desc')->skip($offset)->take($limit)->get();
+        $query = Post::where('status', '=', 5);
+        if (is_numeric($likes))
+            $query = $query->where('max_likes', '>=', $likes);
+        if (is_numeric($media))
+            $query = $query->where('media', '=', $media);
+
+        $posts = $query->orderByDesc('id')
+                       ->skip($offset)->take($limit)
+                       ->get();
 
         $results = [];
         foreach ($posts as $post) {

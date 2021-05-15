@@ -24,7 +24,9 @@ function more() {
 
     const urlParams = new URLSearchParams(window.location.search);
     let likes = urlParams.get('likes');
-    if (!likes) likes = 0;
+    if (!likes) likes = '';
+    let media = urlParams.get('media');
+    if (!media) media = '';
 
     if (button.classList.contains('disabled'))
         return;
@@ -35,15 +37,15 @@ function more() {
         limit = offset;
 
     button.dataset.offset = offset + limit;
-    getPosts(likes, limit, offset);
+    getPosts(likes, media, limit, offset);
     setTimeout(() => {
         if (button.dataset.offset >= 0)
             button.classList.remove('disabled');
     }, 1000);
 }
 
-function getPosts(likes, limit, offset) {
-    fetch(`/api/posts?likes=${likes}&limit=${limit}&offset=${offset}`)
+function getPosts(likes, media, limit, offset) {
+    fetch(`/api/posts?likes=${likes}&media=${media}&limit=${limit}&offset=${offset}`)
         .then(resp => resp.json())
         .then((resp) => {
             if (resp.length < limit) {
@@ -53,10 +55,7 @@ function getPosts(likes, limit, offset) {
                 button.dataset.offset = "-87";
             }
             resp.forEach((item) => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const filter_img = urlParams.get('img');
-                if (!filter_img || filter_img === item.has_img)
-                    appendPost(item);
+                appendPost(item);
             })
         });
 }
@@ -72,10 +71,17 @@ function appendPost(item) {
     post.querySelector('#hashtag').innerText = '#靠交' + item.id;
     post.querySelector('#hashtag').href = '/post/' + item.id;
 
-    if (item.has_img) {
+    if (item.media != 0)
         post.querySelector('#img').onclick = showImg;
+
+    if (item.media == 1)
         post.querySelector('#img').src = '/img/' + item.uid + '.jpg';
-    }
+
+    if (item.media == 2)
+        post.querySelector('#img').src = '/img/' + item.uid + '.gif';
+
+    if (item.media == 3)
+        post.querySelector('#img').src = '/img/' + item.uid + '.mp4';
 
     let body = item.body;
     const block = body.split('\n.\n.\n.\n.\n.\n.\n.\n.\n.\n.\n');

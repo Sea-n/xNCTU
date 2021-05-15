@@ -2,11 +2,16 @@
 
 use App\Models\Post;
 
-$likes = request()->input('likes', 0);
+$likes = request()->input('likes', '');
+$media = request()->input('media', '');
 
-$posts = Post::where('status', '=', 5)
-    ->where('max_likes', '>=', $likes)
-    ->orderBy('id', 'desc')->take(50)->get();
+$query = Post::where('status', '=', 5);
+if (is_numeric($likes))
+    $query = $query->where('max_likes', '>=', $likes);
+if (is_numeric($media))
+    $query = $query->where('media', '=', $media);
+
+$posts = $query->orderByDesc('id')->take(50)->get();
 ?>
 
 @extends('layouts.master')
