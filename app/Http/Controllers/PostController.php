@@ -213,7 +213,7 @@ class PostController extends Controller
                 ],
             ];
 
-            if ($ip_from == '交大')
+            if (in_array($ip_from, ['交大', '陽交大']))
                 $rule = $rules['B'];
             else if (strpos($ip_from, '境外') === false)
                 $rule = $rules['C'];

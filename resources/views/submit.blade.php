@@ -8,7 +8,7 @@ if (strpos($ip_from, '境外') === false)
 
 $captcha_q = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";
 $captcha_a = "";
-if (Auth::check() || $ip_from == '交大')
+if (Auth::check() || in_array($ip_from, ['交大', '陽交大']))
     $captcha_a = "交大竹湖";
 ?>
 
