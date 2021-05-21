@@ -22,13 +22,12 @@ class DatabaseSeeder extends Seeder
         $users = $db->table('users')->get();
         foreach ($users as $item) {
             Schema::disableForeignKeyConstraints();
-            DB::table('users')->where('stuid', '=', $item->stuid)->delete();
             DB::table('users')->insert([
                 'stuid' => $item->stuid,
                 'name' => $item->name,
                 'email' => $item->mail,
                 'tg_id' => $item->tg_id,
-                'tg_name' => null, // prevent sending review
+                'tg_name' => $item->tg_name
                 'tg_username' => $item->tg_username,
                 'tg_photo' => $item->tg_photo,
 
@@ -50,10 +49,9 @@ class DatabaseSeeder extends Seeder
             if (strpos($item->author_name, '匿名, ') !== false)
                 $ip_from = mb_substr($item->author_name, 4);
             else
-                $ip_from = "Authored user";
-//                $ip_from = ip_from($item->ip_addr);
+                $ip_from = ip_from($item->ip_addr);
 
-            DB::table('posts')->insertOrIgnore([
+            DB::table('posts')->insert([
                 'uid' => $item->uid,
                 'id' => $item->id,
                 'body' => $item->body,
@@ -84,14 +82,12 @@ class DatabaseSeeder extends Seeder
         }
 
         echo "Migrating votes...\n";
-        DB::table('votes')->delete();
         $votes = $db->table('votes')->get();
         foreach ($votes as $item) {
             DB::table('votes')->insert(get_object_vars($item));
         }
 
         echo "Migrating google_accounts...\n";
-        DB::table('google_accounts')->delete();
         $accounts = $db->table('google_accounts')->get();
         foreach ($accounts as $item) {
             DB::table('google_accounts')->insert([

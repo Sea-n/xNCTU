@@ -23,7 +23,7 @@ class CreateGoogleAccountsTable extends Migration
             $table->foreign('stuid')->references('stuid')->on('users');
             $table->timestamps();
             $table->dateTime('last_login')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->dateTime('last_verify')->default(DB::raw('2020-01-01 00:00:00'));
+            $table->dateTime('last_verify')->default('2020-01-01 00:00:00');
             $table->softDeletes();
         });
     }

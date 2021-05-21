@@ -10,7 +10,7 @@
 - Telegram: [@xNCTU](https://t.me/xNCTU)
 - Plurk: [@xNCTU](https://plurk.com/xNCTU)
 - Twitter: [@x_NCTU](https://twitter.com/x_NCTU)
-- Facebook: [@xNCTU](https://fb.me/xNCTU2.0)
+- Facebook: [@xNCTU2.0](https://fb.me/xNCTU2.0)
 - Instagram [@x_nctu](https://www.instagram.com/x_nctu/)
 
 ## 審文機制
