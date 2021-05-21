@@ -44,14 +44,14 @@ class PostUpdate extends Command
         ]);
 
         foreach ($posts as $post) {
-            if (in_array($post->id, [581, 1597, 2211, 3849, 3870, 3975, 4275, 4575, 6894]))
+            if (in_array($post->id, []))
                 continue; // API error but post exists
 
             if ($post->facebook_id < 10)
                 continue;
 
-            $url = 'https://graph.facebook.com/v7.0/' . env('FACEBOOK_PAGES_ID') . '_' . $post->facebook_id . '/reactions' .
-                '?fields=type,name,profile_type&limit=100000&access_token=' . env('FACEBOOK_ACCESS_TOKEN');
+            $url = 'https://graph.facebook.com/v10.0/' . env('FACEBOOK_PAGES_ID') . '_' . $post->facebook_id .
+                '?fields=reactions.summary(total_count)&access_token=' . env('FACEBOOK_ACCESS_TOKEN');
 
             curl_setopt_array($curl, [
                 CURLOPT_URL => $url,
@@ -59,25 +59,20 @@ class PostUpdate extends Command
             $result = curl_exec($curl);
             $result = json_decode($result);
 
+            $json = json_encode($result, JSON_PRETTY_PRINT);
+            \Storage::put("fb-stat/reactions-{$post->id}", $json);
 
-            if (!isset($result->data)) {
+
+            if (!isset($result->reactions->summary->total_count)) {
                 Log::error('Update likes error: ' . $post->id);
-                $json = json_encode($result, JSON_PRETTY_PRINT);
-                \Storage::put("fb-stat/error-{$post->id}", $json);
                 sleep(5);
                 continue;
             }
 
-            $result = $result->data;
-            $json = json_encode($result, JSON_PRETTY_PRINT);
-            \Storage::put("fb-stat/reactions-{$post->id}", $json);
+            $likes = $result->reactions->summary->total_count;
+            $likes = max($post->fb_likes, $likes);
 
-            $likes = count($result);
-
-            $post->update([
-                'fb_likes' => $likes,
-                'max_likes' => $likes,
-            ]);
+            $post->update(['fb_likes' => $likes]);
         }
     }
 

@@ -67,8 +67,6 @@ class DatabaseSeeder extends Seeder
                 'approvals' => $item->approvals,
                 'rejects' => $item->rejects,
                 'fb_likes' => $item->fb_likes,
-                'old_likes' => $item->fb_likes_old,
-                'max_likes' => max($item->fb_likes, $item->fb_likes_old),
 
                 'telegram_id' => $item->telegram_id,
                 'plurk_id' => $item->plurk_id,

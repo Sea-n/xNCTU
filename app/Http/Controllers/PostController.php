@@ -27,7 +27,7 @@ class PostController extends Controller
 
         $query = Post::where('status', '=', 5);
         if (is_numeric($likes))
-            $query = $query->where('max_likes', '>=', $likes);
+            $query = $query->where('fb_likes', '>=', $likes);
         if (is_numeric($media))
             $query = $query->where('media', '=', $media);
 

@@ -24,8 +24,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $approvals
  * @property integer $rejects
  * @property integer $fb_likes
- * @property integer $old_likes
- * @property integer $max_likes
  *
  * @property integer $telegram_id
  * @property integer $plurk_id

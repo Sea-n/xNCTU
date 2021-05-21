@@ -127,7 +127,7 @@ if ($post->orig) {
 
             @if ($post->facebook_id > 87)
                 <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="{{ $post->getUrl('facebook') }}">
-                        @<span>{{ env('FACEBOOK_USERNAME') }}</span>/{{ $post->facebook_id }}</a> <small>({{ $post->max_likes }} likes)</small></span>
+                        @<span>{{ env('FACEBOOK_USERNAME') }}</span>/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span>
                 <br>
             @endif
 

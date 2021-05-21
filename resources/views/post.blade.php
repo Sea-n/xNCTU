@@ -39,7 +39,7 @@ $posts = array_filter($posts, function($item) {
 });
 
 usort($posts, function (Post $a, Post $b) {
-    return $b['max_likes'] <=> $a['max_likes'];
+    return $b['fb_likes'] <=> $a['fb_likes'];
 });
 $posts = array_slice($posts, 0, 50);
 
