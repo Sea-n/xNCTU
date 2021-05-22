@@ -119,7 +119,7 @@
         </tr>
         <tr>
             <td>2020 Oct 26</td>
-            <td>草屯警兒田勝傑強姦女學生（共 34 篇）</td>
+            <td>草屯警兒田勝傑強姦女學生（共 35 篇）</td>
             <td>
                 <a href="/post/4993" target="_blank">#靠交4993</a>、
                 <a href="/post/5356" target="_blank">#靠交5356</a>、
@@ -154,7 +154,8 @@
                 <a href="/post/6846" target="_blank">#靠交6846</a>、
                 <a href="/post/6851" target="_blank">#靠交6851</a>、
                 <a href="/post/6854" target="_blank">#靠交6854</a>、
-                <a href="/post/6859" target="_blank">#靠交6859</a>
+                <a href="/post/6859" target="_blank">#靠交6859</a>、
+                <a href="/post/6894" target="_blank">#靠交6894</a>
             </td>
         </tr>
         <tr>

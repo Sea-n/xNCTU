@@ -22,6 +22,7 @@ class PostController extends Controller
     {
         $likes = $request->input('likes', '');
         $media = $request->input('media', '');
+        $keyword = $request->input('keyword', '');
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 50);
 
@@ -30,6 +31,8 @@ class PostController extends Controller
             $query = $query->where('fb_likes', '>=', $likes);
         if (is_numeric($media))
             $query = $query->where('media', '=', $media);
+        if (mb_strlen($keyword))
+            $query = $query->where('body', 'LIKE', "%$keyword%");
 
         $posts = $query->orderByDesc('id')
                        ->skip($offset)->take($limit)

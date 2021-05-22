@@ -27,6 +27,8 @@ function more() {
     if (!likes) likes = '';
     let media = urlParams.get('media');
     if (!media) media = '';
+    let keyword = urlParams.get('keyword');
+    if (!keyword) keyword = '';
 
     if (button.classList.contains('disabled'))
         return;
@@ -37,15 +39,15 @@ function more() {
         limit = offset;
 
     button.dataset.offset = offset + limit;
-    getPosts(likes, media, limit, offset);
+    getPosts(likes, media, keyword, limit, offset);
     setTimeout(() => {
         if (button.dataset.offset >= 0)
             button.classList.remove('disabled');
     }, 1000);
 }
 
-function getPosts(likes, media, limit, offset) {
-    fetch(`/api/posts?likes=${likes}&media=${media}&limit=${limit}&offset=${offset}`)
+function getPosts(likes, media, keyword, limit, offset) {
+    fetch(`/api/posts?likes=${likes}&media=${media}&keyword=${keyword}&limit=${limit}&offset=${offset}`)
         .then(resp => resp.json())
         .then((resp) => {
             if (resp.length < limit) {

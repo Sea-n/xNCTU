@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 'name' => $item->name,
                 'email' => $item->mail,
                 'tg_id' => $item->tg_id,
-                'tg_name' => $item->tg_name
+                'tg_name' => $item->tg_name,
                 'tg_username' => $item->tg_username,
                 'tg_photo' => $item->tg_photo,
 
