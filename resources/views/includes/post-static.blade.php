@@ -37,7 +37,6 @@ if ($post->orig) {
     $differ = new Differ(explode("\n", $post->orig), explode("\n", $post->body), []);
     $renderer = RendererFactory::make('Combined', $rendererOptions); // or your own renderer object
     $diff = $renderer->render($differ);
-//    $diff = DiffHelper::calculate($post->orig, $post->body, 'Combined', [], $rendererOptions);
 }
 
 ?>
@@ -72,7 +71,7 @@ if ($post->orig) {
             @endif
         @endisset
 
-        <div itemprop="articleBody">{!! x($post->body) !!}</div>
+        <p itemprop="articleBody">{!! x($post->body) !!}</p>
         @isset ($diff)
             <details class="ts accordion" id="diff" open>
                 <summary>
