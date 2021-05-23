@@ -12,7 +12,7 @@ use App\Models\User;
         </tr>
     </thead>
     <tbody>
-@if (Auth::check() || in_array($post->uid, ['DEMO', '2C8j']))
+@if (Auth::check() || in_array($post->uid, ['DEMO', '2020', '2C8j']))
 @foreach ($votes as $i => $vote)
         <tr>
             <td>{{ $i+1 }}</td>

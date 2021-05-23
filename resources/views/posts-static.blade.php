@@ -26,18 +26,7 @@ $posts = Post::where('status', '=', 5)->orderBy('id', 'desc')->get();
 
     <button id="more" class="ts primary button" onclick="more();" data-offset="50">顯示更多文章</button>
 
-    <div class="ts modals dimmer" id="img-container-wrapper" style="margin-top: 40px;">
-        <dialog id="modal" class="ts basic fullscreen closable modal" open>
-            <i class="close icon"></i>
-            <div class="ts icon header"></div>
-            <div class="content">
-                <img id="img-container-inner" style="width: 100%;">
-            </div>
-            <div class="actions">
-                <button class="ts inverted basic cancel button">關閉</button>
-            </div>
-        </dialog>
-    </div>
+    @include('include.imgbox')
 
     <template id="post-template">
         <div class="ts card" id="post-XXXX" style="margin-bottom: 42px;">

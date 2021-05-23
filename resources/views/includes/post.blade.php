@@ -58,25 +58,19 @@ if ($post->orig) {
          id="post-{{ $post->uid }}" style="margin-bottom: 42px;">
     @if ($post->media == 1)
         <div class="image">
-            @isset ($single)
-                <img itemprop="image" class="post-image" src="/img/{{ $post->uid }}.jpg"/>
-            @else
-                <img itemprop="image" class="post-image" src="/img/{{ $post->uid }}.jpg"
-                     onclick="showImg(this);" style="max-height: 40vh; width: auto; cursor: zoom-in;"/>
-            @endif
+            <img itemprop="image" class="post-image" src="/img/{{ $post->uid }}.jpg"
+                 onclick="showImg({{ $post->uid }});" style="max-height: 40vh; width: auto; cursor: zoom-in;"/>
         </div>
     @elseif ($post->media == 2)
         <div class="image">
-            @isset ($single)
-                <img itemprop="image" class="post-image" src="/img/{{ $post->uid }}.gif"/>
-            @else
-                <img itemprop="image" class="post-image" src="/img/{{ $post->uid }}.gif"
-                     onclick="showImg(this);" style="max-height: 40vh; width: auto; cursor: zoom-in;"/>
-            @endif
+            <video autoplay muted loop onclick="showImg({{ $post->uid }}, 2);"
+                   style="max-width: 100%; max-height: 40vh; cursor: zoom-in;">
+                <source src="/img/{{ $post->uid }}.mp4" type="video/mp4">
+            </video>
         </div>
     @elseif ($post->media == 3)
         <div class="image">
-            <video controls>
+            <video controls style="max-width: 100%; max-height: 40vh">
                 <source src="/img/{{ $post->uid }}.mp4" type="video/mp4">
             </video>
         </div>

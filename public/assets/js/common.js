@@ -156,8 +156,25 @@ function toHTML(str) {
     return str;
 }
 
-function showImg(e) {
-    console.log(e);
-    document.getElementById('img-container-inner').src = e.src || e.target.src;
+function showImg(uid, media=1) {
+    let imgInner = document.getElementById('img-inner');
+    let gifInner = document.getElementById('gif-inner');
+    let gifWrapper = document.getElementById('gif-wrapper');
+
+    imgInner.style.display = 'none';
+    gifInner.style.display = 'none';
+
+    if (media == 1) {
+        imgInner.src = `/img/${uid}.jpg`;
+        imgInner.style.display = '';
+    } else if (media == 2) {
+        gifInner.src = `/img/${uid}.mp4`;
+        gifInner.style.display = '';
+
+        gifWrapper.innerHTML = gifWrapper.innerHTML;  // Refresh to load video
+    } else {
+        alert('Unsupported media type ' + media);
+    }
+
     ts('#modal').modal('show');
 }
