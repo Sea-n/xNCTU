@@ -29,9 +29,7 @@ if (Auth::check()) {
     <p>此頁面列出所有已刪除的投稿，預設顯示最近 3 篇，依照審文數量增加。</p>
     <p>除未通過投票門檻的投稿外，您也可以在 <a href="/transparency">透明度報告</a> 頁面看到貼文遭下架的理由。</p>
 
-    @foreach ($posts as $post)
-        @include('includes.post')
-    @endforeach
+    @each('includes.post', $posts, 'post')
 
     <p>您目前審核 {{ $votes }} 篇文，可看見 {{ $count }} 篇已刪投稿。歡迎多參與審核工作，共同把持{{ env('APP_CHINESE_NAME') }} 貼文品質。</p>
 @endauth

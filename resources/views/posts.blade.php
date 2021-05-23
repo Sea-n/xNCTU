@@ -67,9 +67,7 @@ $posts = $query->orderByDesc('id')->take(50)->get();
     <br>
 
     <div id="posts">
-        @foreach ($posts as $post)
-            @include('includes.post')
-        @endforeach
+        @each('includes.post', $posts, 'post')
     </div>
 
     <button id="more" class="ts primary button" onclick="more();" data-offset="50">顯示更多文章</button>

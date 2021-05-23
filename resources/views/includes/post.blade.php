@@ -50,7 +50,7 @@ if ($post->orig) {
 @isset ($post->deleted_at)
     <div class="ts negative message">
         <div class="header">此文已刪除</div>
-        <p>刪除原因：{{ $post->delete_note }}</p>
+        <p>刪除原因：{!! x($post->delete_note) !!}</p>
     </div>
 @endisset
 
@@ -59,11 +59,11 @@ if ($post->orig) {
     @if ($post->media == 1)
         <div class="image">
             <img itemprop="image" class="post-image" src="/img/{{ $post->uid }}.jpg"
-                 onclick="showImg({{ $post->uid }});" style="max-height: 40vh; width: auto; cursor: zoom-in;"/>
+                 onclick="showImg('{{ $post->uid }}');" style="max-height: 40vh; width: auto; cursor: zoom-in;"/>
         </div>
     @elseif ($post->media == 2)
         <div class="image">
-            <video autoplay muted loop onclick="showImg({{ $post->uid }}, 2);"
+            <video autoplay muted loop onclick="showImg('{{ $post->uid }}', 2);"
                    style="max-width: 100%; max-height: 40vh; cursor: zoom-in;">
                 <source src="/img/{{ $post->uid }}.mp4" type="video/mp4">
             </video>

@@ -26,7 +26,7 @@ $posts = Post::where('status', '=', 5)->orderBy('id', 'desc')->get();
 
     <button id="more" class="ts primary button" onclick="more();" data-offset="50">顯示更多文章</button>
 
-    @include('include.imgbox')
+    @include('includes.imgbox')
 
     <template id="post-template">
         <div class="ts card" id="post-XXXX" style="margin-bottom: 42px;">
