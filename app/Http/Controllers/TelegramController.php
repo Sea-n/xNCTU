@@ -572,11 +572,17 @@ class TelegramController extends Controller
                     break;
                 }
 
+                $text = "[$type/$uid] 請輸入 1 - 100 字理由\n\n";
+                $text .= "將會顯示於貼文頁面中，所有已登入的交大人都能看到您的具名投票\n\n";
+
+                $votes = Vote::where('uid', $uid)->orderBy('created_at')->take(5)->get();
+                foreach ($votes as $vote)
+                    $text .= ($vote->vote == 1 ? '✅' : '❌') . " {$vote->reason}\n";
+
                 Telegram::sendMessage([
                     'chat_id' => $callback->message->chat->id,
                     'reply_to_message_id' => $callback->message->messageId,
-                    'text' => "[$type/$uid] 請輸入 1 - 100 字理由\n\n" .
-                        "將會顯示於貼文頁面中，所有已登入的交大人都能看到您的具名投票",
+                    'text' => $text,
                     'reply_markup' => json_encode([
                         'force_reply' => true,
                     ])
