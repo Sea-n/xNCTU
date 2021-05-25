@@ -10,7 +10,7 @@ class CrawlerController extends Controller
     {
         header('Content-Type: text/xml');
 
-        $posts = Post::where('status', '=', 5)->orderBy('id', 'desc')->get();
+        $posts = Post::where('status', 5)->orderByDesc('id')->get();
 
         echo '<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

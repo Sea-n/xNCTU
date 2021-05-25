@@ -1,7 +1,7 @@
 <?php
 use App\Models\Post;
 
-$posts = Post::whereIn('status', [1, 2, 3, 10])->orderBy('created_at', 'desc')->get();
+$posts = Post::whereIn('status', [1, 2, 3, 10])->orderByDesc('created_at')->get();
 
 foreach ($posts as $key => $item)
     if (!Auth::check())

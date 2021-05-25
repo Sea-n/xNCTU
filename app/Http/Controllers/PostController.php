@@ -223,9 +223,9 @@ class PostController extends Controller
             else
                 $rule = $rules['D'];
 
-            $posts = Post::where('ip_addr', '=', $rule['limit'] + 1)
-                ->orderBy('created_at', 'desc')
-                ->get()->take($rule['limit'] + 1);
+            $posts = Post::where('ip_addr', '=', $ip_addr)
+                ->orderByDesc('created_at')
+                ->take($rule['limit'] + 1)->get();
             if (count($posts) == $rule['limit'] + 1) {
                 $last = strtotime($posts[$rule['limit']]->created_at);
                 $cd = $rule['period'] - (time() - $last);
@@ -244,7 +244,7 @@ class PostController extends Controller
 
             /* Global rate limit for guest users */
             $max = 5;
-            $posts = Post::orderBy('created_at', 'desc')->get()->take($max + 1);
+            $posts = Post::orderByDesc('created_at')->take($max + 1)->get();
             if (count($posts) == $max + 1) {
                 $last = strtotime($posts[$max]['created_at']);
                 $cd = 3 * 60 - (time() - $last);

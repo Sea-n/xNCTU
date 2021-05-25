@@ -53,7 +53,7 @@ class TelegramController extends Controller
      */
     protected function message(Message $message)
     {
-        $text = $message->text ?? '';
+        $text = $message->text ?? $message->caption ?? '';
 
         if ($message->chat->id < 0) {
             if ($message->chat->id != env('TELEGRAM_LOG_GROUP'))
@@ -225,7 +225,7 @@ class TelegramController extends Controller
                         break;
                     }
 
-                    if (!preg_match('/^#投稿(\w{4})/um', $message->replyToMessage->text ?? $message->replyToMessage->caption ?? '', $matches)) {
+                    if (!preg_match('/\n\n#投稿(\w{4}) \| /um', $message->replyToMessage->text ?? $message->replyToMessage->caption ?? '', $matches)) {
                         Telegram::sendMessage([
                             'chat_id' => $message->chat->id,
                             'text' => 'Please reply to submission message.'
@@ -243,6 +243,24 @@ class TelegramController extends Controller
 
                         case 'status':
                             $post->update(['status' => $new]);
+                            break;
+
+                        case 'media':
+                            $post->update(['media' => $new]);
+                            break;
+
+                        case 'image':
+                            $file = Telegram::getFile([
+                                'file_id' => $message->photo->last()['file_id'],
+                            ]);
+                            if (!$file->file_path) {
+                                Log::error('No file path, ' . json_encode($message) . json_encode($file));
+                                break;
+                            }
+                            copy('https://api.telegram.org/file/bot' . env('TELEGRAM_BOT_TOKEN') . '/' . $file->file_path, "img/{$uid}.jpg");
+
+                            if ($post->media == 0)
+                                $post->update(['media' => 1]);
                             break;
 
                         default:
@@ -270,12 +288,23 @@ class TelegramController extends Controller
                         return;
                     }
 
-                    [$uid, $status, $reason] = explode(' ', $arg, 3);
+                    if (!preg_match('/\n\n#投稿(\w{4}) \| /um', $message->replyToMessage->text ?? $message->replyToMessage->caption ?? '', $matches)) {
+                        Telegram::sendMessage([
+                            'chat_id' => $message->chat->id,
+                            'text' => 'Please reply to submission message.'
+                        ]);
+                        return;
+                    }
+                    $uid = $matches[1];
+                    $post = Post::find($uid);
+
+
+                    [$status, $reason] = explode(' ', $arg, 2);
 
                     if ($status >= 0 || mb_strlen($reason) == 0) {
                         Telegram::sendMessage([
                             'chat_id' => $message->chat->id,
-                            'text' => "Usage: /delete <uid> <status> <reason>\n\n" .
+                            'text' => "Usage: /delete <status> <reason>\n\n" .
                                 "-2 rejected\n" .
                                 "-3 deleted by author (hidden)\n" .
                                 "-4 deleted by admin\n" .

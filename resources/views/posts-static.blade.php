@@ -2,7 +2,7 @@
 
 use App\Models\Post;
 
-$posts = Post::where('status', '=', 5)->orderBy('id', 'desc')->get();
+$posts = Post::where('status', '=', 5)->orderByDesc('id')->get();
 ?>
 
 @extends('layouts.master')

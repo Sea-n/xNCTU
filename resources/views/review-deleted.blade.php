@@ -4,7 +4,7 @@ use App\Models\Post;
 if (Auth::check()) {
     $votes = Auth::user()->approvals + Auth::user()->rejects;
     $count = max(floor($votes/10), 3);
-    $posts = Post::whereIn('status', [-2, -4])->orderBy('deleted_at', 'desc')->take($count)->get();
+    $posts = Post::whereIn('status', [-2, -4])->orderByDesc('deleted_at')->take($count)->get();
 }
 ?>
 

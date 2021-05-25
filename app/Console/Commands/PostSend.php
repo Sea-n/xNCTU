@@ -63,7 +63,7 @@ class PostSend extends Command
             foreach ($submissions as $item) {
                 if ($this->checkEligible($item)) {
                     $post = $item;
-                    $id = Post::orderBy('id', 'desc')->first()->id ?? 0;
+                    $id = Post::orderByDesc('id')->first()->id ?? 0;
                     $post->update([
                         'id' => $id + 1,
                         'status' => 4,
