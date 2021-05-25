@@ -60,6 +60,9 @@ for ($i=1; $i<=8; $i++) {
 
 @section('head')
     <script src="/assets/js/review.js"></script>
+@if ($post->status == 4)
+    <meta http-equiv="refresh" content="3" />
+@endif
 @stop
 
 @section('content')
