@@ -140,7 +140,7 @@ class PostController extends Controller
         $body = $request->input('body', '');
         $body = str_replace("\r", "", $body);
         $body = preg_replace("#\n\s+\n#", "\n\n", $body);
-        $body = preg_replace("#[&?](fbclid|igshid|utm_[a-z]+)=[a-zA-Z0-9_-]+#", "", $body);
+        $body = preg_replace("#[&?](fbclid|igshid|gclid|cid|utm_[a-z]+)=[a-zA-Z0-9_-]+#", "", $body);
         $body = trim($body);
 
         $has_img = $request->hasFile('img');
