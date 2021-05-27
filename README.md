@@ -2,7 +2,7 @@
 
 不要問為何沒有人審文，先承認你就是沒有人。
 
-[![logo](assets/img/logo.png)](https://x.nctu.app)
+[![logo](public/assets/img/logo.png)](https://x.nctu.app)
 
 新版靠北交大讓全校師生都有了審核的權限，每天穩定發出投稿文章
 

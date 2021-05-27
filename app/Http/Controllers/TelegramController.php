@@ -313,7 +313,6 @@ class TelegramController extends Controller
                         return;
                     }
 
-                    $post = Post::find($uid);
                     ReviewDelete::dispatch($post);
                     $post->update([
                         'status' => $status,

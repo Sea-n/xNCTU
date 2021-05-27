@@ -68,23 +68,32 @@ class VerifyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $sub = session()->get('google_sub');
         $google = GoogleAccount::find($sub);
         if (!$google)
-            err('Please login first. 請先登入');
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Please login first. 請先登入'
+            ]);
 
         $last = strtotime($google->last_verify);
         if (time() - $last < 10)
-            err('Retry later. 冷卻中，請稍後再試');
+            return response()->json([
+                'ok' => false,
+                'msg' => 'Retry later. 冷卻中，請稍後再試'
+            ]);
 
         $stuid = $request->input('stuid', '');
 
         if (!preg_match('#^1\d{2}\d{6}$#', $stuid))
-            err('stuid format error. 學號格式錯誤' . $stuid);
+            return response()->json([
+                'ok' => false,
+                'msg' => 'stuid format error. 學號格式錯誤'
+            ]);
 
         $year = substr($stuid, 0, 3);
         $to = "s{$stuid}@m{$year}.nthu.edu.tw";
@@ -184,7 +193,7 @@ $verify_link
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
