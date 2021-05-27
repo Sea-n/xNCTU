@@ -574,6 +574,7 @@ class TelegramController extends Controller
 
                 $text = "[$type/$uid] 請輸入 1 - 100 字理由\n\n";
                 $text .= "將會顯示於貼文頁面中，所有已登入的交大人都能看到您的具名投票\n\n";
+                $text .= "-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -\n";
 
                 $votes = Vote::where('uid', $uid)->orderBy('created_at')->take(5)->get();
                 foreach ($votes as $vote)
