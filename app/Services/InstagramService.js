@@ -24,7 +24,7 @@ const {IgApiClient} = require('instagram-private-api');
     strictEqual(post.media, 1);
     strictEqual(post.instagram_id, '');
     const img = __dirname + '/../../public/img/' + post.uid + '.jpg';
-    const msg = post.body + '\n\n#靠交' + post.id + ' #靠北交大';
+    const msg = post.body + '\n\n#' + process.env.HASHTAG + post.id + ' #靠北交大';
 
     /* Instagram */
     const ig = new IgApiClient();

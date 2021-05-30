@@ -81,10 +81,10 @@ if ($post->orig) {
     <div class="content">
         @isset ($post->id)
             @isset ($single)
-                <div itemprop="headline" class="header">#靠交{{ $post->id }}</div>
+                <div itemprop="headline" class="header">#{{ env('HASHTAG') }}{{ $post->id }}</div>
             @else
                 <div itemprop="headline" class="header">
-                    <a href="/post/{{ $post->id }}">#靠交{{ $post->id }}</a>
+                    <a href="/post/{{ $post->id }}">#{{ env('HASHTAG') }}{{ $post->id }}</a>
                 </div>
             @endif
         @else

@@ -36,20 +36,20 @@ class FacebookService extends BaseService implements PostContract
             env('APP_CHINESE_NAME') . " 除了 Facebook 外，還支援 Twitter、Plurk 等平台\nhttps://twitter.com/" . env('TWITTER_USERNAME'),
             env('APP_CHINESE_NAME') . " 除了 Facebook 外，還支援 Plurk、Twitter 等平台\nhttps://www.plurk.com/" . env('PLURK_USERNAME'),
             "加入" . env('APP_CHINESE_NAME') . " Telegram 頻道，第一時間看到所有貼文\nhttps://t.me/" . env('TELEGRAM_USERNAME'),
-            "你知道靠交也有 Instagram 帳號嗎？只要投稿圖片就會同步發佈至 IG 喔\nhttps://www.instagram.com/" . env('INSTAGRAM_USERNAME'),
+            "你知道" . env('HASHTAG') . "也有 Instagram 帳號嗎？只要投稿圖片就會同步發佈至 IG 喔\nhttps://www.instagram.com/" . env('INSTAGRAM_USERNAME'),
 
             "審核紀錄公開透明，你可以看到誰以什麼原因通過/駁回了投稿\n" . url('/posts'),
             "覺得審核太慢嗎？你也可以來投票\n" . url('/review'),
             "網站上「已刪投稿」區域可以看到被黑箱的記錄\n" . url('/deleted'),
             "知道都是哪些系的同學在審文嗎？打開排行榜看看吧\n" . url('/ranking'),
             "秉持公開透明原則，您可以在透明度報告看到師長同學請求刪文的紀錄\n" . url('/transparency'),
-            "靠交 2.0 是交大資工學生自行開發的系統，程式原始碼公開於 GitHub 平台\nhttps://github.com/Sea-n/" . env('APP_NAME'),
+            env('APP_CHINESE_NAME') . " 是交大資工學生自行開發的系統，程式原始碼公開於 GitHub 平台\nhttps://github.com/Sea-n/" . env('APP_NAME'),
         ];
     }
 
     public function publish(Post $post)
     {
-        $msg = "#靠交{$post->id}\n\n";
+        $msg = '#' . env('HASHTAG') . "{$post->id}\n\n";
         $msg .= "{$post->body}";
 
         $url = 'https://graph.facebook.com/v6.0/' . env('FACEBOOK_PAGES_ID') . ($post->media == 0 ? '/feed' : '/photos');

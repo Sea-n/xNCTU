@@ -20,7 +20,7 @@ class TwitterService extends BaseService implements PostContract
      */
     public function publish(Post $post)
     {
-        $msg = "#靠交{$post->id}\n\n{$post->body}";
+        $msg = '#' . env('HASHTAG') . "{$post->id}\n\n{$post->body}";
         if (mb_strlen($msg) > 120)
             $msg = mb_substr($msg, 0, 120) . '...';
         $msg .= "\n\n✅ {$post->getUrl('website')} .";

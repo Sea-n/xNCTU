@@ -120,7 +120,7 @@ $verify_link
 
 有了您的貢獻，期望能以嶄新的姿態，將" . env('APP_CHINESE_NAME') . " 推向靠北生態系巔峰。
 
-靠交維護團隊
+" . env('HASHTAG') . "維護團隊
 {$date}
 
 

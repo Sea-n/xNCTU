@@ -26,7 +26,7 @@ class PlurkService extends BaseService implements PostContract
     public function publish(Post $post)
     {
         $msg = $post->media == 1 ? ($post->getUrl('image') . "\n") : '';
-        $msg .= "#靠交{$post->id}\n{$post->body}";
+        $msg .= '#' . env('HASHTAG') . "{$post->id}\n{$post->body}";
 
         if (mb_strlen($msg) > 290)
             $msg = mb_substr($msg, 0, 290) . '...';

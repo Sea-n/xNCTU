@@ -80,7 +80,7 @@ $posts = $query->orderByDesc('id')->take(50)->get();
                 <img id="img" class="post-image" style="max-height: 40vh; width: auto; cursor: zoom-in;"/>
             </div>
             <div class="content">
-                <div class="header"><a id="hashtag">#靠交000</a></div>
+                <div class="header"><a id="hashtag">#{{ env('HASHTAG') }}000</a></div>
                 <div id="body"></div>
             </div>
             <div class="extra content">

@@ -46,7 +46,7 @@ use App\Model\GoogleAccount;
 
 		<p>有了您的貢獻，期望能以嶄新的姿態，將{{ env('APP_CHINESE_NAME') }} 推向靠北生態系巔峰。</p>
 
-		<p style="text-align: right;">靠交維護團隊<br>{{ $date }}</p>
+		<p style="text-align: right;">{{ env('HASHTAG') }}維護團隊<br>{{ $date }}</p>
 
 		<p style="text-align: center; font-size: 10px; color: #888;">
 			由於 <a href="mailto:{{ $google->email }}">{{ $google->name }} &lt;{{ $google->email }}&gt;</a> 在{{ env('APP_CHINESE_NAME') }} 網站申請寄送驗證碼，因此寄發本信件給您。
