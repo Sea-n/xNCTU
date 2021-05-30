@@ -16,41 +16,47 @@ document.addEventListener('keyup', (e) => {
 });
 
 function more() {
+    const urlParams = new URLSearchParams(window.location.search);
     const button = document.getElementById('more');
     const offset = parseInt(button.dataset.offset);
+    const params = {};
 
     if (offset < 0)
         return;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    let likes = urlParams.get('likes');
-    if (!likes) likes = '';
-    let media = urlParams.get('media');
-    if (!media) media = '';
-    let keyword = urlParams.get('keyword');
-    if (!keyword) keyword = '';
 
     if (button.classList.contains('disabled'))
         return;
     button.classList.add('disabled');
 
+    let likes = urlParams.get('likes');
+    let media = urlParams.get('media');
+    let keyword = urlParams.get('keyword');
+    if (likes) params['likes'] = likes;
+    if (media) parmas['media'] = media;
+    if (keyword) params['keyword'] = keyword;
+
     let limit = 50;
     if (offset >= 200)
         limit = offset;
 
+    params['offset'] = offset;
+    params['limit'] = limit;
+
     button.dataset.offset = offset + limit;
-    getPosts(likes, media, keyword, limit, offset);
+    getPosts(likes, params);
     setTimeout(() => {
         if (button.dataset.offset >= 0)
             button.classList.remove('disabled');
     }, 1000);
 }
 
-function getPosts(likes, media, keyword, limit, offset) {
-    fetch(`/api/posts?likes=${likes}&media=${media}&keyword=${keyword}&limit=${limit}&offset=${offset}`)
+function getPosts(likes, params) {
+    let url = '/api/posts?' + Object.keys(params)
+        .map(k => k + '=' + encodeURIComponent(params[k])).join('&');
+    fetch(url)
         .then(resp => resp.json())
         .then((resp) => {
-            if (resp.length < limit) {
+            if (resp.length < params['limit']) {
                 const button = document.getElementById('more');
                 button.classList.add('disabled');
                 button.innerText = '已無更多文章';
@@ -86,16 +92,16 @@ function appendPost(item) {
         post.querySelector('#img').src = '/img/' + item.uid + '.mp4';
 
     let body = item.body;
-    const block = body.split('\n.\n.\n.\n.\n.\n.\n.\n.\n.\n.\n');
-    if (block.length > 1) {
-        body = block[0];
+    const blocks = body.split('\n');
+    if (blocks.length > 15) {
+        body = blocks.slice(0, 10).join('\n');
         read_more = true;
     }
 
     post.querySelector('#body').innerHTML = toHTML(body);
 
     if (read_more)
-        post.querySelector('#body').innerHTML += '<p>.<br>.<br>.<br>.<br>.<br>. . . . . <a href="/post/' + item.id + '">閱讀全文</a></p>';
+        post.querySelector('#body').innerHTML += '<br><br><a href="/post/' + item.id + '">閱讀全文</a></p>';
 
     post.querySelector('#author-name').innerText = item.author_name;
     post.querySelector('#author-photo').src = item.author_photo;
