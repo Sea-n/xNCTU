@@ -232,7 +232,9 @@ class TelegramController extends Controller
                         return;
                     }
 
-                    [$column, $new] = explode(' ', $arg, 2);
+                    $args = explode(' ', $arg, 2);
+                    $column = $args[0];
+                    $new = $args[1] ?? '';
 
                     if ($column == 'name') {
                         [$stuid, $name] = explode(' ', $new, 2);
