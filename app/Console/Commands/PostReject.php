@@ -41,10 +41,16 @@ class PostReject extends Command
         $submissions = Post::where('status', '=', 3)->get();
 
         foreach ($submissions as $post) {
+            /*
+             * When the time is xx:x0 or xx:x5,
+             * do nothing to prevent racing condition with post:send.
+             * Break here instead of return for processing unconfirmed posts.
+             */
+            if (floor(time() / 60) % 5 == 0)
+                break;
+
             $submitted = strtotime($post->submitted_at);
             $dt = floor(time() / 60) - floor($submitted / 60);
-            if ($submitted % 5 == 0)
-                $dt += 1;
 
             if (strpos($post->ip_from, '境外') === false) {
                 /* Before 1 hour */
