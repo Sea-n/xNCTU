@@ -39,6 +39,17 @@ class LoginController extends Controller
     }
 
     /**
+     * Redirect the user to the NYCU OAuth authentication page.
+     *
+     * @return RedirectResponse
+     */
+    public function redirectToNYCU()
+    {
+        session(['redirect' => url()->previous()]);
+        return Socialite::driver('nycu')->redirect();
+    }
+
+    /**
      * Obtain the user information from Google.
      *
      * @return RedirectResponse
@@ -99,6 +110,43 @@ class LoginController extends Controller
                 'name' => $auth->getId(),
                 'email' => $auth->getEmail(),
                 'last_login_nctu' => Carbon::now(),
+            ],
+            );
+
+        Auth::login($user, true);
+        $this->postLogin();
+
+        $redirect = session('redirect', '/');
+        session()->forget('redirect');
+        return redirect($redirect);
+    }
+
+    /**
+     * Obtain the user information from NYCU OAuth.
+     *
+     * @return Response|RedirectResponse
+     */
+    public function handleNYCUCallback()
+    {
+        try {
+            $auth = Socialite::driver('nycu')->user();
+        } catch (Exception $e) {
+            return $this->redirectToNYCU();
+        }
+
+        $user = User::find($auth->getId());
+
+        if ($user)
+            $user->update([
+                'email' => $auth->getEmail(),
+                'last_login_nycu' => Carbon::now(),
+            ]);
+        else
+            $user = User::create([
+                'stuid' => $auth->getId(),
+                'name' => $auth->getId(),
+                'email' => $auth->getEmail(),
+                'last_login_nycu' => Carbon::now(),
             ],
             );
 
@@ -174,7 +222,7 @@ class LoginController extends Controller
         }
 
         if (Auth::guest())
-            return $this->redirectToNCTU();
+            return $this->redirectToNYCU();
 
         Auth::user()->update([
             'tg_id' => $auth_data['id'],

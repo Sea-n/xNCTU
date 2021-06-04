@@ -32,6 +32,12 @@ return [
         'redirect' => env('APP_URL') . '/login/nctu/callback',
     ],
 
+    'nycu' => [
+        'client_id' => env('NYCU_CLIENT_ID'),
+        'client_secret' => env('NYCU_CLIENT_SECRET'),
+        'redirect' => env('APP_URL') . '/login/nycu/callback',
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

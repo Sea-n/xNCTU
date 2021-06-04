@@ -68,13 +68,15 @@ Route::get('/post/{post:id}', function (Post $post) {
 
 Route::name('login.')->group(function () {
     Route::get('/login', function () {
-        return redirect('/login/nctu');
+        return redirect('/login/nycu');
     })->name('index');
 
     Route::get('/login/google', [LoginController::class, 'redirectToGoogle'])->name('google');
     Route::get('/login/google/callback', [LoginController::class, 'handleGoogleCallback'])->name('google.callback');
     Route::get('/login/nctu', [LoginController::class, 'redirectToNCTU'])->name('nctu');
     Route::get('/login/nctu/callback', [LoginController::class, 'handleNCTUCallback'])->name('nctu.callback');
+    Route::get('/login/nycu', [LoginController::class, 'redirectToNYCU'])->name('nycu');
+    Route::get('/login/nycu/callback', [LoginController::class, 'handleNYCUCallback'])->name('nycu.callback');
     Route::get('/login/tg', [LoginController::class, 'handleTGCallback'])->name('tg');
     Route::get('/login-tg', [LoginController::class, 'handleTGCallback'])->name('tg.legacy');  // Backward compatibility for before Feb 2021
     Route::get('/login/fb', [LoginController::class, 'redirectToFB'])->name('fb');

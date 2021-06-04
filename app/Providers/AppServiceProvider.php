@@ -31,5 +31,12 @@ class AppServiceProvider extends ServiceProvider
                 return $socialite->buildProvider(NCTUOAuthProvider::class, $config);
             }
         );
+        $socialite->extend(
+            'nycu',
+            function ($app) use ($socialite) {
+                $config = $app['config']['services.nycu'];
+                return $socialite->buildProvider(NYCUOAuthProvider::class, $config);
+            }
+        );
     }
 }

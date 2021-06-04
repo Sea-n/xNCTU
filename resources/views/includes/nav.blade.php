@@ -59,6 +59,9 @@ use App\Models\GoogleAccount;
                     <a href="https://t.me/{{ env('APP_NAME') }}bot?start=login">
                         <img class="logo" src="/assets/img/login-telegram.png">
                     </a>
+                    <a href="/login/nycu">
+                        <img class="logo" src="/assets/img/login-nycu.png">
+                    </a>
                 </div>
             </div>
         </dialog>

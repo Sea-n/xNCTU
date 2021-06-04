@@ -73,6 +73,7 @@ class User extends Authenticatable
         'last_vote',
         'last_login_tg',
         'last_login_nctu',
+        'last_login_nycu',
         'last_login_google',
     ];
 

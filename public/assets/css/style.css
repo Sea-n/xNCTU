@@ -146,23 +146,27 @@ div[itemprop="articleBody"] {
     width: 520px;
 }
 
+.logo {
+    width: 96px;
+}
+
 @media screen and (max-width: 768px) {
     .login-inner {
-        width: 400px;
+        width: 340px;
     }
 
     .logo {
-        width: 96px;
+        width: 64px;
     }
 }
 
 @media screen and (max-width: 536px) {
     .login-inner {
-        width: 280px;
+        width: 260px;
     }
 
     .logo {
-        width: 64px;
+        width: 48px;
     }
 }
 

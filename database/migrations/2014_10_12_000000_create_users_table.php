@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
 
             $table->dateTime('last_login_tg')->nullable();
             $table->dateTime('last_login_nctu')->nullable();
+            $table->dateTime('last_login_nycu')->nullable();
             $table->dateTime('last_login_google')->nullable();
             $table->rememberToken();
             $table->timestamps();
