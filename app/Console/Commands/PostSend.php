@@ -150,11 +150,23 @@ class PostSend extends Command
 
         /* Rule for Logged-in users */
         if ($post->author_id) {
-            /* No reject: 3 votes */
+            /* No reject */
             if ($dt < 10)
-                return ($vote2 >= 3);
+                return ($vote2 >= 4);
 
-            /* More than 10 min */
+            /* 10 min - 1 hour, during night */
+            if (strtotime("02:00") <= time() && time() <= strtotime("09:00")) return ($vote >= 4);
+            if (strtotime("01:30") <= time() && time() <= strtotime("09:30")) return ($vote >= 3);
+
+            /* 10 min - 1 hour, daytime */
+            if ($dt < 60)
+                return ($vote >= 2);
+
+            /* More than 1 hour, during night */
+            if (strtotime("01:00") <= time() && time() <= strtotime("10:00")) return ($vote >= 2);
+            if (strtotime("00:30") <= time() && time() <= strtotime("10:30")) return ($vote >= 1);
+
+            /* More than 1 hour, daytime */
             return ($vote >= 0);
         }
 
@@ -162,45 +174,48 @@ class PostSend extends Command
         if (in_array($post->ip_from, ['交大', '陽交大'])
             && $post->ip_addr != ip_mask($post->ip_addr)) {
 
-            /* No reject: 5 votes */
+            /* No reject */
             if ($dt < 10)
-                return ($vote2 >= 5);
+                return ($vote2 >= 6);
 
             /* 10 min - 1 hour */
             if ($dt < 60)
-                return ($vote >= 3);
+                return ($vote >= 4);
 
             /* More than 1 hour, during night */
-            if (strtotime("03:00") <= time() && time() <= strtotime("09:00"))
-                return ($vote >= 3);
-
-            if (strtotime("02:30") <= time() && time() <= strtotime("09:30"))
-                return ($vote >= 2);
-
-            if (strtotime("02:00") <= time() && time() <= strtotime("10:00"))
-                return ($vote >= 1);
+            if (strtotime("02:00") <= time() && time() <= strtotime("09:00")) return ($vote >= 4);
+            if (strtotime("01:30") <= time() && time() <= strtotime("09:30")) return ($vote >= 3);
 
             /* More than 1 hour, daytime */
-            return ($vote >= 0);
+            return ($vote >= 2);
         }
 
         /* Rule for Taiwan IP address */
         if (strpos($post->ip_from, '境外') === false) {
-            /* No reject: 7 votes */
+            /* No reject */
             if ($dt < 10)
-                return ($vote2 >= 7);
+                return ($vote2 >= 8);
 
             /* 10 min - 1 hour */
             if ($dt < 60)
-                return ($vote >= 5);
+                return ($vote >= 6);
 
             /* More than 1 hour */
-            return ($vote >= 3);
+            return ($vote >= 4);
         }
 
         /* Rule for Foreign IP address */
         if (true) {
-            return ($vote >= 10);
+            /* No reject */
+            if ($dt < 10)
+                return ($vote2 >= 10);
+
+            /* 10 min - 1 hour */
+            if ($dt < 60)
+                return ($vote >= 8);
+
+            /* More than 1 hour */
+            return false;
         }
     }
 }

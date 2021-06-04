@@ -62,7 +62,7 @@ class PostReject extends Command
                     continue;
             } else {
                 /* Before 1 hour */
-                if ($dt < 1 * 60 && $post->rejects < 2)
+                if ($dt < 1 * 60)
                     continue;
             }
 

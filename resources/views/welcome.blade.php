@@ -56,12 +56,15 @@
         <p>新版{{ env('APP_CHINESE_NAME') }} 採自助式審文，所有交大師生皆可加入審核者的行列，以下是系統判斷標準</p>
 
         <h4>(A) 具名投稿</h4>
-        <p>點擊右上角使用 NCTU OAuth 登入後，可用師生身份具名投稿，即使無人審核也會在 10 分鐘內自動發出，詳細判斷條件如下：</p>
+        <p>點擊右上角使用交大帳號登入後，可用師生身份具名投稿，即使無人審核也會自動發出，詳細判斷條件如下：</p>
         <ul>
-            <li>10 分鐘以內：達到 3 個&nbsp;<button class="ts vote positive button">通過</button>
+            <li>10 分鐘以內：達到 4 個&nbsp;<button class="ts vote positive button">通過</button>
                 &nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button>
             </li>
-            <li>10 分鐘以後：&nbsp;<button class="ts vote positive button">通過</button>
+            <li>10 分鐘至 1 小時：&nbsp;<button class="ts vote positive button">通過</button>
+                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 2 個
+            </li>
+            <li>1 小時以後：&nbsp;<button class="ts vote positive button">通過</button>
                 &nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button>
             </li>
         </ul>
@@ -69,42 +72,39 @@
         <h4>(B) 交大 IP 位址</h4>
         <p>在宿舍、系館使用 113 位址投稿者，滿足以下條件即發出：</p>
         <ul>
-            <li>10 分鐘以內：達到 5 個&nbsp;<button class="ts vote positive button">通過</button>
+            <li>10 分鐘以內：達到 6 個&nbsp;<button class="ts vote positive button">通過</button>
                 &nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button>
             </li>
             <li>10 分鐘至 1 小時：&nbsp;<button class="ts vote positive button">通過</button>
-                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 3 個
+                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 4 個
             </li>
             <li>1 小時以後：&nbsp;<button class="ts vote positive button">通過</button>
-                &nbsp;不少於&nbsp;<button class="ts vote negative button">駁回</button>
+                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 2 個
             </li>
         </ul>
-        <div class="ts negative raised compact segment">
-            <h5>例外狀況</h5>
-            <p>為避免非法文章意外通過，每天 03:00 - 09:00 門檻提升為&nbsp;<button class="ts vote positive button">通過</button>
-                需比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 3 個
-            </p>
-        </div>
 
         <h4>(C) 使用台灣 IP 位址</h4>
         <p>熱門投稿會快速登上版面，審核者們也有足夠時間找出惡意投稿，滿足以下條件即發出：</p>
         <ul>
-            <li>10 分鐘以內：達到 7 個&nbsp;<button class="ts vote positive button">通過</button>
+            <li>10 分鐘以內：達到 8 個&nbsp;<button class="ts vote positive button">通過</button>
                 &nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button>
             </li>
             <li>10 分鐘至 1 小時：&nbsp;<button class="ts vote positive button">通過</button>
-                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 5 個
+                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 6 個
             </li>
             <li>1 小時以後：&nbsp;<button class="ts vote positive button">通過</button>
-                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 3 個
+                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 4 個
             </li>
         </ul>
 
         <h4>(D) 境外 IP 位址</h4>
         <p>保留境外發文是為了提供更安心的靠北管道，並不鼓勵發日常廢文使用。因此設下較為嚴格的審核標準，除非通過群眾一致認同有其必要，否則一概不予發出。</p>
         <ul>
-            <li>1 小時以內：&nbsp;<button class="ts vote positive button">通過</button>
-                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 10 個
+            <li>10 分鐘以內：達到 10 個&nbsp;<button class="ts vote positive button">通過</button>
+                &nbsp;且無&nbsp;<button class="ts vote negative button">駁回</button>
+            </li>
+            <li>10 分鐘至 1 小時：&nbsp;<button class="ts vote positive button">通過</button>
+                &nbsp;比&nbsp;<button class="ts vote negative button">駁回</button>&nbsp;多 8 個
             </li>
             <li>1 小時以後：投稿掰掰</li>
         </ul>

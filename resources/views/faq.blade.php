@@ -25,6 +25,7 @@
     <div class="faq-anchor" id="post-schedule"></div><h2 class="ts header">Q：投稿什麼時候會發出</h2>
     <p>通過審核之文章將會進入發文佇列，由系統<b>每 5 分鐘</b> po 出一篇至各大社群平台，如欲搶先看也可申請加入審核團隊。</p>
     <p>所謂無人 <button class="ts vote negative button">駁回</button> 門檻意指 <button class="ts vote positive button">通過</button> - <button class="ts vote negative button">駁回</button> * 2，以降低個人誤觸影響。</p>
+    <p>為避免非法文章意外通過，每天 02:00 - 09:00 至少要 4 個&nbsp;<button class="ts vote positive button">通過</button>，讓更多人有機會一起把關。</p>
 
     <div class="faq-anchor" id="deleted-submissions"></div><h2 class="ts header">Q：被駁回的機制是什麼</h2>
     <p>當投稿被多數人駁回，或是放了很久卻達不到通過標準，就會被系統自動清理。</p>
@@ -34,7 +35,6 @@
         <li>1 小時至 12 小時：達到 3 個&nbsp;<button class="ts vote negative button">駁回</button></li>
         <li>12 小時以後：不論條件，全數回收</li>
     </ul>
-    <p>使用境外 IP 位址發文者，達到 2 個 <button class="ts vote negative button">駁回</button> 即刪除。</p>
 
     <div class="faq-anchor" id="deleted-submissions"></div><h2 class="ts header">Q：可以去哪找到被黑箱的投稿</h2>
     <p>如果達到上述駁回條件，或是管理團隊覺得投稿不適合發出，就會放到 <a href="/deleted">已刪投稿</a> 頁面。</p>
