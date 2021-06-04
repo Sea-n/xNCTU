@@ -224,6 +224,7 @@ class PostController extends Controller
                 $rule = $rules['D'];
 
             $posts = Post::where('ip_addr', '=', $ip_addr)
+                ->whereNotIn('status', [-12, -3, 5])
                 ->orderByDesc('created_at')
                 ->take($rule['limit'] + 1)->get();
             if (count($posts) == $rule['limit'] + 1) {
