@@ -120,12 +120,13 @@ if ($post->orig) {
 
             @if ($post->facebook_id > 87)
                 <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="{{ $post->getUrl('facebook') }}">
-                        @<span>{{ env('FACEBOOK_USERNAME') }}</span>/{{ $post->facebook_id }}</a> <small>({{ $post->fb_likes }} likes)</small></span>
+                        @<span>{{ env('FACEBOOK_USERNAME') }}</span>/{{ $post->facebook_id }}</a>
+                        <small>({{ $post->fb_likes }} likes)</small></span>
                 <br>
             @endif
 
             @if (strlen($post->instagram_id) > 1)
-                <span><i class="instagram icon"></i>Instagram:
+                <span><i class="instagram icon"></i> Instagram:
                     <a target="_blank" href="{{ $post->getUrl('instagram') }}">
                         @<span>{{ env('INSTAGRAM_USERNAME') }}</span>/{{ $post->instagram_id }}</a></span>
                 <br>
