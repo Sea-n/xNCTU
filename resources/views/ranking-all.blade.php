@@ -133,11 +133,7 @@
                 <td>{{ $item['user']->dep() }}</td>
                 <td><img class="ts circular avatar image" src="{{ $photo }}"
                          onerror="this.src='/assets/img/avatar.jpg';"></td>
-                @isset ($item['user']->tg_id)
-                    <td><a onclick="changeChart('{{ $item['user']->tg_id }}')">{{ $item['user']->name }}</a></td>
-                @else
-                    <td>{{ $item['user']->name }}</td>
-                @endisset
+                <td><a onclick="changeChart('{{ $item['user']->tg_id ?? $item['user']->stuid }}')">{{ $item['user']->name }}</a></td>
                 <td>{{ $item[1] }}</td>
                 <td>{{ $item[-1] }}</td>
                 <td>{!! $streak !!}</td>

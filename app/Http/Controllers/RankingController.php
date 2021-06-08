@@ -11,12 +11,18 @@ class RankingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $tg_id
+     * @param int $id
      * @return JsonResponse
      */
-    public function show(int $tg_id)
+    public function show(int $id)
     {
-        $user = User::where('tg_id', '=', $tg_id)->firstOrFail();
+        $user = User::where('tg_id', '=', $id)->first();
+
+        if (!$user)
+            $user = User::where('stuid', '=', '.'.$id)->whereNull('tg_id')->first();
+
+        if (!$user)
+            return response()->json([]);
 
         $data = [
             'columns' => [
