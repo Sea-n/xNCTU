@@ -193,6 +193,33 @@ class PostController extends Controller
             'ip_from' => $ip_from,
         ]);
 
+        if (empty($author_id)) {
+            if (in_array($ip_addr, config('blacklist.submit.ip_addr'))) {
+                $post->update([
+                    'status' => -14,
+                    'deleted_at' => Carbon::now(),
+                    'delete_note' => "IP 位址「{$ip_addr}」已被封鎖",
+                ]);
+                return response()->json([
+                    'ok' => false,
+                    'msg' => "The IP address {$ip_addr} has been banned.",
+                ]);
+
+            }
+        } else {
+            if (in_array($author_id, config('blacklist.submit.users'))) {
+                $post->update([
+                    'status' => -14,
+                    'deleted_at' => Carbon::now(),
+                    'delete_note' => "發文者「{$author_id}」已被封鎖",
+                ]);
+                return response()->json([
+                    'ok' => false,
+                    'msg' => "The user {$author_id} has been banned.",
+                ]);
+            }
+        }
+
         /* Check rate limit */
         if (empty($author_id)) {
             $rules = [

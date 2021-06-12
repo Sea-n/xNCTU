@@ -180,6 +180,10 @@ function submitForm(e) {
 
                 if (resp.uid)
                     location.href = '/review/' + resp.uid;
+                else
+                    location.href = '/';
+
+                return;
             }
 
             localStorage.setItem('draft', '');

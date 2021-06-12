@@ -493,6 +493,9 @@ function voteSubmission(string $uid, string $stuid, int $vote, string $reason)
     if (mb_strlen($reason) > 100)
         return ['ok' => false, 'msg' => 'Reason too long. 附註文字過長'];
 
+    if (in_array($stuid, config('blacklist.review')))
+        return ['ok' => false, 'msg' => 'Banned account. 您的帳號已被停權'];
+
     $post = Post::find($uid);
     $user = User::find($stuid);
 

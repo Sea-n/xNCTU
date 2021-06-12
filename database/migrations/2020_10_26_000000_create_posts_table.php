@@ -62,6 +62,7 @@ class CreatePostsTable extends Migration
      * -11 deleted and by admin (hidden)
      * -12 rate limited
      * -13 unconfirmed timeout
+     * -14 user or IP address banned
      */
 
     /*
