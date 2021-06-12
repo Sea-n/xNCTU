@@ -278,6 +278,9 @@ function idToDep(string $id): string
     if (preg_match('#^[A-Z][A-Z0-9][0-9]{3}$#', $id))
         return '教職員';
 
+    if (preg_match('#^[AE][A-Z][A-Z0-9][0-9]{3}$#', $id))
+        return '教職員';
+
     if (preg_match('#^\d{7}$#', $id))
         return idToDepNCTU($id);
 
