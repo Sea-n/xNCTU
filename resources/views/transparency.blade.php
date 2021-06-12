@@ -204,6 +204,13 @@
         </tr>
         </thead>
         <tbody>
+        <tr>
+            <td>2021 Jun</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
         <tr class="negative indicated">
             <td>2021 May</td>
             <td>0</td>
@@ -321,5 +328,5 @@
 
     <br>
     <p>收到任何刪除通知將人工更新至此頁面，在不造成二次傷害的前提下，本站會盡可能提供最多資訊，原則上收到請求後會在 7 天內公開揭露。</p>
-    <p style="text-align: right;"><i>最後更新日期：2021 May 07</i></p>
+    <p style="text-align: right;"><i>最後更新日期：2021 Jun 12</i></p>
 @stop
