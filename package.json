@@ -12,9 +12,14 @@
     "devDependencies": {
         "axios": "^0.21.1",
         "cross-env": "^7.0.3",
+        "glob-parent": ">=5.1.2",
+        "json-bigint": ">=1.0.0",
         "laravel-mix": "^5.0.9",
         "lodash": "^4.17.21",
-        "resolve-url-loader": "^3.1.0"
+        "normalize-url": ">=4.5.1",
+        "postcss": ">=8.2.10",
+        "resolve-url-loader": "^3.1.0",
+        "ssri": ">=7.1.1"
     },
     "dependencies": {
         "dotenv": "^6.2.0",
