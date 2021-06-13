@@ -7,6 +7,7 @@ use Jfcherng\Diff\Factory\RendererFactory;
 
 /**
  * @var Post $post
+ * @var bool|null $static
  */
 
 $time = humanTime($post->submitted_at ?? now());
@@ -24,11 +25,13 @@ if (!Auth::check())
 if ($post->author)
     $ip_masked = false;
 
-$author_photo = genPic($ip_masked);
-if ($post->author) {
-    $author_photo = genPic($post->author_id);
-    if ($post->author->tg_photo)
-        $author_photo = "/avatar/tg/{$post->author->tg_id}-x64.jpg";
+if (!isset($static)) {
+    $author_photo = genPic($ip_masked);
+    if ($post->author) {
+        $author_photo = genPic($post->author_id);
+        if ($post->author->tg_photo)
+            $author_photo = "/avatar/tg/{$post->author->tg_id}-x64.jpg";
+    }
 }
 
 if ($post->orig) {
@@ -56,7 +59,9 @@ if ($post->orig) {
 
 <article itemscope itemtype="http://schema.org/Article" class="ts card"
          id="post-{{ $post->uid }}" style="margin-bottom: 42px;">
-    @if ($post->media == 1)
+    @if (isset($static))
+        <meta itemprop="image" content="/assets/img/logo.png">
+    @elseif ($post->media == 1)
         <div class="image">
             <img itemprop="image" class="post-image" src="/img/{{ $post->uid }}.jpg"
                  onclick="showImg('{{ $post->uid }}');" style="max-height: 40vh; width: auto; cursor: zoom-in;"/>
@@ -145,8 +150,10 @@ if ($post->orig) {
         @endisset
 
         <div itemprop="author" itemscope itemtype="http://schema.org/Person" class="right floated author">
-            <img itemprop="image" class="ts circular avatar image"
-                 src="{{ $author_photo }}" onerror="this.src='/assets/img/avatar.jpg';">
+            @unless (isset($static))
+                <img itemprop="image" class="ts circular avatar image"
+                     src="{{ $author_photo }}" onerror="this.src='/assets/img/avatar.jpg';">
+            @endunless
             <span itemprop="name">{{ $author_name }}</span>
             @if ($ip_masked)
                 <br><span class="right floated">({{ $ip_masked }})</span>

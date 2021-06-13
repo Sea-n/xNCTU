@@ -29,7 +29,7 @@ if (Auth::check())
 $single = 1;
 
 if ($post->status != 0) {
-    $votes = Vote::where('uid', '=', $post->uid)->orderBy('created_at')->get();
+    $votes = Vote::where('uid', $post->uid)->orderBy('created_at')->get();
 }
 
 ?>

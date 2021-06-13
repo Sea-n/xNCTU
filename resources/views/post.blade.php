@@ -24,10 +24,10 @@ if ($post->media)
 
 $single = 1;
 
-$votes = Vote::where('uid', '=', $post->uid)->orderBy('created_at')->get();
+$votes = Vote::where('uid', $post->uid)->orderBy('created_at')->get();
 
 /* Recommended posts */
-$posts = Post::where('status', '=', 5)->orderByDesc('id')->take(500)->get();
+$posts = Post::where('status', 5)->orderByDesc('id')->take(500)->get();
 $posts = $posts->getIterator()->getArrayCopy();
 
 $id = $post->id;
