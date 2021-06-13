@@ -52,7 +52,7 @@ class PostReject extends Command
             $submitted = strtotime($post->submitted_at);
             $dt = floor(time() / 60) - floor($submitted / 60);
 
-            if (strpos($post->ip_from, '境外') === false) {
+            if (strpos($post->ip_from, '境外') === false && $post->ip_from != 'VPS') {
                 /* Before 1 hour */
                 if ($dt < 1 * 60 && $post->rejects < 5)
                     continue;

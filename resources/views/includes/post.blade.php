@@ -18,7 +18,7 @@ if ($post->author)
     $author_name = $post->author->dep() . ' ' . $post->author->name;
 
 $ip_masked = $post->ip_addr;
-if (strpos($author_name, '境外') === false)
+if (strpos($post->ip_from, '境外') === false && $post->ip_from != 'VPS')
     $ip_masked = ip_mask($ip_masked);
 if (!Auth::check())
     $ip_masked = ip_mask_anon($ip_masked);

@@ -3,7 +3,7 @@ $ip_addr = Request::ip();
 $ip_from = ip_from($ip_addr);
 
 $ip_masked = $ip_addr;
-if (strpos($ip_from, '境外') === false)
+if (strpos($ip_from, '境外') === false && $ip_from != 'VPS')
     $ip_masked = ip_mask($ip_masked);
 
 $captcha_q = "請輸入「交大ㄓㄨˊㄏㄨˊ」（四個字）";

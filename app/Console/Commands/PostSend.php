@@ -191,7 +191,7 @@ class PostSend extends Command
         }
 
         /* Rule for Taiwan IP address */
-        if (strpos($post->ip_from, '境外') === false) {
+        if (strpos($post->ip_from, '境外') === false && $post->ip_from != 'VPS') {
             /* No reject */
             if ($dt < 10)
                 return ($vote2 >= 8);

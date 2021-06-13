@@ -105,15 +105,19 @@ function ip_from(string $ip_addr): string
     $ptr = gethostbyaddr($ip_addr);
     if ($ptr != $ip_addr) {
         $ptr_array = explode('.', $ptr);
-        $ptr_array = array_slice($ptr_array, -3, 3);
-        $ptr = join('.', $ptr_array);
-        $ptr = str_replace("emome-ip6.hinet.net", "中華電信", $ptr);
-        $ptr = str_replace("dynamic-ip.hinet.net", "中華電信", $ptr);
-        $ptr = str_replace("dynamic-ip6.hinet.net", "中華電信", $ptr);
-        $ptr = str_replace("dynamic.kbtelecom.net", "中嘉和網", $ptr);
-        $ptr = str_replace("hyabd.com.tw", "中嘉和網", $ptr);
-        $ptr = str_replace("static.kbtelecom.net", "中嘉和網", $ptr);
-        return $ptr;
+
+        $ptr2 = join('.', array_slice($ptr_array, -2, 2));
+        switch ($ptr2) {
+            case 'hinet.net': return '中華電信';
+            case 'kbtelecom.net': return '中嘉和網';
+            case 'hostinginside.com': return 'VPS';
+        }
+
+        $ptr3 = join('.', array_slice($ptr_array, -3, 3));
+        switch ($ptr3) {
+            case 'hyabd.com.tw': return '中嘉和網';
+            default: return $ptr3;
+        }
     }
 
     /* Unknown ISP */
