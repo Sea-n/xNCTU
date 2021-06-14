@@ -19,7 +19,7 @@ class RankingController extends Controller
         $user = User::where('tg_id', '=', $id)->first();
 
         if (!$user)
-            $user = User::where('stuid', '=', '.'.$id)->whereNull('tg_id')->first();
+            $user = User::where('stuid', '=', $id)->whereNull('tg_id')->first();
 
         if (!$user)
             return response()->json([]);
