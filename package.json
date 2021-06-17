@@ -12,7 +12,6 @@
     "devDependencies": {
         "axios": "^0.21.1",
         "cross-env": "^7.0.3",
-        "glob-parent": ">=5.1.2",
         "json-bigint": ">=1.0.0",
         "laravel-mix": "^5.0.9",
         "lodash": "^4.17.21",
