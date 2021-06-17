@@ -82,14 +82,9 @@ function appendPost(item) {
     if (item.media != 0)
         post.querySelector('#img').onclick = showImg;
 
-    if (item.media == 1)
+    // TODO: use mp4 for GIF and Video
+    if (item.media != 0)
         post.querySelector('#img').src = '/img/' + item.uid + '.jpg';
-
-    if (item.media == 2)
-        post.querySelector('#img').src = '/img/' + item.uid + '.gif';
-
-    if (item.media == 3)
-        post.querySelector('#img').src = '/img/' + item.uid + '.mp4';
 
     let body = item.body;
     const blocks = body.split('\n');
