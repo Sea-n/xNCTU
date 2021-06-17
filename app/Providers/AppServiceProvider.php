@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Ref: https://stackoverflow.com/a/35258097/5201431
+        $this->app['request']->server->set('HTTPS', true);
+
         $socialite = $this->app->make('Laravel\Socialite\Contracts\Factory');
         $socialite->extend(
             'nctu',

