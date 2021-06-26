@@ -76,6 +76,9 @@ class TelegramService extends BaseService implements PostContract
                     'url' => $post->getUrl($platform),
                 ];
 
+        if (!count($buttons))
+            return;
+
         try {
             Telegram::editMessageReplyMarkup([
                 'chat_id' => '@' . env('TELEGRAM_USERNAME'),
