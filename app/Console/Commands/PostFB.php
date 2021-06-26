@@ -53,7 +53,7 @@ class PostFB extends Command
 
         /* Ignore errors */
         if ($post->facebook_id == 0) {
-            $post->update(['facebook_id', 1]);
+            $post->update(['facebook_id' => 1]);
             return;
         }
 
