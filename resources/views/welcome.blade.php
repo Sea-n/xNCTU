@@ -36,19 +36,19 @@
     <div class="icon-row">
         <a id="telegram-icon" class="ts link tiny rounded image" target="_blank"
            href="https://t.me/{{ env('TELEGRAM_USERNAME') }}">
-            <img src="https://image.flaticon.com/icons/svg/2111/2111646.svg" alt="Telegram"></a>
+            <img src="/assets/img/social-telegram.svg" alt="Telegram"></a>
         <a id="twitter-icon" class="ts link tiny rounded image" target="_blank"
            href="https://twitter.com/{{ env('TWITTER_USERNAME') }}">
-            <img src="https://image.flaticon.com/icons/svg/124/124021.svg" alt="Twitter"></a>
+            <img src="/assets/img/social-twitter.svg" alt="Twitter"></a>
         <a id="plurk-icon" class="ts link tiny rounded image" target="_blank"
            href="https://www.plurk.com/{{ env('PLURK_USERNAME') }}">
-            <img src="https://image.flaticon.com/icons/svg/124/124026.svg" alt="Plurk"></a>
+            <img src="/assets/img/social-plurk.svg" alt="Plurk"></a>
         <a id="facebook-icon" class="ts link tiny rounded image" target="_blank"
            href="https://www.facebook.com/{{ env('FACEBOOK_USERNAME') }}">
-            <img src="https://image.flaticon.com/icons/svg/220/220200.svg" alt="Facebook"></a>
+            <img src="/assets/img/social-facebook.svg" alt="Facebook"></a>
         <a id="instagram-icon" class="ts link tiny rounded image" target="_blank"
            href="https://www.instagram.com/{{ env('INSTAGRAM_USERNAME') }}">
-            <img src="https://image.flaticon.com/icons/svg/2111/2111463.svg" alt="Instagram"></a>
+            <img src="/assets/img/social-instagram.svg" alt="Instagram"></a>
     </div>
 
     <h2 class="ts header">審文機制</h2>
