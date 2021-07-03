@@ -165,10 +165,19 @@ if ($post->orig) {
                 <br><span>送出時間：<time data-ts="0">{{ $time }}</time></span>
             @else
                 <span>{{ in_array($post->status, [1, 2, 3]) ? '審核狀況' : '審核結果' }}：
-                    <button class="ts vote positive button">通過</button>
-                    <span id="approvals">{{ $post->approvals }}</span>&nbsp;票 /
-                    <button class="ts vote negative button">駁回</button>
-                    <span id="rejects">{{ $post->rejects }}</span>&nbsp;票</span>
+                    @if (Auth::check() && canVote($post->uid, Auth::id())['ok'])
+                        <button class="ts vote positive button"
+                                onclick="approve('{{ $post->uid }}');">通過</button>
+                        <span id="approvals">{{ $post->approvals }}</span>&nbsp;票 /
+                        <button class="ts vote negative button"
+                                onclick="reject('{{ $post->uid }}');">駁回</button>
+                        <span id="rejects">{{ $post->rejects }}</span>&nbsp;票</span>
+                    @else
+                        <button class="ts vote positive button">通過</button>
+                        <span id="approvals">{{ $post->approvals }}</span>&nbsp;票 /
+                        <button class="ts vote negative button">駁回</button>
+                        <span id="rejects">{{ $post->rejects }}</span>&nbsp;票</span>
+                    @endif
                 <br><span>投稿時間：<time datetime="{{ $post->submitted_at }}" data-ts="{{ $ts }}"
                                      itemprop="dateCreated">{{ $time }}</time></span>
             @endif
