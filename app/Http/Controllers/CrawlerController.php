@@ -19,7 +19,7 @@ class CrawlerController extends Controller
     <priority>1.00</priority>
   </url>
   <url>
-	<loc>' . url('/posts') . '</loc>
+    <loc>' . url('/posts') . '</loc>
     <changefreq>hourly</changefreq>
     <priority>1.00</priority>
   </url>

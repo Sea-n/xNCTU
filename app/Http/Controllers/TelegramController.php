@@ -81,17 +81,17 @@ class TelegramController extends Controller
             $msg .= "不過在啟用 Telegram 審文功能之前，要麻煩您先設定一下 username 使用者名稱喔！";
             Telegram::sendMessage([
                 'chat_id' => $message->chat->id,
-				'text' => $msg,
-				'reply_markup' => json_encode([
-					'inline_keyboard' => [
-						[
-							[
-								'text' => '📗 按我看教學',
-								'url' => 'https://t.me/UNameBot?start=tech'
-							]
-						]
-					]
-				])
+                'text' => $msg,
+                'reply_markup' => json_encode([
+                    'inline_keyboard' => [
+                        [
+                            [
+                                'text' => '📗 按我看教學',
+                                'url' => 'https://t.me/UNameBot?start=tech'
+                            ]
+                        ]
+                    ]
+                ])
             ]);
             return;
         }
