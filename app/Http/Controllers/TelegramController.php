@@ -283,6 +283,19 @@ class TelegramController extends Controller
 
                             if ($post->media == 0)
                                 $post->update(['media' => 1]);
+
+                            $curl = curl_init();
+                            curl_setopt_array($curl, [
+                                CURLOPT_URL => 'https://api.cloudflare.com/client/v4/zones/' . env('CLOUDFLARE_ZONE') . '/purge_cache',
+                                CURLOPT_POSTFIELDS => '{"purge_everything": true}',
+                                CURLOPT_RETURNTRANSFER => 1,
+                                CURLOPT_HTTPHEADER => [
+                                    'Authorization: Bearer ' . env('CLOUDFLARE_TOKEN'),
+                                    'Content-Type: application/json',
+                                ]
+                            ]);
+                            curl_exec($curl);
+                            curl_close($curl);
                             break;
 
                         default:
