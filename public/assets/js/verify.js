@@ -92,7 +92,7 @@ function confirmVerify() {
         console.log(resp);
         alert(resp.msg);
         if (resp.ok)
-            location.href = '.';
+            location.href = '/';
     });
 }
 

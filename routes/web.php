@@ -86,6 +86,8 @@ Route::name('login.')->group(function () {
 Route::post('/logout', function () {
     session()->forget('google_sub');
     Auth::logout();
+    if (url()->previous() == route('verify.index'))
+        return redirect(url('/'));
     return redirect(url()->previous());
 });
 
