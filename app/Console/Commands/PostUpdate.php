@@ -20,7 +20,7 @@ class PostUpdate extends Command
      *
      * @var string
      */
-    protected $description = 'Send eligible post to social media';
+    protected $description = 'Update fb_likes using API';
 
 
     /**
@@ -35,8 +35,11 @@ class PostUpdate extends Command
 
     public function handle()
     {
+        if (!env('FACEBOOK_ENABLE', false))
+            return;
+
         $count = $this->argument('count');
-        $posts = Post::where('status', '=', 5)->orderByDesc('id')->limit($count)->get();
+        $posts = Post::where('status', 5)->orderByDesc('id')->limit($count)->get();
 
         $curl = curl_init();
         curl_setopt_array($curl, [
