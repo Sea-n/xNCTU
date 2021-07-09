@@ -198,6 +198,16 @@ class TelegramController extends Controller
                     break;
 
                 case 'unlink':
+                    if ($arg != 'confirm') {
+                        Telegram::sendMessage([
+                            'chat_id' => $message->chat->id,
+                            'text' => "您確定要取消 {$user->name} ({$user->stuid}) 的 Telegram 帳號關聯嗎？\n\n" .
+                                "請輸入 <code>/unlink confirm</code> 以確認執行",
+                            'parse_mode' => 'HTML',
+                        ]);
+                        return;
+                    }
+
                     $user->update([
                         'tg_id' => null,
                         'tg_name' => null,
