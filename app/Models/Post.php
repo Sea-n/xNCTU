@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $telegram_id
  * @property integer $plurk_id
  * @property integer $twitter_id
+ * @property integer $discord_id
  * @property integer $facebook_id
  * @property string $instagram_id
  *

@@ -2,12 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\PublishDiscord;
 use App\Jobs\PublishFacebook;
 use App\Jobs\PublishInstagram;
 use App\Jobs\PublishPlurk;
 use App\Jobs\PublishTelegram;
 use App\Jobs\PublishTwitter;
 use App\Jobs\ReviewDelete;
+use App\Jobs\UpdateDiscord;
 use App\Jobs\UpdateFacebook;
 use App\Jobs\UpdatePlurk;
 use App\Jobs\UpdateTelegram;
@@ -87,6 +89,9 @@ class PostSend extends Command
         if (env('INSTAGRAM_ENABLE', false) && $post->instagram_id == '')
             PublishInstagram::dispatch($post);
 
+        if (env('DISCORD_ENABLE', false) && $post->discord_id == 0)
+            PublishDiscord::dispatch($post);
+
         if (env('PLURK_ENABLE', false) && $post->plurk_id == 0)
             PublishPlurk::dispatch($post);
 
@@ -105,6 +110,9 @@ class PostSend extends Command
 
         if (env('PLURK_ENABLE', false) && $post1->plurk_id == 0 && $post2->plurk_id > 10)
             UpdatePlurk::dispatch($post2);
+
+        if (env('DISCORD_ENABLE', false) && $post1->discord_id == 0 && $post2->discord_id > 10)
+            UpdateDiscord::dispatch($post2);
 
         if (env('TELEGRAM_ENABLE', false) && $post2->telegram_id > 10)
             UpdateTelegram::dispatch($post2);

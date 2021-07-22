@@ -32,6 +32,7 @@ class CreatePostsTable extends Migration
             $table->integer('telegram_id')->default(0);
             $table->integer('plurk_id')->default(0);
             $table->bigInteger('twitter_id')->default(0);
+            $table->bigInteger('discord_id')->default(0);
             $table->bigInteger('facebook_id')->default(0);
             $table->string('instagram_id')->default('');
 
