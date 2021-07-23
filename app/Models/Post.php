@@ -99,6 +99,9 @@ class Post extends Model
                 return $this->media == 0 ? '' : url("/img/{$this->uid}.jpg");
             case 'telegram':
                 return $this->telegram_id > 0 ? 'https://t.me/' . env('TELEGRAM_USERNAME') . "/{$this->telegram_id}" : null;
+            case 'discord':
+                return $this->discord_id > 0 ? 'https://discord.com/channels/' . env('DISCORD_SERVER_ID') . '/'
+                    . env('DISCORD_CHANNEL_ID') . "/{$this->discord_id}" : null;
             case 'plurk':
                 return $this->plurk_id > 10 ? 'https://www.plurk.com/p/' . base_convert($this->plurk_id, 10, 36) : null;
             case 'twitter':

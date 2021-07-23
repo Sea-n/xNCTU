@@ -92,7 +92,7 @@
     </table>
 
     <h2>因應 Facebook 政策自我審查</h2>
-    <p>此清單中的貼文僅會從 Facebook、Instagram 下架，您仍然可以從 Telegram、Twitter、Plurk 看到原文。</p>
+    <p>此清單中的貼文僅會從 Facebook、Instagram 下架，您仍然可以從 Telegram、Discord、Twitter、Plurk 看到原文。</p>
     <table class="ts striped table">
         <thead>
         <tr>

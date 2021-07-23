@@ -43,6 +43,9 @@
         <a id="plurk-icon" class="ts link tiny rounded image" target="_blank"
            href="https://www.plurk.com/{{ env('PLURK_USERNAME') }}">
             <img src="/assets/img/social-plurk.svg" alt="Plurk"></a>
+        <a id="discord-icon" class="ts link tiny rounded image" target="_blank"
+           href="https://discord.gg/{{ env('DISCORD_INVITE_LINK') }}">
+            <img src="/assets/img/social-discord.svg" alt="Discord"></a>
         <a id="facebook-icon" class="ts link tiny rounded image" target="_blank"
            href="https://www.facebook.com/{{ env('FACEBOOK_USERNAME') }}">
             <img src="/assets/img/social-facebook.svg" alt="Facebook"></a>

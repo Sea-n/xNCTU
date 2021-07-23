@@ -24,7 +24,7 @@ class DiscordService extends BaseService implements PostContract
     {
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://discord.com/api/v9/channels/' . env('DISCORD_CHANNEL') . '/messages',
+            CURLOPT_URL => 'https://discord.com/api/v9/channels/' . env('DISCORD_CHANNEL_ID') . '/messages',
             CURLOPT_HTTPHEADER => [
                 'Authorization: Bot ' . env('DISCORD_TOKEN')
             ],
@@ -51,7 +51,7 @@ class DiscordService extends BaseService implements PostContract
 
         foreach ($this->reactions as $name => $reaction) {
             curl_setopt_array($curl, [
-                CURLOPT_URL => 'https://discord.com/api/v9/channels/' . env('DISCORD_CHANNEL') .
+                CURLOPT_URL => 'https://discord.com/api/v9/channels/' . env('DISCORD_CHANNEL_ID') .
                 "/messages/{$post->discord_id}/reactions/" . urlencode($reaction) . '/@me',
                 CURLOPT_CUSTOMREQUEST => 'PUT',
                 CURLOPT_HTTPHEADER => [
@@ -65,7 +65,7 @@ class DiscordService extends BaseService implements PostContract
 
         $msg = $this->genMsg($post);
         curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://discord.com/api/v9/channels/' . env('DISCORD_CHANNEL') .
+            CURLOPT_URL => 'https://discord.com/api/v9/channels/' . env('DISCORD_CHANNEL_ID') .
             "/messages/{$post->discord_id}",
             CURLOPT_CUSTOMREQUEST => 'PUT',
             CURLOPT_HTTPHEADER => [

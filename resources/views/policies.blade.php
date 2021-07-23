@@ -8,7 +8,7 @@
     <p>非常歡迎您光臨「{{ env('APP_CHINESE_NAME') }}」（以下簡稱<strong>本網站</strong>），為了讓您能夠安心使用本網站的各項服務與資訊，特此向您說明本網站的隱私權保護政策，以保障您的權益，請您詳閱下列內容：</p>
 
     <h2 class="ts header">一、隱私權保護政策的適用範圍</h2>
-    <p>隱私權保護政策內容，包括本網站如何處理在您使用網站服務時收集到的個人識別資料。隱私權保護政策不適用於本網站以外的相關連結網站，亦如另行登錄 NCTU OAuth、Google OAuth、Telegram、Twitter、Facebook、Instagram，或 Plurk 平台後的互動，依個別平台與使用者另訂的隱私條款，本網站的隱私政策也不適用於非本網站所委託或參與管理的人員。</p>
+    <p>隱私權保護政策內容，包括本網站如何處理在您使用網站服務時收集到的個人識別資料。隱私權保護政策不適用於本網站以外的相關連結網站，亦如另行登錄 NCTU OAuth、Google OAuth、Telegram、Discord、Twitter、Facebook、Instagram，或 Plurk 平台後的互動，依個別平台與使用者另訂的隱私條款，本網站的隱私政策也不適用於非本網站所委託或參與管理的人員。</p>
 
     <h2 class="ts header">二、Cookies、個人資料的蒐集、處理及利用方式</h2>
     <ul>

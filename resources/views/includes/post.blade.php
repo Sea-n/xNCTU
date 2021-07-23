@@ -123,6 +123,12 @@ if ($post->orig) {
                 <br>
             @endif
 
+            @if ($post->discord_id > 42)
+                <span><i class="rocket icon"></i> Discord: <a target="_blank" href="{{ $post->getUrl('discord') }}">
+                        {{ $post->discord_id }}</a></span>
+                <br>
+            @endif
+
             @if ($post->facebook_id > 87)
                 <span><i class="facebook icon"></i> Facebook: <a target="_blank" href="{{ $post->getUrl('facebook') }}">
                         @<span>{{ env('FACEBOOK_USERNAME') }}</span>/{{ $post->facebook_id }}</a>

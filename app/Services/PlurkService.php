@@ -57,6 +57,8 @@ class PlurkService extends BaseService implements PostContract
             $msg .= "審核結果：✅ 通過 {$post->approvals} 票\n\n";
 
         $msg .= '🥙 其他平台：';
+        if ($post->discord_id > 10)
+            $msg .= "{$post->getUrl('discord')} (Discord)、";
         if ($post->facebook_id > 10)
             $msg .= "{$post->getUrl('facebook')} (Facebook)、";
         if ($post->twitter_id > 10)

@@ -65,6 +65,7 @@ class TelegramService extends BaseService implements PostContract
             'Facebook',
             'Plurk',
             'Twitter',
+            'Discord',
             'Instagram',
         ];
 

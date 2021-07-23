@@ -9,7 +9,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <meta name="keywords" content="{{ env('APP_NAME') }}, {{ env('APP_CHINESE_NAME') }}" />
-<meta name="description" content="@yield('desc', '不要問為何沒有人審文，先承認你就是沒有人。新版' . env('APP_CHINESE_NAME') . ' (' . env('APP_NAME') . ') 讓全校師生都有了審核的權限，每天穩定發出投稿文章。並支援 Telegram、Plurk、Twitter、Facebook、Instagram 五大社群媒體平台。')" />
+<meta name="description" content="@yield('desc', '不要問為何沒有人審文，先承認你就是沒有人。新版' . env('APP_CHINESE_NAME') . ' (' . env('APP_NAME') . ') 讓全校師生都有了審核的權限，每天穩定發出投稿文章。並支援 Telegram、Discord、Plurk、Twitter、Facebook、Instagram 六大社群媒體平台。')" />
 <link rel="canonical" href="{{ url()->current() }}" />
 
 <meta property="og:title" content="@yield('title')" />
@@ -17,7 +17,7 @@
 <meta property="og:image" content="@yield('img', url('/assets/img/og.png'))" />
 <meta property="og:image:secure_url" content="@yield('img', url('/assets/img/og.png'))" />
 <meta property="og:type" content="website" />
-<meta property="og:description" content="@yield('desc', '不要問為何沒有人審文，先承認你就是沒有人。新版' . env('APP_CHINESE_NAME') . ' (' . env('APP_NAME') . ') 讓全校師生都有了審核的權限，每天穩定發出投稿文章。並支援 Telegram、Plurk、Twitter、Facebook、Instagram 五大社群媒體平台。')" />
+<meta property="og:description" content="@yield('desc', '不要問為何沒有人審文，先承認你就是沒有人。新版' . env('APP_CHINESE_NAME') . ' (' . env('APP_NAME') . ') 讓全校師生都有了審核的權限，每天穩定發出投稿文章。並支援 Telegram、Discord、Plurk、Twitter、Facebook、Instagram 六大社群媒體平台。')" />
 <meta property="og:site_name" content="{{ env('APP_CHINESE_NAME') }}" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="{{ '@' . env('TWITTER_USERNAME') }}" />

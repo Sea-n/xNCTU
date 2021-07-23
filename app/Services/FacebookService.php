@@ -36,6 +36,7 @@ class FacebookService extends BaseService implements PostContract
             env('APP_CHINESE_NAME') . " 除了 Facebook 外，還支援 Twitter、Plurk 等平台\nhttps://twitter.com/" . env('TWITTER_USERNAME'),
             env('APP_CHINESE_NAME') . " 除了 Facebook 外，還支援 Plurk、Twitter 等平台\nhttps://www.plurk.com/" . env('PLURK_USERNAME'),
             "加入" . env('APP_CHINESE_NAME') . " Telegram 頻道，第一時間看到所有貼文\nhttps://t.me/" . env('TELEGRAM_USERNAME'),
+            "加入" . env('APP_CHINESE_NAME') . " Discord 伺服器，第一時間看到所有貼文\nhttps://discord.gg/" . env('DISCORD_INVITE_LINK'),
             "你知道" . env('HASHTAG') . "也有 Instagram 帳號嗎？只要投稿圖片就會同步發佈至 IG 喔\nhttps://www.instagram.com/" . env('INSTAGRAM_USERNAME'),
 
             "審核紀錄公開透明，你可以看到誰以什麼原因通過/駁回了投稿\n" . url('/posts'),
