@@ -3,8 +3,10 @@ var cd_time = 0;
 
 function init() {
     if (document.getElementById('send-verify')) {
-        document.getElementById('stuid').oninput = formUpdate;
         document.getElementById('send-verify').onsubmit = submitForm;
+        var inp = document.getElementById('stuid');
+        inp.oninput = formUpdate;
+        inp.focus();
     }
 }
 
