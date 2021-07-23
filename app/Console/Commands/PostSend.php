@@ -89,14 +89,14 @@ class PostSend extends Command
         if (env('INSTAGRAM_ENABLE', false) && $post->instagram_id == '')
             PublishInstagram::dispatch($post);
 
-        if (env('DISCORD_ENABLE', false) && $post->discord_id == 0)
-            PublishDiscord::dispatch($post);
-
         if (env('PLURK_ENABLE', false) && $post->plurk_id == 0)
             PublishPlurk::dispatch($post);
 
         if (env('FACEBOOK_ENABLE', false) && $post->facebook_id == 0)
             PublishFacebook::dispatch($post);
+
+        if (env('DISCORD_ENABLE', false) && $post->discord_id == 0)
+            PublishDiscord::dispatch($post);  # Must be latest
 
 
         /* Refresh to obtain post id on every platforms */
@@ -112,7 +112,7 @@ class PostSend extends Command
             UpdatePlurk::dispatch($post2);
 
         if (env('DISCORD_ENABLE', false) && $post1->discord_id == 0 && $post2->discord_id > 10)
-            UpdateDiscord::dispatch($post2);
+            UpdateDiscord::dispatch($post2);  # Add reactions, not updating links
 
         if (env('TELEGRAM_ENABLE', false) && $post2->telegram_id > 10)
             UpdateTelegram::dispatch($post2);

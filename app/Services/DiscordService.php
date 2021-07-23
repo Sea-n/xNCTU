@@ -63,23 +63,6 @@ class DiscordService extends BaseService implements PostContract
             curl_exec($curl);
         }
 
-        $msg = $this->genMsg($post);
-        curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://discord.com/api/v9/channels/' . env('DISCORD_CHANNEL_ID') .
-            "/messages/{$post->discord_id}",
-            CURLOPT_CUSTOMREQUEST => 'PUT',
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bot ' . env('DISCORD_TOKEN')
-            ],
-            CURLOPT_POSTFIELDS => [
-                'payload_json' => json_encode(['embeds' => [
-                    $this->genMsg($post),
-                ]]),
-            ],
-            CURLOPT_RETURNTRANSFER => true,
-        ]);
-        curl_exec($curl);
-
         curl_close($curl);
     }
 
