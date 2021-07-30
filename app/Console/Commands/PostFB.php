@@ -16,7 +16,7 @@ class PostFB extends Command
      *
      * @var string
      */
-    protected $signature = 'post:fb {begin}';
+    protected $signature = 'post:fb';
 
     /**
      * The console command description.
@@ -38,11 +38,8 @@ class PostFB extends Command
 
     public function handle()
     {
-        $post = Post::where([
-            ['status', '=', 5],
-            ['id', '>', $this->argument('begin')],
-            ['facebooK_id', '=', 0],
-        ])->orderBy('id')->first();
+        $post = Post::whereIn('id', [
+        ])->where('facebook_id', 0)->orderBy('id')->first();
 
         if (!isset($post))
             return;

@@ -35,7 +35,7 @@ class PostUpdate extends Command
 
     public function handle()
     {
-        if (!env('FACEBOOK_ENABLE', false))
+        if (empty(env('FACEBOOK_ACCESS_TOKEN', '')))
             return;
 
         $count = $this->argument('count');
