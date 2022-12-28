@@ -192,7 +192,7 @@
     </table>
 
     <h2>請求刪除紀錄</h2>
-    <p>校方定義不限於正式信函通知，包含各處室、教職員工；此處同學僅計算交大在學學生，他校學生列入個人計算。此表格不包含各社群平台檢舉下架貼文。</p>
+    <p>校方定義不限於正式信函通知，包含各處室、教職員工；此處同學僅計算交清在學學生，他校學生列入個人計算。此表格不包含各社群平台檢舉下架貼文。</p>
     <table class="ts striped table">
         <thead>
         <tr>
@@ -201,15 +201,41 @@
             <th>同學請求數</th>
             <th>個人請求數</th>
             <th>實際受理貼文數</th>
+            <th>貼文編號</th>
         </tr>
         </thead>
         <tbody>
+        <tr class="negative indicated">
+            <td>2022 Dec</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td><a href="/post/4194" target="_blank">#靠交4194</a></td>
+        </tr>
+        <tr>
+            <td>2021 Sep</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>2021 Aug</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td></td>
+        </tr>
         <tr class="negative indicated">
             <td>2021 Jul</td>
             <td>0</td>
             <td>1</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2021 Jun</td>
@@ -217,6 +243,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr class="negative indicated">
             <td>2021 May</td>
@@ -224,6 +251,7 @@
             <td>1</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr class="negative indicated">
             <td>2021 Apr</td>
@@ -231,6 +259,7 @@
             <td>1</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2021 Mar</td>
@@ -238,6 +267,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2021 Feb</td>
@@ -245,6 +275,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2021 Jan</td>
@@ -252,6 +283,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2020 Dec</td>
@@ -259,6 +291,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2020 Nov</td>
@@ -266,6 +299,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2020 Oct</td>
@@ -273,6 +307,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr class="negative indicated">
             <td>2020 Sep</td>
@@ -280,6 +315,7 @@
             <td>1</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr class="negative indicated">
             <td>2020 Aug</td>
@@ -287,6 +323,7 @@
             <td>1</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2020 Jul</td>
@@ -294,6 +331,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr class="negative indicated">
             <td>2020 Jun</td>
@@ -301,6 +339,7 @@
             <td>1</td>
             <td>1</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2020 May</td>
@@ -308,6 +347,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr class="negative indicated">
             <td>2020 Apr</td>
@@ -315,6 +355,7 @@
             <td>1</td>
             <td>1</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2020 Mar</td>
@@ -322,6 +363,7 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         <tr>
             <td>2020 Feb</td>
@@ -329,10 +371,11 @@
             <td>0</td>
             <td>0</td>
             <td>0</td>
+            <td></td>
         </tr>
         </tbody>
     </table>
 
     <p style="margin-top: 2rem;">收到任何刪除通知將人工更新至此頁面，在不造成二次傷害的前提下，本站會盡可能提供最多資訊，原則上收到請求後會在 7 天內公開揭露。</p>
-    <p style="text-align: right;"><i>最後更新日期：2021 Jul 03</i></p>
+    <p style="text-align: right;"><i>最後更新日期：2022 Dec 28</i></p>
 @stop

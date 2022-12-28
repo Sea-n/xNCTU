@@ -221,6 +221,7 @@ div[itemprop="articleBody"] {
     background: #94f094;
 }
 
+.diff-wrapper.diff.diff-html .change-del,
 .diff-wrapper.diff.diff-html .change del {
     background: #f09494;
 }

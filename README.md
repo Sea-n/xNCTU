@@ -19,6 +19,13 @@
 ## 排程發文
 通過審核之文章將會進入發文佇列，由系統於指定時間每 5 分鐘 po 出一篇至各大社群平台
 
+## Setup
+```
+php artisan telegram:webhook --setup
+php artisan tg:cmd
+```
+
+
 ## 授權條款
 程式原始碼以 [MIT](LICENSE) 授權釋出  
 圖片素材、網站內容以 CC-BY 釋出

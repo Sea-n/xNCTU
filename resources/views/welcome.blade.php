@@ -46,9 +46,9 @@
         <a id="discord-icon" class="ts link tiny rounded image" target="_blank"
            href="https://discord.gg/{{ env('DISCORD_INVITE_LINK') }}">
             <img src="/assets/img/social-discord.svg" alt="Discord"></a>
-        <a id="facebook-icon" class="ts link tiny rounded image" target="_blank"
+        <!--<a id="facebook-icon" class="ts link tiny rounded image" target="_blank"
            href="https://www.facebook.com/{{ env('FACEBOOK_USERNAME') }}">
-            <img src="/assets/img/social-facebook.svg" alt="Facebook"></a>
+            <img src="/assets/img/social-facebook.svg" alt="Facebook"></a>-->
         <a id="instagram-icon" class="ts link tiny rounded image" target="_blank"
            href="https://www.instagram.com/{{ env('INSTAGRAM_USERNAME') }}">
             <img src="/assets/img/social-instagram.svg" alt="Instagram"></a>
