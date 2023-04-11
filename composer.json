@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3",
+        "php": "^8.1",
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
@@ -20,16 +20,15 @@
         "guzzlehttp/guzzle": "^7.2",
         "irazasyed/telegram-bot-sdk": "^3.4",
         "jfcherng/php-diff": "^6.9",
-        "laravel/framework": "^8.25",
+        "laravel/framework": "^9.0",
         "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.6"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.9",
-        "facade/ignition": "^2.5",
-        "fzaninotto/faker": "^1.9.1",
+        "spatie/laravel-ignition": "^1.0",
         "mockery/mockery": "^1.4",
-        "nunomaduro/collision": "^5.3",
+        "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5"
     },
     "config": {
