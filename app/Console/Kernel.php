@@ -24,11 +24,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('post:send')->everyFiveMinutes();
-        $schedule->command('post:fb')->everyFiveMinutes()->between('17:00', '18:00');
+        // $schedule->command('post:send')->everyFiveMinutes();
+        // $schedule->command('post:fb')->everyFiveMinutes()->between('17:00', '18:00');
         $schedule->command('post:reject')->everyMinute();
-        $schedule->command('post:update 42')->hourlyAt(12);
-        $schedule->command('post:update 1000')->dailyAt('06:42');
+        // $schedule->command('post:update 42')->hourlyAt(12);
+        // $schedule->command('post:update 1000')->dailyAt('06:42');
     }
 
     /**

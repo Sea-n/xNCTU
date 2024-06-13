@@ -11,6 +11,7 @@
     use App\Models\Post;
     use App\Models\Vote;
     use Carbon\Carbon;
+    ini_set('memory_limit', 400 * 1000 * 1000);  # 400 MB
 
     $time_start = microtime(true);
 
@@ -19,12 +20,12 @@
     if (!file_exists($dir))
         mkdir($dir);
 
-    if (!file_exists($CACHE) || time() - filemtime($CACHE) > 60 * 60) {
+    if (!file_exists($CACHE) || time() - filemtime($CACHE) > 24 * 60 * 60) {
     ob_start();
 
     $del = Post::where('status', '<', 0)->pluck('uid')->toArray();
 
-    $votes = Vote::where('created_at', '>', Carbon::today()->subMonths(6))->get();
+    $votes = Vote::where('created_at', '<', Carbon::parse('2022-02-01'))->get();
 
     $user_count = [];
     $vote_sum = [1 => 0, -1 => 0];
@@ -40,11 +41,11 @@
         $user_count[$item->stuid][$item->vote]++;
         $vote_sum[$item->vote]++;
 
-        /* After 1 day, half the score every week */
-        $dt = time() - strtotime($item->created_at);
+        /* After 1 day, half the score every month */
+        $dt = strtotime('2022-02-02') - strtotime($item->created_at);
         $dt = $dt / 24 / 60 / 60;
         $dt = max($dt - 1, 0);
-        $pt = pow(0.5, $dt / 7);
+        $pt = pow(0.5, $dt / 30);
 
         if (in_array($item->uid, $del)) {
             if ($item->vote == 1)
@@ -76,7 +77,7 @@
     $pt_max = $user_count[0]['pt'];
     $end = 5;
     foreach ($user_count as $k => $v) {
-        if ($k > 0 && $k % 5 == 0 && $user_count[$k]['pt'] < 20) {
+        if ($k > 0 && $k % 5 == 0 && $user_count[$k]['pt'] < 5) {
             $end = $k;
             break;
         }
@@ -200,7 +201,7 @@
     $dt = ($time_end - $time_start) * 1000.0;
     $dt = number_format($dt, 2, '.', '');
     ?>
-    <!-- Page generated in {{ $dt }}ms  ({{ Carbon::now() }}) -->
+    <!-- Page generated in {{ floor($dt / 10) / 100 }} sec, memory usage = {{ floor(memory_get_peak_usage() / 1000 / 100) / 10 }} MB  ({{ Carbon::now() }}) -->
 
     <?php
     $htmlStr = ob_get_contents();
@@ -223,8 +224,8 @@ function genData()
         'subchart' => [
             'show' => true,
             'defaultZoom' => [
-                strtotime("28 days ago") * 1000,
-                strtotime(" 0 days ago") * 1000
+                strtotime("2020-04-15") * 1000,
+                strtotime("2020-07-15") * 1000
             ]
         ],
         'types' => ['y0' => 'bar', 'y1' => 'bar', 'x' => 'x'],
@@ -242,9 +243,9 @@ function genData()
     ];
 
     $data['title'] = '所有人';
-    $begin = strtotime("6 months ago 00:00");
-    $end = strtotime("today 24:00");
-    $step = 2 * 60 * 60;
+    $begin = strtotime("2020-02-20 00:00");
+    $end = strtotime("2022-01-20 24:00");
+    $step = 4 * 60 * 60;
 
     for ($i = $begin; $i <= $end; $i += $step) {
         $data['columns'][0][] = $i * 1000;
@@ -252,7 +253,7 @@ function genData()
         $data['columns'][2][] = 0;
     }
 
-    $VOTES = Vote::where('created_at', '>', Carbon::today()->subMonths(6))->get();
+    $VOTES = Vote::where('created_at', '<', Carbon::parse('2022-01-20'))->get();
     foreach ($VOTES as $vote) {
         $ts = strtotime($vote['created_at']);
         $y = $vote['vote'] == 1 ? 1 : 2;

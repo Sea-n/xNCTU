@@ -33,8 +33,8 @@ class RankingController extends Controller
             'subchart' => [
                 'show' => true,
                 'defaultZoom' => [
-                    strtotime("28 days ago") * 1000,
-                    strtotime(" 0 days ago") * 1000
+                    strtotime("2020-04-01") * 1000,
+                    strtotime("2020-10-01") * 1000
                 ]
             ],
             'types' => ['y0' => 'bar', 'y1' => 'bar', 'x' => 'x'],
@@ -52,11 +52,13 @@ class RankingController extends Controller
         ];
 
         $name = "{$user->dep()} {$user->name}";
-        $step = 6 * 60 * 60;
+        $step = 12 * 60 * 60;
+
+        $VOTES = Vote::where('stuid', '=', $user->stuid)->get();
 
         $data['title'] = $name;
         $begin = strtotime(explode(' ', $user->created_at, 2)[0] . " 00:00");
-        $end = strtotime("today 24:00");
+        $end = strtotime(explode(' ', $user->last_vote, 2)[0] . " 24:00");
 
         for ($i = $begin; $i <= $end; $i += $step) {
             $data['columns'][0][] = $i * 1000;
@@ -64,7 +66,6 @@ class RankingController extends Controller
             $data['columns'][2][] = 0;
         }
 
-        $VOTES = Vote::where('stuid', '=', $user->stuid)->get();
         foreach ($VOTES as $vote) {
             $ts = strtotime($vote['created_at']);
             $y = $vote['vote'] == 1 ? 1 : 2;
